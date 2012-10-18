@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_
-#define ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_
+#ifndef _ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_
+#define _ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_
 
 #include <cms/Session.h>
 #include <decaf/util/StlMap.h>
@@ -47,12 +47,12 @@ namespace cmsutil {
 
     private:
 
-        PooledSession( const PooledSession& );
-        PooledSession& operator= ( const PooledSession& );
+        PooledSession(const PooledSession&);
+        PooledSession& operator=(const PooledSession&);
 
     public:
 
-        PooledSession( SessionPool* pool, cms::Session* session );
+        PooledSession(SessionPool* pool, cms::Session* session);
 
         /**
          * Does nothing
@@ -105,25 +105,25 @@ namespace cmsutil {
             session->recover();
         }
 
-        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination ) {
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination) {
             return session->createConsumer(destination);
         }
 
-        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination,
-                                                      const std::string& selector ) {
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination,
+                                                     const std::string& selector) {
             return session->createConsumer(destination, selector);
         }
 
-        virtual cms::MessageConsumer* createConsumer( const cms::Destination* destination,
-                                                      const std::string& selector,
-                                                      bool noLocal ) {
+        virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination,
+                                                     const std::string& selector,
+                                                     bool noLocal) {
             return session->createConsumer(destination, selector, noLocal);
         }
 
-        virtual cms::MessageConsumer* createDurableConsumer( const cms::Topic* destination,
-                                                             const std::string& name,
-                                                             const std::string& selector,
-                                                             bool noLocal = false ) {
+        virtual cms::MessageConsumer* createDurableConsumer(const cms::Topic* destination,
+                                                            const std::string& name,
+                                                            const std::string& selector,
+                                                            bool noLocal = false) {
             return session->createDurableConsumer(destination, name, selector, noLocal);
         }
 
@@ -143,11 +143,10 @@ namespace cmsutil {
          *
          * @throws cms::CMSException if something goes wrong.
          */
-        virtual cms::MessageConsumer* createCachedConsumer( const cms::Destination* destination,
-                                                            const std::string& selector,
-                                                            bool noLocal );
+        virtual cms::MessageConsumer* createCachedConsumer(const cms::Destination* destination,
+                                                           const std::string& selector, bool noLocal);
 
-        virtual cms::MessageProducer* createProducer( const cms::Destination* destination ) {
+        virtual cms::MessageProducer* createProducer(const cms::Destination* destination) {
             return session->createProducer(destination);
         }
 
@@ -163,18 +162,18 @@ namespace cmsutil {
          *
          * @throws cms::CMSException if something goes wrong.
          */
-        virtual cms::MessageProducer* createCachedProducer( const cms::Destination* destination );
+        virtual cms::MessageProducer* createCachedProducer(const cms::Destination* destination);
 
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue );
+        virtual cms::QueueBrowser* createBrowser(const cms::Queue* queue);
 
-        virtual cms::QueueBrowser* createBrowser( const cms::Queue* queue, const std::string& selector );
+        virtual cms::QueueBrowser* createBrowser(const cms::Queue* queue, const std::string& selector);
 
-        virtual cms::Queue* createQueue( const std::string& queueName ) {
-            return session->createQueue( queueName );
+        virtual cms::Queue* createQueue(const std::string& queueName) {
+            return session->createQueue(queueName);
         }
 
-        virtual cms::Topic* createTopic( const std::string& topicName ) {
-            return session->createTopic( topicName );
+        virtual cms::Topic* createTopic(const std::string& topicName) {
+            return session->createTopic(topicName);
         }
 
         virtual cms::TemporaryQueue* createTemporaryQueue() {
@@ -193,8 +192,8 @@ namespace cmsutil {
             return session->createBytesMessage();
         }
 
-        virtual cms::BytesMessage* createBytesMessage( const unsigned char* bytes, int bytesSize ) {
-            return session->createBytesMessage( bytes, bytesSize );
+        virtual cms::BytesMessage* createBytesMessage(const unsigned char* bytes, int bytesSize) {
+            return session->createBytesMessage(bytes, bytesSize);
         }
 
         virtual cms::StreamMessage* createStreamMessage() {
@@ -205,8 +204,8 @@ namespace cmsutil {
             return session->createTextMessage();
         }
 
-        virtual cms::TextMessage* createTextMessage( const std::string& text ) {
-            return session->createTextMessage( text );
+        virtual cms::TextMessage* createTextMessage(const std::string& text) {
+            return session->createTextMessage(text);
         }
 
         virtual cms::MapMessage* createMapMessage() {
@@ -221,8 +220,8 @@ namespace cmsutil {
             return session->isTransacted();
         }
 
-        virtual void unsubscribe( const std::string& name ) {
-            session->unsubscribe( name );
+        virtual void unsubscribe(const std::string& name) {
+            session->unsubscribe(name);
         }
 
         virtual void setMessageTransformer(cms::MessageTransformer* transformer) {
@@ -235,10 +234,10 @@ namespace cmsutil {
 
     private:
 
-        std::string getUniqueDestName( const cms::Destination* dest );
+        std::string getUniqueDestName(const cms::Destination* dest);
 
     };
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_*/
+#endif /*_ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_*/

@@ -34,27 +34,27 @@ using namespace activemq::cmsutil;
  */
 #define CMSTEMPLATE_CATCHALL() \
     catch( cms::CMSException& ex ){ \
-        throw ex; \
+        throw; \
     } catch( ... ){ \
-        throw CMSException( "caught unknown exception", NULL ); \
+        throw CMSException("caught unknown exception", NULL); \
     }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession::PooledSession( SessionPool* pool, cms::Session* session )
-    : pool( pool ), session( session ), producerCache(), consumerCache() {
+PooledSession::PooledSession(SessionPool* pool, cms::Session* session) :
+    pool(pool), session(session), producerCache(), consumerCache() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PooledSession::~PooledSession() {
 
     // Destroy cached producers.
-    std::auto_ptr< Iterator<CachedProducer*> > producers(producerCache.values().iterator());
+    std::auto_ptr<Iterator<CachedProducer*> > producers(producerCache.values().iterator());
     while (producers->hasNext()) {
         delete producers->next();
     }
 
     // Destroy cached consumers.
-    std::auto_ptr< Iterator<CachedConsumer*> > consumers(consumerCache.values().iterator());
+    std::auto_ptr<Iterator<CachedConsumer*> > consumers(consumerCache.values().iterator());
     while (consumers->hasNext()) {
         delete consumers->next();
     }
@@ -63,28 +63,28 @@ PooledSession::~PooledSession() {
 ////////////////////////////////////////////////////////////////////////////////
 void PooledSession::close() {
 
-    if( pool != NULL ) {
-        pool->returnSession( this );
+    if (pool != NULL) {
+        pool->returnSession(this);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue ) {
-    return session->createBrowser( queue );
+cms::QueueBrowser* PooledSession::createBrowser(const cms::Queue* queue) {
+    return session->createBrowser(queue);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* PooledSession::createBrowser( const cms::Queue* queue, const std::string& selector ) {
-    return session->createBrowser( queue, selector );
+cms::QueueBrowser* PooledSession::createBrowser(const cms::Queue* queue, const std::string& selector) {
+    return session->createBrowser(queue, selector);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destination* destination ) {
+cms::MessageProducer* PooledSession::createCachedProducer(const cms::Destination* destination) {
 
     try {
 
-        if( destination == NULL ) {
-            throw CMSException( "destination is NULL", NULL );
+        if (destination == NULL) {
+            throw CMSException("destination is NULL", NULL);
         }
 
         std::string key = getUniqueDestName(destination);
@@ -92,21 +92,21 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
         // Check the cache - add it if necessary.
         CachedProducer* cachedProducer = NULL;
         try {
-            cachedProducer = producerCache.get( key );
-        } catch( decaf::util::NoSuchElementException& e ) {
+            cachedProducer = producerCache.get(key);
+        } catch (decaf::util::NoSuchElementException& e) {
 
             // No producer exists for this destination - start by creating
             // a new producer resource.
-            cms::MessageProducer* p = session->createProducer( destination );
+            cms::MessageProducer* p = session->createProducer(destination);
 
             // Add the producer resource to the resource lifecycle manager.
-            pool->getResourceLifecycleManager()->addMessageProducer( p );
+            pool->getResourceLifecycleManager()->addMessageProducer(p);
 
             // Create the cached producer wrapper.
-            cachedProducer = new CachedProducer( p );
+            cachedProducer = new CachedProducer(p);
 
             // Add it to the cache.
-            producerCache.put( key, cachedProducer );
+            producerCache.put(key, cachedProducer);
         }
 
         return cachedProducer;
@@ -115,41 +115,39 @@ cms::MessageProducer* PooledSession::createCachedProducer( const cms::Destinatio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destination* destination,
-                                                           const std::string& selector,
-                                                           bool noLocal ) {
+cms::MessageConsumer* PooledSession::createCachedConsumer(const cms::Destination* destination, const std::string& selector, bool noLocal) {
 
     try {
 
-        if( destination == NULL ) {
-            throw CMSException( "destination is NULL", NULL );
+        if (destination == NULL) {
+            throw CMSException("destination is NULL", NULL);
         }
 
         // Append the selector and noLocal flag onto the key.
-        std::string key = getUniqueDestName( destination );
+        std::string key = getUniqueDestName(destination);
         key += "s=";
         key += selector;
         key += ",nl=";
-        key += ( noLocal? "t" : "f" );
+        key += (noLocal ? "t" : "f");
 
         // Check the cache - add it if necessary.
         CachedConsumer* cachedConsumer = NULL;
         try {
-            cachedConsumer = consumerCache.get( key );
-        } catch( decaf::util::NoSuchElementException& e ) {
+            cachedConsumer = consumerCache.get(key);
+        } catch (decaf::util::NoSuchElementException& e) {
 
             // No producer exists for this destination - start by creating
             // a new consumer resource.
-            cms::MessageConsumer* c = session->createConsumer( destination, selector, noLocal );
+            cms::MessageConsumer* c = session->createConsumer(destination, selector, noLocal);
 
             // Add the consumer resource to the resource lifecycle manager.
-            pool->getResourceLifecycleManager()->addMessageConsumer( c );
+            pool->getResourceLifecycleManager()->addMessageConsumer(c);
 
             // Create the cached consumer wrapper.
-            cachedConsumer = new CachedConsumer( c );
+            cachedConsumer = new CachedConsumer(c);
 
             // Add it to the cache.
-            consumerCache.put( key, cachedConsumer );
+            consumerCache.put(key, cachedConsumer);
         }
 
         return cachedConsumer;
@@ -158,15 +156,15 @@ cms::MessageConsumer* PooledSession::createCachedConsumer( const cms::Destinatio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string PooledSession::getUniqueDestName( const cms::Destination* dest ) {
+std::string PooledSession::getUniqueDestName(const cms::Destination* dest) {
 
     std::string destName = "[";
-    const cms::Queue* queue = dynamic_cast<const cms::Queue*>( dest );
-    if( queue != NULL ) {
+    const cms::Queue* queue = dynamic_cast<const cms::Queue*>(dest);
+    if (queue != NULL) {
         destName += "q:" + queue->getQueueName();
     } else {
-        const cms::Topic* topic = dynamic_cast<const cms::Topic*>( dest );
-        if( topic != NULL ) {
+        const cms::Topic* topic = dynamic_cast<const cms::Topic*>(dest);
+        if (topic != NULL) {
             destName += "t:" + topic->getTopicName();
         }
     }

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_SESSIONPOOL_H_
-#define ACTIVEMQ_CMSUTIL_SESSIONPOOL_H_
+#ifndef _ACTIVEMQ_CMSUTIL_SESSIONPOOL_H_
+#define _ACTIVEMQ_CMSUTIL_SESSIONPOOL_H_
 
 #include <activemq/cmsutil/PooledSession.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -53,8 +53,8 @@ namespace cmsutil {
 
     private:
 
-        SessionPool( const SessionPool& );
-        SessionPool& operator= ( const SessionPool& );
+        SessionPool(const SessionPool&);
+        SessionPool& operator=(const SessionPool&);
 
     public:
 
@@ -68,9 +68,9 @@ namespace cmsutil {
          *          the object responsible for managing the lifecycle of
          *          any allocated cms::Session resources.
          */
-        SessionPool( cms::Connection* connection,
-                     cms::Session::AcknowledgeMode ackMode,
-                     ResourceLifecycleManager* resourceLifecycleManager );
+        SessionPool(cms::Connection* connection,
+                    cms::Session::AcknowledgeMode ackMode,
+                    ResourceLifecycleManager* resourceLifecycleManager);
 
         /**
          * Destroys the pooled session objects, but not the underlying session
@@ -89,10 +89,11 @@ namespace cmsutil {
 
         /**
          * Returns a session to the pool.
+         *
          * @param session
          *         the session to be returned.
          */
-        virtual void returnSession( PooledSession* session );
+        virtual void returnSession(PooledSession* session);
 
         ResourceLifecycleManager* getResourceLifecycleManager() {
             return resourceLifecycleManager;
@@ -102,4 +103,4 @@ namespace cmsutil {
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_SESSIONPOOL_H_*/
+#endif /*_ACTIVEMQ_CMSUTIL_SESSIONPOOL_H_*/

@@ -25,16 +25,16 @@ using namespace activemq::cmsutil;
 ////////////////////////////////////////////////////////////////////////////////
 #define CMSTEMPLATE_CATCHALL() \
     catch( cms::CMSException& ex ){ \
-        throw ex; \
-    } catch( std::exception& ex ) { \
+        throw; \
+    } catch(std::exception& ex) { \
         throw CMSException( ex.what(), NULL ); \
     } catch( ... ){ \
-        throw CMSException( "caught unknown exception", NULL ); \
+        throw CMSException("caught unknown exception", NULL); \
     }
 
 ////////////////////////////////////////////////////////////////////////////////
 #define CMSTEMPLATE_CATCHALL_NOTHROW( ) \
-    catch( ... ){ \
+    catch(...){ \
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,6 @@ ResourceLifecycleManager::ResourceLifecycleManager() : connections(),
 ResourceLifecycleManager::~ResourceLifecycleManager() {
 
     try {
-
         // Destroy all the resources
         destroy();
     }
@@ -70,72 +69,74 @@ void ResourceLifecycleManager::releaseAll() {
 ////////////////////////////////////////////////////////////////////////////////
 void ResourceLifecycleManager::destroy() {
 
-    try{
+    try {
 
         synchronized(&connections) {
-            // Close all the connections.
-            std::auto_ptr< decaf::util::Iterator< cms::Connection* > > connIter(
-                connections.iterator() );
 
-            while( connIter->hasNext() ) {
+            // Close all the connections.
+            std::auto_ptr<decaf::util::Iterator<cms::Connection*> > connIter(connections.iterator());
+
+            while (connIter->hasNext()) {
                 cms::Connection* conn = connIter->next();
                 try {
                     conn->close();
-                } catch(...){}
+                } catch (...) {
+                }
             }
 
             // Destroy the producers.
-            std::auto_ptr< decaf::util::Iterator< cms::MessageProducer* > > prodIter(
-                producers.iterator() );
+            std::auto_ptr<decaf::util::Iterator<cms::MessageProducer*> > prodIter(producers.iterator());
 
-            while( prodIter->hasNext() ) {
+            while (prodIter->hasNext()) {
                 cms::MessageProducer* producer = prodIter->next();
                 try {
                     delete producer;
-                } catch( ... ) {}
+                } catch (...) {
+                }
             }
 
             // Destroy the consumers.
-            std::auto_ptr< decaf::util::Iterator< cms::MessageConsumer* > > consIter(
-                consumers.iterator() );
+            std::auto_ptr<decaf::util::Iterator<cms::MessageConsumer*> > consIter(consumers.iterator());
 
-            while( consIter->hasNext() ) {
+            while (consIter->hasNext()) {
                 cms::MessageConsumer* consumer = consIter->next();
                 try {
                     delete consumer;
-                } catch( ... ) {}
+                } catch (...) {
+                }
             }
 
             // Destroy the destinations.
-            std::auto_ptr< decaf::util::Iterator< cms::Destination* > > destIter(
-                destinations.iterator() );
+            std::auto_ptr<decaf::util::Iterator<cms::Destination*> > destIter(destinations.iterator());
 
-            while( destIter->hasNext() ) {
+            while (destIter->hasNext()) {
                 cms::Destination* dest = destIter->next();
                 try {
                     delete dest;
-                } catch( ... ) {}
+                } catch (...) {
+                }
             }
 
             // Destroy the sessions.
-            std::auto_ptr< decaf::util::Iterator< cms::Session* > > sessIter(
-                sessions.iterator() );
+            std::auto_ptr<decaf::util::Iterator<cms::Session*> > sessIter(sessions.iterator());
 
-            while( sessIter->hasNext() ) {
+            while (sessIter->hasNext()) {
                 cms::Session* session = sessIter->next();
                 try {
                     delete session;
-                } catch( ... ) {}
+                } catch (...) {
+                }
             }
 
             // Destroy the connections,
-            connIter.reset( connections.iterator() );
+            connIter.reset(connections.iterator());
 
-            while( connIter->hasNext() ) {
+            while (connIter->hasNext()) {
                 cms::Connection* conn = connIter->next();
                 try {
                     delete conn;
-                } catch( ... ) {}
+                } catch (...) {
+                }
             }
 
             // Empty all the lists.
@@ -146,60 +147,60 @@ void ResourceLifecycleManager::destroy() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addConnection( cms::Connection* connection ) {
+void ResourceLifecycleManager::addConnection(cms::Connection* connection) {
 
-    try{
+    try {
         // Add the connection to the list.
         synchronized( &connections ) {
-            connections.add( connection );
+            connections.add(connection);
         }
     }
     CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addSession( cms::Session* session ) {
+void ResourceLifecycleManager::addSession(cms::Session* session) {
 
-    try{
+    try {
         // Add the session to the list.
-        synchronized( &sessions ) {
-            sessions.add( session );
+        synchronized(&sessions) {
+            sessions.add(session);
         }
     }
     CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addDestination( cms::Destination* dest ) {
+void ResourceLifecycleManager::addDestination(cms::Destination* dest) {
 
-    try{
+    try {
         // Add the destination to the list.
-        synchronized( &destinations ) {
-            destinations.add( dest );
+        synchronized(&destinations) {
+            destinations.add(dest);
         }
     }
     CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addMessageProducer( cms::MessageProducer* producer ) {
+void ResourceLifecycleManager::addMessageProducer(cms::MessageProducer* producer) {
 
-    try{
+    try {
         // Add the producer to the list.
-        synchronized( &producers ) {
-            producers.add( producer );
+        synchronized(&producers) {
+            producers.add(producer);
         }
     }
     CMSTEMPLATE_CATCHALL()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addMessageConsumer( cms::MessageConsumer* consumer ) {
+void ResourceLifecycleManager::addMessageConsumer(cms::MessageConsumer* consumer) {
 
-    try{
+    try {
         // Add the consumer to the list.
-        synchronized( &consumers ) {
-            consumers.add( consumer );
+        synchronized(&consumers) {
+            consumers.add(consumer);
         }
     }
     CMSTEMPLATE_CATCHALL()

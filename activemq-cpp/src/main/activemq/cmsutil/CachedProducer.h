@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_
-#define ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_
+#ifndef _ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_
+#define _ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_
 
 #include <cms/MessageProducer.h>
 #include <activemq/util/Config.h>
@@ -39,12 +39,9 @@ namespace cmsutil {
 
     public:
 
-        CachedProducer(cms::MessageProducer* producer) :
-                producer(producer) {
-        }
+        CachedProducer(cms::MessageProducer* producer);
 
-        virtual ~CachedProducer() {
-        }
+        virtual ~CachedProducer();
 
         /**
          * Does nothing - the real producer resource will be closed
@@ -138,4 +135,4 @@ namespace cmsutil {
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_*/
+#endif /*_ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_*/

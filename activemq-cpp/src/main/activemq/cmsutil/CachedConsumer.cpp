@@ -15,37 +15,20 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H_
-#define _ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H_
+#include "CachedConsumer.h"
 
-#include <cms/Session.h>
-#include <cms/Message.h>
-#include <activemq/util/Config.h>
+using namespace cms;
+using namespace activemq::cmsutil;
 
-namespace activemq {
-namespace cmsutil {
+////////////////////////////////////////////////////////////////////////////////
+CachedConsumer::CachedConsumer(cms::MessageConsumer* consumer) : consumer(consumer) {
 
-    /**
-     * Creates the user-defined message to be sent by the
-     * <code>CmsTemplate</code>.
-     */
-    class AMQCPP_API MessageCreator {
-    public:
+}
 
-        virtual ~MessageCreator();
+////////////////////////////////////////////////////////////////////////////////
+CachedConsumer::~CachedConsumer() {
 
-        /**
-         * Creates a message from the given session.
-         *
-         * @param session
-         *          the CMS <code>Session</code>
-         *
-         * @throws cms::CMSException if thrown by CMS API methods
-         */
-        virtual cms::Message* createMessage(cms::Session* session) = 0;
+}
 
-    };
 
-}}
 
-#endif /*_ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H_*/

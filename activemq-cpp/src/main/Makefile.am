@@ -16,12 +16,18 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+    activemq/cmsutil/CachedConsumer.cpp \
+    activemq/cmsutil/CachedProducer.cpp \
     activemq/cmsutil/CmsAccessor.cpp \
     activemq/cmsutil/CmsDestinationAccessor.cpp \
     activemq/cmsutil/CmsTemplate.cpp \
+    activemq/cmsutil/DestinationResolver.cpp \
     activemq/cmsutil/DynamicDestinationResolver.cpp \
+    activemq/cmsutil/MessageCreator.cpp \
     activemq/cmsutil/PooledSession.cpp \
+    activemq/cmsutil/ProducerCallback.cpp \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
+    activemq/cmsutil/SessionCallback.cpp \
     activemq/cmsutil/SessionPool.cpp \
     activemq/commands/ActiveMQBlobMessage.cpp \
     activemq/commands/ActiveMQBytesMessage.cpp \
