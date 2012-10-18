@@ -25,8 +25,8 @@
 #include <cms/CMSProperties.h>
 #include <decaf/util/Properties.h>
 
-namespace activemq{
-namespace util{
+namespace activemq {
+namespace util {
 
     /**
      * Implementation of the CMSProperties interface that
@@ -34,7 +34,7 @@ namespace util{
      *
      * @since 2.0
      */
-    class AMQCPP_API ActiveMQProperties : public cms::CMSProperties {
+    class AMQCPP_API ActiveMQProperties: public cms::CMSProperties {
     private:
 
         decaf::util::Properties properties;
@@ -53,7 +53,7 @@ namespace util{
             return this->properties;
         }
 
-        virtual void setProperties( decaf::util::Properties& props ) {
+        virtual void setProperties(decaf::util::Properties& props) {
             this->properties = props;
         }
 
@@ -65,41 +65,39 @@ namespace util{
             return properties.isEmpty();
         }
 
-        virtual const char* getProperty( const std::string& name ) const{
+        virtual const char* getProperty(const std::string& name) const {
             return properties.getProperty(name);
         }
 
-        virtual std::string getProperty( const std::string& name,
-                                         const std::string& defaultValue ) const {
-            return properties.getProperty( name,defaultValue );
+        virtual std::string getProperty(const std::string& name, const std::string& defaultValue) const {
+            return properties.getProperty(name, defaultValue);
         }
 
-        virtual void setProperty( const std::string& name,
-                                  const std::string& value ){
-            properties.setProperty( name,value );
+        virtual void setProperty(const std::string& name, const std::string& value) {
+            properties.setProperty(name, value);
         }
 
-        virtual bool hasProperty( const std::string& name ) const {
+        virtual bool hasProperty(const std::string& name) const {
             return properties.hasProperty(name);
         }
 
-        virtual std::string remove( const std::string& name ){
-            return properties.remove( name );
+        virtual std::string remove(const std::string& name) {
+            return properties.remove(name);
         }
 
         virtual std::vector<std::string> propertyNames() const {
             return properties.propertyNames();
         }
 
-        virtual std::vector< std::pair< std::string, std::string > > toArray() const{
+        virtual std::vector<std::pair<std::string, std::string> > toArray() const {
             return properties.toArray();
         }
 
-        virtual void copy( const CMSProperties* source );
+        virtual void copy(const CMSProperties* source);
 
         virtual CMSProperties* clone() const;
 
-        virtual void clear(){
+        virtual void clear() {
             properties.clear();
         }
 

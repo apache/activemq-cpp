@@ -31,7 +31,7 @@ namespace threads {
     class AMQCPP_API Task {
     public:
 
-        virtual ~Task() {}
+        virtual ~Task();
 
         /**
          * Perform one iteration of work, returns true if the task needs

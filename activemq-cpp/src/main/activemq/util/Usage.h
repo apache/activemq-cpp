@@ -26,7 +26,7 @@ namespace util {
     class AMQCPP_API Usage {
     public:
 
-        virtual ~Usage() {}
+        virtual ~Usage();
 
         /**
          * Waits forever for more space to be returned to this Usage Manager.
@@ -38,26 +38,26 @@ namespace util {
          * when the given time span in milliseconds elapses.
          * @param timeout The time to wait for more space.
          */
-        virtual void waitForSpace( unsigned int timeout ) = 0;
+        virtual void waitForSpace(unsigned int timeout) = 0;
 
         /**
          * Tries to increase the usage by value amount but blocks if this object is
          * currently full.
          * @param value Amount of usage in bytes to add.
          */
-        virtual void enqueueUsage( unsigned long long value ) = 0;
+        virtual void enqueueUsage(unsigned long long value) = 0;
 
         /**
          * Increases the usage by the value amount
          * @param value Amount of usage to add.
          */
-        virtual void increaseUsage( unsigned long long value ) = 0;
+        virtual void increaseUsage(unsigned long long value) = 0;
 
         /**
          * Decreases the usage by the value amount.
          * @param value Amount of space to return to the pool
          */
-        virtual void decreaseUsage( unsigned long long value ) = 0;
+        virtual void decreaseUsage(unsigned long long value) = 0;
 
         /**
          * Returns true if this Usage instance is full, i.e. Usage >= 100%

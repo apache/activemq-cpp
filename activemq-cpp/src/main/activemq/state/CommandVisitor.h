@@ -69,8 +69,7 @@ namespace state {
     class AMQCPP_API CommandVisitor {
     public:
 
-        virtual ~CommandVisitor() {
-        }
+        virtual ~CommandVisitor();
 
         virtual decaf::lang::Pointer<commands::Command> processTransactionInfo(commands::TransactionInfo* info) = 0;
 

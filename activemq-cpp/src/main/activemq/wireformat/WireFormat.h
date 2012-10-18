@@ -31,21 +31,19 @@
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
-namespace activemq{
-namespace wireformat{
+namespace activemq {
+namespace wireformat {
 
     using decaf::lang::Pointer;
 
     /**
      * Provides a mechanism to marshal commands into and out of packets
      * or into and out of streams, Channels and Datagrams.
-     *
-     * @version $Revision: 1.1 $
      */
     class AMQCPP_API WireFormat {
     public:
 
-        virtual ~WireFormat() {}
+        virtual ~WireFormat();
 
         /**
          * Stream based marshaling of a Command, this method blocks until the entire

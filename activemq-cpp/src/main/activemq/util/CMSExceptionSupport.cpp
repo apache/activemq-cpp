@@ -35,50 +35,50 @@ CMSExceptionSupport::~CMSExceptionSupport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException CMSExceptionSupport::create( const std::string& msg, const Exception& cause ) {
+CMSException CMSExceptionSupport::create(const std::string& msg, const Exception& cause) {
 
-    CMSException exception( msg, cause.clone() );
+    CMSException exception(msg, cause.clone());
     return exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSException CMSExceptionSupport::create( const Exception& cause ) {
+CMSException CMSExceptionSupport::create(const Exception& cause) {
 
     std::string msg = cause.getMessage();
 
-    if( msg.length() == 0 ) {
+    if (msg.length() == 0) {
         msg = typeid( &cause ).name();
     }
 
-    CMSException exception( msg, cause.clone() );
-
-    return exception;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-MessageEOFException CMSExceptionSupport::createMessageEOFException( const Exception& cause ) {
-
-    std::string msg = cause.getMessage();
-
-    if( msg.length() == 0 ) {
-        msg = typeid( &cause ).name();
-    }
-
-    MessageEOFException exception( msg, cause.clone() );
+    CMSException exception(msg, cause.clone());
 
     return exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageFormatException CMSExceptionSupport::createMessageFormatException( const Exception& cause ) {
+MessageEOFException CMSExceptionSupport::createMessageEOFException(const Exception& cause) {
 
     std::string msg = cause.getMessage();
 
-    if( msg.length() == 0 ) {
+    if (msg.length() == 0) {
         msg = typeid( &cause ).name();
     }
 
-    MessageFormatException exception( msg, cause.clone() );
+    MessageEOFException exception(msg, cause.clone());
+
+    return exception;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageFormatException CMSExceptionSupport::createMessageFormatException(const Exception& cause) {
+
+    std::string msg = cause.getMessage();
+
+    if (msg.length() == 0) {
+        msg = typeid( &cause ).name();
+    }
+
+    MessageFormatException exception(msg, cause.clone());
 
     return exception;
 }

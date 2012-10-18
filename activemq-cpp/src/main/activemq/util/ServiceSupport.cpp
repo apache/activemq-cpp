@@ -40,22 +40,22 @@ ServiceSupport::~ServiceSupport() {
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::dispose(Service* service) {
     try {
-        if(service != NULL) {
+        if (service != NULL) {
             service->stop();
         }
-    } catch (Exception e) {
+    } catch (Exception& e) {
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::start() {
-    if(started.compareAndSet(false, true)) {
+    if (started.compareAndSet(false, true)) {
 
         bool success = false;
         try {
             this->doStart();
             success = true;
-        } catch(...) {
+        } catch (...) {
             this->started.set(success);
         }
 
@@ -63,8 +63,8 @@ void ServiceSupport::start() {
         this->stopped.set(!success);
 
         synchronized(&this->listeners) {
-            std::auto_ptr< Iterator<ServiceListener*> > iter(this->listeners.iterator());
-            while(iter->hasNext()) {
+            std::auto_ptr<Iterator<ServiceListener*> > iter(this->listeners.iterator());
+            while (iter->hasNext()) {
                 iter->next()->started(this);
             }
         }
@@ -73,12 +73,12 @@ void ServiceSupport::start() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::stop() {
-    if(this->stopped.compareAndSet(false, true)) {
+    if (this->stopped.compareAndSet(false, true)) {
         this->stopping.set(true);
         ServiceStopper stopper;
         try {
             this->doStop(&stopper);
-        } catch(Exception& e) {
+        } catch (Exception& e) {
             stopper.onException(this, e);
         }
 
@@ -87,8 +87,8 @@ void ServiceSupport::stop() {
         this->stopping.set(false);
 
         synchronized(&this->listeners) {
-            std::auto_ptr< Iterator<ServiceListener*> > iter(this->listeners.iterator());
-            while(iter->hasNext()) {
+            std::auto_ptr<Iterator<ServiceListener*> > iter(this->listeners.iterator());
+            while (iter->hasNext()) {
                 iter->next()->stopped(this);
             }
         }
@@ -114,7 +114,7 @@ bool ServiceSupport::isStopped() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::addServiceListener(ServiceListener* listener) {
-    if(listener != NULL) {
+    if (listener != NULL) {
         synchronized(&this->listeners) {
             this->listeners.add(listener);
         }
@@ -123,7 +123,7 @@ void ServiceSupport::addServiceListener(ServiceListener* listener) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceSupport::removeServiceListener(ServiceListener* listener) {
-    if(listener != NULL) {
+    if (listener != NULL) {
         synchronized(&this->listeners) {
             this->listeners.remove(listener);
         }

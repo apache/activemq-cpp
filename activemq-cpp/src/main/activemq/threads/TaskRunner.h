@@ -27,7 +27,7 @@ namespace threads {
     class AMQCPP_API TaskRunner {
     public:
 
-        virtual ~TaskRunner() {}
+        virtual ~TaskRunner();
 
         /**
          * Shutdown after a timeout, does not guarantee that the task's iterate
@@ -35,7 +35,7 @@ namespace threads {
          *
          * @param timeout - Time in Milliseconds to wait for the task to stop.
          */
-        virtual void shutdown( unsigned int timeout ) = 0;
+        virtual void shutdown(unsigned int timeout) = 0;
 
         /**
          * Shutdown once the task has finished and the TaskRunner's thread has exited.

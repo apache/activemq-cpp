@@ -90,11 +90,11 @@ void MockTransport::oneway(const Pointer<Command> command) {
             return;
         }
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_RETHROW( UnsupportedOperationException)
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(UnsupportedOperationException)
+    AMQ_CATCH_EXCEPTION_CONVERT(ActiveMQException, IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,6 @@ Pointer<Response> MockTransport::request(const Pointer<Command> command, unsigne
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::start() {
-
     if (this->failOnStart) {
         throw IOException(__FILE__, __LINE__, "Failed to Start MockTransport.");
     }
@@ -195,7 +194,6 @@ void MockTransport::start() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::stop() {
-
     if (this->failOnStop) {
         throw IOException(__FILE__, __LINE__, "Failed to Stop MockTransport.");
     }
@@ -203,7 +201,6 @@ void MockTransport::stop() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::close() {
-
     if (this->failOnClose) {
         throw IOException(__FILE__, __LINE__, "Failed to Close MockTransport.");
     }

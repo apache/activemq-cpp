@@ -48,12 +48,12 @@ namespace threads {
 
     private:
 
-        DedicatedTaskRunner( const DedicatedTaskRunner& );
-        DedicatedTaskRunner& operator= ( const DedicatedTaskRunner& );
+        DedicatedTaskRunner(const DedicatedTaskRunner&);
+        DedicatedTaskRunner& operator=(const DedicatedTaskRunner&);
 
     public:
 
-        DedicatedTaskRunner( Task* task );
+        DedicatedTaskRunner(Task* task);
         virtual ~DedicatedTaskRunner();
 
         /**
@@ -62,7 +62,7 @@ namespace threads {
          *
          * @param timeout - Time in Milliseconds to wait for the task to stop.
          */
-        virtual void shutdown( unsigned int timeout );
+        virtual void shutdown(unsigned int timeout);
 
         /**
          * Shutdown once the task has finished and the TaskRunner's thread has exited.

@@ -27,38 +27,37 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-DedicatedTaskRunner::DedicatedTaskRunner( Task* task ) :
+DedicatedTaskRunner::DedicatedTaskRunner(Task* task) :
     mutex(), thread(), threadTerminated(false), pending(false), shutDown(false), task(task) {
 
-    if( this->task == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "Task passed was null" );
+    if (this->task == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Task passed was null");
     }
 
-    this->thread.reset( new Thread( this ) );
+    this->thread.reset(new Thread(this));
     this->thread->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DedicatedTaskRunner::~DedicatedTaskRunner() {
-    try{
+    try {
         this->shutdown();
     }
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DedicatedTaskRunner::shutdown( unsigned int timeout ) {
+void DedicatedTaskRunner::shutdown(unsigned int timeout) {
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         shutDown = true;
         pending = true;
         mutex.notifyAll();
 
         // Wait till the thread stops ( no need to wait if shutdown
         // is called from thread that is shutting down)
-        if( Thread::currentThread() != this->thread.get() && !threadTerminated ) {
-            mutex.wait( timeout );
+        if (Thread::currentThread() != this->thread.get() && !threadTerminated) {
+            mutex.wait(timeout);
         }
     }
 }
@@ -66,7 +65,7 @@ void DedicatedTaskRunner::shutdown( unsigned int timeout ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DedicatedTaskRunner::shutdown() {
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         shutDown = true;
         pending = true;
         mutex.notifyAll();
@@ -74,7 +73,7 @@ void DedicatedTaskRunner::shutdown() {
 
     // Wait till the thread stops ( no need to wait if shutdown
     // is called from thread that is shutting down)
-    if( Thread::currentThread() != this->thread.get() && !threadTerminated ) {
+    if (Thread::currentThread() != this->thread.get() && !threadTerminated) {
         this->thread->join();
     }
 }
@@ -82,8 +81,8 @@ void DedicatedTaskRunner::shutdown() {
 ////////////////////////////////////////////////////////////////////////////////
 void DedicatedTaskRunner::wakeup() {
 
-    synchronized( &mutex ) {
-        if( shutDown) {
+    synchronized(&mutex) {
+        if (shutDown) {
             return;
         }
         pending = true;
@@ -96,23 +95,23 @@ void DedicatedTaskRunner::run() {
 
     try {
 
-        while( true ) {
+        while (true) {
 
-            synchronized( &mutex ) {
+            synchronized(&mutex) {
                 pending = false;
-                if( shutDown ) {
+                if (shutDown) {
                     return;
                 }
             }
 
-            if( !this->task->iterate() ) {
+            if (!this->task->iterate()) {
 
                 // wait to be notified.
-                synchronized( &mutex ) {
-                    if( shutDown ) {
+                synchronized(&mutex) {
+                    if (shutDown) {
                         return;
                     }
-                    while( !pending ) {
+                    while (!pending) {
                         mutex.wait();
                     }
                 }
@@ -120,12 +119,11 @@ void DedicatedTaskRunner::run() {
 
         }
     }
-    AMQ_CATCH_NOTHROW( Exception )
     AMQ_CATCHALL_NOTHROW()
 
     // Make sure we notify any waiting threads that thread
     // has terminated.
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         threadTerminated = true;
         mutex.notifyAll();
     }

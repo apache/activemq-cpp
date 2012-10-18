@@ -39,10 +39,10 @@ namespace wireformat {
          * @param next
          *      The next Transport in the chain
          */
-        WireFormatNegotiator(const Pointer<transport::Transport> next ) :
+        WireFormatNegotiator(const Pointer<transport::Transport> next) :
             transport::TransportFilter(next) {}
 
-        virtual ~WireFormatNegotiator() {}
+        virtual ~WireFormatNegotiator();
 
     };
 

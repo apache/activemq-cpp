@@ -21,8 +21,8 @@
 #include <activemq/util/Config.h>
 #include <decaf/util/concurrent/Mutex.h>
 
-namespace activemq{
-namespace util{
+namespace activemq {
+namespace util {
 
     /**
      * This class is used to generate a sequence of long long values that
@@ -38,7 +38,7 @@ namespace util{
     public:
 
         LongSequenceGenerator();
-        virtual ~LongSequenceGenerator() {}
+        virtual ~LongSequenceGenerator();
 
         /**
          * @returns the next id in the sequence.

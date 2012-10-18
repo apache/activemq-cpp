@@ -15,32 +15,10 @@
  * limitations under the License.
  */
 
-#include "Tracked.h"
-
-#include <activemq/exceptions/ActiveMQException.h>
+#include "Usage.h"
 
 using namespace activemq;
-using namespace activemq::state;
-using namespace activemq::exceptions;
-using namespace decaf;
-using namespace decaf::lang;
+using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-Tracked::Tracked() : commands::Response(), runnable() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Tracked::Tracked(Pointer<Runnable> runnable) : commands::Response(), runnable(runnable) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Tracked::onResponse() {
-    try {
-        if (this->runnable != NULL) {
-            this->runnable->run();
-            this->runnable.reset(NULL);
-        }
-    }
-    AMQ_CATCH_RETHROW(ActiveMQException)
-    AMQ_CATCHALL_THROW(ActiveMQException)
-}
+Usage::~Usage() {}

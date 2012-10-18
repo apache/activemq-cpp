@@ -23,8 +23,8 @@
 #include <decaf/util/Map.h>
 #include <decaf/util/List.h>
 
-namespace activemq{
-namespace util{
+namespace activemq {
+namespace util {
 
     /**
      * Class that wraps around a single value of one of the
@@ -94,89 +94,88 @@ namespace util{
          * Boolean Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( bool value );
+        PrimitiveValueNode(bool value);
 
         /**
          * Byte Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( unsigned char value );
+        PrimitiveValueNode(unsigned char value);
 
         /**
          * Char Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( char value );
+        PrimitiveValueNode(char value);
 
         /**
          * Short Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( short value );
+        PrimitiveValueNode(short value);
 
         /**
          * Int Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( int value );
+        PrimitiveValueNode(int value);
 
         /**
          * Long Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( long long value );
+        PrimitiveValueNode(long long value);
 
         /**
          * Float Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( float value );
+        PrimitiveValueNode(float value);
 
         /**
          * Double Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( double value );
+        PrimitiveValueNode(double value);
 
         /**
          * String Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( const char* value );
+        PrimitiveValueNode(const char* value);
 
         /**
          * String Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( const std::string& value );
+        PrimitiveValueNode(const std::string& value);
 
         /**
          * Byte Array Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( const std::vector<unsigned char>& value );
+        PrimitiveValueNode(const std::vector<unsigned char>& value);
 
         /**
          * Primtive List Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode( const decaf::util::List<PrimitiveValueNode>& value );
+        PrimitiveValueNode(const decaf::util::List<PrimitiveValueNode>& value);
 
         /**
          * Primtive Map Value Constructor
          * @param value - the new value to store.
          */
-        PrimitiveValueNode(
-            const decaf::util::Map<std::string, PrimitiveValueNode>& value );
+        PrimitiveValueNode(const decaf::util::Map<std::string, PrimitiveValueNode>& value);
 
         /**
          * Copy constructor
          * @param node
          *      The instance of another node to copy to this one.
          */
-        PrimitiveValueNode( const PrimitiveValueNode& node );
+        PrimitiveValueNode(const PrimitiveValueNode& node);
 
-        ~PrimitiveValueNode(){
+        ~PrimitiveValueNode() {
             clear();
         }
 
@@ -186,19 +185,21 @@ namespace util{
          * @param node
          *      The instance of another node to copy to this one.
          */
-        PrimitiveValueNode& operator =( const PrimitiveValueNode& node );
+        PrimitiveValueNode& operator =(const PrimitiveValueNode& node);
 
         /**
          * Comparison Operator, compares this node to the other node.
          * @return true if the values are the same false otherwise.
          */
-        bool operator==( const PrimitiveValueNode& node ) const;
+        bool operator==(const PrimitiveValueNode& node) const;
 
         /**
          * Gets the Value Type of this type wrapper.
          * @return the PrimitiveType value for this wrapper.
          */
-        PrimitiveType getType() const { return valueType; }
+        PrimitiveType getType() const {
+            return valueType;
+        }
 
         /**
          * Gets the internal Primitive Value object from this wrapper.
@@ -217,7 +218,7 @@ namespace util{
          * @param valueType
          *      The type of the value being set into this one.
          */
-        void setValue( const PrimitiveValue& value, PrimitiveType valueType );
+        void setValue(const PrimitiveValue& value, PrimitiveType valueType);
 
         /**
          * Clears the value from this wrapper converting it back to a blank
@@ -231,7 +232,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setBool( bool value );
+        void setBool(bool value);
 
         /**
          * Gets the Boolean value of this Node.
@@ -247,7 +248,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setByte( unsigned char value );
+        void setByte(unsigned char value);
 
         /**
          * Gets the Byte value of this Node.
@@ -263,7 +264,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setChar( char value );
+        void setChar(char value);
 
         /**
          * Gets the Character value of this Node.
@@ -279,7 +280,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setShort( short value );
+        void setShort(short value);
 
         /**
          * Gets the Short value of this Node.
@@ -295,7 +296,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setInt( int value );
+        void setInt(int value);
 
         /**
          * Gets the Integer value of this Node.
@@ -311,7 +312,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setLong( long long value );
+        void setLong(long long value);
 
         /**
          * Gets the Long value of this Node.
@@ -327,7 +328,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setFloat( float value );
+        void setFloat(float value);
 
         /**
          * Gets the Float value of this Node.
@@ -343,7 +344,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setDouble( double value );
+        void setDouble(double value);
 
         /**
          * Gets the Double value of this Node.
@@ -359,7 +360,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setString( const std::string& value );
+        void setString(const std::string& value);
 
         /**
          * Gets the String value of this Node.
@@ -375,7 +376,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setByteArray( const std::vector<unsigned char>& value );
+        void setByteArray(const std::vector<unsigned char>& value);
 
         /**
          * Gets the Byte Array value of this Node.
@@ -391,7 +392,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setList( const decaf::util::List<PrimitiveValueNode>& value );
+        void setList(const decaf::util::List<PrimitiveValueNode>& value);
 
         /**
          * Gets the Primitive List value of this Node.
@@ -407,7 +408,7 @@ namespace util{
          * given.
          * @param value - the new value to assign to the element at index
          */
-        void setMap( const decaf::util::Map<std::string, PrimitiveValueNode>& value );
+        void setMap(const decaf::util::Map<std::string, PrimitiveValueNode>& value);
 
         /**
          * Gets the Primitive Map value of this Node.

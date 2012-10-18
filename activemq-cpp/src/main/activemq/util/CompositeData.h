@@ -58,7 +58,7 @@ namespace util {
             return components;
         }
 
-        void setComponents( const LinkedList<URI>& components ) {
+        void setComponents(const LinkedList<URI>& components) {
             this->components = components;
         }
 
@@ -66,7 +66,7 @@ namespace util {
             return fragment;
         }
 
-        void setFragment( const std::string& fragment ) {
+        void setFragment(const std::string& fragment) {
             this->fragment = fragment;
         }
 
@@ -74,7 +74,7 @@ namespace util {
             return parameters;
         }
 
-        void setParameters( const Properties& parameters ) {
+        void setParameters(const Properties& parameters) {
             this->parameters = parameters;
         }
 
@@ -82,7 +82,7 @@ namespace util {
             return scheme;
         }
 
-        void setScheme( const std::string& scheme ) {
+        void setScheme(const std::string& scheme) {
             this->scheme = scheme;
         }
 
@@ -90,7 +90,7 @@ namespace util {
             return path;
         }
 
-        void setPath( const std::string& path ) {
+        void setPath(const std::string& path) {
             this->path = path;
         }
 
@@ -98,7 +98,7 @@ namespace util {
             return host;
         }
 
-        void setHost( const std::string& host ) {
+        void setHost(const std::string& host) {
             this->host = host;
         }
 

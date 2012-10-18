@@ -41,10 +41,20 @@ using namespace activemq::transport::failover;
 using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQCPP::initializeLibrary( int argc, char** argv ) {
+ActiveMQCPP::ActiveMQCPP() {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQCPP::~ActiveMQCPP() {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQCPP::initializeLibrary(int argc, char** argv) {
 
     // Initialize the Decaf Library by requesting its runtime.
-    decaf::lang::Runtime::initializeRuntime( argc, argv );
+    decaf::lang::Runtime::initializeRuntime(argc, argv);
 
     // Register all WireFormats
     ActiveMQCPP::registerWireFormats();
@@ -58,7 +68,7 @@ void ActiveMQCPP::initializeLibrary( int argc, char** argv ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQCPP::initializeLibrary() {
-    ActiveMQCPP::initializeLibrary( 0, NULL );
+    ActiveMQCPP::initializeLibrary(0, NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,10 +91,8 @@ void ActiveMQCPP::registerWireFormats() {
     // with the WireFormat Registry
     WireFormatRegistry::initialize();
 
-    WireFormatRegistry::getInstance().registerFactory(
-        "openwire", new wireformat::openwire::OpenWireFormatFactory() );
-    WireFormatRegistry::getInstance().registerFactory(
-        "stomp", new wireformat::stomp::StompWireFormatFactory() );
+    WireFormatRegistry::getInstance().registerFactory("openwire", new wireformat::openwire::OpenWireFormatFactory());
+    WireFormatRegistry::getInstance().registerFactory("stomp", new wireformat::stomp::StompWireFormatFactory());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,12 +102,8 @@ void ActiveMQCPP::registerTransports() {
     // with the Transport Registry
     TransportRegistry::initialize();
 
-    TransportRegistry::getInstance().registerFactory(
-        "tcp", new TcpTransportFactory() );
-    TransportRegistry::getInstance().registerFactory(
-        "ssl", new SslTransportFactory() );
-    TransportRegistry::getInstance().registerFactory(
-        "mock", new MockTransportFactory() );
-    TransportRegistry::getInstance().registerFactory(
-        "failover", new FailoverTransportFactory() );
+    TransportRegistry::getInstance().registerFactory("tcp", new TcpTransportFactory());
+    TransportRegistry::getInstance().registerFactory("ssl", new SslTransportFactory());
+    TransportRegistry::getInstance().registerFactory("mock", new MockTransportFactory());
+    TransportRegistry::getInstance().registerFactory("failover", new FailoverTransportFactory());
 }

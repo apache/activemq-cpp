@@ -15,41 +15,10 @@
  * limitations under the License.
  */
 
-#include "SchedulerTimerTask.h"
-
-#include <activemq/exceptions/ActiveMQException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
+#include "Task.h"
 
 using namespace activemq;
 using namespace activemq::threads;
-using namespace activemq::exceptions;
-using namespace decaf;
-using namespace decaf::lang;
-using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-SchedulerTimerTask::SchedulerTimerTask(Runnable* task, bool ownsTask) :
-    task(task), ownsTask(ownsTask) {
-
-    if (task == NULL) {
-        throw NullPointerException(__FILE__, __LINE__, "Assigned Task cannot be NULL.");
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-SchedulerTimerTask::~SchedulerTimerTask() {
-
-    try {
-        if (ownsTask) {
-            delete this->task;
-        }
-    }
-    AMQ_CATCHALL_NOTHROW()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void SchedulerTimerTask::run() {
-    if (this->task != NULL) {
-        this->task->run();
-    }
-}
+Task::~Task() {}

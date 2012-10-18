@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
-#define ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
+#ifndef _ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
+#define _ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
 
 #include <string>
 #include <vector>
@@ -291,4 +291,4 @@ namespace util {
 
 }}
 
-#endif /*ACTIVEMQ_UTIL_PRIMITIVEMAP_H_*/
+#endif /*_ACTIVEMQ_UTIL_PRIMITIVEMAP_H_*/

@@ -26,10 +26,10 @@
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/util/Config.h>
 
-namespace activemq{
-namespace wireformat{
-namespace openwire{
-namespace marshal{
+namespace activemq {
+namespace wireformat {
+namespace openwire {
+namespace marshal {
 
     /**
      * Base class for all classes that marshal commands for Openwire
@@ -37,7 +37,7 @@ namespace marshal{
     class AMQCPP_API DataStreamMarshaller {
     public:
 
-        virtual ~DataStreamMarshaller() {}
+        virtual ~DataStreamMarshaller();
 
         /**
          * Gets the DataStructureType that this class marshals/unmarshals
@@ -64,9 +64,9 @@ namespace marshal{
          *
          * @throws IOException if an error occurs.
          */
-        virtual int tightMarshal1( OpenWireFormat* format,
-                                   commands::DataStructure* command,
-                                   utils::BooleanStream* bs ) = 0;
+        virtual int tightMarshal1(OpenWireFormat* format,
+                                  commands::DataStructure* command,
+                                  utils::BooleanStream* bs) = 0;
 
         /**
          * Tight Marhsal to the given stream
@@ -76,10 +76,10 @@ namespace marshal{
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
-        virtual void tightMarshal2( OpenWireFormat* format,
-                                    commands::DataStructure* command,
-                                    decaf::io::DataOutputStream* ds,
-                                    utils::BooleanStream* bs ) = 0;
+        virtual void tightMarshal2(OpenWireFormat* format,
+                                   commands::DataStructure* command,
+                                   decaf::io::DataOutputStream* ds,
+                                   utils::BooleanStream* bs) = 0;
 
         /**
          * Tight Un-marhsal to the given stream
@@ -89,10 +89,10 @@ namespace marshal{
          * @param bs - boolean stream to unmarshal from.
          * @throws IOException if an error occurs.
          */
-        virtual void tightUnmarshal( OpenWireFormat* format,
-                                     commands::DataStructure* command,
-                                     decaf::io::DataInputStream* dis,
-                                     utils::BooleanStream* bs ) = 0;
+        virtual void tightUnmarshal(OpenWireFormat* format,
+                                    commands::DataStructure* command,
+                                    decaf::io::DataInputStream* dis,
+                                    utils::BooleanStream* bs) = 0;
 
         /**
          * Tight Marhsal to the given stream
@@ -101,9 +101,9 @@ namespace marshal{
          * @param ds - DataOutputStream to marshal to
          * @throws IOException if an error occurs.
          */
-        virtual void looseMarshal( OpenWireFormat* format,
-                                   commands::DataStructure* command,
-                                   decaf::io::DataOutputStream* ds ) = 0;
+        virtual void looseMarshal(OpenWireFormat* format,
+                                  commands::DataStructure* command,
+                                  decaf::io::DataOutputStream* ds) = 0;
 
         /**
          * Loose Un-marhsal to the given stream
@@ -112,9 +112,9 @@ namespace marshal{
          * @param dis - the DataInputStream to Un-Marshal from
          * @throws IOException if an error occurs.
          */
-        virtual void looseUnmarshal( OpenWireFormat* format,
-                                     commands::DataStructure* command,
-                                     decaf::io::DataInputStream* dis ) = 0;
+        virtual void looseUnmarshal(OpenWireFormat* format,
+                                    commands::DataStructure* command,
+                                    decaf::io::DataInputStream* dis) = 0;
 
     };
 

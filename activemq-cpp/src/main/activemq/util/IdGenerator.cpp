@@ -58,14 +58,14 @@ namespace util {
 
             try {
                 hostname = InetAddress::getLocalHost().getHostName();
-                ServerSocket ss( 0 );
-                stub = "-" + Long::toString( ss.getLocalPort() ) + "-" +
-                             Long::toString( System::currentTimeMillis() ) + "-";
-                Thread::sleep( 100 );
+                ServerSocket ss(0);
+                stub = "-" + Long::toString(ss.getLocalPort()) +
+                       "-" + Long::toString(System::currentTimeMillis()) + "-";
+                Thread::sleep(100);
                 ss.close();
-            } catch( Exception& ioe ) {
+            } catch (Exception& ioe) {
                 hostname = "localhost";
-                stub = "-1-" + Long::toString( System::currentTimeMillis() ) + "-";
+                stub = "-1-" + Long::toString(System::currentTimeMillis()) + "-";
             }
 
             UNIQUE_STUB = stub;
@@ -78,7 +78,7 @@ IdGenerator::IdGenerator() : prefix(), seed(), sequence(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IdGenerator::IdGenerator( const std::string& prefix ) : prefix(prefix), seed(), sequence(0) {
+IdGenerator::IdGenerator(const std::string& prefix) : prefix(prefix), seed(), sequence(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,39 +90,37 @@ std::string IdGenerator::generateId() const {
 
     std::string result;
 
-    if( IdGenerator::kernel == NULL ) {
-        throw RuntimeException( __FILE__, __LINE__, "Library is not initialized." );
+    if (IdGenerator::kernel == NULL) {
+        throw RuntimeException(__FILE__, __LINE__, "Library is not initialized.");
     }
 
     synchronized( &( IdGenerator::kernel->mutex ) ) {
 
-        if( seed.empty() ) {
+        if (seed.empty()) {
 
-            if( prefix.empty() ) {
-                this->seed = std::string( "ID:" ) + IdGenerator::kernel->hostname +
-                             IdGenerator::kernel->UNIQUE_STUB +
-                             Long::toString( IdGenerator::kernel->instanceCount++ ) + ":";
+            if (prefix.empty()) {
+                this->seed = std::string("ID:") + IdGenerator::kernel->hostname + IdGenerator::kernel->UNIQUE_STUB
+                        + Long::toString(IdGenerator::kernel->instanceCount++) + ":";
             } else {
-                this->seed = prefix + IdGenerator::kernel->UNIQUE_STUB +
-                             Long::toString( IdGenerator::kernel->instanceCount++ ) + ":";
+                this->seed = prefix + IdGenerator::kernel->UNIQUE_STUB + Long::toString(IdGenerator::kernel->instanceCount++) + ":";
             }
         }
 
-        result = this->seed + Long::toString( this->sequence++ );
+        result = this->seed + Long::toString(this->sequence++);
     }
 
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string IdGenerator::getSeedFromId( const std::string& id ) {
+std::string IdGenerator::getSeedFromId(const std::string& id) {
 
     std::string result = id;
 
-    if( !id.empty() ) {
-        std::size_t index = id.find_last_of( ':' );
-        if( index != std::string::npos && ( index + 1 ) < id.length() ) {
-            result = id.substr( 0, index + 1 );
+    if (!id.empty()) {
+        std::size_t index = id.find_last_of(':');
+        if (index != std::string::npos && (index + 1) < id.length()) {
+            result = id.substr(0, index + 1);
         }
     }
 
@@ -130,15 +128,15 @@ std::string IdGenerator::getSeedFromId( const std::string& id ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long IdGenerator::getSequenceFromId( const std::string& id ) {
+long long IdGenerator::getSequenceFromId(const std::string& id) {
 
     long long result = -1;
 
-    if( !id.empty() ) {
-        std::size_t index = id.find_last_of( ':' );
-        if( index != std::string::npos && ( index + 1 ) < id.length() ) {
-            std::string numStr = id.substr( index + 1, id.length() );
-            result = Long::parseLong( numStr );
+    if (!id.empty()) {
+        std::size_t index = id.find_last_of(':');
+        if (index != std::string::npos && (index + 1) < id.length()) {
+            std::string numStr = id.substr(index + 1, id.length());
+            result = Long::parseLong(numStr);
         }
     }
 
@@ -146,20 +144,20 @@ long long IdGenerator::getSequenceFromId( const std::string& id ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int IdGenerator::compare( const std::string& id1, const std::string& id2 ) {
+int IdGenerator::compare(const std::string& id1, const std::string& id2) {
 
     int result = -1;
-    std::string seed1 = IdGenerator::getSeedFromId( id1 );
-    std::string seed2 = IdGenerator::getSeedFromId( id2 );
+    std::string seed1 = IdGenerator::getSeedFromId(id1);
+    std::string seed2 = IdGenerator::getSeedFromId(id2);
 
-    if( !seed1.empty() && !seed2.empty() ) {
+    if (!seed1.empty() && !seed2.empty()) {
 
-        result = apr_strnatcmp( seed1.c_str(), seed2.c_str() );
+        result = apr_strnatcmp(seed1.c_str(), seed2.c_str());
 
-        if( result == 0 ) {
-            long long count1 = IdGenerator::getSequenceFromId( id1 );
-            long long count2 = IdGenerator::getSequenceFromId( id2 );
-            result = (int)( count1 - count2 );
+        if (result == 0) {
+            long long count1 = IdGenerator::getSequenceFromId(id1);
+            long long count2 = IdGenerator::getSequenceFromId(id2);
+            result = (int) (count1 - count2);
         }
     }
 

@@ -22,15 +22,15 @@
 #include <decaf/io/IOException.h>
 #include <activemq/util/Config.h>
 
-namespace activemq{
-namespace wireformat{
+namespace activemq {
+namespace wireformat {
 
     class WireFormat;
 
     class AMQCPP_API MarshalAware {
     public:
 
-        virtual ~MarshalAware() {}
+        virtual ~MarshalAware();
 
         /**
          * Determine if the class implementing this interface is really
@@ -52,7 +52,7 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void beforeMarshal( WireFormat* wireFormat ) = 0;
+        virtual void beforeMarshal(WireFormat* wireFormat) = 0;
 
         /**
          * Called after marshaling is started to cleanup the object being
@@ -63,7 +63,7 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void afterMarshal( WireFormat* wireFormat ) = 0;
+        virtual void afterMarshal(WireFormat* wireFormat) = 0;
 
         /**
          * Called before unmarshaling is started to prepare the object to be
@@ -74,7 +74,7 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void beforeUnmarshal( WireFormat* wireFormat ) = 0;
+        virtual void beforeUnmarshal(WireFormat* wireFormat) = 0;
 
         /**
          * Called after unmarshaling is started to cleanup the object being
@@ -85,7 +85,7 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void afterUnmarshal( WireFormat* wireFormat ) = 0;
+        virtual void afterUnmarshal(WireFormat* wireFormat) = 0;
 
         /**
          * Called to set the data to this object that will contain the objects
@@ -100,7 +100,7 @@ namespace wireformat{
          *
          * @throws IOException if an I/O error occurs.
          */
-        virtual void setMarshaledForm( WireFormat* wireFormat, const std::vector<char>& data ) = 0;
+        virtual void setMarshaledForm(WireFormat* wireFormat, const std::vector<char>& data) = 0;
 
         /**
          * Called to get the data to this object that will contain the objects
@@ -111,7 +111,7 @@ namespace wireformat{
          *
          * @return buffer that holds the objects data.
          */
-        virtual std::vector<unsigned char> getMarshaledForm( WireFormat* wireFormat ) = 0;
+        virtual std::vector<unsigned char> getMarshaledForm(WireFormat* wireFormat) = 0;
 
     };
 
