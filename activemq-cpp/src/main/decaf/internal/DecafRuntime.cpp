@@ -64,11 +64,11 @@ Runtime* Runtime::getRuntime() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Runtime::initializeRuntime( int argc, char **argv ) {
+void Runtime::initializeRuntime(int argc, char **argv) {
 
     // Initializes the APR Runtime from within a library.
     apr_initialize();
-    apr_pool_create_ex( &aprPool, NULL, NULL, NULL );
+    apr_pool_create_ex(&aprPool, NULL, NULL, NULL);
 
     Runtime::getRuntime();
 
@@ -79,7 +79,7 @@ void Runtime::initializeRuntime( int argc, char **argv ) {
     globalLock = new Mutex;
 
     // Initialize the System Class to make things like Properties available.
-    System::initSystem( argc, argv );
+    System::initSystem(argc, argv);
 
     // Initialize the Networking layer.
     Network::initializeNetworking();
@@ -87,7 +87,7 @@ void Runtime::initializeRuntime( int argc, char **argv ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Runtime::initializeRuntime() {
-    Runtime::initializeRuntime( 0, NULL );
+    Runtime::initializeRuntime(0, NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +109,6 @@ void Runtime::shutdownRuntime() {
     Threading::shutdown();
 
     // Cleans up APR data structures.
-    apr_pool_destroy( aprPool );
+    apr_pool_destroy(aprPool);
     apr_terminate();
 }

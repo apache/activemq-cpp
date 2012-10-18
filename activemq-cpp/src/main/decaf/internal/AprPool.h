@@ -40,8 +40,8 @@ namespace internal{
 
     private:
 
-        AprPool( const AprPool& pool );
-        AprPool& operator= ( const AprPool& pool );
+        AprPool(const AprPool& pool);
+        AprPool& operator=(const AprPool& pool);
 
     public:
 

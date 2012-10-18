@@ -33,32 +33,33 @@ namespace util {
      * @since 1.0
      */
     template<typename T>
-    class GenericResource : public Resource {
+    class GenericResource: public Resource {
     private:
 
         T* managed;
 
     private:
 
-        GenericResource( const GenericResource& );
-        GenericResource& operator= ( const GenericResource& );
+        GenericResource(const GenericResource&);
+        GenericResource& operator=(const GenericResource&);
 
     public:
 
-        explicit GenericResource( T* value ) : managed( value ) {
+        explicit GenericResource(T* value) : managed(value) {
         }
 
         virtual ~GenericResource() {
-            try{
+            try {
                 delete managed;
-            } catch(...) {}
+            } catch (...) {
+            }
         }
 
         T* getManaged() const {
             return this->managed;
         }
 
-        void setManaged( T* value ) {
+        void setManaged(T* value) {
             this->managed = value;
         }
 

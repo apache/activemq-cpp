@@ -28,24 +28,26 @@ AprPool::AprPool() : aprPool(NULL) {
 
 ////////////////////////////////////////////////////////////////////////////////
 AprPool::~AprPool() {
-
-    // Destroy the pool if it was allocated.
-    destroyPool();
+    try {
+        // Destroy the pool if it was allocated.
+        destroyPool();
+    }
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AprPool::allocatePool() const {
 
-    if( aprPool == NULL ) {
-        apr_pool_create_unmanaged_ex( &aprPool, NULL, NULL );
+    if (aprPool == NULL) {
+        apr_pool_create_unmanaged_ex(&aprPool, NULL, NULL);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AprPool::destroyPool() {
 
-    if( aprPool != NULL ) {
-        apr_pool_destroy( aprPool );
+    if (aprPool != NULL) {
+        apr_pool_destroy(aprPool);
     }
 
     aprPool = NULL;
@@ -54,8 +56,8 @@ void AprPool::destroyPool() {
 ////////////////////////////////////////////////////////////////////////////////
 void AprPool::cleanup() {
 
-    if( aprPool != NULL ) {
-        apr_pool_clear( aprPool );
+    if (aprPool != NULL) {
+        apr_pool_clear(aprPool);
     }
 }
 
@@ -75,6 +77,6 @@ apr_pool_t* AprPool::getAprPool() const {
 apr_pool_t* AprPool::getGlobalPool() {
 
     // Ensure there is a Runtime instance created so we have a global pool
-    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>( Runtime::getRuntime() );
+    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>(Runtime::getRuntime());
     return runtime->getGlobalPool();
 }

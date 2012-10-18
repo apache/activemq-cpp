@@ -42,7 +42,7 @@ namespace util {
         static const int DEFAULT_HEAP_SIZE = 256;
 
         // Dynamic Array of TimerTasks used to represent the heap
-        std::vector< Pointer<TimerTask> > heap;
+        std::vector<Pointer<TimerTask> > heap;
 
     public:
 
@@ -74,7 +74,7 @@ namespace util {
          * @param task
          *      The TimerTask to insert into the heap.
          */
-        void insert( const Pointer<TimerTask>& task );
+        void insert(const Pointer<TimerTask>& task);
 
         /**
          * Removes the Task at the specified position from the heap, resorts the heap from the
@@ -83,7 +83,7 @@ namespace util {
          * @param pos
          *      The position at which to remove the TimerTask and begin a resort of the heap.
          */
-        void remove( std::size_t pos );
+        void remove(std::size_t pos);
 
         /**
          * Clear all contents from the heap.
@@ -110,12 +110,12 @@ namespace util {
          *
          * @returns the position in the Heap where the Task is stored, or npos.
          */
-        std::size_t find( const Pointer<TimerTask>& task ) const;
+        std::size_t find(const Pointer<TimerTask>& task) const;
 
     private:
 
         void upHeap();
-        void downHeap( std::size_t pos );
+        void downHeap(std::size_t pos);
 
     };
 
