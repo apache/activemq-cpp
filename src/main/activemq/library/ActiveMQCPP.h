@@ -26,13 +26,13 @@ namespace library {
     class AMQCPP_API ActiveMQCPP {
     protected:
 
-        ActiveMQCPP() {};
-        ActiveMQCPP( const ActiveMQCPP& );
-        ActiveMQCPP& operator= ( const ActiveMQCPP& );
+    ActiveMQCPP();
+    ActiveMQCPP(const ActiveMQCPP&);
+    ActiveMQCPP& operator=(const ActiveMQCPP&);
 
     public:
 
-        virtual ~ActiveMQCPP() {}
+        virtual ~ActiveMQCPP();
 
         /**
          * Initialize the ActiveMQ-CPP Library constructs, this method will
@@ -55,7 +55,7 @@ namespace library {
          *
          * @throws runtime_error if an error occurs while initializing this library.
          */
-        static void initializeLibrary( int argc, char** argv );
+        static void initializeLibrary(int argc, char** argv);
 
         /**
          * Shutdown the ActiveMQ-CPP Library, freeing any resources

@@ -35,157 +35,142 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-void URISupport::parseURL( const std::string& URI,
-                           decaf::util::Properties& properties ) {
+void URISupport::parseURL(const std::string& URI, decaf::util::Properties& properties) {
 
-    try{
+    try {
 
-        StringTokenizer tokenizer( URI, ":/" );
+        StringTokenizer tokenizer(URI, ":/");
 
         std::vector<std::string> tokens;
 
         // Require that there be three tokens at the least, these are
         // transport, url, port.
-        if( tokenizer.countTokens() < 3 ) {
-            throw decaf::lang::exceptions::IllegalArgumentException(
-                __FILE__, __LINE__,
-                (string( "URISupport::parseURL - "
-                         "Marlformed URI: ") + URI).c_str() );
+        if (tokenizer.countTokens() < 3) {
+            throw decaf::lang::exceptions::IllegalArgumentException(__FILE__, __LINE__, (string("URISupport::parseURL - "
+                    "Marlformed URI: ") + URI).c_str());
         }
 
         // First element should be the Transport Type, following that is the
         // URL and any params.
-        properties.setProperty( "transport.protocol", tokenizer.nextToken() );
+        properties.setProperty("transport.protocol", tokenizer.nextToken());
 
         // Parse URL and Port as one item, optional params follow the ?
         // and then each param set is delimited with & we extract first
         // three chars as they are the left over ://
-        properties.setProperty( "transport.uri", tokenizer.nextToken("&?").substr(3) );
+        properties.setProperty("transport.uri", tokenizer.nextToken("&?").substr(3));
 
         // Now get all the optional parameters and store them as properties
-        int count = tokenizer.toArray( tokens );
+        int count = tokenizer.toArray(tokens);
 
-        for( int i = 0; i < count; ++i ) {
-            tokenizer.reset( tokens[i], "=" );
+        for (int i = 0; i < count; ++i) {
+            tokenizer.reset(tokens[i], "=");
 
-            if( tokenizer.countTokens() != 2 ) {
-                throw decaf::lang::exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__,
-                    ( string( "URISupport::parseURL - "
-                              "Marlformed Parameter = " ) + tokens[i] ).c_str() );
+            if (tokenizer.countTokens() != 2) {
+                throw decaf::lang::exceptions::IllegalArgumentException(__FILE__, __LINE__, (string("URISupport::parseURL - "
+                        "Marlformed Parameter = ") + tokens[i]).c_str());
             }
 
             // Get them in order, passing both as nextToken calls in the
             // set Property can cause reversed order.
             string key = tokenizer.nextToken();
-            string value = URISupport::replaceEnvValues( tokenizer.nextToken() );
+            string value = URISupport::replaceEnvValues(tokenizer.nextToken());
 
             // Store this param as a property
-            properties.setProperty( key, value );
+            properties.setProperty(key, value);
         }
     }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
+    AMQ_CATCH_RETHROW(IllegalArgumentException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IllegalArgumentException)
+    AMQ_CATCHALL_THROW(IllegalArgumentException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties URISupport::parseQuery( std::string query ) {
+Properties URISupport::parseQuery(std::string query) {
 
     try {
 
         Properties options;
-        URISupport::parseQuery( query, &options );
+        URISupport::parseQuery(query, &options);
         return options;
     }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
+    AMQ_CATCH_RETHROW(IllegalArgumentException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IllegalArgumentException)
+    AMQ_CATCHALL_THROW(IllegalArgumentException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URISupport::parseQuery( std::string query, Properties* properties ) {
+void URISupport::parseQuery(std::string query, Properties* properties) {
 
     try {
 
-        if( properties == NULL ) {
-            throw IllegalArgumentException(
-                __FILE__,
-                __LINE__,
-                "URISupport::parseQuery - Can't pass in a null properties object" );
+        if (properties == NULL) {
+            throw IllegalArgumentException(__FILE__, __LINE__, "URISupport::parseQuery - Can't pass in a null properties object");
         }
 
         // strip the initial "?"
-        size_t pos = query.find_first_of( "?" );
-        if( pos != std::string::npos ) {
-            query = query.substr(pos+1);
+        size_t pos = query.find_first_of("?");
+        if (pos != std::string::npos) {
+            query = query.substr(pos + 1);
         }
 
         // split the query into parameters
-        StringTokenizer tokenizer( query, "&" );
+        StringTokenizer tokenizer(query, "&");
         std::vector<std::string> options;
-        tokenizer.toArray( options );
+        tokenizer.toArray(options);
 
         std::vector<std::string>::const_iterator iter = options.begin();
 
-        for( ; iter != options.end(); ++iter ) {
+        for (; iter != options.end(); ++iter) {
 
-            tokenizer.reset( *iter, "=" );
+            tokenizer.reset(*iter, "=");
 
             std::string key = "";
             std::string value = "";
 
-            if( tokenizer.countTokens() != 2 ) {
-                throw IllegalArgumentException(
-                    __FILE__,
-                    __LINE__,
-                    "URISupport::parseQuery - Invalid URI Option." );
+            if (tokenizer.countTokens() != 2) {
+                throw IllegalArgumentException(__FILE__, __LINE__, "URISupport::parseQuery - Invalid URI Option.");
             }
 
             // Get the Key
-            if( tokenizer.hasMoreTokens() != false ) {
+            if (tokenizer.hasMoreTokens() != false) {
                 key = tokenizer.nextToken();
             }
 
             // Get the Value
-            if( tokenizer.hasMoreTokens() != false ) {
-                value = URISupport::replaceEnvValues( tokenizer.nextToken() );
+            if (tokenizer.hasMoreTokens() != false) {
+                value = URISupport::replaceEnvValues(tokenizer.nextToken());
             }
 
             // Store them.
-            properties->setProperty( key, value );
+            properties->setProperty(key, value);
         }
     }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
+    AMQ_CATCH_RETHROW(IllegalArgumentException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IllegalArgumentException)
+    AMQ_CATCHALL_THROW(IllegalArgumentException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URISupport::replaceEnvValues( const std::string& value ) {
+std::string URISupport::replaceEnvValues(const std::string& value) {
 
     try {
 
         // If it matches the first env var indicator then we validate that it is
         // surrounded by an { and } bracket.  once done we remove the inner value
         // and look up the env var.
-        if( value.at(0) == '$' ) {
+        if (value.at(0) == '$') {
 
-            if( value.size() > 3 && value.at(1) != '{' && value.at( value.size() - 1 ) != '}' ) {
-                throw new decaf::lang::exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__,
-                    "URISupport::replaceEnvValues - Invalid Env Var Syntax: %s",
-                    value.c_str() );
+            if (value.size() > 3 && value.at(1) != '{' && value.at(value.size() - 1) != '}') {
+                throw new decaf::lang::exceptions::IllegalArgumentException(__FILE__, __LINE__, "URISupport::replaceEnvValues - Invalid Env Var Syntax: %s",
+                        value.c_str());
             }
 
-            string var = value.substr( 2, value.size() - 3 );
-            var = decaf::lang::System::getenv( var );
+            string var = value.substr(2, value.size() - 3);
+            var = decaf::lang::System::getenv(var);
 
-            if( var == "" ) {
-                throw new decaf::lang::exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__,
-                    "URISupport::replaceEnvValues - Env Var not set: %s",
-                    value.c_str() );
+            if (var == "") {
+                throw new decaf::lang::exceptions::IllegalArgumentException(__FILE__, __LINE__, "URISupport::replaceEnvValues - Env Var not set: %s",
+                        value.c_str());
             }
 
             return var;
@@ -193,32 +178,31 @@ std::string URISupport::replaceEnvValues( const std::string& value ) {
 
         return value;
     }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
+    AMQ_CATCH_RETHROW(IllegalArgumentException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IllegalArgumentException)
+    AMQ_CATCHALL_THROW(IllegalArgumentException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URISupport::createQueryString( const Properties& options ) {
+std::string URISupport::createQueryString(const Properties& options) {
 
     try {
 
-        if( options.isEmpty() ) {
+        if (options.isEmpty()) {
 
             ostringstream rc;
             bool first = true;
-            std::vector< std::pair< std::string, std::string > > values = options.toArray();
-            std::vector< std::pair< std::string, std::string > >::const_iterator iter = values.begin();
+            std::vector<std::pair<std::string, std::string> > values = options.toArray();
+            std::vector<std::pair<std::string, std::string> >::const_iterator iter = values.begin();
 
-            for( ; iter != values.end(); ++iter ) {
-                if( first ) {
+            for (; iter != values.end(); ++iter) {
+                if (first) {
                     first = false;
                 } else {
                     rc << "&";
                 }
 
-                rc << URLEncoder::encode( iter->first ) << "="
-                   << URLEncoder::encode( iter->second );
+                rc << URLEncoder::encode(iter->first) << "=" << URLEncoder::encode(iter->second);
             }
 
             return rc.str();
@@ -227,25 +211,25 @@ std::string URISupport::createQueryString( const Properties& options ) {
             return "";
         }
     }
-    AMQ_CATCH_RETHROW( URISyntaxException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, URISyntaxException )
-    AMQ_CATCHALL_THROW( URISyntaxException )
+    AMQ_CATCH_RETHROW(URISyntaxException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, URISyntaxException)
+    AMQ_CATCHALL_THROW(URISyntaxException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool URISupport::checkParenthesis( const std::string& str ) {
+bool URISupport::checkParenthesis(const std::string& str) {
 
     bool result = true;
-    if( str != "" ) {
+    if (str != "") {
         int open = 0;
         int closed = 0;
 
         std::string::const_iterator iter = str.begin();
 
-        for( ; iter != str.end(); ++iter ) {
-            if( *iter == '(' ) {
+        for (; iter != str.end(); ++iter) {
+            if (*iter == '(') {
                 open++;
-            } else if( *iter == ')' ){
+            } else if (*iter == ')') {
                 closed++;
             }
         }
@@ -257,70 +241,67 @@ bool URISupport::checkParenthesis( const std::string& str ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CompositeData URISupport::parseComposite( const URI& uri ) {
+CompositeData URISupport::parseComposite(const URI& uri) {
 
     CompositeData result;
-    result.setScheme( uri.getScheme() );
-    string ssp = stripPrefix( uri.getSchemeSpecificPart(), "//" );
-    parseComposite( uri, result, ssp );
-    result.setFragment( uri.getFragment() );
+    result.setScheme(uri.getScheme());
+    string ssp = stripPrefix(uri.getSchemeSpecificPart(), "//");
+    parseComposite(uri, result, ssp);
+    result.setFragment(uri.getFragment());
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::string& ssp ) {
+void URISupport::parseComposite(const URI& uri, CompositeData& rc, const std::string& ssp) {
 
     std::string componentString;
     std::string params;
 
-    if( !checkParenthesis( ssp ) ) {
-        throw URISyntaxException(
-            __FILE__, __LINE__,
-            "%s, Not a matching number of '(' and ')' parenthesis",
-            uri.toString() );
+    if (!checkParenthesis(ssp)) {
+        throw URISyntaxException(__FILE__, __LINE__, "%s, Not a matching number of '(' and ')' parenthesis", uri.toString());
     }
 
     std::size_t p;
-    std::size_t intialParen = ssp.find( "(" );
-    if( intialParen == 0 ) {
-        rc.setHost( ssp.substr( 0, intialParen ) );
-        p = rc.getHost().find( "/" );
-        if( p != string::npos ) {
-            rc.setPath( rc.getHost().substr( p ) );
-            rc.setHost( rc.getHost().substr( 0, p ) );
+    std::size_t intialParen = ssp.find("(");
+    if (intialParen == 0) {
+        rc.setHost(ssp.substr(0, intialParen));
+        p = rc.getHost().find("/");
+        if (p != string::npos) {
+            rc.setPath(rc.getHost().substr(p));
+            rc.setHost(rc.getHost().substr(0, p));
         }
 
-        p = ssp.rfind( ")" );
-        componentString = ssp.substr( intialParen + 1, p - (intialParen + 1) );
-        params = ssp.substr( p + 1 );
+        p = ssp.rfind(")");
+        componentString = ssp.substr(intialParen + 1, p - (intialParen + 1));
+        params = ssp.substr(p + 1);
 
     } else {
         componentString = ssp;
         params = "";
     }
 
-    LinkedList<std::string> components = splitComponents( componentString );
-    std::auto_ptr< Iterator<std::string> > iter( components.iterator() );
-    while( iter->hasNext() ) {
-        rc.getComponents().add( URI( iter->next() ) );
+    LinkedList<std::string> components = splitComponents(componentString);
+    std::auto_ptr<Iterator<std::string> > iter(components.iterator());
+    while (iter->hasNext()) {
+        rc.getComponents().add(URI(iter->next()));
     }
 
-    p = params.find( "?" );
-    if( p != string::npos ) {
-        if( p > 0 ) {
-            rc.setPath( stripPrefix( params.substr( 0, p ), "/" ) );
+    p = params.find("?");
+    if (p != string::npos) {
+        if (p > 0) {
+            rc.setPath(stripPrefix(params.substr(0, p), "/"));
         }
 
-        rc.setParameters( parseQuery( params.substr( p + 1 ) ) );
+        rc.setParameters(parseQuery(params.substr(p + 1)));
     } else {
-        if( params.length() > 0 ) {
-            rc.setPath( stripPrefix( params, "/" ) );
+        if (params.length() > 0) {
+            rc.setPath(stripPrefix(params, "/"));
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LinkedList<std::string> URISupport::splitComponents( const std::string& str ) {
+LinkedList<std::string> URISupport::splitComponents(const std::string& str) {
 
     LinkedList<std::string> components;
 
@@ -329,9 +310,9 @@ LinkedList<std::string> URISupport::splitComponents( const std::string& str ) {
 
     std::string::const_iterator iter = str.begin();
 
-    for( std::size_t i = 0; iter != str.end(); ++iter, ++i ) {
+    for (std::size_t i = 0; iter != str.end(); ++iter, ++i) {
 
-        switch( *iter ) {
+        switch (*iter) {
         case '(':
             depth++;
             break;
@@ -339,9 +320,9 @@ LinkedList<std::string> URISupport::splitComponents( const std::string& str ) {
             depth--;
             break;
         case ',':
-            if( depth == 0 ) {
-                std::string s = str.substr( last, i - last );
-                components.add( s );
+            if (depth == 0) {
+                std::string s = str.substr(last, i - last);
+                components.add(s);
                 last = i + 1;
             }
             break;
@@ -350,19 +331,19 @@ LinkedList<std::string> URISupport::splitComponents( const std::string& str ) {
         }
     }
 
-    std::string s = str.substr( last );
-    if( s.length() != 0 ) {
-        components.add( s );
+    std::string s = str.substr(last);
+    if (s.length() != 0) {
+        components.add(s);
     }
 
     return components;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URISupport::stripPrefix( const std::string& value, const std::string& prefix ) {
+std::string URISupport::stripPrefix(const std::string& value, const std::string& prefix) {
 
-    if( value.find( prefix ) == 0 ) {
-        return value.substr( prefix.length() );
+    if (value.find(prefix) == 0) {
+        return value.substr(prefix.length());
     }
 
     return value;

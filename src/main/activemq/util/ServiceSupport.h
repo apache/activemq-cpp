@@ -16,7 +16,7 @@
  */
 
 #ifndef _ACTIVEMQ_UTIL_SERVICESUPPORT_H_
-#define SERVICESUPPORT_H_
+#define _ACTIVEMQ_UTIL_SERVICESUPPORT_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/util/Service.h>

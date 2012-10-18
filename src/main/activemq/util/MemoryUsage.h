@@ -48,7 +48,7 @@ namespace util {
          * Creates an instance of an Usage monitor with a set limit.
          * @param limit - amount of memory this manager allows.
          */
-        MemoryUsage( unsigned long long limit );
+        MemoryUsage(unsigned long long limit);
 
         virtual ~MemoryUsage();
 
@@ -62,14 +62,14 @@ namespace util {
          * when the given time span in milliseconds elapses.
          * @param timeout The time to wait for more space.
          */
-        virtual void waitForSpace( unsigned int timeout );
+        virtual void waitForSpace(unsigned int timeout);
 
         /**
          * Tries to increase the usage by value amount but blocks if this object is
          * currently full.
          * @param value Amount of usage in bytes to add.
          */
-        virtual void enqueueUsage( unsigned long long value ) {
+        virtual void enqueueUsage(unsigned long long value) {
             waitForSpace();
             increaseUsage(value);
         }
@@ -78,13 +78,13 @@ namespace util {
          * Increases the usage by the value amount
          * @param value Amount of usage to add.
          */
-        virtual void increaseUsage( unsigned long long value );
+        virtual void increaseUsage(unsigned long long value);
 
         /**
          * Decreases the usage by the value amount.
          * @param value Amount of space to return to the pool
          */
-        virtual void decreaseUsage( unsigned long long value );
+        virtual void decreaseUsage(unsigned long long value);
 
         /**
          * Returns true if this Usage instance is full, i.e. Usage >= 100%
@@ -103,7 +103,7 @@ namespace util {
          * Sets the current usage amount
          * @param usage - The amount to tag as used.
          */
-        void setUsage( unsigned long long usage ) {
+        void setUsage(unsigned long long usage) {
             this->usage = usage;
         }
 
@@ -119,7 +119,7 @@ namespace util {
          * Sets the current limit amount
          * @param limit - The amount that can be used before full.
          */
-        void setLimit( unsigned long long limit ) {
+        void setLimit(unsigned long long limit) {
             this->limit = limit;
         }
 

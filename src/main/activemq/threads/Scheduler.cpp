@@ -40,16 +40,16 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 Scheduler::Scheduler(const std::string& name) : name(name), timer(NULL), tasks() {
 
-    if(name.empty()) {
+    if (name.empty()) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Scheduler name must not be empty.");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Scheduler::~Scheduler() {
-    try{
+    try {
 
-        if(this->timer != NULL) {
+        if (this->timer != NULL) {
             this->timer->cancel();
         }
 
@@ -63,7 +63,7 @@ Scheduler::~Scheduler() {
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::executePeriodically(Runnable* task, long long period, bool ownsTask) {
 
-    if(!isStarted()) {
+    if (!isStarted()) {
         throw IllegalStateException(__FILE__, __LINE__, "Scheduler is not started.");
     }
 
@@ -77,7 +77,7 @@ void Scheduler::executePeriodically(Runnable* task, long long period, bool ownsT
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::schedualPeriodically(Runnable* task, long long period, bool ownsTask) {
 
-    if(!isStarted()) {
+    if (!isStarted()) {
         throw IllegalStateException(__FILE__, __LINE__, "Scheduler is not started.");
     }
 
@@ -91,13 +91,13 @@ void Scheduler::schedualPeriodically(Runnable* task, long long period, bool owns
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::cancel(Runnable* task) {
 
-    if(!isStarted()) {
+    if (!isStarted()) {
         throw IllegalStateException(__FILE__, __LINE__, "Scheduler is not started.");
     }
 
     synchronized(&mutex) {
         TimerTask* ticket = this->tasks.remove(task);
-        if(ticket != NULL) {
+        if (ticket != NULL) {
             ticket->cancel();
             this->timer->purge();
         }
@@ -107,7 +107,7 @@ void Scheduler::cancel(Runnable* task) {
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::executeAfterDelay(Runnable* task, long long delay, bool ownsTask) {
 
-    if(!isStarted()) {
+    if (!isStarted()) {
         throw IllegalStateException(__FILE__, __LINE__, "Scheduler is not started.");
     }
 
@@ -119,7 +119,7 @@ void Scheduler::executeAfterDelay(Runnable* task, long long delay, bool ownsTask
 
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::shutdown() {
-    if(this->timer != NULL) {
+    if (this->timer != NULL) {
         this->timer->cancel();
     }
 }
@@ -134,7 +134,7 @@ void Scheduler::doStart() {
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::doStop(ServiceStopper* stopper AMQCPP_UNUSED) {
     synchronized(&mutex) {
-        if(this->timer != NULL) {
+        if (this->timer != NULL) {
             this->timer->cancel();
         }
     }

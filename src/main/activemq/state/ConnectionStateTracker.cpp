@@ -103,9 +103,9 @@ Pointer<Tracked> ConnectionStateTracker::track(Pointer<Command> command) {
             return result.dynamicCast<Tracked>();
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,17 +127,17 @@ void ConnectionStateTracker::trackBack(Pointer<Command> command) {
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::restore(Pointer<transport::Transport> transport) {
 
-    try{
+    try {
 
-        Pointer< Iterator< Pointer<ConnectionState> > > iterator(this->connectionStates.values().iterator());
+        Pointer<Iterator<Pointer<ConnectionState> > > iterator(this->connectionStates.values().iterator());
         while (iterator->hasNext()) {
             Pointer<ConnectionState> state = iterator->next();
 
@@ -157,24 +157,23 @@ void ConnectionStateTracker::restore(Pointer<transport::Transport> transport) {
         }
 
         // Now we flush messages
-        Pointer< Iterator< Pointer<Command> > > messages(this->messageCache.values().iterator());
+        Pointer<Iterator<Pointer<Command> > > messages(this->messageCache.values().iterator());
         while (messages->hasNext()) {
             transport->oneway(messages->next());
         }
 
-        Pointer< Iterator< Pointer<Command> > > messagePullIter(this->messagePullCache.values().iterator());
+        Pointer<Iterator<Pointer<Command> > > messagePullIter(this->messagePullCache.values().iterator());
         while (messagePullIter->hasNext()) {
             transport->oneway(messagePullIter->next());
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport> transport,
-                                                   Pointer<ConnectionState> connectionState) {
+void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport> transport, Pointer<ConnectionState> connectionState) {
 
     try {
 
@@ -182,7 +181,7 @@ void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport>
 
         // For any completed transactions we don't know if the commit actually made it to the broker
         // or was lost along the way, so they need to be rolled back.
-        Pointer< Iterator< Pointer<TransactionState> > > iter(connectionState->getTransactionStates().iterator());
+        Pointer<Iterator<Pointer<TransactionState> > > iter(connectionState->getTransactionStates().iterator());
         while (iter->hasNext()) {
 
             Pointer<TransactionState> txState = iter->next();
@@ -196,7 +195,7 @@ void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport>
             }
 
             // replay short lived producers that may have been involved in the transaction
-            Pointer< Iterator< Pointer<ProducerState> > > state(txState->getProducerStates().iterator());
+            Pointer<Iterator<Pointer<ProducerState> > > state(txState->getProducerStates().iterator());
             while (state->hasNext()) {
                 transport->oneway(state->next()->getInfo());
             }
@@ -220,25 +219,23 @@ void ConnectionStateTracker::doRestoreTransactions(Pointer<transport::Transport>
             Pointer<BrokerError> exception(new BrokerError());
             exception->setExceptionClass("TransactionRolledBackException");
             exception->setMessage(
-                std::string("Transaction completion in doubt due to failover. Forcing rollback of ") +
-                (*command)->getTransactionId()->toString());
+                    std::string("Transaction completion in doubt due to failover. Forcing rollback of ") + (*command)->getTransactionId()->toString());
             response->setException(exception);
             response->setCorrelationId((*command)->getCommandId());
             transport->getTransportListener()->onCommand(response);
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::doRestoreSessions(Pointer<transport::Transport> transport,
-                                               Pointer<ConnectionState> connectionState) {
+void ConnectionStateTracker::doRestoreSessions(Pointer<transport::Transport> transport, Pointer<ConnectionState> connectionState) {
 
     try {
 
-        Pointer< Iterator< Pointer<SessionState> > > iter(connectionState->getSessionStates().iterator());
+        Pointer<Iterator<Pointer<SessionState> > > iter(connectionState->getSessionStates().iterator());
         while (iter->hasNext()) {
             Pointer<SessionState> state = iter->next();
             transport->oneway(state->getInfo());
@@ -252,77 +249,71 @@ void ConnectionStateTracker::doRestoreSessions(Pointer<transport::Transport> tra
             }
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::doRestoreConsumers(Pointer<transport::Transport> transport, Pointer<SessionState> sessionState ) {
+void ConnectionStateTracker::doRestoreConsumers(Pointer<transport::Transport> transport, Pointer<SessionState> sessionState) {
 
     try {
 
         // Restore the session's consumers but possibly in pull only (prefetch 0 state) till recovery complete
-        Pointer<ConnectionState> connectionState =
-            connectionStates.get(sessionState->getInfo()->getSessionId()->getParentId());
-        bool connectionInterruptionProcessingComplete =
-            connectionState->isConnectionInterruptProcessingComplete();
+        Pointer<ConnectionState> connectionState = connectionStates.get(sessionState->getInfo()->getSessionId()->getParentId());
+        bool connectionInterruptionProcessingComplete = connectionState->isConnectionInterruptProcessingComplete();
 
-        Pointer< Iterator< Pointer<ConsumerState> > > state(sessionState->getConsumerStates().iterator());
+        Pointer<Iterator<Pointer<ConsumerState> > > state(sessionState->getConsumerStates().iterator());
         while (state->hasNext()) {
 
             Pointer<ConsumerInfo> infoToSend = state->next()->getInfo();
             Pointer<wireformat::WireFormat> wireFormat = transport->getWireFormat();
 
-            if (!connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0 &&
-                wireFormat->getVersion() > 5) {
+            if (!connectionInterruptionProcessingComplete && infoToSend->getPrefetchSize() > 0 && wireFormat->getVersion() > 5) {
 
                 Pointer<ConsumerInfo> oldInfoToSend = infoToSend;
                 infoToSend.reset(oldInfoToSend->cloneDataStructure());
-                connectionState->getRecoveringPullConsumers().put(
-                    infoToSend->getConsumerId(), oldInfoToSend);
+                connectionState->getRecoveringPullConsumers().put(infoToSend->getConsumerId(), oldInfoToSend);
                 infoToSend->setPrefetchSize(0);
             }
 
             transport->oneway(infoToSend);
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::doRestoreProducers(Pointer<transport::Transport> transport, Pointer<SessionState> sessionState ) {
+void ConnectionStateTracker::doRestoreProducers(Pointer<transport::Transport> transport, Pointer<SessionState> sessionState) {
 
     try {
 
         // Restore the session's producers
-        Pointer< Iterator< Pointer<ProducerState> > > iter(sessionState->getProducerStates().iterator());
+        Pointer<Iterator<Pointer<ProducerState> > > iter(sessionState->getProducerStates().iterator());
         while (iter->hasNext()) {
             Pointer<ProducerState> state = iter->next();
             transport->oneway(state->getInfo());
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::doRestoreTempDestinations(Pointer<transport::Transport> transport,
-                                                       Pointer<ConnectionState> connectionState ) {
+void ConnectionStateTracker::doRestoreTempDestinations(Pointer<transport::Transport> transport, Pointer<ConnectionState> connectionState) {
     try {
-        std::auto_ptr<Iterator<Pointer<DestinationInfo> > > iter(
-            connectionState->getTempDesinations().iterator());
+        std::auto_ptr<Iterator<Pointer<DestinationInfo> > > iter(connectionState->getTempDesinations().iterator());
 
         while (iter->hasNext()) {
             transport->oneway(iter->next());
         }
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -337,9 +328,9 @@ Pointer<Command> ConnectionStateTracker::processDestinationInfo(DestinationInfo*
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,9 +345,9 @@ Pointer<Command> ConnectionStateTracker::processRemoveDestination(DestinationInf
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -380,9 +371,9 @@ Pointer<Command> ConnectionStateTracker::processProducerInfo(ProducerInfo* info)
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -406,9 +397,9 @@ Pointer<Command> ConnectionStateTracker::processRemoveProducer(ProducerId* id) {
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,9 +424,9 @@ Pointer<Command> ConnectionStateTracker::processConsumerInfo(ConsumerInfo* info)
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -459,9 +450,9 @@ Pointer<Command> ConnectionStateTracker::processRemoveConsumer(ConsumerId* id) {
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -480,9 +471,9 @@ Pointer<Command> ConnectionStateTracker::processSessionInfo(SessionInfo* info) {
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -501,9 +492,9 @@ Pointer<Command> ConnectionStateTracker::processRemoveSession(SessionId* id) {
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -512,14 +503,13 @@ Pointer<Command> ConnectionStateTracker::processConnectionInfo(ConnectionInfo* i
     try {
         if (info != NULL) {
             Pointer<ConnectionInfo> infoCopy(info->cloneDataStructure());
-            connectionStates.put(
-                info->getConnectionId(), Pointer<ConnectionState>(new ConnectionState(infoCopy)));
+            connectionStates.put(info->getConnectionId(), Pointer<ConnectionState>(new ConnectionState(infoCopy)));
         }
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -532,9 +522,9 @@ Pointer<Command> ConnectionStateTracker::processRemoveConnection(ConnectionId* i
 
         return TRACKED_RESPONSE_MARKER;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -550,8 +540,7 @@ Pointer<Command> ConnectionStateTracker::processMessage(Message* message) {
                 if (connectionId != NULL) {
                     Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                     if (cs != NULL) {
-                        Pointer<TransactionState> transactionState =
-                            cs->getTransactionState(message->getTransactionId());
+                        Pointer<TransactionState> transactionState = cs->getTransactionState(message->getTransactionId());
                         if (transactionState != NULL) {
                             transactionState->addCommand(Pointer<Command>(message->cloneDataStructure()));
 
@@ -566,15 +555,15 @@ Pointer<Command> ConnectionStateTracker::processMessage(Message* message) {
                 }
                 return TRACKED_RESPONSE_MARKER;
             } else if (trackMessages) {
-                messageCache.put(message->getMessageId(), Pointer<Message> (message->cloneDataStructure()));
+                messageCache.put(message->getMessageId(), Pointer<Message>(message->cloneDataStructure()));
             }
         }
 
         return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -588,8 +577,7 @@ Pointer<Command> ConnectionStateTracker::processBeginTransaction(TransactionInfo
                 Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                 if (cs != NULL) {
                     cs->addTransactionState(info->getTransactionId());
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState(info->getTransactionId());
+                    Pointer<TransactionState> transactionState = cs->getTransactionState(info->getTransactionId());
                     transactionState->addCommand(Pointer<Command>(info->cloneDataStructure()));
                 }
             }
@@ -597,11 +585,11 @@ Pointer<Command> ConnectionStateTracker::processBeginTransaction(TransactionInfo
             return TRACKED_RESPONSE_MARKER;
         }
 
-        return Pointer<Response> ();
+        return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -614,8 +602,7 @@ Pointer<Command> ConnectionStateTracker::processPrepareTransaction(TransactionIn
             if (connectionId != NULL) {
                 Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                 if (cs != NULL) {
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState(info->getTransactionId());
+                    Pointer<TransactionState> transactionState = cs->getTransactionState(info->getTransactionId());
                     if (transactionState != NULL) {
                         transactionState->addCommand(Pointer<Command>(info->cloneDataStructure()));
                     }
@@ -627,9 +614,9 @@ Pointer<Command> ConnectionStateTracker::processPrepareTransaction(TransactionIn
 
         return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -642,23 +629,21 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase(Transa
             if (connectionId != NULL) {
                 Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                 if (cs != NULL) {
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState(info->getTransactionId());
+                    Pointer<TransactionState> transactionState = cs->getTransactionState(info->getTransactionId());
                     if (transactionState != NULL) {
                         Pointer<TransactionInfo> infoCopy(info->cloneDataStructure());
                         transactionState->addCommand(infoCopy);
-                        return Pointer<Tracked>(
-                            new Tracked(Pointer<Runnable>(new RemoveTransactionAction(this, infoCopy))));
+                        return Pointer<Tracked>(new Tracked(Pointer<Runnable>(new RemoveTransactionAction(this, infoCopy))));
                     }
                 }
             }
         }
 
-        return Pointer<Response> ();
+        return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -671,13 +656,11 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase(Transa
             if (connectionId != NULL) {
                 Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                 if (cs != NULL) {
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState(info->getTransactionId());
+                    Pointer<TransactionState> transactionState = cs->getTransactionState(info->getTransactionId());
                     if (transactionState != NULL) {
                         Pointer<TransactionInfo> infoCopy(info->cloneDataStructure());
                         transactionState->addCommand(infoCopy);
-                        return Pointer<Tracked>(
-                            new Tracked(Pointer<Runnable>(new RemoveTransactionAction(this, infoCopy))));
+                        return Pointer<Tracked>(new Tracked(Pointer<Runnable>(new RemoveTransactionAction(this, infoCopy))));
                     }
                 }
             }
@@ -685,9 +668,9 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase(Transa
 
         return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -700,13 +683,11 @@ Pointer<Command> ConnectionStateTracker::processRollbackTransaction(TransactionI
             if (connectionId != NULL) {
                 Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                 if (cs != NULL) {
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState(info->getTransactionId());
+                    Pointer<TransactionState> transactionState = cs->getTransactionState(info->getTransactionId());
                     if (transactionState != NULL) {
                         Pointer<TransactionInfo> infoCopy(info->cloneDataStructure());
                         transactionState->addCommand(infoCopy);
-                        return Pointer<Tracked>(
-                            new Tracked(Pointer<Runnable>(new RemoveTransactionAction(this, infoCopy))));
+                        return Pointer<Tracked>(new Tracked(Pointer<Runnable>(new RemoveTransactionAction(this, infoCopy))));
                     }
                 }
             }
@@ -714,9 +695,9 @@ Pointer<Command> ConnectionStateTracker::processRollbackTransaction(TransactionI
 
         return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -729,10 +710,9 @@ Pointer<Command> ConnectionStateTracker::processEndTransaction(TransactionInfo* 
             if (connectionId != NULL) {
                 Pointer<ConnectionState> cs = connectionStates.get(connectionId);
                 if (cs != NULL) {
-                    Pointer<TransactionState> transactionState =
-                        cs->getTransactionState(info->getTransactionId());
+                    Pointer<TransactionState> transactionState = cs->getTransactionState(info->getTransactionId());
                     if (transactionState != NULL) {
-                        transactionState->addCommand(Pointer<Command> (info->cloneDataStructure()));
+                        transactionState->addCommand(Pointer<Command>(info->cloneDataStructure()));
                     }
                 }
             }
@@ -742,9 +722,9 @@ Pointer<Command> ConnectionStateTracker::processEndTransaction(TransactionInfo* 
 
         return Pointer<Response>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -757,16 +737,15 @@ Pointer<Command> ConnectionStateTracker::processMessagePull(MessagePull* pull) {
             messagePullCache.put(id, Pointer<Command>(pull->cloneDataStructure()));
         }
 
-        return Pointer<Command> ();
+        return Pointer<Command>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionStateTracker::connectionInterruptProcessingComplete(
-    transport::Transport* transport, Pointer<ConnectionId> connectionId) {
+void ConnectionStateTracker::connectionInterruptProcessingComplete(transport::Transport* transport, Pointer<ConnectionId> connectionId) {
 
     Pointer<ConnectionState> connectionState = connectionStates.get(connectionId);
 
@@ -774,10 +753,9 @@ void ConnectionStateTracker::connectionInterruptProcessingComplete(
 
         connectionState->setConnectionInterruptProcessingComplete(true);
 
-        StlMap<Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR> stalledConsumers =
-            connectionState->getRecoveringPullConsumers();
+        StlMap<Pointer<ConsumerId>, Pointer<ConsumerInfo>, ConsumerId::COMPARATOR> stalledConsumers = connectionState->getRecoveringPullConsumers();
 
-        Pointer< Iterator< Pointer<ConsumerId> > > key(stalledConsumers.keySet().iterator());
+        Pointer<Iterator<Pointer<ConsumerId> > > key(stalledConsumers.keySet().iterator());
         while (key->hasNext()) {
             Pointer<ConsumerControl> control(new ConsumerControl());
 
@@ -800,7 +778,7 @@ void ConnectionStateTracker::connectionInterruptProcessingComplete(
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTracker::transportInterrupted() {
 
-    Pointer< Iterator< Pointer<ConnectionState> > > state(this->connectionStates.values().iterator());
+    Pointer<Iterator<Pointer<ConnectionState> > > state(this->connectionStates.values().iterator());
     while (state->hasNext()) {
         state->next()->setConnectionInterruptProcessingComplete(false);
     }

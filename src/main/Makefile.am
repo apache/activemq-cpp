@@ -125,6 +125,8 @@ cc_sources = \
     activemq/io/LoggingInputStream.cpp \
     activemq/io/LoggingOutputStream.cpp \
     activemq/library/ActiveMQCPP.cpp \
+    activemq/state/CommandVisitor.cpp \
+    activemq/state/CommandVisitorAdapter.cpp \
     activemq/state/ConnectionState.cpp \
     activemq/state/ConnectionStateTracker.cpp \
     activemq/state/ConsumerState.cpp \
@@ -132,10 +134,13 @@ cc_sources = \
     activemq/state/SessionState.cpp \
     activemq/state/Tracked.cpp \
     activemq/state/TransactionState.cpp \
+    activemq/threads/CompositeTask.cpp \
     activemq/threads/CompositeTaskRunner.cpp \
     activemq/threads/DedicatedTaskRunner.cpp \
     activemq/threads/Scheduler.cpp \
     activemq/threads/SchedulerTimerTask.cpp \
+    activemq/threads/Task.cpp \
+    activemq/threads/TaskRunner.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
     activemq/transport/CompositeTransport.cpp \
     activemq/transport/DefaultTransportListener.cpp \
@@ -183,12 +188,18 @@ cc_sources = \
     activemq/util/ServiceStopper.cpp \
     activemq/util/ServiceSupport.cpp \
     activemq/util/URISupport.cpp \
+    activemq/util/Usage.cpp \
+    activemq/wireformat/MarshalAware.cpp \
+    activemq/wireformat/WireFormat.cpp \
+    activemq/wireformat/WireFormatFactory.cpp \
+    activemq/wireformat/WireFormatNegotiator.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
     activemq/wireformat/openwire/OpenWireFormat.cpp \
     activemq/wireformat/openwire/OpenWireFormatFactory.cpp \
     activemq/wireformat/openwire/OpenWireFormatNegotiator.cpp \
     activemq/wireformat/openwire/OpenWireResponseBuilder.cpp \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.cpp \
+    activemq/wireformat/openwire/marshal/DataStreamMarshaller.cpp \
     activemq/wireformat/openwire/marshal/PrimitiveTypesMarshaller.cpp \
     activemq/wireformat/openwire/marshal/generated/ActiveMQBlobMessageMarshaller.cpp \
     activemq/wireformat/openwire/marshal/generated/ActiveMQBytesMessageMarshaller.cpp \

@@ -51,7 +51,7 @@ CompositeTaskRunner::~CompositeTaskRunner() {
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunner::shutdown(unsigned int timeout) {
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         shutDown = true;
         pending = true;
         mutex.notifyAll();
@@ -67,7 +67,7 @@ void CompositeTaskRunner::shutdown(unsigned int timeout) {
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunner::shutdown() {
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         shutDown = true;
         pending = true;
         mutex.notifyAll();
@@ -109,7 +109,7 @@ void CompositeTaskRunner::run() {
             if( !this->iterate() ) {
 
                 // wait to be notified.
-                synchronized( &mutex ) {
+                synchronized(&mutex) {
                     if (shutDown) {
                         return;
                     }
@@ -121,7 +121,6 @@ void CompositeTaskRunner::run() {
 
         }
     }
-    AMQ_CATCH_NOTHROW( Exception )
     AMQ_CATCHALL_NOTHROW()
 
     // Make sure we notify any waiting threads that thread
@@ -157,7 +156,7 @@ void CompositeTaskRunner::removeTask(CompositeTask* task) {
 ////////////////////////////////////////////////////////////////////////////////
 bool CompositeTaskRunner::iterate() {
 
-    synchronized( &tasks ) {
+    synchronized(&tasks) {
 
         auto_ptr<Iterator<CompositeTask*> > iter(tasks.iterator());
 

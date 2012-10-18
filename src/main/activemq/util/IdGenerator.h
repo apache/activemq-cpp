@@ -41,14 +41,14 @@ namespace util {
 
     private:
 
-        IdGenerator( const IdGenerator& );
-        IdGenerator& operator= ( const IdGenerator& );
+        IdGenerator(const IdGenerator&);
+        IdGenerator& operator=(const IdGenerator&);
 
     public:
 
         IdGenerator();
 
-        IdGenerator( const std::string& prefix );
+        IdGenerator(const std::string& prefix);
 
         virtual ~IdGenerator();
 
@@ -74,14 +74,14 @@ namespace util {
          *
          * @returns the seed portion of the Id, minus the count value.
          */
-        static std::string getSeedFromId( const std::string& id );
+        static std::string getSeedFromId(const std::string& id);
 
         /**
          * Gets the count value from a Generated Id, the seed portion is removed.
          *
          * @returns the sequence count portion of the id, minus the seed value.
          */
-        static long long getSequenceFromId( const std::string& id );
+        static long long getSequenceFromId(const std::string& id);
 
         /**
          * Compares two generated id values.
@@ -93,7 +93,7 @@ namespace util {
          *
          * @returns zero if ids are equal or positove if id1 > id2...
          */
-        static int compare( const std::string& id1, const std::string& id2 );
+        static int compare(const std::string& id1, const std::string& id2);
 
     private:
 

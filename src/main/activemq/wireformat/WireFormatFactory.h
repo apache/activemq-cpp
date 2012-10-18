@@ -24,8 +24,8 @@
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
-namespace activemq{
-namespace wireformat{
+namespace activemq {
+namespace wireformat {
 
     using decaf::lang::Pointer;
 
@@ -38,7 +38,7 @@ namespace wireformat{
     class AMQCPP_API WireFormatFactory {
     public:
 
-        virtual ~WireFormatFactory() {}
+        virtual ~WireFormatFactory();
 
         /**
          * Creates a new WireFormat Object passing it a set of
@@ -51,7 +51,7 @@ namespace wireformat{
          *
          * @throws IllegalStateException if the factory has not been initialized.
          */
-        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties ) = 0;
+        virtual Pointer<WireFormat> createWireFormat(const decaf::util::Properties& properties) = 0;
 
     };
 

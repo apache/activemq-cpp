@@ -51,13 +51,13 @@ namespace util {
 
         virtual ~CMSExceptionSupport();
 
-        static cms::CMSException create( const std::string& msg, const decaf::lang::Exception& cause );
+        static cms::CMSException create(const std::string& msg, const decaf::lang::Exception& cause);
 
-        static cms::CMSException create( const decaf::lang::Exception& cause );
+        static cms::CMSException create(const decaf::lang::Exception& cause);
 
-        static cms::MessageEOFException createMessageEOFException( const decaf::lang::Exception& cause );
+        static cms::MessageEOFException createMessageEOFException(const decaf::lang::Exception& cause);
 
-        static cms::MessageFormatException createMessageFormatException( const decaf::lang::Exception& cause );
+        static cms::MessageFormatException createMessageFormatException(const decaf::lang::Exception& cause);
 
     };
 

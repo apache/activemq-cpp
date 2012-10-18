@@ -38,18 +38,21 @@ InternalCommandListener::InternalCommandListener() :
 
 ////////////////////////////////////////////////////////////////////////////////
 InternalCommandListener::~InternalCommandListener() {
-    done = true;
-    synchronized( &inboundQueue ) {
-        inboundQueue.notifyAll();
-    }
-    this->join();
+    try {
+        done = true;
+        synchronized(&inboundQueue) {
+            inboundQueue.notifyAll();
+        }
+        this->join();
 
-    inboundQueue.clear();
+        inboundQueue.clear();
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InternalCommandListener::onCommand(const Pointer<Command> command) {
-    synchronized( &inboundQueue ) {
+    synchronized(&inboundQueue) {
         // Create a response now before the caller has a
         // chance to destroy the command.
         responseBuilder->buildIncomingCommands(command, inboundQueue);

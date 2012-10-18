@@ -41,20 +41,20 @@ URI CompositeData::toURI() const {
 
     ostringstream sb;
 
-    if( scheme != "" ) {
+    if (scheme != "") {
         sb << scheme << ":";
     }
 
-    if( host.size() != 0) {
+    if (host.size() != 0) {
         sb << host;
     } else {
         sb << "(";
 
         bool firstTime = true;
-        std::auto_ptr< Iterator<URI> > iter( components.iterator() );
+        std::auto_ptr<Iterator<URI> > iter(components.iterator());
 
-        while( iter->hasNext() ) {
-            if( firstTime == true ) {
+        while (iter->hasNext()) {
+            if (firstTime == true) {
                 sb << ",";
                 firstTime = false;
             }
@@ -64,17 +64,17 @@ URI CompositeData::toURI() const {
         sb << ")";
     }
 
-    if( path != "") {
+    if (path != "") {
         sb << "/" << path;
     }
 
-    if( !parameters.isEmpty() ) {
-        sb << "?" << URISupport::createQueryString( parameters );
+    if (!parameters.isEmpty()) {
+        sb << "?" << URISupport::createQueryString(parameters);
     }
 
-    if( fragment != "" ) {
+    if (fragment != "") {
         sb << "#" << fragment;
     }
 
-    return URI( sb.str() );
+    return URI(sb.str());
 }

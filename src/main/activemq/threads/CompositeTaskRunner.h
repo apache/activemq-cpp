@@ -55,8 +55,8 @@ namespace threads {
 
     private:
 
-        CompositeTaskRunner( const CompositeTaskRunner& );
-        CompositeTaskRunner& operator= ( const CompositeTaskRunner& );
+        CompositeTaskRunner(const CompositeTaskRunner&);
+        CompositeTaskRunner& operator=(const CompositeTaskRunner&);
 
     public:
 
@@ -68,13 +68,13 @@ namespace threads {
          * Adds a new CompositeTask to the Set of Tasks that this class manages.
          * @param task - Pointer to a CompositeTask instance.
          */
-        void addTask( CompositeTask* task );
+        void addTask(CompositeTask* task);
 
         /**
          * Removes a CompositeTask that was added previously
          * @param task - Pointer to a CompositeTask instance.
          */
-        void removeTask( CompositeTask* task );
+        void removeTask(CompositeTask* task);
 
         /**
          * Shutdown after a timeout, does not guarantee that the task's iterate
@@ -82,7 +82,7 @@ namespace threads {
          *
          * @param timeout - Time in Milliseconds to wait for the task to stop.
          */
-        virtual void shutdown( unsigned int timeout );
+        virtual void shutdown(unsigned int timeout);
 
         /**
          * Shutdown once the task has finished and the TaskRunner's thread has exited.

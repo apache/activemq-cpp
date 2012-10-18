@@ -29,7 +29,7 @@ MemoryUsage::MemoryUsage() : limit(0), usage(0), mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MemoryUsage::MemoryUsage( unsigned long long limit ) : limit(limit), usage(), mutex() {
+MemoryUsage::MemoryUsage(unsigned long long limit) : limit(limit), usage(), mutex() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -39,43 +39,43 @@ MemoryUsage::~MemoryUsage() {
 ////////////////////////////////////////////////////////////////////////////////
 void MemoryUsage::waitForSpace() {
 
-    synchronized( &mutex ) {
-        while( this->isFull() ) {
+    synchronized(&mutex) {
+        while (this->isFull()) {
             mutex.wait();
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MemoryUsage::waitForSpace( unsigned int timeout ) {
+void MemoryUsage::waitForSpace(unsigned int timeout) {
 
-    if( this->isFull() ) {
-        synchronized( &mutex ) {
-            mutex.wait( timeout );
+    if (this->isFull()) {
+        synchronized(&mutex) {
+            mutex.wait(timeout);
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MemoryUsage::increaseUsage( unsigned long long value ) {
+void MemoryUsage::increaseUsage(unsigned long long value) {
 
-    if( value == 0 ) {
+    if (value == 0) {
         return;
     }
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         this->usage += value;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MemoryUsage::decreaseUsage( unsigned long long value ) {
+void MemoryUsage::decreaseUsage(unsigned long long value) {
 
-    if( value == 0 ) {
+    if (value == 0) {
         return;
     }
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         value > this->usage ? this->usage = 0 : this->usage -= value;
         mutex.notifyAll();
     }
@@ -85,7 +85,7 @@ void MemoryUsage::decreaseUsage( unsigned long long value ) {
 bool MemoryUsage::isFull() const {
     bool result = false;
 
-    synchronized( &mutex ) {
+    synchronized(&mutex) {
         result = this->usage >= this->limit;
     }
 

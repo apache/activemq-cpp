@@ -52,9 +52,8 @@ std::string PrimitiveList::toString() const {
 
     stream << "Begin Class PrimitiveList:" << std::endl;
 
-    for( int i = 0; i < this->size(); ++i ) {
-        stream << "list[" << i << "] = "
-               << this->get( i ).toString() << std::endl;
+    for (int i = 0; i < this->size(); ++i) {
+        stream << "list[" << i << "] = " << this->get(i).toString() << std::endl;
     }
 
     stream << "End Class PrimitiveList:" << std::endl;
@@ -63,161 +62,161 @@ std::string PrimitiveList::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool PrimitiveList::getBool( int index ) const {
+bool PrimitiveList::getBool(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<bool>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<bool>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setBool( int index, bool value ) {
+void PrimitiveList::setBool(int index, bool value) {
 
     PrimitiveValueNode node;
-    node.setBool( value );
+    node.setBool(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char PrimitiveList::getByte( int index ) const {
+unsigned char PrimitiveList::getByte(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<unsigned char>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<unsigned char>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByte( int index, unsigned char value ) {
+void PrimitiveList::setByte(int index, unsigned char value) {
 
     PrimitiveValueNode node;
-    node.setByte( value );
+    node.setByte(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char PrimitiveList::getChar( int index ) const {
+char PrimitiveList::getChar(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<char>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<char>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setChar( int index, char value ) {
+void PrimitiveList::setChar(int index, char value) {
 
     PrimitiveValueNode node;
-    node.setChar( value );
+    node.setChar(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short PrimitiveList::getShort( int index ) const {
+short PrimitiveList::getShort(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<short>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<short>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setShort( int index, short value ) {
+void PrimitiveList::setShort(int index, short value) {
 
     PrimitiveValueNode node;
-    node.setShort( value );
+    node.setShort(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PrimitiveList::getInt( int index ) const {
+int PrimitiveList::getInt(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<int>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<int>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setInt( int index, int value ) {
+void PrimitiveList::setInt(int index, int value) {
 
     PrimitiveValueNode node;
-    node.setInt( value );
+    node.setInt(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PrimitiveList::getLong( int index ) const {
+long long PrimitiveList::getLong(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<long long>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<long long>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setLong( int index, long long value ) {
+void PrimitiveList::setLong(int index, long long value) {
 
     PrimitiveValueNode node;
-    node.setLong( value );
+    node.setLong(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double PrimitiveList::getDouble( int index ) const {
+double PrimitiveList::getDouble(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<double>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<double>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setDouble( int index, double value ) {
+void PrimitiveList::setDouble(int index, double value) {
 
     PrimitiveValueNode node;
-    node.setDouble( value );
+    node.setDouble(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float PrimitiveList::getFloat( int index ) const {
+float PrimitiveList::getFloat(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<float>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<float>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setFloat( int index, float value ) {
+void PrimitiveList::setFloat(int index, float value) {
 
     PrimitiveValueNode node;
-    node.setFloat( value );
+    node.setFloat(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-string PrimitiveList::getString( int index ) const {
+string PrimitiveList::getString(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert<std::string>( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<std::string>(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setString( int index, const string& value ) {
+void PrimitiveList::setString(int index, const string& value) {
 
     PrimitiveValueNode node;
-    node.setString( value );
+    node.setString(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> PrimitiveList::getByteArray( int index ) const  {
+std::vector<unsigned char> PrimitiveList::getByteArray(int index) const {
 
-    PrimitiveValueNode node = this->get( index );
-    return converter.convert< std::vector<unsigned char> >( node );
+    PrimitiveValueNode node = this->get(index);
+    return converter.convert<std::vector<unsigned char> >(node);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByteArray( int index, const std::vector<unsigned char>& value ) {
+void PrimitiveList::setByteArray(int index, const std::vector<unsigned char>& value) {
 
     PrimitiveValueNode node;
-    node.setByteArray( value );
+    node.setByteArray(value);
 
-    this->set( index, node );
+    this->set(index, node);
 }

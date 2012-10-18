@@ -41,7 +41,7 @@ void ServiceStopper::stop(Service* service) {
         return;
     }
 
-    try{
+    try {
         service->stop();
     } catch(Exception& ex) {
         this->onException(service, ex);

@@ -37,7 +37,7 @@ SessionState::~SessionState() {
     try {
         this->shutdown();
     }
-    DECAF_CATCHALL_NOTHROW()
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

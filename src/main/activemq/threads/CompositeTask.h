@@ -33,7 +33,7 @@ namespace threads {
     class AMQCPP_API CompositeTask : public activemq::threads::Task {
     public:
 
-        virtual ~CompositeTask() {}
+        virtual ~CompositeTask();
 
         /**
          * Indicates whether this task has any pending work that needs to be
