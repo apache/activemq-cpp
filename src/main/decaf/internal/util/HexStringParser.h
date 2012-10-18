@@ -21,9 +21,9 @@
 #include <decaf/util/Config.h>
 #include <string>
 
-namespace decaf{
-namespace internal{
-namespace util{
+namespace decaf {
+namespace internal {
+namespace util {
 
     class HexStringParser {
     private:
@@ -63,9 +63,10 @@ namespace util{
          * @param exponentWidth - Width of the exponent for the type to parse
          * @param mantissaWidth - Width of the mantissa for the type to parse
          */
-        HexStringParser( int exponentWidth, int mantissaWidth );
+        HexStringParser(int exponentWidth, int mantissaWidth);
 
-        virtual ~HexStringParser() {}
+        virtual ~HexStringParser() {
+        }
 
         /**
          * Parses a hex string using the specs given in the constructor
@@ -74,7 +75,7 @@ namespace util{
          * @param hexString - string to parse
          * @returns the bits parsed from the string
          */
-        long long parse( const std::string& hexString );
+        long long parse(const std::string& hexString);
 
     private:
 
@@ -82,7 +83,7 @@ namespace util{
          * Parses the sign field.
          * @param sign string to parse
          */
-        void parseHexSign( const std::string& signStr ) {
+        void parseHexSign(const std::string& signStr) {
             this->sign = signStr.compare("-") == 0 ? 1 : 0;
         }
 
@@ -90,13 +91,13 @@ namespace util{
          * Parses the exponent field.
          * @param exponent string to parse
          */
-        void parseExponent( const std::string& exponentStr );
+        void parseExponent(const std::string& exponentStr);
 
         /*
          * Parses the mantissa field.
          * @param mantissa string to parse
          */
-        void parseMantissa( const std::string& significantStr );
+        void parseMantissa(const std::string& significantStr);
 
         void setInfinite() {
             exponent = MAX_EXPONENT;
@@ -113,21 +114,21 @@ namespace util{
          * overflow or underflow happens.
          * @param the offset to set
          */
-        void checkedAddExponent( long long offset );
+        void checkedAddExponent(long long offset);
 
         void processNormalNumber();
         void processSubNormalNumber();
-        int countBitsLength( long long value );
+        int countBitsLength(long long value);
 
         /*
          * Adjusts the mantissa to desired width for further analysis.
          */
-        void fitMantissaInDesiredWidth( int desiredWidth );
+        void fitMantissaInDesiredWidth(int desiredWidth);
 
         /*
          * Stores the discarded bits to abandonedNumber.
          */
-        void discardTrailingBits( long long num );
+        void discardTrailingBits(long long num);
 
         /*
          * The value is rounded up or down to the nearest infinitely precise result.
@@ -139,8 +140,7 @@ namespace util{
         /*
          * Returns the normalized significand after removing the leading zeros.
          */
-        std::string getNormalizedSignificand( const std::string& strIntegerPart,
-                                              const std::string& strDecimalPart );
+        std::string getNormalizedSignificand(const std::string& strIntegerPart, const std::string& strDecimalPart);
 
         /*
          * Calculates the offset between the normalized number and unnormalized
@@ -148,55 +148,51 @@ namespace util{
          * characters "0x1." followed by a lower-case hexadecimal representation of
          * the rest of the significand as a fraction.
          */
-        int getOffset( const std::string& strIntegerPart,
-                       const std::string& strDecimalPart );
+        int getOffset(const std::string& strIntegerPart, const std::string& strDecimalPart);
 
-    public:  // Statics
+    public:
+        // Statics
 
         /*
          * Parses the hex string to a double number.
          * @param hexString - string to parse
          * @returns the parsed double value
          */
-        static double parseDouble( const std::string& hexString );
+        static double parseDouble(const std::string& hexString);
 
         /*
          * Parses the hex string to a float number.
          * @param hexString - string to parse
          * @returns the parsed float value
          */
-        static float parseFloat( const std::string& hexString );
+        static float parseFloat(const std::string& hexString);
 
-
-    private:  // Static
+    private:
+        // Static
 
         /*
          * Analyzes the hex string and extracts the sign and digit segments.
          * @param hexString - string to parse
          * @returns array of three strings holding the segments caller owns
          */
-        static std::string* getSegmentsFromHexString( const std::string& hexString );
+        static std::string* getSegmentsFromHexString(const std::string& hexString);
 
-        std::string& replaceFirst( std::string& target,
-                                   const std::string& find,
-                                   const std::string& replace ) {
+        std::string& replaceFirst(std::string& target, const std::string& find, const std::string& replace) {
 
             std::string::size_type pos = std::string::npos;
 
-            if( ( pos = target.find_first_of( find, 0 ) ) != std::string::npos ) {
-                return target.replace( pos, find.length(), replace );
+            if ((pos = target.find_first_of(find, 0)) != std::string::npos) {
+                return target.replace(pos, find.length(), replace);
             }
 
             return target;
         }
 
-        std::string& replaceAll( std::string& target,
-                                 const std::string& find,
-                                 const std::string& replace ) {
+        std::string& replaceAll(std::string& target, const std::string& find, const std::string& replace) {
 
             std::string::size_type pos = std::string::npos;
-            while( ( pos = target.find( find ) ) != std::string::npos ) {
-                target.replace( pos, find.length(), replace );
+            while ((pos = target.find(find)) != std::string::npos) {
+                target.replace(pos, find.length(), replace);
             }
 
             return target;

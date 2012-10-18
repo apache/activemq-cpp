@@ -356,6 +356,7 @@ cc_sources = \
     decaf/internal/nio/ShortArrayBuffer.cpp \
     decaf/internal/security/unix/SecureRandomImpl.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
+    decaf/internal/util/GenericResource.cpp \
     decaf/internal/util/HexStringParser.cpp \
     decaf/internal/util/Resource.cpp \
     decaf/internal/util/ResourceLifecycleManager.cpp \

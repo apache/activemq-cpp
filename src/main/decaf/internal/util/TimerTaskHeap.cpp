@@ -32,7 +32,7 @@ TimerTaskHeap::~TimerTaskHeap() {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<TimerTask> TimerTaskHeap::peek() {
 
-    if( heap.empty() ) {
+    if (heap.empty()) {
         return Pointer<TimerTask>();
     }
 
@@ -50,20 +50,20 @@ std::size_t TimerTaskHeap::size() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimerTaskHeap::insert( const Pointer<TimerTask>& task ) {
+void TimerTaskHeap::insert(const Pointer<TimerTask>& task) {
 
-    heap.push_back( task );
+    heap.push_back(task);
     upHeap();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimerTaskHeap::remove( std::size_t pos ) {
+void TimerTaskHeap::remove(std::size_t pos) {
 
     // possible to delete any position of the heap
-    if( pos < heap.size() ) {
+    if (pos < heap.size()) {
         heap[pos] = heap.back();
         heap.pop_back();
-        downHeap( pos );
+        downHeap(pos);
     }
 }
 
@@ -71,9 +71,9 @@ void TimerTaskHeap::remove( std::size_t pos ) {
 void TimerTaskHeap::upHeap() {
 
     std::size_t current = heap.size() - 1;
-    std::size_t parent = ( current - 1 ) / 2;
+    std::size_t parent = (current - 1) / 2;
 
-    while( current != 0 && heap[current]->when < heap[parent]->when) {
+    while (current != 0 && heap[current]->when < heap[parent]->when) {
 
         // swap the two
         Pointer<TimerTask> tmp = heap[current];
@@ -82,25 +82,25 @@ void TimerTaskHeap::upHeap() {
 
         // update parent and current positions.
         current = parent;
-        parent = ( current - 1 ) / 2;
+        parent = (current - 1) / 2;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TimerTaskHeap::downHeap( std::size_t pos ) {
+void TimerTaskHeap::downHeap(std::size_t pos) {
 
     std::size_t current = pos;
     std::size_t child = 2 * current + 1;
 
-    while( child < heap.size() && !heap.empty() ) {
+    while (child < heap.size() && !heap.empty()) {
 
         // compare the children if they exist
-        if( child + 1 < heap.size() && heap[child + 1]->when < heap[child]->when) {
+        if (child + 1 < heap.size() && heap[child + 1]->when < heap[child]->when) {
             child++;
         }
 
         // compare selected child with parent
-        if( heap[current]->when < heap[child]->when ) {
+        if (heap[current]->when < heap[child]->when) {
             break;
         }
 
@@ -122,7 +122,7 @@ void TimerTaskHeap::reset() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TimerTaskHeap::adjustMinimum() {
-    downHeap( 0 );
+    downHeap(0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,10 +130,10 @@ std::size_t TimerTaskHeap::deleteIfCancelled() {
 
     std::size_t result = 0;
 
-    for( std::size_t i = 0; i < heap.size(); ++i ) {
-        if( heap[i]->cancelled ) {
+    for (std::size_t i = 0; i < heap.size(); ++i) {
+        if (heap[i]->cancelled) {
             result++;
-            remove( i );
+            remove(i);
             // re-try this point
             i--;
         }
@@ -143,10 +143,10 @@ std::size_t TimerTaskHeap::deleteIfCancelled() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t TimerTaskHeap::find( const Pointer<TimerTask>& task ) const {
+std::size_t TimerTaskHeap::find(const Pointer<TimerTask>& task) const {
 
-    for( std::size_t i = 0; i < heap.size(); ++i ) {
-        if( heap[i] == task ) {
+    for (std::size_t i = 0; i < heap.size(); ++i) {
+        if (heap[i] == task) {
             return i;
         }
     }

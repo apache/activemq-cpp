@@ -30,11 +30,11 @@ namespace internal {
     /**
      * Handles APR initialization and termination.
      */
-    class DECAF_API DecafRuntime : public decaf::lang::Runtime {
+    class DECAF_API DecafRuntime: public decaf::lang::Runtime {
     private:
 
-       DecafRuntime( const DecafRuntime& );
-       DecafRuntime& operator= ( const DecafRuntime& );
+        DecafRuntime(const DecafRuntime&);
+        DecafRuntime& operator=(const DecafRuntime&);
 
     public:
 

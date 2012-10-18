@@ -33,36 +33,35 @@ ResourceLifecycleManager::ResourceLifecycleManager() : resources() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ResourceLifecycleManager::~ResourceLifecycleManager() {
-    try{
+    try {
         this->destroyResources();
     }
-    DECAF_CATCH_NOTHROW( Exception )
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::addResource( Resource* value ) {
+void ResourceLifecycleManager::addResource(Resource* value) {
 
-    if( value == NULL ) {
+    if (value == NULL) {
         return;
     }
 
-    this->resources.add( value );
+    this->resources.add(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResourceLifecycleManager::destroyResources() {
 
-    try{
+    try {
 
-        std::auto_ptr< Iterator<Resource*> > iterator( this->resources.iterator() );
+        std::auto_ptr<Iterator<Resource*> > iterator(this->resources.iterator());
 
-        while( iterator->hasNext() ) {
+        while (iterator->hasNext()) {
             delete iterator->next();
         }
 
         this->resources.clear();
     }
-    DECAF_CATCH_RETHROW( Exception )
-    DECAF_CATCHALL_THROW( Exception )
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
 }
