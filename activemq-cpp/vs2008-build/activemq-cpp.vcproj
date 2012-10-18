@@ -2097,6 +2097,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\Usage.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\Usage.h"
 					>
 				</File>
@@ -2621,6 +2625,10 @@
 				Name="core"
 				>
 				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQAckHandler.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQAckHandler.h"
 					>
 				</File>
@@ -2737,7 +2745,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\core\DispatchData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\core\DispatchData.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\Dispatcher.cpp"
 					>
 				</File>
 				<File
@@ -2750,6 +2766,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\FifoMessageDispatchChannel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\MessageDispatchChannel.cpp"
 					>
 				</File>
 				<File
@@ -2778,6 +2798,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\SimplePriorityMessageDispatchChannel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\Synchronization.cpp"
 					>
 				</File>
 				<File
@@ -2853,7 +2877,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\exceptions\BrokerException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\exceptions\BrokerException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\exceptions\ConnectionFailedException.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\exceptions\ConnectionFailedException.h"
 					>
 				</File>
 				<File
@@ -3165,7 +3201,15 @@
 				Name="wireformat"
 				>
 				<File
+					RelativePath="..\src\main\activemq\wireformat\MarshalAware.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\wireformat\MarshalAware.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\wireformat\WireFormat.cpp"
 					>
 				</File>
 				<File
@@ -3173,7 +3217,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\wireformat\WireFormatFactory.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\wireformat\WireFormatFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\wireformat\WireFormatNegotiator.cpp"
 					>
 				</File>
 				<File
@@ -3232,6 +3284,10 @@
 						</File>
 						<File
 							RelativePath="..\src\main\activemq\wireformat\openwire\marshal\BaseDataStreamMarshaller.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\wireformat\openwire\marshal\DataStreamMarshaller.cpp"
 							>
 						</File>
 						<File
@@ -3825,7 +3881,15 @@
 				Name="cmsutil"
 				>
 				<File
+					RelativePath="..\src\main\activemq\cmsutil\CachedConsumer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\cmsutil\CachedConsumer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\cmsutil\CachedProducer.cpp"
 					>
 				</File>
 				<File
@@ -3857,6 +3921,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\cmsutil\DestinationResolver.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\cmsutil\DestinationResolver.h"
 					>
 				</File>
@@ -3866,6 +3934,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\cmsutil\DynamicDestinationResolver.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\cmsutil\MessageCreator.cpp"
 					>
 				</File>
 				<File
@@ -3881,6 +3953,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\cmsutil\ProducerCallback.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\cmsutil\ProducerCallback.h"
 					>
 				</File>
@@ -3890,6 +3966,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\cmsutil\ResourceLifecycleManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\cmsutil\SessionCallback.cpp"
 					>
 				</File>
 				<File
@@ -3909,7 +3989,15 @@
 				Name="state"
 				>
 				<File
+					RelativePath="..\src\main\activemq\state\CommandVisitor.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\state\CommandVisitor.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\state\CommandVisitorAdapter.cpp"
 					>
 				</File>
 				<File
@@ -3977,6 +4065,10 @@
 				Name="threads"
 				>
 				<File
+					RelativePath="..\src\main\activemq\threads\CompositeTask.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\threads\CompositeTask.h"
 					>
 				</File>
@@ -4013,7 +4105,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\threads\Task.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\threads\Task.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\TaskRunner.cpp"
 					>
 				</File>
 				<File
@@ -4293,6 +4393,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\internal\nio\FloatArrayBuffer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\util\GenericResource.cpp"
 						>
 					</File>
 					<File
