@@ -38,7 +38,6 @@ DefaultPrefetchPolicy::DefaultPrefetchPolicy() :
     queuePrefetch( DEFAULT_QUEUE_PREFETCH ),
     queueBrowserPrefetch( DEFAULT_QUEUE_BROWSER_PREFETCH ),
     topicPrefetch( DEFAULT_TOPIC_PREFETCH ) {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,10 +49,10 @@ PrefetchPolicy* DefaultPrefetchPolicy::clone() const {
 
     DefaultPrefetchPolicy* copy = new DefaultPrefetchPolicy;
 
-    copy->setDurableTopicPrefetch( this->getDurableTopicPrefetch() );
-    copy->setTopicPrefetch( this->getTopicPrefetch() );
-    copy->setQueueBrowserPrefetch( this->getQueueBrowserPrefetch() );
-    copy->setQueuePrefetch( this->getQueuePrefetch() );
+    copy->setDurableTopicPrefetch(this->getDurableTopicPrefetch());
+    copy->setTopicPrefetch(this->getTopicPrefetch());
+    copy->setQueueBrowserPrefetch(this->getQueueBrowserPrefetch());
+    copy->setQueuePrefetch(this->getQueuePrefetch());
 
     return copy;
 }

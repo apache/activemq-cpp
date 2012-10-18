@@ -43,37 +43,36 @@ DefaultRedeliveryPolicy::~DefaultRedeliveryPolicy() {
 
 ////////////////////////////////////////////////////////////////////////////////
 short DefaultRedeliveryPolicy::getCollisionAvoidancePercent() const {
-    return (short)Math::round( this->collisionAvoidanceFactor * 100 );
+    return (short) Math::round(this->collisionAvoidanceFactor * 100);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DefaultRedeliveryPolicy::setCollisionAvoidancePercent( short value ) {
+void DefaultRedeliveryPolicy::setCollisionAvoidancePercent(short value) {
     this->collisionAvoidanceFactor = value * 0.01;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long DefaultRedeliveryPolicy::getNextRedeliveryDelay( long long previousDelay ) {
+long long DefaultRedeliveryPolicy::getNextRedeliveryDelay(long long previousDelay) {
 
     static Random randomNumberGenerator;
 
     long long nextDelay;
 
-    if( previousDelay == 0 ) {
+    if (previousDelay == 0) {
         nextDelay = redeliveryDelay;
-    } else if( useExponentialBackOff && (int)backOffMultiplier > 1 ) {
-        nextDelay = (long long)( (double)previousDelay * backOffMultiplier );
+    } else if (useExponentialBackOff && (int) backOffMultiplier > 1) {
+        nextDelay = (long long) ((double) previousDelay * backOffMultiplier);
     } else {
         nextDelay = previousDelay;
     }
 
-    if( useCollisionAvoidance ) {
+    if (useCollisionAvoidance) {
         /*
          * First random determines +/-, second random determines how far to
          * go in that direction. -cgs
          */
-        double variance = ( randomNumberGenerator.nextBoolean() ?
-            collisionAvoidanceFactor : -collisionAvoidanceFactor ) * randomNumberGenerator.nextDouble( );
-        nextDelay += (long long)( (double)nextDelay * variance );
+        double variance = (randomNumberGenerator.nextBoolean() ? collisionAvoidanceFactor : -collisionAvoidanceFactor) * randomNumberGenerator.nextDouble();
+        nextDelay += (long long) ((double) nextDelay * variance);
     }
 
     return nextDelay;

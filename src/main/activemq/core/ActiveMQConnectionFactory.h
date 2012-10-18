@@ -63,7 +63,9 @@ namespace core{
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQConnectionFactory(const std::string& uri, const std::string& username = "", const std::string& password = "");
+        ActiveMQConnectionFactory(const std::string& uri,
+                                  const std::string& username = "",
+                                  const std::string& password = "");
 
         /**
          * Constructor
@@ -71,7 +73,9 @@ namespace core{
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQConnectionFactory(const decaf::net::URI& uri, const std::string& username = "", const std::string& password = "");
+        ActiveMQConnectionFactory(const decaf::net::URI& uri,
+                                  const std::string& username = "",
+                                  const std::string& password = "");
 
         virtual ~ActiveMQConnectionFactory();
 
@@ -98,7 +102,8 @@ namespace core{
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection(const std::string& username, const std::string& password);
+        virtual cms::Connection* createConnection(const std::string& username,
+                                                  const std::string& password);
 
         /**
          * Creates a connection with the specified user identity. The
@@ -115,7 +120,9 @@ namespace core{
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection(const std::string& username, const std::string& password, const std::string& clientId);
+        virtual cms::Connection* createConnection(const std::string& username,
+                                                  const std::string& password,
+                                                  const std::string& clientId);
 
     public:   // Configuration Options
 
@@ -332,7 +339,7 @@ namespace core{
          * cause all messages to be sent using a Synchronous request is non-zero.
          * @param timeout - The time to wait for a response.
          */
-        void setSendTimeout( unsigned int timeout );
+        void setSendTimeout(unsigned int timeout);
 
         /**
          * Gets the assigned close timeout for this Connector

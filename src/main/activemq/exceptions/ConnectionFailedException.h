@@ -27,35 +27,17 @@ namespace exceptions {
     class AMQCPP_API ConnectionFailedException : public exceptions::ActiveMQException {
     public:
 
-        ConnectionFailedException() {}
+        ConnectionFailedException();
 
-        ConnectionFailedException( const exceptions::ActiveMQException& ex )
-            : exceptions::ActiveMQException() {
-            *( exceptions::ActiveMQException* )this = ex;
-        }
+        ConnectionFailedException(const exceptions::ActiveMQException& ex);
 
-        ConnectionFailedException( const ConnectionFailedException& ex )
-            : exceptions::ActiveMQException() {
-            *( exceptions::ActiveMQException* )this = ex;
-        }
+        ConnectionFailedException(const ConnectionFailedException& ex);
 
-        ConnectionFailedException( const char* file, const int lineNumber,
-                                   const char* msg, ... )
-          : exceptions::ActiveMQException() {
+        ConnectionFailedException(const char* file, const int lineNumber, const char* msg, ...);
 
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
+        virtual ~ConnectionFailedException() throw ();
 
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
-
-        virtual ConnectionFailedException* clone() const {
-            return new ConnectionFailedException( *this );
-        }
-
-        virtual ~ConnectionFailedException() throw() {}
+        virtual ConnectionFailedException* clone() const;
 
     };
 

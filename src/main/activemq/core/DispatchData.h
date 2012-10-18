@@ -18,8 +18,6 @@
 #ifndef _ACTIVEMQ_CORE_DISPATCHDATA_H_
 #define _ACTIVEMQ_CORE_DISPATCHDATA_H_
 
-#include <stdlib.h>
-#include <memory>
 #include <activemq/util/Config.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/Message.h>
@@ -40,15 +38,17 @@ namespace core {
         decaf::lang::Pointer<commands::ConsumerId> consumerId;
         decaf::lang::Pointer<commands::Message> message;
 
+    private:
+
+        DispatchData(const DispatchData&);
+        DispatchData& operator= (const DispatchData&);
+
     public:
 
-        DispatchData() {}
+        DispatchData();
 
         DispatchData(const decaf::lang::Pointer<commands::ConsumerId>& consumer,
-                     const decaf::lang::Pointer<commands::Message>& message) {
-            this->consumerId = consumer;
-            this->message = message;
-        }
+                     const decaf::lang::Pointer<commands::Message>& message);
 
         const decaf::lang::Pointer<commands::ConsumerId>& getConsumerId() {
             return consumerId;

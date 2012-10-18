@@ -15,66 +15,45 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include "ActiveMQException.h"
-#include <decaf/util/logging/LoggerDefines.h>
+#include "ConnectionFailedException.h"
 
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace decaf::lang;
 using namespace std;
 
-// For supporting older versions of msvc (<=2003)
-#if defined(_MSC_VER) && (_MSC_VER < 1400)
-#define vsnprintf _vsnprintf
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException() : decaf::lang::Exception() {
+ConnectionFailedException::ConnectionFailedException() : ActiveMQException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException(const ActiveMQException& ex) : decaf::lang::Exception(ex) {
+ConnectionFailedException::ConnectionFailedException(const exceptions::ActiveMQException& ex) : ActiveMQException() {
+    *(exceptions::ActiveMQException*) this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException(const Exception& ex) : decaf::lang::Exception(ex.clone()) {
+ConnectionFailedException::ConnectionFailedException(const ConnectionFailedException& ex) : ActiveMQException() {
+    *(exceptions::ActiveMQException*) this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException(const char* file, const int lineNumber, const char* msg, ...) : decaf::lang::Exception() {
+ConnectionFailedException::ConnectionFailedException(const char* file, const int lineNumber, const char* msg, ...) : ActiveMQException() {
 
     va_list vargs;
     va_start(vargs, msg);
     buildMessage(msg, vargs);
 
     // Set the first mark for this exception.
-    Exception::setMark(file, lineNumber);
+    setMark(file, lineNumber);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::~ActiveMQException() throw () {
+ConnectionFailedException::~ConnectionFailedException() throw() {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException* ActiveMQException::clone() const {
-    return new ActiveMQException(*this);
+ConnectionFailedException* ConnectionFailedException::clone() const {
+    return new ConnectionFailedException(*this);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-cms::CMSException ActiveMQException::convertToCMSException() const {
-
-    std::exception* result = NULL;
-
-    if (this->getCause() != NULL) {
-        const Exception* ptrCause = dynamic_cast<const Exception*>(this->getCause());
-
-        if (ptrCause == NULL) {
-            result = new Exception(__FILE__, __LINE__, getCause()->what());
-        } else {
-            result = ptrCause->clone();
-        }
-    }
-
-    return cms::CMSException(this->getMessage(), result, this->getStackTrace());
-}

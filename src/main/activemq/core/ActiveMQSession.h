@@ -21,7 +21,6 @@
 #include <cms/ExceptionListener.h>
 
 #include <activemq/util/Config.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/kernels/ActiveMQConsumerKernel.h>
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>

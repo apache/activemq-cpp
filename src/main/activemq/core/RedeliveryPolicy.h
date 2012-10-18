@@ -38,8 +38,8 @@ namespace core {
 
     private:
 
-        RedeliveryPolicy( const RedeliveryPolicy& );
-        RedeliveryPolicy& operator= ( const RedeliveryPolicy& );
+        RedeliveryPolicy(const RedeliveryPolicy&);
+        RedeliveryPolicy& operator=(const RedeliveryPolicy&);
 
     protected:
 
@@ -60,7 +60,7 @@ namespace core {
          * @param value
          *      The new value for the back-off multiplier.
          */
-        virtual void setBackOffMultiplier( double value ) = 0;
+        virtual void setBackOffMultiplier(double value) = 0;
 
         /**
          * @returns the currently set Collision Avoidance percentage.
@@ -71,7 +71,7 @@ namespace core {
          * @param value
          *      The collision avoidance percentage setting.
          */
-        virtual void setCollisionAvoidancePercent( short value ) = 0;
+        virtual void setCollisionAvoidancePercent(short value) = 0;
 
         /**
          * Gets the initial time that redelivery of messages is delayed.
@@ -86,7 +86,7 @@ namespace core {
          * @param value
          *      Time in Milliseconds to wait before starting redelivery.
          */
-        virtual void setInitialRedeliveryDelay( long long value ) = 0;
+        virtual void setInitialRedeliveryDelay(long long value) = 0;
 
         /**
          * Gets the time that redelivery of messages is delayed.
@@ -101,7 +101,7 @@ namespace core {
          * @param value
          *      Time in Milliseconds to wait before the next redelivery.
          */
-        virtual void setRedeliveryDelay( long long value ) = 0;
+        virtual void setRedeliveryDelay(long long value) = 0;
 
         /**
          * Gets the Maximum number of allowed redeliveries for a message before it will
@@ -117,7 +117,7 @@ namespace core {
          * @param maximumRedeliveries
          *      The maximum number of times that a message will be redelivered.
          */
-        virtual void setMaximumRedeliveries( int maximumRedeliveries ) = 0;
+        virtual void setMaximumRedeliveries(int maximumRedeliveries) = 0;
 
         /**
          * Given the last used redelivery delay calculate the next value of the delay
@@ -128,7 +128,7 @@ namespace core {
          *
          * @return the new delay to use before attempting another redelivery.
          */
-        virtual long long getNextRedeliveryDelay( long long previousDelay ) = 0;
+        virtual long long getNextRedeliveryDelay(long long previousDelay) = 0;
 
         /**
          * @returns whether or not collision avoidance is enabled for this Policy.
@@ -139,7 +139,7 @@ namespace core {
          * @param value
          *      Enable or Disable collision avoidance for this Policy.
          */
-        virtual void setUseCollisionAvoidance( bool value ) = 0;
+        virtual void setUseCollisionAvoidance(bool value) = 0;
 
         /**
          * @returns whether or not the exponential back off option is enabled.
@@ -150,7 +150,7 @@ namespace core {
          * @param value
          *      Enable or Disable the exponential back off multiplier option.
          */
-        virtual void setUseExponentialBackOff( bool value ) = 0;
+        virtual void setUseExponentialBackOff(bool value) = 0;
 
         /**
          * Create a copy of this Policy and return it.
@@ -175,7 +175,7 @@ namespace core {
          * @throws NumberFormatException if a property that is numeric cannot be converted
          * @throws IllegalArgumentException if a property can't be converted to the correct type.
          */
-        virtual void configure( const decaf::util::Properties& properties );
+        virtual void configure(const decaf::util::Properties& properties);
 
     };
 

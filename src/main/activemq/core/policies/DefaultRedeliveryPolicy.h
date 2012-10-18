@@ -39,8 +39,8 @@ namespace policies {
 
     private:
 
-        DefaultRedeliveryPolicy( const DefaultRedeliveryPolicy& );
-        DefaultRedeliveryPolicy& operator= ( const DefaultRedeliveryPolicy& );
+        DefaultRedeliveryPolicy(const DefaultRedeliveryPolicy&);
+        DefaultRedeliveryPolicy& operator=(const DefaultRedeliveryPolicy&);
 
     public:
 
@@ -52,19 +52,19 @@ namespace policies {
             return this->backOffMultiplier;
         }
 
-        virtual void setBackOffMultiplier( double value ) {
+        virtual void setBackOffMultiplier(double value) {
             this->backOffMultiplier = value;
         }
 
         virtual short getCollisionAvoidancePercent() const;
 
-        virtual void setCollisionAvoidancePercent( short value );
+        virtual void setCollisionAvoidancePercent(short value);
 
         virtual long long getInitialRedeliveryDelay() const {
             return this->initialRedeliveryDelay;
         }
 
-        virtual void setInitialRedeliveryDelay( long long value ) {
+        virtual void setInitialRedeliveryDelay(long long value) {
             this->initialRedeliveryDelay = value;
         }
 
@@ -72,7 +72,7 @@ namespace policies {
             return this->redeliveryDelay;
         }
 
-        virtual void setRedeliveryDelay( long long value ) {
+        virtual void setRedeliveryDelay(long long value) {
             this->redeliveryDelay = value;
         }
 
@@ -80,7 +80,7 @@ namespace policies {
             return this->maximumRedeliveries;
         }
 
-        virtual void setMaximumRedeliveries( int value ) {
+        virtual void setMaximumRedeliveries(int value) {
             this->maximumRedeliveries = value;
         }
 
@@ -88,7 +88,7 @@ namespace policies {
             return this->useCollisionAvoidance;
         }
 
-        virtual void setUseCollisionAvoidance( bool value ) {
+        virtual void setUseCollisionAvoidance(bool value) {
             this->useCollisionAvoidance = value;
         }
 
@@ -96,11 +96,11 @@ namespace policies {
             return this->useExponentialBackOff;
         }
 
-        virtual void setUseExponentialBackOff( bool value ) {
+        virtual void setUseExponentialBackOff(bool value) {
             this->useExponentialBackOff = value;
         }
 
-        virtual long long getNextRedeliveryDelay( long long previousDelay );
+        virtual long long getNextRedeliveryDelay(long long previousDelay);
 
         virtual RedeliveryPolicy* clone() const;
 

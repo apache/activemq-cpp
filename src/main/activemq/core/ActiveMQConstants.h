@@ -96,40 +96,38 @@ namespace core{
             NUM_PARAMS
         };
 
-        static const std::string& toString( const DestinationOption option ){
+        static const std::string& toString(const DestinationOption option) {
             return StaticInitializer::destOptions[option];
         }
 
-        static DestinationOption toDestinationOption( const std::string& option ){
-            std::map< std::string, DestinationOption >::iterator iter =
-                StaticInitializer::destOptionMap.find( option );
+        static DestinationOption toDestinationOption(const std::string& option) {
+            std::map<std::string, DestinationOption>::iterator iter = StaticInitializer::destOptionMap.find(option);
 
-            if( iter == StaticInitializer::destOptionMap.end() ){
+            if (iter == StaticInitializer::destOptionMap.end()) {
                 return NUM_OPTIONS;
             }
 
             return iter->second;
         }
 
-        static const std::string& toString( const URIParam option ){
+        static const std::string& toString(const URIParam option) {
             return StaticInitializer::uriParams[option];
         }
 
-        static URIParam toURIOption( const std::string& option ){
-            std::map< std::string, URIParam >::iterator iter =
-                StaticInitializer::uriParamsMap.find( option );
+        static URIParam toURIOption(const std::string& option) {
+            std::map<std::string, URIParam>::iterator iter = StaticInitializer::uriParamsMap.find(option);
 
-            if( iter == StaticInitializer::uriParamsMap.end() ){
+            if (iter == StaticInitializer::uriParamsMap.end()) {
                 return NUM_PARAMS;
             }
 
             return iter->second;
         }
 
-        class StaticInitializer{
+        class StaticInitializer {
         public:
             StaticInitializer();
-            virtual ~StaticInitializer(){}
+            virtual ~StaticInitializer() {}
 
             static std::string destOptions[NUM_OPTIONS];
             static std::string uriParams[NUM_PARAMS];

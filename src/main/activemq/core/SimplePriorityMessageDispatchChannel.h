@@ -46,17 +46,17 @@ namespace core {
 
     private:
 
-        SimplePriorityMessageDispatchChannel( const SimplePriorityMessageDispatchChannel& );
-        SimplePriorityMessageDispatchChannel& operator= ( const SimplePriorityMessageDispatchChannel& );
+        SimplePriorityMessageDispatchChannel(const SimplePriorityMessageDispatchChannel&);
+        SimplePriorityMessageDispatchChannel& operator=(const SimplePriorityMessageDispatchChannel&);
 
     public:
 
         SimplePriorityMessageDispatchChannel();
         virtual ~SimplePriorityMessageDispatchChannel();
 
-        virtual void enqueue( const Pointer<MessageDispatch>& message );
+        virtual void enqueue(const Pointer<MessageDispatch>& message);
 
-        virtual void enqueueFirst( const Pointer<MessageDispatch>& message );
+        virtual void enqueueFirst(const Pointer<MessageDispatch>& message);
 
         virtual bool isEmpty() const;
 
@@ -68,7 +68,7 @@ namespace core {
             return this->running;
         }
 
-        virtual Pointer<MessageDispatch> dequeue( long long timeout );
+        virtual Pointer<MessageDispatch> dequeue(long long timeout);
 
         virtual Pointer<MessageDispatch> dequeueNoWait();
 
@@ -84,61 +84,45 @@ namespace core {
 
         virtual int size() const;
 
-        virtual std::vector< Pointer<MessageDispatch> > removeAll();
+        virtual std::vector<Pointer<MessageDispatch> > removeAll();
 
     public:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             mutex.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return mutex.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             mutex.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait() {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            mutex.wait(millisecs);
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            mutex.wait( millisecs, nanos );
+        virtual void wait(long long millisecs, int nanos) {
+            mutex.wait(millisecs, nanos);
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             mutex.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             mutex.notifyAll();
         }
 
     private:
 
-        decaf::util::LinkedList< Pointer<MessageDispatch> >& getChannel( const Pointer<MessageDispatch>& dispatch );
+        decaf::util::LinkedList<Pointer<MessageDispatch> >& getChannel(const Pointer<MessageDispatch>& dispatch);
 
         Pointer<MessageDispatch> removeFirst();
 

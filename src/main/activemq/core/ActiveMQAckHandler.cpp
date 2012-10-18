@@ -15,37 +15,10 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CORE_DISPATCHER_H_
-#define ACTIVEMQ_CORE_DISPATCHER_H_
+#include "ActiveMQAckHandler.h"
 
-#include <activemq/commands/MessageDispatch.h>
-#include <activemq/util/Config.h>
-#include <decaf/lang/Pointer.h>
+using namespace activemq;
+using namespace activemq::core;
 
-namespace activemq {
-namespace core {
-
-    using decaf::lang::Pointer;
-
-    /**
-     * Interface for an object responsible for dispatching messages to
-     * consumers.
-     */
-    class AMQCPP_API Dispatcher {
-    public:
-
-        virtual ~Dispatcher();
-
-        /**
-         * Dispatches a message to a particular consumer.
-         *
-         * @param message
-         *      The message to be dispatched to a waiting consumer.
-         */
-        virtual void dispatch(const Pointer<commands::MessageDispatch>& message) = 0;
-
-    };
-
-}}
-
-#endif /*ACTIVEMQ_CORE_DISPATCHER_H_*/
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQAckHandler::~ActiveMQAckHandler() {}

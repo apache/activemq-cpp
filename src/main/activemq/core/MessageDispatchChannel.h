@@ -31,24 +31,24 @@ namespace core {
     using decaf::lang::Pointer;
     using activemq::commands::MessageDispatch;
 
-    class AMQCPP_API MessageDispatchChannel : public decaf::util::concurrent::Synchronizable {
+    class AMQCPP_API MessageDispatchChannel: public decaf::util::concurrent::Synchronizable {
     public:
 
-        virtual ~MessageDispatchChannel() {}
+        virtual ~MessageDispatchChannel();
 
         /**
          * Add a Message to the Channel behind all pending message.
          *
          * @param message - The message to add to the Channel.
          */
-        virtual void enqueue( const Pointer<MessageDispatch>& message ) = 0;
+        virtual void enqueue(const Pointer<MessageDispatch>& message) = 0;
 
         /**
          * Add a message to the front of the Channel.
          *
          * @param message - The Message to add to the front of the Channel.
          */
-        virtual void enqueueFirst( const Pointer<MessageDispatch>& message ) = 0;
+        virtual void enqueueFirst(const Pointer<MessageDispatch>& message) = 0;
 
         /**
          * @return true if there are no messages in the Channel.
@@ -76,7 +76,7 @@ namespace core {
          * @return null if we timeout or if the consumer is closed.
          * @throws ActiveMQException
          */
-        virtual Pointer<MessageDispatch> dequeue( long long timeout ) = 0;
+        virtual Pointer<MessageDispatch> dequeue(long long timeout) = 0;
 
         /**
          * Used to get an enqueued message if there is one queued right now.  If there is
@@ -125,7 +125,7 @@ namespace core {
          *
          * @return a list of Messages that was previously in the Channel.
          */
-        virtual std::vector< Pointer<MessageDispatch> > removeAll() = 0;
+        virtual std::vector<Pointer<MessageDispatch> > removeAll() = 0;
 
     };
 

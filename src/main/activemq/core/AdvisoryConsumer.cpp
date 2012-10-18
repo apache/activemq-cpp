@@ -79,7 +79,6 @@ AdvisoryConsumer::~AdvisoryConsumer() {
     try {
         delete config;
     }
-    AMQ_CATCH_NOTHROW(ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -90,7 +89,7 @@ void AdvisoryConsumer::dispose() {
 
         try {
             this->connection->oneway(this->config->info->createRemoveCommand());
-        } catch (cms::CMSException e) {
+        } catch (cms::CMSException& e) {
         }
 
         this->connection->removeDispatcher(this->config->info->getConsumerId());

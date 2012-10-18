@@ -21,6 +21,7 @@
 
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConstants.h>
+#include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/AdvisoryConsumer.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>

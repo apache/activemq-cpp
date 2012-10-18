@@ -26,11 +26,12 @@ using namespace activemq::io;
 using namespace decaf::io;
 using namespace decaf::lang::exceptions;
 
-LOGDECAF_INITIALIZE( logger, LoggingInputStream, "activemq.io.LoggingInputStream")
+LOGDECAF_INITIALIZE(logger, LoggingInputStream, "activemq.io.LoggingInputStream")
 
 ////////////////////////////////////////////////////////////////////////////////
-LoggingInputStream::LoggingInputStream( decaf::io::InputStream* inputStream, bool own )
- : decaf::io::FilterInputStream( inputStream, own ) {}
+LoggingInputStream::LoggingInputStream(decaf::io::InputStream* inputStream, bool own) :
+     decaf::io::FilterInputStream(inputStream, own) {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 LoggingInputStream::~LoggingInputStream() {}
@@ -38,60 +39,54 @@ LoggingInputStream::~LoggingInputStream() {}
 ////////////////////////////////////////////////////////////////////////////////
 int LoggingInputStream::doReadByte() {
     try {
-
-        unsigned char c = (unsigned char)FilterInputStream::doReadByte();
-        log( &c, 1 );
+        unsigned char c = (unsigned char) FilterInputStream::doReadByte();
+        log(&c, 1);
         return c;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LoggingInputStream::doReadArrayBounded( unsigned char* buffer, int size,
-                                            int offset, int length ) {
+int LoggingInputStream::doReadArrayBounded(unsigned char* buffer, int size, int offset, int length) {
 
     try {
 
-        if( length == 0 ) {
+        if (length == 0) {
             return 0;
         }
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "LoggingInputStream::read - Passed Buffer is Null" );
+        if (buffer == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "LoggingInputStream::read - Passed Buffer is Null");
         }
 
-        if( length > size - offset ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length );
+        if (length > size - offset) {
+            throw IndexOutOfBoundsException(__FILE__, __LINE__, "Given size{%d} - offset{%d} is less than length{%d}.", size, offset, length);
         }
 
-        int numRead = FilterInputStream::doReadArrayBounded( buffer, size, offset, length );
+        int numRead = FilterInputStream::doReadArrayBounded(buffer, size, offset, length);
 
-        log( buffer, numRead );
+        log(buffer, numRead);
 
-        return (int)numRead;
+        return (int) numRead;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
-    AMQ_CATCH_RETHROW( NullPointerException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(IndexOutOfBoundsException)
+    AMQ_CATCH_RETHROW(NullPointerException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingInputStream::log( const unsigned char* buffer, int len ) {
+void LoggingInputStream::log(const unsigned char* buffer, int len) {
 
     ostringstream ostream;
 
     ostream << "TCP Trace: Reading: " << endl << "[";
 
-    for( int ix = 0; ix < len; ++ix ) {
-        ostream << setw( 2 ) << setfill( '0' ) << std::hex << (int)buffer[ix];
+    for (int ix = 0; ix < len; ++ix) {
+        ostream << setw(2) << setfill('0') << std::hex << (int) buffer[ix];
 
-        if( ( ( ix + 1 ) % 2 ) == 0 ) {
+        if (((ix + 1) % 2) == 0) {
             ostream << ' ';
         }
     }
@@ -99,5 +94,5 @@ void LoggingInputStream::log( const unsigned char* buffer, int len ) {
     ostream << "] len: " << std::dec << len << " bytes";
 
     // Log the data
-    LOGDECAF_INFO( logger, ostream.str() )
+    LOGDECAF_INFO(logger, ostream.str())
 }

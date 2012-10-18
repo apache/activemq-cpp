@@ -57,8 +57,8 @@ namespace core{
     class FactorySettings {
     private:
 
-        FactorySettings( const FactorySettings& );
-        FactorySettings& operator= ( const FactorySettings& );
+        FactorySettings(const FactorySettings&);
+        FactorySettings& operator=(const FactorySettings&);
 
     public:
 
@@ -107,91 +107,83 @@ namespace core{
                             defaultRedeliveryPolicy(new DefaultRedeliveryPolicy()) {
         }
 
-        void updateConfiguration( const URI& uri ) {
+        void updateConfiguration(const URI& uri) {
 
             this->brokerURI = uri;
             this->properties->clear();
 
-            if( uri.getQuery() != "" ) {
+            if (uri.getQuery() != "") {
 
-            	// Not a composite URI so this works fine.
-            	try{
-            		URISupport::parseQuery( uri.getQuery(), properties.get() );
-            	} catch(URISyntaxException& ex) {}
+                // Not a composite URI so this works fine.
+                try {
+                    URISupport::parseQuery(uri.getQuery(), properties.get());
+                } catch (URISyntaxException& ex) {
+                }
 
             } else {
 
-            	// Composite URI won't indicate it has a query even if it does.
-            	try{
-            		CompositeData composite = URISupport::parseComposite( uri );
-            		*this->properties = composite.getParameters();
-            	} catch(URISyntaxException& ex) {}
+                // Composite URI won't indicate it has a query even if it does.
+                try {
+                    CompositeData composite = URISupport::parseComposite(uri);
+                    *this->properties = composite.getParameters();
+                } catch (URISyntaxException& ex) {
+                }
             }
 
             // Check the connection options
             this->alwaysSyncSend = Boolean::parseBoolean(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND ), "false" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND), "false"));
 
             this->useAsyncSend = Boolean::parseBoolean(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_USEASYNCSEND ), "false" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_USEASYNCSEND), "false"));
 
             this->useCompression = Boolean::parseBoolean(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_USECOMPRESSION ), "false" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_USECOMPRESSION), "false"));
 
             this->compressionLevel = Integer::parseInt(
-                properties->getProperty( "connection.compressionLevel", "-1" ) );
+                properties->getProperty("connection.compressionLevel", "-1"));
 
             this->messagePrioritySupported = Boolean::parseBoolean(
-                properties->getProperty( "connection.messagePrioritySupported", "true" ) );
+                properties->getProperty("connection.messagePrioritySupported", "true"));
 
             this->dispatchAsync = Boolean::parseBoolean(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_DISPATCHASYNC ), "true" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_DISPATCHASYNC), "true"));
 
             this->producerWindowSize = Integer::parseInt(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE), "0"));
 
             this->sendTimeout = decaf::lang::Integer::parseInt(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_SENDTIMEOUT ), "0" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_SENDTIMEOUT), "0"));
 
             this->closeTimeout = decaf::lang::Integer::parseInt(
-                properties->getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT ), "15000" ) );
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT), "15000"));
 
             this->clientId = properties->getProperty(
-                core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::PARAM_CLIENTID ), clientId );
+                core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_CLIENTID), clientId);
 
             this->username = properties->getProperty(
-                core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::PARAM_USERNAME ), username );
+                core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_USERNAME), username);
 
             this->password = properties->getProperty(
-                core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::PARAM_PASSWORD ), password );
+                core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_PASSWORD), password);
 
-            this->defaultPrefetchPolicy->configure( *properties );
-            this->defaultRedeliveryPolicy->configure( *properties );
+            this->defaultPrefetchPolicy->configure(*properties);
+            this->defaultRedeliveryPolicy->configure(*properties);
         }
 
         static URI createURI(const std::string& uriString) {
-        	try{
-        		return URI(uriString);
-        	} catch(URISyntaxException& ex) {
-        		throw cms::CMSException("Invalid Connection Uri detected.");
-        	}
+            try {
+                return URI(uriString);
+            } catch (URISyntaxException& ex) {
+                throw cms::CMSException("Invalid Connection Uri detected.");
+            }
         }
     };
 
@@ -199,7 +191,6 @@ namespace core{
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory(const std::string& brokerURI) {
-
     return new ActiveMQConnectionFactory( brokerURI );
 }
 
@@ -219,8 +210,8 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory(const std::string& uri,
         this->settings->username = username;
     }
     if (!password.empty()) {
-		this->settings->password = password;
-	}
+        this->settings->password = password;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,37 +221,37 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory(const decaf::net::URI& uri,
 
     this->setBrokerURI(uri);
 
-	// Store login data in the properties
-	if (!username.empty()) {
-		this->settings->username = username;
-	}
-	if (!password.empty()) {
-		this->settings->password = password;
-	}
+    // Store login data in the properties
+    if (!username.empty()) {
+        this->settings->username = username;
+    }
+    if (!password.empty()) {
+        this->settings->password = password;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnectionFactory::~ActiveMQConnectionFactory() {
-    try{
+    try {
         delete this->settings;
     }
-    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection() {
-    return doCreateConnection( settings->brokerURI, settings->username, settings->password, settings->clientId );
+    return doCreateConnection(settings->brokerURI, settings->username, settings->password, settings->clientId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection(const std::string& username, const std::string& password) {
-    return doCreateConnection( settings->brokerURI, username, password, settings->clientId );
+    return doCreateConnection(settings->brokerURI, username, password, settings->clientId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection(const std::string& username, const std::string& password, const std::string& clientId) {
-    return doCreateConnection( settings->brokerURI, username, password, clientId );
+    return doCreateConnection(settings->brokerURI, username, password, clientId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -272,63 +263,59 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection(const decaf::net:
     Pointer<Transport> transport;
     auto_ptr<ActiveMQConnection> connection;
 
-    try{
+    try {
 
-        this->setBrokerURI( uri );
+        this->setBrokerURI(uri);
 
         // Store login data in the properties
-        if( !username.empty() ) {
+        if (!username.empty()) {
             this->settings->username = username;
         }
-        if( !password.empty() ) {
+        if (!password.empty()) {
             this->settings->password = password;
         }
-        if( !clientId.empty() ) {
+        if (!clientId.empty()) {
             this->settings->clientId = clientId;
         }
 
         // Use the TransportBuilder to get our Transport
-        transport =
-            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( uri );
+        transport = TransportRegistry::getInstance().findFactory(uri.getScheme())->create(uri);
 
-        if( transport == NULL ){
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQConnectionFactory::createConnection - "
-                "failed creating new Transport" );
+        if (transport == NULL) {
+            throw ActiveMQException(__FILE__, __LINE__, "ActiveMQConnectionFactory::createConnection - "
+                    "failed creating new Transport");
         }
 
-        Pointer<Properties> properties( this->settings->properties->clone() );
+        Pointer<Properties> properties(this->settings->properties->clone());
 
         // Create and Return the new connection object.
-        connection.reset( createActiveMQConnection( transport, properties ) );
+        connection.reset(createActiveMQConnection(transport, properties));
 
         // Set all options parsed from the URI.
-        configureConnection( connection.get() );
+        configureConnection(connection.get());
 
         // Now start the connection since all other configuration is done.
         transport->start();
 
-        if( !this->settings->clientId.empty() ) {
-            connection->setDefaultClientId( this->settings->clientId );
+        if (!this->settings->clientId.empty()) {
+            connection->setDefaultClientId(this->settings->clientId);
         }
 
         return connection.release();
-    }
-    catch( cms::CMSException& ex ){
-        ex.setMark( __FILE__, __LINE__ );
+    } catch (cms::CMSException& ex) {
+        ex.setMark(__FILE__, __LINE__);
         throw ex;
-    } catch( activemq::exceptions::ActiveMQException& ex ){
-        ex.setMark( __FILE__, __LINE__ );
+    } catch (activemq::exceptions::ActiveMQException& ex) {
+        ex.setMark(__FILE__, __LINE__);
         throw ex.convertToCMSException();
-    } catch( decaf::lang::Exception& ex ){
-        ex.setMark( __FILE__, __LINE__ );
-        activemq::exceptions::ActiveMQException amqEx( ex );
+    } catch (decaf::lang::Exception& ex) {
+        ex.setMark(__FILE__, __LINE__);
+        activemq::exceptions::ActiveMQException amqEx(ex);
         throw amqEx.convertToCMSException();
-    } catch( std::exception& ex ) {
-        throw cms::CMSException( ex.what(), NULL );
-    } catch(...) {
-        throw cms::CMSException( "Caught Unknown Exception", NULL );
+    } catch (std::exception& ex) {
+        throw cms::CMSException(ex.what(), NULL);
+    } catch (...) {
+        throw cms::CMSException("Caught Unknown Exception", NULL);
     }
 }
 
@@ -337,19 +324,16 @@ ActiveMQConnection* ActiveMQConnectionFactory::createActiveMQConnection(
     const Pointer<transport::Transport>& transport,
     const Pointer<decaf::util::Properties>& properties) {
 
-    return new ActiveMQConnection( transport, properties );
+    return new ActiveMQConnection(transport, properties);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection(
-    const std::string& uri,
-    const std::string& username,
-    const std::string& password,
-    const std::string& clientId) {
-
+cms::Connection* ActiveMQConnectionFactory::createConnection(const std::string& uri,
+                                                             const std::string& username,
+                                                             const std::string& password,
+                                                             const std::string& clientId) {
     ActiveMQConnectionFactory factory;
-
-    return factory.doCreateConnection( URI( uri ), username, password, clientId );
+    return factory.doCreateConnection(URI(uri), username, password, clientId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

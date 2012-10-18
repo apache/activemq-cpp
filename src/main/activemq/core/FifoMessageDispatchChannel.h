@@ -37,8 +37,8 @@ namespace core {
 
     private:
 
-        FifoMessageDispatchChannel( const FifoMessageDispatchChannel& );
-        FifoMessageDispatchChannel& operator= ( const FifoMessageDispatchChannel& );
+        FifoMessageDispatchChannel(const FifoMessageDispatchChannel&);
+        FifoMessageDispatchChannel& operator=(const FifoMessageDispatchChannel&);
 
     public:
 
@@ -46,9 +46,9 @@ namespace core {
 
         virtual ~FifoMessageDispatchChannel();
 
-        virtual void enqueue( const Pointer<MessageDispatch>& message );
+        virtual void enqueue(const Pointer<MessageDispatch>& message);
 
-        virtual void enqueueFirst( const Pointer<MessageDispatch>& message );
+        virtual void enqueueFirst(const Pointer<MessageDispatch>& message);
 
         virtual bool isEmpty() const;
 
@@ -60,7 +60,7 @@ namespace core {
             return this->running;
         }
 
-        virtual Pointer<MessageDispatch> dequeue( long long timeout );
+        virtual Pointer<MessageDispatch> dequeue(long long timeout);
 
         virtual Pointer<MessageDispatch> dequeueNoWait();
 
@@ -76,55 +76,39 @@ namespace core {
 
         virtual int size() const;
 
-        virtual std::vector< Pointer<MessageDispatch> > removeAll();
+        virtual std::vector<Pointer<MessageDispatch> > removeAll();
 
     public:
 
-        virtual void lock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void lock() {
             channel.lock();
         }
 
-        virtual bool tryLock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual bool tryLock() {
             return channel.tryLock();
         }
 
-        virtual void unlock() throw( decaf::lang::exceptions::RuntimeException ) {
+        virtual void unlock() {
             channel.unlock();
         }
 
-        virtual void wait() throw( decaf::lang::exceptions::RuntimeException,
-                                   decaf::lang::exceptions::IllegalMonitorStateException,
-                                   decaf::lang::exceptions::InterruptedException ) {
-
+        virtual void wait() {
             channel.wait();
         }
 
-        virtual void wait( long long millisecs )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            channel.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            channel.wait(millisecs);
         }
 
-        virtual void wait( long long millisecs, int nanos )
-            throw( decaf::lang::exceptions::RuntimeException,
-                   decaf::lang::exceptions::IllegalArgumentException,
-                   decaf::lang::exceptions::IllegalMonitorStateException,
-                   decaf::lang::exceptions::InterruptedException ) {
-
-            channel.wait( millisecs, nanos );
+        virtual void wait(long long millisecs, int nanos) {
+            channel.wait(millisecs, nanos);
         }
 
-        virtual void notify() throw( decaf::lang::exceptions::RuntimeException,
-                                     decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notify() {
             channel.notify();
         }
 
-        virtual void notifyAll() throw( decaf::lang::exceptions::RuntimeException,
-                                        decaf::lang::exceptions::IllegalMonitorStateException ) {
-
+        virtual void notifyAll() {
             channel.notifyAll();
         }
 

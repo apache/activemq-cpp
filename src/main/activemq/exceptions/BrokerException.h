@@ -21,74 +21,33 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/BrokerError.h>
-#include <sstream>
 
-namespace activemq{
-namespace exceptions{
+namespace activemq {
+namespace exceptions {
 
-    class AMQCPP_API BrokerException : public exceptions::ActiveMQException {
+    class AMQCPP_API BrokerException: public exceptions::ActiveMQException {
     public:
 
-        BrokerException() {}
+        BrokerException();
 
-        BrokerException( const exceptions::ActiveMQException& ex )
-            : exceptions::ActiveMQException(){
-            *( exceptions::ActiveMQException* )this = ex;
-        }
+        BrokerException(const exceptions::ActiveMQException& ex);
 
-        BrokerException( const BrokerException& ex )
-            : exceptions::ActiveMQException(){
-            *( exceptions::ActiveMQException* )this = ex;
-        }
+        BrokerException(const BrokerException& ex);
 
-        BrokerException( const char* file, const int lineNumber,
-                         const char* msg, ... )
-          : exceptions::ActiveMQException() {
+        BrokerException(const char* file, const int lineNumber, const char* msg, ...);
 
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
-
-        BrokerException( const char* file, const int lineNumber,
-                         const commands::BrokerError* error )
-          : exceptions::ActiveMQException() {
-
-            std::ostringstream ostream;
-            ostream << "*** BEGIN SERVER-SIDE STACK TRACE ***" << std::endl;
-            ostream << "Message: " << error->getMessage() << std::endl;
-            if( error->getCause() != NULL ) {
-                ostream << "Cause: " << error->getCause()->toString() << std::endl;
-            }
-            ostream << "Exception Class " << error->getExceptionClass() << std::endl;
-
-            for( std::size_t ix = 0; ix< error->getStackTraceElements().size(); ++ix ){
-                ostream << "\t[FILE: " << error->getStackTraceElements()[ix]->FileName
-                        << ", LINE: " << error->getStackTraceElements()[ix]->LineNumber
-                        << "] occurred in: " << error->getStackTraceElements()[ix]->ClassName
-                        << "." << error->getStackTraceElements()[ix]->MethodName
-                        << std::endl;
-            }
-
-            ostream << "*** END SERVER-SIDE STACK TRACE ***";
-
-            setMessage( ostream.str().c_str() );
-            setMark( file, lineNumber );
-        }
+        BrokerException(const char* file, const int lineNumber, const commands::BrokerError* error);
 
         /**
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
+         *
+         * @returns new BrokerException instance that is a clone of this one.
          */
-        virtual BrokerException* clone() const{
-            return new BrokerException( *this );
-        }
+        virtual BrokerException* clone() const;
 
-        virtual ~BrokerException() throw() {}
+        virtual ~BrokerException() throw ();
     };
 
 }}
