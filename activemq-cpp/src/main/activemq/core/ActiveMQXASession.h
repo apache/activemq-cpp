@@ -34,6 +34,11 @@ namespace core {
 
         Pointer<activemq::core::kernels::ActiveMQXASessionKernel> xaKernel;
 
+    private:
+
+        ActiveMQXASession(const ActiveMQXASession&);
+        ActiveMQXASession& operator= (const ActiveMQXASession&);
+
     public:
 
         ActiveMQXASession(Pointer<activemq::core::kernels::ActiveMQXASessionKernel> kernel);

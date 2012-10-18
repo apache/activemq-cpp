@@ -25,8 +25,6 @@
 #include <cms/CMSException.h>
 #include <decaf/lang/Exception.h>
 #include <activemq/exceptions/ExceptionDefines.h>
-#include <stdarg.h>
-#include <sstream>
 
 namespace activemq{
 namespace exceptions{

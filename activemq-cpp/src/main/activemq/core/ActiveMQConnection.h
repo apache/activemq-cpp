@@ -20,7 +20,6 @@
 
 #include <cms/Connection.h>
 #include <activemq/util/Config.h>
-#include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/ConnectionInfo.h>
@@ -684,7 +683,7 @@ namespace core{
          * Notify the exception listener
          * @param ex the exception to fire
          */
-        virtual void fire( const exceptions::ActiveMQException& ex );
+        virtual void fire(const exceptions::ActiveMQException& ex);
 
         /**
          * Indicates that a Connection resource that is processing the transportInterrupted

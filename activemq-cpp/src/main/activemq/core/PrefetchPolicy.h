@@ -34,8 +34,8 @@ namespace core {
     class AMQCPP_API PrefetchPolicy {
     private:
 
-        PrefetchPolicy( const PrefetchPolicy& );
-        PrefetchPolicy& operator= ( const PrefetchPolicy& );
+        PrefetchPolicy(const PrefetchPolicy&);
+        PrefetchPolicy& operator=(const PrefetchPolicy&);
 
     protected:
 
@@ -51,7 +51,7 @@ namespace core {
          * @param value
          *      The number of messages to prefetch.
          */
-        virtual void setDurableTopicPrefetch( int value ) = 0;
+        virtual void setDurableTopicPrefetch(int value) = 0;
 
         /**
          * Gets the amount of messages to prefetch for a Durable Topic.
@@ -66,7 +66,7 @@ namespace core {
          * @param value
          *      The number of messages to prefetch.
          */
-        virtual void setQueuePrefetch( int value ) = 0;
+        virtual void setQueuePrefetch(int value) = 0;
 
         /**
          * Gets the amount of messages to prefetch for a Queue.
@@ -81,7 +81,7 @@ namespace core {
          * @param value
          *      The number of messages to prefetch.
          */
-        virtual void setQueueBrowserPrefetch( int value ) = 0;
+        virtual void setQueueBrowserPrefetch(int value) = 0;
 
         /**
          * Gets the amount of messages to prefetch for a Queue Browser.
@@ -96,7 +96,7 @@ namespace core {
          * @param value
          *      The number of messages to prefetch.
          */
-        virtual void setTopicPrefetch( int value ) = 0;
+        virtual void setTopicPrefetch(int value) = 0;
 
         /**
          * Gets the amount of messages to prefetch for a Topic.
@@ -112,7 +112,7 @@ namespace core {
          *
          * @returns the allowable value for a prefetch limit, either requested or the max.
          */
-        virtual int getMaxPrefetchLimit( int value ) const = 0;
+        virtual int getMaxPrefetchLimit(int value) const = 0;
 
         /**
          * Clone the Policy and return a new pointer to that clone.
@@ -137,7 +137,7 @@ namespace core {
          * @throws NumberFormatException if a property that is numeric cannot be converted
          * @throws IllegalArgumentException if a property can't be converted to the correct type.
          */
-        virtual void configure( const decaf::util::Properties& properties );
+        virtual void configure(const decaf::util::Properties& properties);
 
     };
 

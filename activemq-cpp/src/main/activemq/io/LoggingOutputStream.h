@@ -45,22 +45,22 @@ namespace io{
          *      If true, this object will control the lifetime of the
          *      output stream that it encapsulates.
          */
-        LoggingOutputStream( OutputStream* next, bool own = false );
+        LoggingOutputStream(OutputStream* next, bool own = false);
 
         virtual ~LoggingOutputStream();
 
     protected:
 
-        virtual void doWriteByte( unsigned char c );
+        virtual void doWriteByte(unsigned char c);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     private:
 
         /**
          * Logs the data in the buffer.
          */
-        void log( const unsigned char* buffer, int len );
+        void log(const unsigned char* buffer, int len);
 
     };
 

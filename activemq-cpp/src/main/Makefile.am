@@ -90,6 +90,7 @@ cc_sources = \
     activemq/commands/TransactionInfo.cpp \
     activemq/commands/WireFormatInfo.cpp \
     activemq/commands/XATransactionId.cpp \
+    activemq/core/ActiveMQAckHandler.cpp \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQConnectionMetaData.cpp \
@@ -104,10 +105,14 @@ cc_sources = \
     activemq/core/ActiveMQXAConnectionFactory.cpp \
     activemq/core/ActiveMQXASession.cpp \
     activemq/core/AdvisoryConsumer.cpp \
+    activemq/core/DispatchData.cpp \
+    activemq/core/Dispatcher.cpp \
     activemq/core/FifoMessageDispatchChannel.cpp \
+    activemq/core/MessageDispatchChannel.cpp \
     activemq/core/PrefetchPolicy.cpp \
     activemq/core/RedeliveryPolicy.cpp \
     activemq/core/SimplePriorityMessageDispatchChannel.cpp \
+    activemq/core/Synchronization.cpp \
     activemq/core/kernels/ActiveMQConsumerKernel.cpp \
     activemq/core/kernels/ActiveMQProducerKernel.cpp \
     activemq/core/kernels/ActiveMQSessionKernel.cpp \
@@ -115,6 +120,8 @@ cc_sources = \
     activemq/core/policies/DefaultPrefetchPolicy.cpp \
     activemq/core/policies/DefaultRedeliveryPolicy.cpp \
     activemq/exceptions/ActiveMQException.cpp \
+    activemq/exceptions/BrokerException.cpp \
+    activemq/exceptions/ConnectionFailedException.cpp \
     activemq/io/LoggingInputStream.cpp \
     activemq/io/LoggingOutputStream.cpp \
     activemq/library/ActiveMQCPP.cpp \

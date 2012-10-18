@@ -29,66 +29,63 @@ using namespace decaf::lang::exceptions;
 LOGDECAF_INITIALIZE( logger, LoggingOutputStream, "activemq.io.LoggingOutputStream")
 
 ////////////////////////////////////////////////////////////////////////////////
-LoggingOutputStream::LoggingOutputStream( OutputStream* outputStream, bool own )
- : decaf::io::FilterOutputStream( outputStream, own ) {}
-
-////////////////////////////////////////////////////////////////////////////////
-LoggingOutputStream::~LoggingOutputStream() {}
-
-////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::doWriteByte( const unsigned char c ) {
-    try {
-
-        log( &c, 1 );
-        FilterOutputStream::doWriteByte( c );
-    }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+LoggingOutputStream::LoggingOutputStream(OutputStream* outputStream, bool own) :
+    decaf::io::FilterOutputStream(outputStream, own) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                               int offset, int length ) {
+LoggingOutputStream::~LoggingOutputStream() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LoggingOutputStream::doWriteByte(const unsigned char c) {
+    try {
+        log(&c, 1);
+        FilterOutputStream::doWriteByte(c);
+    }
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LoggingOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
 
     try {
 
-        if( length == 0 ) {
+        if (length == 0) {
             return;
         }
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "LoggingOutputStream::write - Passed Buffer is Null" );
+        if (buffer == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "LoggingOutputStream::write - Passed Buffer is Null");
         }
 
-        if( ( offset + length ) > size ) {
-            throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "DataOutputStream::write - given offset + length is greater than buffer size.");
+        if ((offset + length) > size) {
+            throw decaf::lang::exceptions::IndexOutOfBoundsException(__FILE__, __LINE__,
+                    "DataOutputStream::write - given offset + length is greater than buffer size.");
         }
 
-        log( buffer + offset, length );
+        log(buffer + offset, length);
 
-        FilterOutputStream::doWriteArrayBounded( buffer, size, offset, length );
+        FilterOutputStream::doWriteArrayBounded(buffer, size, offset, length);
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_RETHROW( NullPointerException )
-    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
-    AMQ_CATCHALL_THROW( IOException )
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_RETHROW(NullPointerException)
+    AMQ_CATCH_RETHROW(IndexOutOfBoundsException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingOutputStream::log( const unsigned char* buffer, int len ) {
+void LoggingOutputStream::log(const unsigned char* buffer, int len) {
 
     // Write the buffer as hex to a string stream.
     ostringstream ostream;
     ostream << "TCP Trace: Writing:" << endl << '[';
 
-    for( int ix = 0; ix < len; ++ix ) {
-        ostream << setw( 2 ) << setfill( '0' ) << std::hex << (int)buffer[ix];
+    for (int ix = 0; ix < len; ++ix) {
+        ostream << setw(2) << setfill('0') << std::hex << (int) buffer[ix];
 
-        if( ( ( ix + 1 ) % 2 ) == 0 ) {
+        if (((ix + 1) % 2) == 0) {
             ostream << ' ';
         }
     }
@@ -96,5 +93,5 @@ void LoggingOutputStream::log( const unsigned char* buffer, int len ) {
     ostream << "] len: " << std::dec << len << " bytes";
 
     // Log the data
-    LOGDECAF_INFO( logger, ostream.str() )
+    LOGDECAF_INFO(logger, ostream.str())
 }

@@ -32,6 +32,11 @@ namespace core {
 
     class AMQCPP_API ActiveMQXAConnectionFactory : public cms::XAConnectionFactory,
                                                    public ActiveMQConnectionFactory {
+    private:
+
+        ActiveMQXAConnectionFactory(const ActiveMQXAConnectionFactory&);
+        ActiveMQXAConnectionFactory& operator= (const ActiveMQXAConnectionFactory&);
+
     public:
 
         ActiveMQXAConnectionFactory();
@@ -42,9 +47,9 @@ namespace core {
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQXAConnectionFactory( const std::string& uri,
-                                     const std::string& username = "",
-                                     const std::string& password = "" );
+        ActiveMQXAConnectionFactory(const std::string& uri,
+                                    const std::string& username = "",
+                                    const std::string& password = "");
 
         /**
          * Constructor
@@ -52,21 +57,21 @@ namespace core {
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
          */
-        ActiveMQXAConnectionFactory( const decaf::net::URI& uri,
-                                     const std::string& username = "",
-                                     const std::string& password = "" );
+        ActiveMQXAConnectionFactory(const decaf::net::URI& uri,
+                                    const std::string& username = "",
+                                    const std::string& password = "");
 
         virtual ~ActiveMQXAConnectionFactory();
 
         virtual cms::XAConnection* createXAConnection();
 
-        virtual cms::XAConnection* createXAConnection( const std::string& userName,
-                                                       const std::string& password );
+        virtual cms::XAConnection* createXAConnection(const std::string& userName,
+                                                      const std::string& password);
 
     protected:
 
-        virtual ActiveMQConnection* createActiveMQConnection( const Pointer<transport::Transport>& transport,
-                                                              const Pointer<decaf::util::Properties>& properties );
+        virtual ActiveMQConnection* createActiveMQConnection(const Pointer<transport::Transport>& transport,
+                                                             const Pointer<decaf::util::Properties>& properties);
 
     };
 

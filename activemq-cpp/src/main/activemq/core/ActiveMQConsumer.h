@@ -24,7 +24,6 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/core/kernels/ActiveMQConsumerKernel.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/core/RedeliveryPolicy.h>
 

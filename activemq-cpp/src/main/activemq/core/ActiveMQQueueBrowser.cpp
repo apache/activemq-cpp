@@ -66,7 +66,7 @@ namespace core{
                 cms::MessageListener* listener ) :
             ActiveMQConsumerKernel(session, id, destination, name, selector, prefetch,
                                    maxPendingMessageCount, noLocal, browser, dispatchAsync,
-                                   listener ), parent(parent) {
+                                   listener), parent(parent) {
 
         }
 
@@ -127,7 +127,7 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser(ActiveMQSessionKernel* session,
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQQueueBrowser::~ActiveMQQueueBrowser() {
-    try{
+    try {
         this->close();
     }
     DECAF_CATCHALL_NOTHROW()
@@ -146,9 +146,9 @@ std::string ActiveMQQueueBrowser::getMessageSelector() const {
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() {
 
-    try{
+    try {
         checkClosed();
-        if( this->browser == NULL ) {
+        if (this->browser == NULL) {
             this->browser = createConsumer();
         }
         return this;
@@ -158,7 +158,7 @@ cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQQueueBrowser::close() {
-    try{
+    try {
 
         if (this->closed) {
             return;
@@ -175,7 +175,7 @@ void ActiveMQQueueBrowser::close() {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQQueueBrowser::hasMoreMessages() {
 
-    try{
+    try {
 
         while (true) {
 
@@ -203,7 +203,7 @@ bool ActiveMQQueueBrowser::hasMoreMessages() {
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* ActiveMQQueueBrowser::nextMessage() {
 
-    try{
+    try {
 
         while (true) {
 
@@ -220,7 +220,7 @@ cms::Message* ActiveMQQueueBrowser::nextMessage() {
                     return answer;
                 }
 
-            } catch(cms::CMSException& e) {
+            } catch (cms::CMSException& e) {
                 return NULL;
             }
 
@@ -257,16 +257,14 @@ Pointer<ActiveMQConsumerKernel> ActiveMQQueueBrowser::createConsumer() {
 
     int prefetch = this->session->getConnection()->getPrefetchPolicy()->getQueueBrowserPrefetch();
 
-    Pointer<ActiveMQConsumerKernel> consumer(
-        new Browser(this, session, consumerId, destination, "", selector,
-                    prefetch, 0, false, true, dispatchAsync, NULL ) );
+    Pointer<ActiveMQConsumerKernel> consumer(new Browser(this, session, consumerId, destination, "", selector, prefetch, 0, false, true, dispatchAsync, NULL));
 
     try {
         this->session->addConsumer(consumer);
         this->session->syncRequest(consumer->getConsumerInfo());
     } catch (Exception& ex) {
         this->session->removeConsumer(consumer);
-        throw ex;
+        throw;
     }
 
     if (this->session->getConnection()->isStarted()) {

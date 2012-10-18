@@ -33,36 +33,36 @@ PrefetchPolicy::~PrefetchPolicy() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrefetchPolicy::configure( const decaf::util::Properties& properties ) {
+void PrefetchPolicy::configure(const decaf::util::Properties& properties) {
 
-    try{
+    try {
 
-        if( properties.hasProperty( "cms.PrefetchPolicy.durableTopicPrefetch" ) ) {
-            this->setDurableTopicPrefetch( Integer::parseInt(
-                properties.getProperty( "cms.PrefetchPolicy.durableTopicPrefetch" ) ) );
+        if (properties.hasProperty("cms.PrefetchPolicy.durableTopicPrefetch")) {
+            this->setDurableTopicPrefetch(Integer::parseInt(
+                properties.getProperty("cms.PrefetchPolicy.durableTopicPrefetch")));
         }
-        if( properties.hasProperty( "cms.PrefetchPolicy.queueBrowserPrefetch" ) ) {
-            this->setQueueBrowserPrefetch( Integer::parseInt(
-                properties.getProperty( "cms.PrefetchPolicy.queueBrowserPrefetch" ) ) );
+        if (properties.hasProperty("cms.PrefetchPolicy.queueBrowserPrefetch")) {
+            this->setQueueBrowserPrefetch(Integer::parseInt(
+                properties.getProperty("cms.PrefetchPolicy.queueBrowserPrefetch")));
         }
-        if( properties.hasProperty( "cms.PrefetchPolicy.queuePrefetch" ) ) {
-            this->setQueuePrefetch( Integer::parseInt(
-                properties.getProperty( "cms.PrefetchPolicy.queuePrefetch" ) ) );
+        if (properties.hasProperty("cms.PrefetchPolicy.queuePrefetch")) {
+            this->setQueuePrefetch(Integer::parseInt(
+                properties.getProperty("cms.PrefetchPolicy.queuePrefetch")));
         }
-        if( properties.hasProperty( "cms.PrefetchPolicy.topicPrefetch" ) ) {
-            this->setTopicPrefetch( Integer::parseInt(
-                properties.getProperty( "cms.PrefetchPolicy.topicPrefetch" ) ) );
+        if (properties.hasProperty("cms.PrefetchPolicy.topicPrefetch")) {
+            this->setTopicPrefetch(Integer::parseInt(
+                properties.getProperty("cms.PrefetchPolicy.topicPrefetch")));
         }
 
-        if( properties.hasProperty( "cms.PrefetchPolicy.all" ) ) {
-            int value = Integer::parseInt( properties.getProperty( "cms.PrefetchPolicy.all" ) );
+        if (properties.hasProperty("cms.PrefetchPolicy.all")) {
+            int value = Integer::parseInt(properties.getProperty("cms.PrefetchPolicy.all"));
 
-            this->setDurableTopicPrefetch( value );
-            this->setQueueBrowserPrefetch( value );
-            this->setQueuePrefetch( value );
-            this->setTopicPrefetch( value );
+            this->setDurableTopicPrefetch(value);
+            this->setQueueBrowserPrefetch(value);
+            this->setQueuePrefetch(value);
+            this->setTopicPrefetch(value);
         }
     }
-    DECAF_CATCH_RETHROW( Exception )
-    DECAF_CATCHALL_THROW( Exception )
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
 }

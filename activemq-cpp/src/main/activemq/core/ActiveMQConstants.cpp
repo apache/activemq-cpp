@@ -56,11 +56,10 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
     uriParams[PARAM_PASSWORD] = "password";
     uriParams[PARAM_CLIENTID] = "client-id";
 
-    for( int ix=0; ix<NUM_OPTIONS; ++ix ){
-        destOptionMap[destOptions[ix]] = (DestinationOption)ix;
+    for (int ix = 0; ix < NUM_OPTIONS; ++ix) {
+        destOptionMap[destOptions[ix]] = (DestinationOption) ix;
     }
-    for( int ix=0; ix<NUM_PARAMS; ++ix ){
-        uriParamsMap[uriParams[ix]] = (URIParam)ix;
+    for (int ix = 0; ix < NUM_PARAMS; ++ix) {
+        uriParamsMap[uriParams[ix]] = (URIParam) ix;
     }
-
 }

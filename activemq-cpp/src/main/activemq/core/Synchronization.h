@@ -19,7 +19,6 @@
 #define _ACTIVEMQ_CORE_SYNCHRONIZATION_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq {
 namespace core {
@@ -28,10 +27,10 @@ namespace core {
      * Transacted Object Synchronization, used to sync the events of a Transaction
      * with the items in the Transaction.
      */
-    class Synchronization {
+    class AMQCPP_API Synchronization {
     public:
 
-        virtual ~Synchronization() {}
+        virtual ~Synchronization();
 
         virtual void beforeEnd() = 0;
 

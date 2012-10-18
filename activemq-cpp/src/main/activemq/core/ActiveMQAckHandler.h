@@ -17,7 +17,6 @@
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQACKHANDLER_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQACKHANDLER_H_
 
-#include <cms/CMSException.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -35,7 +34,7 @@ namespace core{
     class AMQCPP_API ActiveMQAckHandler {
     public:
 
-        virtual ~ActiveMQAckHandler() {};
+        virtual ~ActiveMQAckHandler();
 
         /**
          * Method called to acknowledge the message once it has been received by a
@@ -46,7 +45,7 @@ namespace core{
          *
          * @throw CMSException if an error occurs while acknowledging the given Message.
          */
-        virtual void acknowledgeMessage( const commands::Message* message ) = 0;
+        virtual void acknowledgeMessage(const commands::Message* message) = 0;
 
     };
 

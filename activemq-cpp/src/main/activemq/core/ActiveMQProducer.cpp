@@ -43,14 +43,13 @@ ActiveMQProducer::~ActiveMQProducer() {
     try {
         this->kernel->close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::close() {
 
-    try{
+    try {
         this->kernel->close();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()

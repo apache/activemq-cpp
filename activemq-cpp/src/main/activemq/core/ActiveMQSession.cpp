@@ -53,8 +53,7 @@ ActiveMQSession::~ActiveMQSession() {
     try {
         this->kernel->close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

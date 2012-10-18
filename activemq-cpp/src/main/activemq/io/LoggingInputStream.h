@@ -36,11 +36,13 @@ namespace io{
         /**
          * Creates a DataInputStream that uses the specified underlying
          * InputStream.
-         * @param inputStream the InputStream instance to wrap.
-         * @param own indicates if this class owns the wrapped string
-         * defaults to false.
+         *
+         * @param inputStream
+         *      the InputStream instance to wrap.
+         * @param own
+         *      indicates if this class owns the wrapped string defaults to false.
          */
-        LoggingInputStream( decaf::io::InputStream* inputStream, bool own = false );
+        LoggingInputStream(decaf::io::InputStream* inputStream, bool own = false);
 
         virtual ~LoggingInputStream();
 
@@ -48,14 +50,14 @@ namespace io{
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     private:
 
         /**
          * Logs the data in the buffer.
          */
-        void log( const unsigned char* buffer, int len );
+        void log(const unsigned char* buffer, int len);
 
     };
 

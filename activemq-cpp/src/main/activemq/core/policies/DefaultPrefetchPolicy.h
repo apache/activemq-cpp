@@ -44,8 +44,8 @@ namespace policies {
 
     private:
 
-        DefaultPrefetchPolicy( const DefaultPrefetchPolicy& );
-        DefaultPrefetchPolicy& operator= ( DefaultPrefetchPolicy& );
+        DefaultPrefetchPolicy(const DefaultPrefetchPolicy&);
+        DefaultPrefetchPolicy& operator=(DefaultPrefetchPolicy&);
 
     public:
 
@@ -53,39 +53,39 @@ namespace policies {
 
         virtual ~DefaultPrefetchPolicy();
 
-        virtual void setDurableTopicPrefetch( int value ) {
-            this->durableTopicPrefetch = getMaxPrefetchLimit( value );
+        virtual void setDurableTopicPrefetch(int value) {
+            this->durableTopicPrefetch = getMaxPrefetchLimit(value);
         }
 
         virtual int getDurableTopicPrefetch() const {
             return this->durableTopicPrefetch;
         }
 
-        virtual void setQueuePrefetch( int value ) {
-            this->queuePrefetch = getMaxPrefetchLimit( value );
+        virtual void setQueuePrefetch(int value) {
+            this->queuePrefetch = getMaxPrefetchLimit(value);
         }
 
         virtual int getQueuePrefetch() const {
             return this->queuePrefetch;
         }
 
-        virtual void setQueueBrowserPrefetch( int value ) {
-            this->queueBrowserPrefetch = getMaxPrefetchLimit( value );
+        virtual void setQueueBrowserPrefetch(int value) {
+            this->queueBrowserPrefetch = getMaxPrefetchLimit(value);
         }
 
         virtual int getQueueBrowserPrefetch() const {
             return this->queueBrowserPrefetch;
         }
 
-        virtual void setTopicPrefetch( int value ) {
-            this->topicPrefetch = getMaxPrefetchLimit( value );
+        virtual void setTopicPrefetch(int value) {
+            this->topicPrefetch = getMaxPrefetchLimit(value);
         }
 
         virtual int getTopicPrefetch() const {
             return this->topicPrefetch;
         }
 
-        virtual int getMaxPrefetchLimit( int value ) const {
+        virtual int getMaxPrefetchLimit(int value) const {
             return value < MAX_PREFETCH_SIZE ? value : MAX_PREFETCH_SIZE;
         }
 

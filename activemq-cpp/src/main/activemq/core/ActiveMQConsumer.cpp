@@ -49,8 +49,7 @@ namespace core {
 
         Pointer<ActiveMQConsumerKernel> kernel;
 
-        ActiveMQConsumerData(const Pointer<ActiveMQConsumerKernel>& kernel) : kernel(kernel) {
-        }
+        ActiveMQConsumerData(const Pointer<ActiveMQConsumerKernel>& kernel) : kernel(kernel) {}
     };
 
 }}
@@ -78,7 +77,6 @@ ActiveMQConsumer::~ActiveMQConsumer() {
 
         delete this->config;
     }
-    AMQ_CATCH_NOTHROW(ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
