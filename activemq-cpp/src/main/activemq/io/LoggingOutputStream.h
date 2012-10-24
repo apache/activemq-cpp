@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_
-#define ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_
+#ifndef _ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_
+#define _ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_
 
 #include <activemq/util/Config.h>
 #include <decaf/io/FilterOutputStream.h>
@@ -66,4 +66,4 @@ namespace io{
 
 }}
 
-#endif /*ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_*/
+#endif /*_ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_*/
