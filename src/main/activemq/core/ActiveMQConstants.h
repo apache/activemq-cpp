@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_
-#define ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_
+#ifndef _ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_
+#define _ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_
 
 #include <string>
 #include <map>
@@ -143,4 +143,4 @@ namespace core{
 
 }}
 
-#endif /*ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_*/
+#endif /*_ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_*/
