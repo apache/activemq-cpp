@@ -83,7 +83,7 @@ void ActiveMQSessionExecutor::executeFirst(const Pointer<MessageDispatch>& dispa
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::wakeup() {
 
-    Pointer<TaskRunner> taskRunner = this->taskRunner;
+    Pointer<TaskRunner> taskRunner;
     synchronized(messageQueue.get()) {
         if (this->taskRunner == NULL) {
             this->taskRunner.reset(new DedicatedTaskRunner(this));
@@ -111,9 +111,17 @@ void ActiveMQSessionExecutor::stop() {
 
     if (messageQueue->isRunning()) {
         messageQueue->stop();
-        Pointer<TaskRunner> taskRunner = this->taskRunner;
+        Pointer<TaskRunner> taskRunner;
+
+        synchronized(messageQueue.get()) {
+            taskRunner = this->taskRunner;
+
+            if (taskRunner != NULL) {
+                this->taskRunner.reset(NULL);
+            }
+        }
+
         if (taskRunner != NULL) {
-            this->taskRunner.reset(NULL);
             taskRunner->shutdown();
         }
     }
