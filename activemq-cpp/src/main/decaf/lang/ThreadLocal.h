@@ -41,6 +41,11 @@ namespace lang {
      */
     template <typename E>
     class ThreadLocal : protected decaf::internal::util::concurrent::ThreadLocalImpl {
+    private:
+
+        ThreadLocal(const ThreadLocal&);
+        ThreadLocal& operator= (const ThreadLocal&);
+
     public:
 
         /**

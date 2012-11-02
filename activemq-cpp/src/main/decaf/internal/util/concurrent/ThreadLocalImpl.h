@@ -30,6 +30,11 @@ namespace concurrent {
 
         int tlsKey;
 
+    private:
+
+        ThreadLocalImpl(const ThreadLocalImpl&);
+        ThreadLocalImpl& operator= (const ThreadLocalImpl&);
+
     public:
 
         ThreadLocalImpl();
