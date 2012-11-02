@@ -26,12 +26,23 @@ using namespace activemq::wireformat::stomp;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<WireFormat> StompWireFormatFactory::createWireFormat(
-    const decaf::util::Properties& properties AMQCPP_UNUSED ) {
+Pointer<WireFormat> StompWireFormatFactory::createWireFormat(const decaf::util::Properties& properties AMQCPP_UNUSED) {
 
-    try{
-        return Pointer<WireFormat>( new StompWireFormat() );
+    try {
+
+        Pointer<StompWireFormat> wireFormat(new StompWireFormat());
+
+        wireFormat->setTopicPrefix(
+            properties.getProperty("wireFormat.topicPrefix", "/topic/"));
+        wireFormat->setQueuePrefix(
+            properties.getProperty("wireFormat.queuePrefix", "/queue/"));
+        wireFormat->setTempTopicPrefix(
+            properties.getProperty("wireFormat.tempTopicPrefix", "/temp-topic/"));
+        wireFormat->setTempQueuePrefix(
+            properties.getProperty("wireFormat.tempQueuePrefix", "/temp-queue/"));
+
+        return wireFormat;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
