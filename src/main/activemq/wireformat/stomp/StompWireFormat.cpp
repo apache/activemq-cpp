@@ -18,6 +18,7 @@
 #include "StompWireFormat.h"
 
 #include <activemq/wireformat/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/StompHelper.h>
 #include <activemq/wireformat/stomp/StompCommandConstants.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/commands/Response.h>
@@ -70,9 +71,25 @@ namespace stomp {
 
         int connectResponseId;
 
+        // Prefix used to address Topics (default is /topic/
+        std::string topicPrefix;
+
+        // Prefix used to address Queues (default is /queue/
+        std::string queuePrefix;
+
+        // Prefix used to address Temporary Topics (default is /temp-topic/
+        std::string tempTopicPrefix;
+
+        // Prefix used to address Temporary Queues (default is /temp-queue/
+        std::string tempQueuePrefix;
+
     public:
 
-        StompWireformatProperties() : connectResponseId(-1) {
+        StompWireformatProperties() : connectResponseId(-1),
+                                      topicPrefix("/topic/"),
+                                      queuePrefix("/queue/"),
+                                      tempTopicPrefix("/temp-topic/"),
+                                      tempQueuePrefix("/temp-queue/") {
 
         }
 
@@ -81,15 +98,16 @@ namespace stomp {
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-StompWireFormat::StompWireFormat() : helper(), clientId(), receiving(), properties(NULL) {
-
+StompWireFormat::StompWireFormat() : helper(NULL), clientId(), receiving(), properties(NULL) {
+    this->helper = new StompHelper(this);
     this->properties = new StompWireformatProperties();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 StompWireFormat::~StompWireFormat() {
 
-    try{
+    try {
+        delete this->helper;
         delete this->properties;
     }
     AMQ_CATCHALL_NOTHROW()
@@ -233,14 +251,14 @@ Pointer<Command> StompWireFormat::unmarshalMessage(const Pointer<StompFrame> fra
     // We created a unique id when we registered the subscription for the consumer
     // now extract it back to a consumer Id so the ActiveMQConnection can dispatch it
     // correctly.
-    Pointer<ConsumerId> consumerId = helper.convertConsumerId(frame->removeProperty(StompCommandConstants::HEADER_SUBSCRIPTION));
+    Pointer<ConsumerId> consumerId = helper->convertConsumerId(frame->removeProperty(StompCommandConstants::HEADER_SUBSCRIPTION));
     messageDispatch->setConsumerId(consumerId);
 
     if (frame->hasProperty(StompCommandConstants::HEADER_CONTENTLENGTH)) {
 
         Pointer<ActiveMQBytesMessage> message(new ActiveMQBytesMessage());
         frame->removeProperty(StompCommandConstants::HEADER_CONTENTLENGTH);
-        helper.convertProperties(frame, message);
+        helper->convertProperties(frame, message);
         message->setContent(frame->getBody());
         messageDispatch->setMessage(message);
         messageDispatch->setDestination(message->getDestination());
@@ -248,7 +266,7 @@ Pointer<Command> StompWireFormat::unmarshalMessage(const Pointer<StompFrame> fra
     } else {
 
         Pointer<ActiveMQTextMessage> message(new ActiveMQTextMessage());
-        helper.convertProperties(frame, message);
+        helper->convertProperties(frame, message);
         message->setText((char*) &(frame->getBody()[0]));
         messageDispatch->setMessage(message);
         messageDispatch->setDestination(message->getDestination());
@@ -335,7 +353,7 @@ Pointer<StompFrame> StompWireFormat::marshalMessage(const Pointer<Command> comma
     }
 
     // Convert the standard headers to the Stomp Format.
-    helper.convertProperties(message, frame);
+    helper->convertProperties(message, frame);
 
     // Convert the Content
     try {
@@ -366,13 +384,16 @@ Pointer<StompFrame> StompWireFormat::marshalAck(const Pointer<Command> command) 
     frame->setCommand(StompCommandConstants::ACK);
 
     if (command->isResponseRequired()) {
-        frame->setProperty(StompCommandConstants::HEADER_RECEIPT_REQUIRED, std::string("ignore:") + Integer::toString(command->getCommandId()));
+        frame->setProperty(StompCommandConstants::HEADER_RECEIPT_REQUIRED,
+                           std::string("ignore:") + Integer::toString(command->getCommandId()));
     }
 
-    frame->setProperty(StompCommandConstants::HEADER_MESSAGEID, helper.convertMessageId(ack->getLastMessageId()));
+    frame->setProperty(StompCommandConstants::HEADER_MESSAGEID,
+        helper->convertMessageId(ack->getLastMessageId()));
 
     if (ack->getTransactionId() != NULL) {
-        frame->setProperty(StompCommandConstants::HEADER_TRANSACTIONID, helper.convertTransactionId(ack->getTransactionId()));
+        frame->setProperty(StompCommandConstants::HEADER_TRANSACTIONID,
+                           helper->convertTransactionId(ack->getTransactionId()));
     }
 
     return frame;
@@ -417,7 +438,8 @@ Pointer<StompFrame> StompWireFormat::marshalTransactionInfo(const Pointer<Comman
         frame->setProperty(StompCommandConstants::HEADER_RECEIPT_REQUIRED, Integer::toString(command->getCommandId()));
     }
 
-    frame->setProperty(StompCommandConstants::HEADER_TRANSACTIONID, helper.convertTransactionId(info->getTransactionId()));
+    frame->setProperty(StompCommandConstants::HEADER_TRANSACTIONID,
+                       helper->convertTransactionId(info->getTransactionId()));
 
     return frame;
 }
@@ -448,7 +470,7 @@ Pointer<StompFrame> StompWireFormat::marshalRemoveInfo(const Pointer<Command> co
 
     try {
         Pointer<ConsumerId> id = info->getObjectId().dynamicCast<ConsumerId>();
-        frame->setProperty(StompCommandConstants::HEADER_ID, helper.convertConsumerId(id));
+        frame->setProperty(StompCommandConstants::HEADER_ID, helper->convertConsumerId(id));
         return frame;
     } catch (ClassCastException& ex) {
     }
@@ -468,12 +490,12 @@ Pointer<StompFrame> StompWireFormat::marshalConsumerInfo(const Pointer<Command> 
         frame->setProperty(StompCommandConstants::HEADER_RECEIPT_REQUIRED, Integer::toString(command->getCommandId()));
     }
 
-    frame->setProperty(StompCommandConstants::HEADER_DESTINATION, helper.convertDestination(info->getDestination()));
+    frame->setProperty(StompCommandConstants::HEADER_DESTINATION, helper->convertDestination(info->getDestination()));
 
     // This creates a unique Id for this consumer using the connection id, session id and
     // the consumers's id value, when we get a message this Id will be embedded in the
     // Message's "subscription" property.
-    frame->setProperty(StompCommandConstants::HEADER_ID, helper.convertConsumerId(info->getConsumerId()));
+    frame->setProperty(StompCommandConstants::HEADER_ID, helper->convertConsumerId(info->getConsumerId()));
 
     if (info->getSubscriptionName() != "") {
 
@@ -534,4 +556,44 @@ Pointer<StompFrame> StompWireFormat::marshalRemoveSubscriptionInfo(const Pointer
     frame->setProperty(StompCommandConstants::HEADER_OLDSUBSCRIPTIONNAME, info->getClientId());
 
     return frame;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string StompWireFormat::getTopicPrefix() const {
+    return this->properties->topicPrefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StompWireFormat::setTopicPrefix(const std::string& prefix) {
+    this->properties->topicPrefix = prefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string StompWireFormat::getQueuePrefix() const {
+    return this->properties->queuePrefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StompWireFormat::setQueuePrefix(const std::string& prefix) {
+    this->properties->queuePrefix = prefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string StompWireFormat::getTempTopicPrefix() const {
+    return this->properties->tempTopicPrefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StompWireFormat::setTempTopicPrefix(const std::string& prefix) {
+    this->properties->tempTopicPrefix = prefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string StompWireFormat::getTempQueuePrefix() const {
+    return this->properties->tempQueuePrefix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StompWireFormat::setTempQueuePrefix(const std::string& prefix) {
+    this->properties->tempQueuePrefix = prefix;
 }

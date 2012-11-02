@@ -26,15 +26,14 @@
 #include <decaf/io/DataInputStream.h>
 #include <activemq/util/Config.h>
 
-namespace activemq{
-namespace wireformat{
-namespace stomp{
+namespace activemq {
+namespace wireformat {
+namespace stomp {
 
     /**
-     * A Stomp-level message frame that encloses all messages
-     * to and from the broker.
+     * A Stomp-level message frame that encloses all messages to and from the broker.
      */
-    class AMQCPP_API StompFrame{
+    class AMQCPP_API StompFrame {
     private:
 
         // String Name of this command.
@@ -69,20 +68,20 @@ namespace stomp{
          * Copies the contents of the passed Frame to this one
          * @param src - Frame to copy
          */
-        void copy( const StompFrame* src );
+        void copy(const StompFrame* src);
 
         /**
          * Sets the command for this stomp frame.
          * @param cmd command The command to be set.
          */
-        void setCommand( const std::string& cmd ){
+        void setCommand(const std::string& cmd) {
             this->command = cmd;
         }
 
         /**
          * Accessor for this frame's command field.
          */
-        const std::string& getCommand() const{
+        const std::string& getCommand() const {
             return command;
         }
 
@@ -91,8 +90,8 @@ namespace stomp{
          *
          * @param name - The name of the property to check for.
          */
-        bool hasProperty( const std::string& name ) const {
-            return this->properties.hasProperty( name );
+        bool hasProperty(const std::string& name) const {
+            return this->properties.hasProperty(name);
         }
 
         /**
@@ -104,8 +103,8 @@ namespace stomp{
          *
          * @return string value of the property asked for.
          */
-        std::string getProperty( const std::string& name, const std::string& fallback = "" ) const {
-            return this->properties.getProperty( name, fallback );
+        std::string getProperty(const std::string& name, const std::string& fallback = "") const {
+            return this->properties.getProperty(name, fallback);
         }
 
         /**
@@ -114,8 +113,8 @@ namespace stomp{
          *
          * @param name - the Name of the property to get and return.
          */
-        std::string removeProperty( const std::string& name ) {
-            return this->properties.getProperty( name, "" );
+        std::string removeProperty(const std::string& name) {
+            return this->properties.getProperty(name, "");
         }
 
         /**
@@ -124,15 +123,17 @@ namespace stomp{
          * @param name - Name of the property.
          * @param value - Value to set the property to.
          */
-        void setProperty( const std::string& name, const std::string& value ) {
-            this->properties.setProperty( name, value );
+        void setProperty(const std::string& name, const std::string& value) {
+            this->properties.setProperty(name, value);
         }
 
         /**
          * Gets access to the header properties for this frame.
          * @return the Properties object owned by this Frame
          */
-        decaf::util::Properties& getProperties(){ return properties; }
+        decaf::util::Properties& getProperties() {
+            return properties;
+        }
         const decaf::util::Properties& getProperties() const {
             return properties;
         }
@@ -141,14 +142,14 @@ namespace stomp{
          * Accessor for the body data of this frame.
          * @return char pointer to body data
          */
-        const std::vector<unsigned char>& getBody() const{
+        const std::vector<unsigned char>& getBody() const {
             return body;
         }
 
         /**
          * Non-const version of the body accessor.
          */
-        std::vector<unsigned char>& getBody(){
+        std::vector<unsigned char>& getBody() {
             return body;
         }
 
@@ -156,14 +157,16 @@ namespace stomp{
          * Return the number of bytes contained in this frames body
          * @return Body bytes length.
          */
-        std::size_t getBodyLength() const{ return body.size(); }
+        std::size_t getBodyLength() const {
+            return body.size();
+        }
 
         /**
          * Sets the body data of this frame as a byte sequence.
          * @param bytes The byte buffer to be set in the body.
          * @param numBytes The number of bytes in the buffer.
          */
-        void setBody( const unsigned char* bytes, std::size_t numBytes );
+        void setBody(const unsigned char* bytes, std::size_t numBytes);
 
         /**
          * Writes this Frame to an OuputStream in the Stomp Wire Format.
@@ -172,7 +175,7 @@ namespace stomp{
          *
          * @throw IOException if an error occurs while reading the Frame.
          */
-        void toStream( decaf::io::DataOutputStream* stream ) const;
+        void toStream(decaf::io::DataOutputStream* stream) const;
 
         /**
          * Reads a Stop Frame from a DataInputStream in the Stomp Wire format.
@@ -181,7 +184,7 @@ namespace stomp{
          *
          * @throw IOException if an error occurs while writing the Frame.
          */
-        void fromStream( decaf::io::DataInputStream* stream );
+        void fromStream(decaf::io::DataInputStream* stream);
 
     private:
 
@@ -190,14 +193,14 @@ namespace stomp{
          * @param in - The stream to read the Frame from.
          * @throws IOException
          */
-        void readCommandHeader( decaf::io::DataInputStream* in );
+        void readCommandHeader(decaf::io::DataInputStream* in);
 
         /**
          * Read all the Stomp Headers for the incoming Frame
          * @param in - The stream to read the Frame from.
          * @throws IOException
          */
-        void readHeaders( decaf::io::DataInputStream* in );
+        void readHeaders(decaf::io::DataInputStream* in);
 
         /**
          * Reads a Stomp Header line and stores it in the buffer object
@@ -206,15 +209,14 @@ namespace stomp{
          * @return number of bytes read, zero if there was a problem.
          * @throws IOException
          */
-        std::size_t readHeaderLine( std::vector<unsigned char>& buffer,
-                                    decaf::io::DataInputStream* in );
+        std::size_t readHeaderLine(std::vector<unsigned char>& buffer, decaf::io::DataInputStream* in);
 
         /**
          * Reads the Stomp Body from the Wire and store it in the frame.
          * @param in - The stream to read the Frame from.
          * @throws IOException
          */
-        void readBody( decaf::io::DataInputStream* in );
+        void readBody(decaf::io::DataInputStream* in);
 
     };
 

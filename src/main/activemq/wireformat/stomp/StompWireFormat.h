@@ -21,7 +21,6 @@
 #include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/wireformat/stomp/StompFrame.h>
-#include <activemq/wireformat/stomp/StompHelper.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/io/IOException.h>
 #include <decaf/lang/Pointer.h>
@@ -33,15 +32,16 @@ namespace stomp {
     using decaf::lang::Pointer;
     using activemq::commands::Command;
 
+    class StompHelper;
     class StompWireformatProperties;
 
     class AMQCPP_API StompWireFormat : public WireFormat {
     private:
 
         /**
-         * Performs conversions for stomp types and canonical types.
+         * Performs conversions for STOMP types and canonical types.
          */
-        StompHelper helper;
+        StompHelper* helper;
 
         // Stored after we connect to use when validating that a durable subscribe
         // and unsubscribe are set to use the client Id.
@@ -96,7 +96,7 @@ namespace stomp {
          * Set the Version
          * @param the version of the wire format
          */
-        virtual void setVersion( int version AMQCPP_UNUSED ) {}
+        virtual void setVersion(int version AMQCPP_UNUSED) {}
 
         /**
          * Get the Version
@@ -105,6 +105,66 @@ namespace stomp {
         virtual int getVersion() const {
             return 1;
         }
+
+        /**
+         * Gets the prefix used to address Topics
+         *
+         * @return the string prefix used to address Topics.
+         */
+        std::string getTopicPrefix() const;
+
+        /**
+         * Sets the prefix used to address Topics.
+         *
+         * @param prefix
+         *      The prefix to use.
+         */
+        void setTopicPrefix(const std::string& prefix);
+
+        /**
+         * Gets the prefix used to address Queues
+         *
+         * @return the string prefix used to address Queues.
+         */
+        std::string getQueuePrefix() const;
+
+        /**
+         * Sets the prefix used to address Queues.
+         *
+         * @param prefix
+         *      The prefix to use.
+         */
+        void setQueuePrefix(const std::string& prefix);
+
+        /**
+         * Gets the prefix used to address Temporary Topics
+         *
+         * @return the string prefix used to address Temporary Topics.
+         */
+        std::string getTempTopicPrefix() const;
+
+        /**
+         * Sets the prefix used to address Temporary Topics.
+         *
+         * @param prefix
+         *      The prefix to use.
+         */
+        void setTempTopicPrefix(const std::string& prefix);
+
+        /**
+         * Gets the prefix used to address Temporary Queues
+         *
+         * @return the string prefix used to address Temporary Queues.
+         */
+        std::string getTempQueuePrefix() const;
+
+        /**
+         * Sets the prefix used to address Temporary Queues.
+         *
+         * @param prefix
+         *      The prefix to use.
+         */
+        void setTempQueuePrefix(const std::string& prefix);
 
         /**
          * Is there a Message being unmarshaled?
