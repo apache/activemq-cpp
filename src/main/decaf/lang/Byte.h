@@ -50,7 +50,7 @@ namespace lang{
         /**
          * @param value - the primitive value to wrap
          */
-        Byte( unsigned char value );
+        Byte(unsigned char value);
 
         /**
          * Creates a new Byte instance from the given string.
@@ -60,7 +60,7 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not a valid byte.
          */
-        Byte( const std::string& value );
+        Byte(const std::string& value);
 
         virtual ~Byte() {}
 
@@ -72,7 +72,7 @@ namespace lang{
          * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Byte& c ) const {
+        virtual int compareTo(const Byte& c) const {
             return this->value < c.value ? -1 : (this->value > c.value) ? 1 : 0;
         }
 
@@ -81,7 +81,7 @@ namespace lang{
          * @param c - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Byte& c ) const {
+        virtual bool operator==(const Byte& c) const {
             return this->value == c.value;
         }
 
@@ -91,7 +91,7 @@ namespace lang{
          * @param c - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Byte& c ) const {
+        virtual bool operator<(const Byte& c) const {
             return this->value < c.value;
         }
 
@@ -103,7 +103,7 @@ namespace lang{
          * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const unsigned char& c ) const {
+        virtual int compareTo(const unsigned char& c) const {
             return this->value < c ? -1 : (this->value > c) ? 1 : 0;
         }
 
@@ -112,7 +112,7 @@ namespace lang{
          * @param c - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const unsigned char& c ) const {
+        virtual bool operator==(const unsigned char& c) const {
             return this->value == c;
         }
 
@@ -122,21 +122,21 @@ namespace lang{
          * @param c - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const unsigned char& c ) const {
+        virtual bool operator<(const unsigned char& c) const {
             return this->value < c;
         }
 
         /**
          * @returns true if the two Byte Objects have the same value.
          */
-        bool equals( const Byte& c ) const {
+        bool equals(const Byte& c) const {
             return this->value == c.value;
         }
 
         /**
          * @returns true if the two Bytes have the same value.
          */
-        bool equals( const unsigned char& c ) const {
+        bool equals(const unsigned char& c) const {
             return this->value == c;
         }
 
@@ -150,7 +150,7 @@ namespace lang{
          * @return double the value of the receiver.
          */
         virtual double doubleValue() const {
-            return (double)this->value;
+            return (double) this->value;
         }
 
         /**
@@ -158,7 +158,7 @@ namespace lang{
          * @return float the value of the receiver.
          */
         virtual float floatValue() const {
-            return (float)this->value;
+            return (float) this->value;
         }
 
         /**
@@ -174,7 +174,7 @@ namespace lang{
          * @return short the value of the receiver.
          */
         virtual short shortValue() const {
-            return (short)this->value;
+            return (short) this->value;
         }
 
         /**
@@ -182,7 +182,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual int intValue() const {
-            return (int)this->value;
+            return (int) this->value;
         }
 
         /**
@@ -190,15 +190,15 @@ namespace lang{
          * @return long long the value of the receiver.
          */
         virtual long long longValue() const {
-            return (long long)this->value;
+            return (long long) this->value;
         }
 
-    public:    // statics
+    public: // statics
 
         /**
          * @returns a string representing the primitive value as Base 10
          */
-        static std::string toString( unsigned char value );
+        static std::string toString(unsigned char value);
 
         /**
          * Decodes a String into a Byte. Accepts decimal, hexadecimal, and octal
@@ -215,7 +215,7 @@ namespace lang{
          * @returns a Byte object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Byte decode( const std::string& value );
+        static Byte decode(const std::string& value);
 
         /**
          * Parses the string argument as a signed unsigned char in the radix specified by
@@ -242,7 +242,7 @@ namespace lang{
          * @throws NumberFormatException - If String does not contain a parsable
          *         unsigned char.
          */
-        static unsigned char parseByte( const std::string& s, int radix );
+        static unsigned char parseByte(const std::string& s, int radix);
 
         /**
          * Parses the string argument as a signed decimal unsigned char. The
@@ -255,15 +255,15 @@ namespace lang{
          * @returns the converted unsigned char value
          * @throws NumberFormatException if the string is not a unsigned char.
          */
-        static unsigned char parseByte( const std::string& s );
+        static unsigned char parseByte(const std::string& s);
 
         /**
          * Returns a Character instance representing the specified char value.
          * @param value - the primitive char to wrap.
          * @returns a new Character instance that wraps this value.
          */
-        static Byte valueOf( unsigned char value ) {
-            return Byte( value );
+        static Byte valueOf(unsigned char value) {
+            return Byte(value);
         }
 
         /**
@@ -276,7 +276,7 @@ namespace lang{
          * @return new Byte Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal unsigned char.
          */
-        static Byte valueOf( const std::string& value );
+        static Byte valueOf(const std::string& value);
 
         /**
          * Returns a Byte object holding the value extracted from the specified
@@ -291,7 +291,7 @@ namespace lang{
          * @return new Byte Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid unsigned char.
          */
-        static Byte valueOf( const std::string& value, int radix );
+        static Byte valueOf(const std::string& value, int radix);
 
     };
 

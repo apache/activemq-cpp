@@ -24,23 +24,23 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-const Boolean Boolean::_FALSE( false );
-const Boolean Boolean::_TRUE( true );
+const Boolean Boolean::_FALSE(false);
+const Boolean Boolean::_TRUE(true);
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean::Boolean( bool value ) : value(value) {
+Boolean::Boolean(bool value) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean::Boolean( const std::string& value ) : value(false) {
-    this->value = parseBoolean( value );
+Boolean::Boolean(const std::string& value) : value(false) {
+    this->value = parseBoolean(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Boolean::compareTo( const Boolean& b ) const {
-    if( this->value == b.value ) {
+int Boolean::compareTo(const Boolean& b) const {
+    if (this->value == b.value) {
         return 0;
-    } else if( this->value && !b.value ) {
+    } else if (this->value && !b.value) {
         return 1;
     } else {
         return -1;
@@ -48,20 +48,20 @@ int Boolean::compareTo( const Boolean& b ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::operator==( const Boolean& b ) const {
+bool Boolean::operator==(const Boolean& b) const {
     return this->value == b.value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::operator<( const Boolean& b ) const {
+bool Boolean::operator<(const Boolean& b) const {
     return this->value < b.value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Boolean::compareTo( const bool& b ) const {
-    if( this->value == b ) {
+int Boolean::compareTo(const bool& b) const {
+    if (this->value == b) {
         return 0;
-    } else if( this->value && !b ) {
+    } else if (this->value && !b) {
         return 1;
     } else {
         return -1;
@@ -69,12 +69,12 @@ int Boolean::compareTo( const bool& b ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::operator==( const bool& b ) const {
+bool Boolean::operator==(const bool& b) const {
     return this->value == b;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::operator<( const bool& b ) const {
+bool Boolean::operator<(const bool& b) const {
     return this->value < b;
 }
 
@@ -84,21 +84,21 @@ std::string Boolean::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean Boolean::valueOf( const std::string& value ) {
-    return Boolean( value );
+Boolean Boolean::valueOf(const std::string& value) {
+    return Boolean(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean Boolean::valueOf( bool value ) {
-    return Boolean( value );
+Boolean Boolean::valueOf(bool value) {
+    return Boolean(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::parseBoolean( const std::string& value ) {
-    return apr_strnatcasecmp( value.c_str(), "true" ) == 0;
+bool Boolean::parseBoolean(const std::string& value) {
+    return apr_strnatcasecmp(value.c_str(), "true") == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Boolean::toString( bool value ) {
+std::string Boolean::toString(bool value) {
     return value ? "true" : "false";
 }

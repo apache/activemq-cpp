@@ -20,10 +20,9 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Comparable.h>
-#include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <apr_uuid.h>
 #include <string>
+#include <vector>
 
 namespace decaf{
 namespace util{
@@ -98,7 +97,7 @@ namespace util{
          *
          * @return type 3 UUID
          */
-        static UUID nameUUIDFromBytes( const std::vector<char>& name );
+        static UUID nameUUIDFromBytes(const std::vector<char>& name);
 
         /**
          * Static factory to retrieve a type 3 (name based) UUID based on the
@@ -111,7 +110,7 @@ namespace util{
          *
          * @return type 3 UUID
          */
-        static UUID nameUUIDFromBytes( const char* name, std::size_t size );
+        static UUID nameUUIDFromBytes(const char* name, std::size_t size);
 
         /**
          * Creates a UUID from the string standard representation as described
@@ -124,7 +123,7 @@ namespace util{
          *
          * @throws IllegalArgumentException if the UUID string given is invalid.
          */
-        static UUID fromString( const std::string& name );
+        static UUID fromString(const std::string& name);
 
     public:
 
@@ -136,7 +135,7 @@ namespace util{
          * @param mostSigBits
          * @param leastSigBits
          */
-        UUID( long long mostSigBits, long long leastSigBits );
+        UUID(long long mostSigBits, long long leastSigBits);
 
         virtual ~UUID();
 
@@ -144,7 +143,7 @@ namespace util{
          * Compare the given UUID to this one
          * @param value - the UUID to compare to
          */
-        virtual int compareTo( const UUID& value ) const;
+        virtual int compareTo(const UUID& value) const;
 
         /**
          * Compares this UUID to the one given, returns true if they are equal.
@@ -154,14 +153,14 @@ namespace util{
          *
          * @return true if UUIDs are the same.
          */
-        virtual bool equals( const UUID& value ) const;
+        virtual bool equals(const UUID& value) const;
 
         /**
          * Compares equality between this object and the one passed.
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const UUID& value ) const;
+        virtual bool operator==(const UUID& value) const;
 
         /**
          * Compares this object to another and returns true if this object
@@ -169,7 +168,7 @@ namespace util{
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const UUID& value ) const;
+        virtual bool operator<(const UUID& value) const;
 
         /**
          * Returns a String object representing this UUID.  UUID's are formatted

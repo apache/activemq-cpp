@@ -49,12 +49,12 @@ namespace lang{
         /**
          * @param value - primitive boolean to wrap.
          */
-        Boolean( bool value );
+        Boolean(bool value);
 
         /**
          * @param value - String value to convert to a boolean.
          */
-        Boolean( const std::string& value );
+        Boolean(const std::string& value);
 
         virtual ~Boolean() {}
 
@@ -78,14 +78,14 @@ namespace lang{
          * argument represents false; and a negative value if this object
          * represents false and the argument represents true
          */
-        virtual int compareTo( const Boolean& b ) const;
+        virtual int compareTo(const Boolean& b) const;
 
         /**
          * Compares equality between this object and the one passed.
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Boolean& value ) const;
+        virtual bool operator==(const Boolean& value) const;
 
         /**
          * Compares this object to another and returns true if this object
@@ -93,12 +93,12 @@ namespace lang{
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Boolean& value ) const;
+        virtual bool operator<(const Boolean& value) const;
 
         /**
          * @returns true if the two Boolean Objects have the same value.
          */
-        bool equals( const Boolean& b ) const {
+        bool equals(const Boolean& b) const {
             return this->value == b.value;
         }
 
@@ -110,14 +110,14 @@ namespace lang{
          * argument represents false; and a negative value if this object
          * represents false and the argument represents true
          */
-        virtual int compareTo( const bool& b ) const;
+        virtual int compareTo(const bool& b) const;
 
         /**
          * Compares equality between this object and the one passed.
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const bool& value ) const;
+        virtual bool operator==(const bool& value) const;
 
         /**
          * Compares this object to another and returns true if this object
@@ -125,16 +125,17 @@ namespace lang{
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const bool& value ) const;
+        virtual bool operator<(const bool& value) const;
 
         /**
          * @returns true if the two Boolean Objects have the same value.
          */
-        bool equals( const bool& b ) const {
+        bool equals(const bool& b) const {
             return this->value == b;
         }
 
-    public:  // Statics
+    public:
+        // Statics
 
         /**
          * @param value
@@ -142,7 +143,7 @@ namespace lang{
          *
          * @returns a Boolean instance of the primitive boolean value
          */
-        static Boolean valueOf( bool value );
+        static Boolean valueOf(bool value);
 
         /**
          * @param value
@@ -150,7 +151,7 @@ namespace lang{
          *
          * @returns a Boolean instance of the string value
          */
-        static Boolean valueOf( const std::string& value );
+        static Boolean valueOf(const std::string& value);
 
         /**
          * Parses the String passed and extracts an bool.
@@ -159,7 +160,7 @@ namespace lang{
          *      The std::string value to parse
          * @return bool value
          */
-        static bool parseBoolean( const std::string& value );
+        static bool parseBoolean(const std::string& value);
 
         /**
          * Converts the bool to a String representation.
@@ -168,7 +169,7 @@ namespace lang{
          *
          * @return std::string representation of the bool value passed.
          */
-        static std::string toString( bool value );
+        static std::string toString(bool value);
 
     };
 
