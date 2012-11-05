@@ -17,9 +17,10 @@
 #ifndef _DECAF_UTIL_STRINGTOKENIZER_H_
 #define _DECAF_UTIL_STRINGTOKENIZER_H_
 
-#include <decaf/util/NoSuchElementException.h>
 #include <decaf/util/Config.h>
+#include <decaf/util/NoSuchElementException.h>
 #include <string>
+#include <vector>
 
 namespace decaf{
 namespace util{
@@ -63,9 +64,7 @@ namespace util{
          * @param delim - String containing the delimiters
          * @param returnDelims - boolean indicating if the delimiters are returned as tokens
          */
-        StringTokenizer( const std::string& str,
-                         const std::string& delim = " \t\n\r\f",
-                         bool returnDelims = false);
+        StringTokenizer(const std::string& str, const std::string& delim = " \t\n\r\f", bool returnDelims = false);
 
         virtual ~StringTokenizer();
 
@@ -109,7 +108,7 @@ namespace util{
          *
          * @throws NoSuchElementException if there are no more tokens in this string.
          */
-        virtual std::string nextToken( const std::string& delim );
+        virtual std::string nextToken(const std::string& delim);
 
         /**
          * Grab all remaining tokens in the String and return them
@@ -117,7 +116,7 @@ namespace util{
          * @param array - vector to place token strings in
          * @return number of string placed into the vector
          */
-        virtual unsigned int toArray( std::vector< std::string >& array );
+        virtual unsigned int toArray(std::vector<std::string>& array);
 
         /**
          * Resets the Tokenizer's position in the String to the Beginning
@@ -139,9 +138,7 @@ namespace util{
          * @param returnDelims
          *      Should the Tokenizer return delimiters as Tokens, default false
          */
-        virtual void reset( const std::string& str = "",
-                            const std::string& delim = "",
-                            bool returnDelims = false );
+        virtual void reset(const std::string& str = "", const std::string& delim = "", bool returnDelims = false);
 
     };
 

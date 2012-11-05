@@ -24,6 +24,15 @@ namespace decaf {
 namespace lang {
 
     class DECAF_API Runtime {
+    private:
+
+        Runtime(const Runtime&);
+        Runtime& operator= (const Runtime&);
+
+    protected:
+
+        Runtime() {}
+
     public:
 
         virtual ~Runtime() {}
@@ -46,7 +55,7 @@ namespace lang {
          * @throws runtime_error if the library is already initialized or an
          *         error occurs during initialization.
          */
-        static void initializeRuntime( int argc, char **argv );
+        static void initializeRuntime(int argc, char **argv);
 
         /**
          * Initialize the Decaf Library

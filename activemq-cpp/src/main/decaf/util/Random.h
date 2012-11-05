@@ -73,7 +73,7 @@ namespace util{
          *
          * @see #setSeed
          */
-        Random( unsigned long long seed );
+        Random(unsigned long long seed);
 
         virtual ~Random();
 
@@ -146,7 +146,7 @@ namespace util{
          *
          * @throws IllegalArgumentException if n is less than or equal to zero.
          */
-        int nextInt( int n );
+        int nextInt(int n);
 
         /**
          * Generates a uniformly distributed 64-bit <code>int</code> value
@@ -160,7 +160,7 @@ namespace util{
          */
         long long nextLong();
 
-    public:  // Virtual Methods
+    public: // Virtual Methods
 
         /**
          * Modifies the byte array by a random sequence of bytes generated
@@ -170,7 +170,7 @@ namespace util{
          *
          * @see #next
          */
-        virtual void nextBytes( std::vector<unsigned char>& buf );
+        virtual void nextBytes(std::vector<unsigned char>& buf);
 
         /**
          * Modifies the byte array by a random sequence of bytes generated
@@ -183,7 +183,7 @@ namespace util{
          * @throw NullPointerException if buff is NULL
          * @throw IllegalArgumentException if size is negative
          */
-        virtual void nextBytes( unsigned char* buf, int size );
+        virtual void nextBytes(unsigned char* buf, int size);
 
         /**
          * Modifies the seed using linear congruential formula presented
@@ -197,9 +197,9 @@ namespace util{
          * @see #Random()
          * @see #Random(long)
          */
-        virtual void setSeed( unsigned long long seed );
+        virtual void setSeed(unsigned long long seed);
 
-    protected:  // Virtual method used by all non-virtual methods in Random.
+    protected: // Virtual method used by all non-virtual methods in Random.
 
         /**
          * Answers a pseudo-random uniformly distributed <code>int</code>
@@ -219,7 +219,7 @@ namespace util{
          * @see #nextGaussian
          * @see #nextLong
          */
-        virtual int next( int bits );
+        virtual int next(int bits);
 
     };
 
