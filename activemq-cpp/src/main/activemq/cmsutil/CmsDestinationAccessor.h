@@ -87,7 +87,7 @@ namespace cmsutil {
 
         virtual void destroy();
 
-    virtual cms::Destination* resolveDestinationName(cms::Session* session, const std::string& destName);
+        virtual cms::Destination* resolveDestinationName(cms::Session* session, const std::string& destName);
 
         virtual void checkDestinationResolver();
 

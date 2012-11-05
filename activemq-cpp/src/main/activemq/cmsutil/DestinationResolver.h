@@ -17,9 +17,13 @@
 #ifndef _ACTIVEMQ_CMSUTIL_DESTINATIONRESOLVER_H_
 #define _ACTIVEMQ_CMSUTIL_DESTINATIONRESOLVER_H_
 
-#include <cms/Session.h>
 #include <activemq/util/Config.h>
+#include <string>
 
+namespace cms {
+    class Session;
+    class Destination;
+}
 namespace activemq {
 namespace cmsutil {
 

@@ -18,9 +18,11 @@
 #ifndef _ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H_
 #define _ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H_
 
-#include <cms/Session.h>
 #include <activemq/util/Config.h>
 
+namespace cms {
+    class Session;
+}
 namespace activemq {
 namespace cmsutil {
 
