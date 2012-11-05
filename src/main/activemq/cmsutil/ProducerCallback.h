@@ -18,10 +18,12 @@
 #ifndef _ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H_
 #define _ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H_
 
-#include <cms/Session.h>
-#include <cms/MessageProducer.h>
 #include <activemq/util/Config.h>
 
+namespace cms {
+    class Session;
+    class MessageProducer;
+}
 namespace activemq {
 namespace cmsutil {
 

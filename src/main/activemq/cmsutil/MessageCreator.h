@@ -18,10 +18,12 @@
 #ifndef _ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H_
 #define _ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H_
 
-#include <cms/Session.h>
-#include <cms/Message.h>
 #include <activemq/util/Config.h>
 
+namespace cms{
+    class Session;
+    class Message;
+}
 namespace activemq {
 namespace cmsutil {
 
