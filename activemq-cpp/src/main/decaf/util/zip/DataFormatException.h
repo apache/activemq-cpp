@@ -36,50 +36,37 @@ namespace zip{
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy
          */
-        DataFormatException( const lang::Exception& ex )
-        : lang::Exception() {
-            *(lang::Exception*)this = ex;
-        }
+        DataFormatException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy, which is an instance of this type
          */
-        DataFormatException( const DataFormatException& ex )
-        : lang::Exception() {
-            *(lang::Exception*)this = ex;
-        }
+        DataFormatException(const DataFormatException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        DataFormatException( const char* file, const int lineNumber,
-                             const std::exception* cause,
-                             const char* msg, ... ) : lang::Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        DataFormatException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        DataFormatException( const std::exception* cause ) : lang::Exception( cause ) {}
+        DataFormatException(const std::exception* cause);
 
         /**
          * Constructor
@@ -88,16 +75,7 @@ namespace zip{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        DataFormatException( const char* file, const int lineNumber,
-                             const char* msg, ... )
-        : lang::Exception() {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        DataFormatException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -106,9 +84,7 @@ namespace zip{
          *
          * @return a new instance of an Exception that is a copy of this instance.
          */
-        virtual DataFormatException* clone() const {
-            return new DataFormatException( *this );
-        }
+        virtual DataFormatException* clone() const;
 
         virtual ~DataFormatException() throw();
 

@@ -19,9 +19,9 @@
 
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace util {
+namespace concurrent {
 
     /*
      * Exception indicating that the result of a value-producing task, such as a
@@ -33,82 +33,55 @@ namespace concurrent{
         /**
          * Default Constructor
          */
-        CancellationException() : decaf::lang::Exception() {}
+        CancellationException();
 
         /**
          * Conversion Constructor from some other Exception
          *
          * @param ex An exception that should become this type of Exception
          */
-        CancellationException( const decaf::lang::Exception& ex )
-        : decaf::lang::Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        CancellationException(const decaf::lang::Exception& ex);
 
         /**
          * Copy Constructor
          *
          * @param ex - The Exception to copy in this new instance.
          */
-        CancellationException( const CancellationException& ex )
-        : decaf::lang::Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        CancellationException(const CancellationException& ex);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        CancellationException( const std::exception* cause )
-             : decaf::lang::Exception( cause ) {}
+        CancellationException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file - The file name where exception occurs
          * @param lineNumber - The line number where the exception occurred.
          * @param msg - The message to report
          * @param ... - list of primitives that are formatted into the message
          */
-        CancellationException( const char* file, const int lineNumber,
-                               const char* msg, ... )
-            : decaf::lang::Exception()
-        {
-
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        CancellationException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file - The file name where exception occurs
          * @param lineNumber - The line number where the exception occurred.
          * @param cause - The exception that was the cause for this one to be thrown.
          * @param msg - The message to report
          * @param ... - list of primitives that are formatted into the message
          */
-        CancellationException( const char* file, const int lineNumber,
-                                const std::exception* cause,
-                                const char* msg, ... )
-            : decaf::lang::Exception( cause )
-        {
-            va_list vargs ;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        CancellationException(const char* file, const int lineNumber,
+                              const std::exception* cause, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -117,11 +90,9 @@ namespace concurrent{
          *
          * @returns a new instance of an exception that is a clone of this one.
          */
-        virtual CancellationException* clone() const{
-            return new CancellationException( *this );
-        }
+        virtual CancellationException* clone() const;
 
-        virtual ~CancellationException() throw() {}
+        virtual ~CancellationException() throw();
 
     };
 

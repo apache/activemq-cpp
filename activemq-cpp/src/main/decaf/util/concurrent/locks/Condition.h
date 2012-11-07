@@ -132,7 +132,7 @@ namespace locks {
     class DECAF_API Condition {
     public:
 
-        virtual ~Condition() {}
+        virtual ~Condition();
 
         /**
          * Causes the current thread to wait until it is signaled or interrupted.
@@ -300,7 +300,7 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual long long awaitNanos( long long nanosTimeout ) = 0;
+        virtual long long awaitNanos(long long nanosTimeout) = 0;
 
         /**
          * Causes the current thread to wait until it is signaled or interrupted, or the
@@ -324,7 +324,7 @@ namespace locks {
          * @throws IllegalMonitorStateException
          *         if the caller is not the lock owner.
          */
-        virtual bool await( long long time, const TimeUnit& unit ) = 0;
+        virtual bool await(long long time, const TimeUnit& unit) = 0;
 
         /*
          * Causes the current thread to wait until it is signaled or interrupted, or the

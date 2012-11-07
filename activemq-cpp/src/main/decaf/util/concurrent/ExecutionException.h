@@ -19,9 +19,9 @@
 
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace util {
+namespace concurrent {
 
     /*
      * Exception thrown when attempting to retrieve the result of a task that aborted by
@@ -34,28 +34,21 @@ namespace concurrent{
         /**
          * Default Constructor
          */
-        ExecutionException() : decaf::lang::Exception() {}
+        ExecutionException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex - An exception that should become this type of Exception
          */
-        ExecutionException( const decaf::lang::Exception& ex )
-        : decaf::lang::Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        ExecutionException(const decaf::lang::Exception& ex);
 
         /**
          * Copy Constructor
          *
          * @param ex - The Exception to copy in this new instance.
          */
-        ExecutionException( const ExecutionException& ex )
-        : decaf::lang::Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        ExecutionException(const ExecutionException& ex);
 
         /**
          * Constructor
@@ -63,53 +56,32 @@ namespace concurrent{
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        ExecutionException( const std::exception* cause )
-            : decaf::lang::Exception( cause ) {}
+        ExecutionException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file - The file name where exception occurs
          * @param lineNumber - The line number where the exception occurred.
          * @param msg - The message to report
          * @param ...  - The list of primitives that are formatted into the message
          */
-        ExecutionException( const char* file, const int lineNumber,
-                            const char* msg, ... )
-            : decaf::lang::Exception()
-        {
-
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        ExecutionException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file - The file name where exception occurs
          * @param lineNumber - The line number where the exception occurred.
          * @param cause - The exception that was the cause for this one to be thrown.
          * @param msg - The message to report
          * @param ... - list of primitives that are formatted into the message
          */
-        ExecutionException( const char* file, const int lineNumber,
-                            const std::exception* cause,
-                            const char* msg, ... )
-            : decaf::lang::Exception( cause )
-        {
-            va_list vargs ;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        ExecutionException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -118,11 +90,9 @@ namespace concurrent{
          *
          * @returns a new instance of an exception that is a clone of this one.
          */
-        virtual ExecutionException* clone() const{
-            return new ExecutionException( *this );
-        }
+        virtual ExecutionException* clone() const;
 
-        virtual ~ExecutionException() throw() {}
+        virtual ~ExecutionException() throw ();
 
     };
 

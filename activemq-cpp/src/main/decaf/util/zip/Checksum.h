@@ -37,7 +37,7 @@ namespace zip {
     class DECAF_API Checksum {
     public:
 
-        virtual ~Checksum() {}
+        virtual ~Checksum();
 
         /**
          * @returns the current checksum value.

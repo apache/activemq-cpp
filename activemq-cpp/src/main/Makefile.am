@@ -485,10 +485,12 @@ cc_sources = \
     decaf/util/Timer.cpp \
     decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
+    decaf/util/comparators/Less.cpp \
     decaf/util/concurrent/AbstractExecutorService.cpp \
     decaf/util/concurrent/BlockingQueue.cpp \
     decaf/util/concurrent/BrokenBarrierException.cpp \
     decaf/util/concurrent/Callable.cpp \
+    decaf/util/concurrent/CancellationException.cpp \
     decaf/util/concurrent/ConcurrentHashMap.cpp \
     decaf/util/concurrent/ConcurrentMap.cpp \
     decaf/util/concurrent/ConcurrentStlMap.cpp \
@@ -496,6 +498,7 @@ cc_sources = \
     decaf/util/concurrent/CopyOnWriteArraySet.cpp \
     decaf/util/concurrent/CountDownLatch.cpp \
     decaf/util/concurrent/Delayed.cpp \
+    decaf/util/concurrent/ExecutionException.cpp \
     decaf/util/concurrent/Executor.cpp \
     decaf/util/concurrent/ExecutorService.cpp \
     decaf/util/concurrent/Executors.cpp \
@@ -504,20 +507,26 @@ cc_sources = \
     decaf/util/concurrent/LinkedBlockingQueue.cpp \
     decaf/util/concurrent/Lock.cpp \
     decaf/util/concurrent/Mutex.cpp \
+    decaf/util/concurrent/RejectedExecutionException.cpp \
     decaf/util/concurrent/RejectedExecutionHandler.cpp \
     decaf/util/concurrent/RunnableFuture.cpp \
     decaf/util/concurrent/Semaphore.cpp \
+    decaf/util/concurrent/Synchronizable.cpp \
     decaf/util/concurrent/SynchronousQueue.cpp \
     decaf/util/concurrent/ThreadFactory.cpp \
     decaf/util/concurrent/ThreadPoolExecutor.cpp \
     decaf/util/concurrent/TimeUnit.cpp \
+    decaf/util/concurrent/TimeoutException.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
     decaf/util/concurrent/atomic/AtomicRefCounter.cpp \
     decaf/util/concurrent/atomic/AtomicReference.cpp \
     decaf/util/concurrent/locks/AbstractOwnableSynchronizer.cpp \
     decaf/util/concurrent/locks/AbstractQueuedSynchronizer.cpp \
+    decaf/util/concurrent/locks/Condition.cpp \
+    decaf/util/concurrent/locks/Lock.cpp \
     decaf/util/concurrent/locks/LockSupport.cpp \
+    decaf/util/concurrent/locks/ReadWriteLock.cpp \
     decaf/util/concurrent/locks/ReentrantLock.cpp \
     decaf/util/concurrent/locks/ReentrantReadWriteLock.cpp \
     decaf/util/logging/ConsoleHandler.cpp \
@@ -538,6 +547,7 @@ cc_sources = \
     decaf/util/zip/CRC32.cpp \
     decaf/util/zip/CheckedInputStream.cpp \
     decaf/util/zip/CheckedOutputStream.cpp \
+    decaf/util/zip/Checksum.cpp \
     decaf/util/zip/DataFormatException.cpp \
     decaf/util/zip/Deflater.cpp \
     decaf/util/zip/DeflaterOutputStream.cpp \
