@@ -19,8 +19,8 @@
 
 #include <decaf/lang/exceptions/RuntimeException.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /*
      * Thrown from an operation that attempts to access some element that does
@@ -42,11 +42,7 @@ namespace util{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NoSuchElementException( const decaf::lang::exceptions::RuntimeException& ex )
-        : decaf::lang::exceptions::RuntimeException()
-        {
-            *(decaf::lang::exceptions::RuntimeException*)this = ex;
-        }
+        NoSuchElementException(const decaf::lang::exceptions::RuntimeException& ex);
 
         /**
          * Copy Constructor
@@ -54,62 +50,40 @@ namespace util{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NoSuchElementException( const NoSuchElementException& ex )
-        : decaf::lang::exceptions::RuntimeException()
-        {
-            *(decaf::lang::exceptions::RuntimeException*)this = ex;
-        }
+        NoSuchElementException(const NoSuchElementException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NoSuchElementException( const char* file, const int lineNumber,
-                                const std::exception* cause,
-                                const char* msg, ... ) : decaf::lang::exceptions::RuntimeException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        NoSuchElementException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        NoSuchElementException( const std::exception* cause ) : decaf::lang::exceptions::RuntimeException( cause ) {}
+        NoSuchElementException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NoSuchElementException( const char* file,
-                                const int lineNumber,
-                                const char* msg, ... )
-        : decaf::lang::exceptions::RuntimeException()
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        NoSuchElementException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need

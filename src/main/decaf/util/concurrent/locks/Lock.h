@@ -99,7 +99,7 @@ namespace locks {
     class DECAF_API Lock {
     public:
 
-        virtual ~Lock() {}
+        virtual ~Lock();
 
         /**
          * Acquires the lock.
@@ -243,7 +243,7 @@ namespace locks {
          *         if the current thread is interrupted while acquiring the lock (and
          *         interruption of lock acquisition is supported)
          */
-        virtual bool tryLock( long long time, const TimeUnit& unit ) = 0;
+        virtual bool tryLock(long long time, const TimeUnit& unit) = 0;
 
         /**
          * Releases the lock.

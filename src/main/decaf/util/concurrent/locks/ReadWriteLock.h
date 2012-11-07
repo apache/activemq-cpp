@@ -90,7 +90,7 @@ namespace locks {
     class DECAF_API ReadWriteLock {
     public:
 
-        virtual ~ReadWriteLock() {}
+        virtual ~ReadWriteLock();
 
         /**
          * Returns the lock used for reading.

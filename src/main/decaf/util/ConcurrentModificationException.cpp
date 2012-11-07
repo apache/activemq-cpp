@@ -28,5 +28,42 @@ ConcurrentModificationException::ConcurrentModificationException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConcurrentModificationException::~ConcurrentModificationException() throw() {
+ConcurrentModificationException::~ConcurrentModificationException() throw () {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConcurrentModificationException::ConcurrentModificationException(const lang::Exception& ex) : lang::exceptions::RuntimeException() {
+    *(lang::Exception*) this = ex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConcurrentModificationException::ConcurrentModificationException(const ConcurrentModificationException& ex) : lang::exceptions::RuntimeException() {
+    *(lang::Exception*) this = ex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConcurrentModificationException::ConcurrentModificationException(
+    const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...) : lang::exceptions::RuntimeException(cause) {
+
+    va_list vargs;
+    va_start(vargs, msg);
+    buildMessage(msg, vargs);
+
+    // Set the first mark for this exception.
+    setMark(file, lineNumber);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConcurrentModificationException::ConcurrentModificationException(const std::exception* cause) : lang::exceptions::RuntimeException(cause) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConcurrentModificationException::ConcurrentModificationException(const char* file, const int lineNumber, const char* msg, ...) : lang::exceptions::RuntimeException() {
+
+    va_list vargs;
+    va_start(vargs, msg);
+    buildMessage(msg, vargs);
+
+    // Set the first mark for this exception.
+    setMark(file, lineNumber);
 }

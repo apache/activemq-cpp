@@ -15,33 +15,35 @@
  * limitations under the License.
  */
 
-#include "ZipException.h"
+#include "CancellationException.h"
 
 using namespace decaf;
-using namespace decaf::lang;
 using namespace decaf::util;
-using namespace decaf::util::zip;
+using namespace decaf::util::concurrent;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException() : IOException() {
+CancellationException::CancellationException() : decaf::lang::Exception() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::~ZipException() throw () {
+CancellationException::CancellationException(const decaf::lang::Exception& ex) : decaf::lang::Exception() {
+    *(Exception*) this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException(const lang::Exception& ex) : IOException() {
-    *(lang::Exception*) this = ex;
+CancellationException::CancellationException(const CancellationException& ex) : decaf::lang::Exception() {
+    *(Exception*) this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException(const ZipException& ex) : IOException() {
-    *(lang::Exception*) this = ex;
+CancellationException::CancellationException(const std::exception* cause) : decaf::lang::Exception(cause) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...) : IOException(cause) {
+CancellationException::CancellationException(const char* file, const int lineNumber, const char* msg, ...) :
+        decaf::lang::Exception() {
+
     va_list vargs;
     va_start( vargs, msg);
     buildMessage(msg, vargs);
@@ -51,11 +53,9 @@ ZipException::ZipException(const char* file, const int lineNumber, const std::ex
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException(const std::exception* cause) : IOException(cause) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-ZipException::ZipException(const char* file, const int lineNumber, const char* msg, ...) : IOException() {
+CancellationException::CancellationException(const char* file, const int lineNumber,
+                                             const std::exception* cause, const char* msg, ...) :
+    decaf::lang::Exception(cause) {
 
     va_list vargs;
     va_start(vargs, msg);
@@ -66,6 +66,10 @@ ZipException::ZipException(const char* file, const int lineNumber, const char* m
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ZipException* ZipException::clone() const {
-    return new ZipException(*this);
+CancellationException::~CancellationException() throw () {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+CancellationException* CancellationException::clone() const {
+    return new CancellationException(*this);
 }
