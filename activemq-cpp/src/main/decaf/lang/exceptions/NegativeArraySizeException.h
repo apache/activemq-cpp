@@ -19,9 +19,9 @@
 
 #include <decaf/lang/exceptions/RuntimeException.h>
 
-namespace decaf{
-namespace lang{
-namespace exceptions{
+namespace decaf {
+namespace lang {
+namespace exceptions {
 
     /*
      * Thrown if an application tries to create an array with negative size.
@@ -34,8 +34,7 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        NegativeArraySizeException() : RuntimeException() {
-        }
+        NegativeArraySizeException();
 
         /**
          * Conversion Constructor from some other Decaf Exception
@@ -43,9 +42,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NegativeArraySizeException(const Exception& ex) : RuntimeException() {
-            *(Exception*) this = ex;
-        }
+        NegativeArraySizeException(const Exception& ex);
 
         /**
          * Copy Constructor
@@ -53,56 +50,40 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NegativeArraySizeException(const NegativeArraySizeException& ex) : RuntimeException() {
-            *(Exception*) this = ex;
-        }
+        NegativeArraySizeException(const NegativeArraySizeException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NegativeArraySizeException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...) : RuntimeException(cause) {
-
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
-
-            // Set the first mark for this exception.
-            setMark(file, lineNumber);
-        }
+        NegativeArraySizeException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        NegativeArraySizeException(const std::exception* cause) : RuntimeException(cause) {
-        }
+        NegativeArraySizeException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NegativeArraySizeException(const char* file, const int lineNumber, const char* msg, ...) : RuntimeException() {
-
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
-
-            // Set the first mark for this exception.
-            setMark(file, lineNumber);
-        }
+        NegativeArraySizeException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -115,8 +96,7 @@ namespace exceptions{
             return new NegativeArraySizeException(*this);
         }
 
-        virtual ~NegativeArraySizeException() throw () {
-        }
+        virtual ~NegativeArraySizeException() throw();
 
     };
 

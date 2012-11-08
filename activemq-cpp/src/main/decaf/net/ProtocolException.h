@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/io/IOException.h>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace net {
 
     class DECAF_API ProtocolException : public io::IOException {
     public:
@@ -30,78 +30,54 @@ namespace net{
         /**
          * Default Constructor
          */
-        ProtocolException() {}
+        ProtocolException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex An exception that should become this type of Exception
          */
-        ProtocolException( const Exception& ex ) : io::IOException()
-        {
-            *(Exception*)this = ex;
-        }
+        ProtocolException(const Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex An exception that should become this type of Exception
          */
-        ProtocolException( const ProtocolException& ex )
-        : io::IOException()
-        {
-            *(Exception*)this = ex;
-        }
+        ProtocolException(const ProtocolException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        ProtocolException( const char* file, const int lineNumber,
-                           const std::exception* cause,
-                           const char* msg, ... )
-        : io::IOException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        ProtocolException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        ProtocolException( const std::exception* cause )
-            : io::IOException( cause ) {}
+        ProtocolException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        ProtocolException( const char* file, const int lineNumber,
-                            const char* msg, ... )
-        : io::IOException()
-        {
-            va_list vargs ;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        ProtocolException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -111,10 +87,10 @@ namespace net{
          * @return a new Exception instance that is a copy of this Exception object.
          */
         virtual ProtocolException* clone() const {
-            return new ProtocolException( *this );
+            return new ProtocolException(*this);
         }
 
-        virtual ~ProtocolException() throw() {}
+        virtual ~ProtocolException() throw();
 
     };
 

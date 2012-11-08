@@ -39,7 +39,7 @@ namespace lang {
     class DECAF_API Readable {
     public:
 
-        virtual ~Readable() {}
+        virtual ~Readable();
 
         /**
          * Attempts to read characters into the specified character buffer. The buffer is used

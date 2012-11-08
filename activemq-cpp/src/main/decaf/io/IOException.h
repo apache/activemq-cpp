@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_IO_IOEXCEPTION_H
-#define _DECAF_IO_IOEXCEPTION_H
+#ifndef _DECAF_IO_IOEXCEPTION_H_
+#define _DECAF_IO_IOEXCEPTION_H_
 
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace io{
+namespace decaf {
+namespace io {
 
     /*
      * Signals that an I/O exception of some sort has occurred.
@@ -31,72 +31,50 @@ namespace io{
         /**
          * Default Constructor
          */
-        IOException() {}
+        IOException();
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        IOException( const lang::Exception& ex )
-        : lang::Exception() {
-            *(lang::Exception*)this = ex;
-        }
+        IOException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        IOException( const IOException& ex )
-        : lang::Exception() {
-            *(lang::Exception*)this = ex;
-        }
+        IOException(const IOException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        IOException( const char* file, const int lineNumber,
-                     const std::exception* cause,
-                     const char* msg, ... ) : lang::Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        IOException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        IOException( const std::exception* cause ) : lang::Exception( cause ) {}
+        IOException(const std::exception* cause);
 
         /**
          * Constructor
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        IOException( const char* file, const int lineNumber,
-                     const char* msg, ... )
-        : lang::Exception() {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        IOException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -106,13 +84,13 @@ namespace io{
          * @return a new instance of an Exception that is a copy of this instance.
          */
         virtual IOException* clone() const {
-            return new IOException( *this );
+            return new IOException(*this);
         }
 
-        virtual ~IOException() throw() {}
+        virtual ~IOException() throw();
 
     };
 
 }}
 
-#endif /*_DECAF_IO_IOEXCEPTION_H*/
+#endif /*_DECAF_IO_IOEXCEPTION_H_*/

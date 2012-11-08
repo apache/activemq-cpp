@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_IO_INTERRUPTEDIOEXCEPTION_H
-#define _DECAF_IO_INTERRUPTEDIOEXCEPTION_H
+#ifndef _DECAF_IO_INTERRUPTEDIOEXCEPTION_H_
+#define _DECAF_IO_INTERRUPTEDIOEXCEPTION_H_
 
 #include <decaf/lang/Exception.h>
 #include <decaf/io/IOException.h>
 
-namespace decaf{
-namespace io{
+namespace decaf {
+namespace io {
 
     /*
      * Signals that an I/O exception of some sort has occurred.
@@ -32,54 +32,40 @@ namespace io{
         /**
          * Default Constructor
          */
-        InterruptedIOException() {}
+        InterruptedIOException();
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        InterruptedIOException( const lang::Exception& ex )
-        : IOException() {
-            *(lang::Exception*)this = ex;
-        }
+        InterruptedIOException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        InterruptedIOException( const InterruptedIOException& ex )
-        : IOException() {
-            *(lang::Exception*)this = ex;
-        }
+        InterruptedIOException(const InterruptedIOException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        InterruptedIOException( const char* file, const int lineNumber,
-                                const std::exception* cause,
-                                const char* msg, ... ) : IOException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        InterruptedIOException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        InterruptedIOException( const std::exception* cause ) : IOException( cause ) {}
+        InterruptedIOException(const std::exception* cause);
 
         /**
          * Constructor
@@ -89,16 +75,7 @@ namespace io{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        InterruptedIOException( const char* file, const int lineNumber,
-                                const char* msg, ... )
-        : IOException() {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        InterruptedIOException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -108,13 +85,13 @@ namespace io{
          * @return a new exception that is a copy of this one.
          */
         virtual InterruptedIOException* clone() const {
-            return new InterruptedIOException( *this );
+            return new InterruptedIOException(*this);
         }
 
-        virtual ~InterruptedIOException() throw() {}
+        virtual ~InterruptedIOException() throw();
 
     };
 
 }}
 
-#endif /*_DECAF_IO_INTERRUPTEDIOEXCEPTION_H*/
+#endif /*_DECAF_IO_INTERRUPTEDIOEXCEPTION_H_*/

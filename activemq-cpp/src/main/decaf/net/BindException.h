@@ -30,7 +30,7 @@ namespace net{
         /**
          * Default Constructor
          */
-        BindException() {}
+        BindException();
 
         /**
          * Conversion Constructor from some other Exception
@@ -38,11 +38,7 @@ namespace net{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        BindException( const Exception& ex )
-        : SocketException()
-        {
-            *(Exception*)this = ex;
-        }
+        BindException(const Exception& ex);
 
         /**
          * Copy Constructor
@@ -50,63 +46,40 @@ namespace net{
          * @param ex
          *      An exception that should become this type of Exception
          */
-        BindException( const BindException& ex )
-        : SocketException()
-        {
-            *(Exception*)this = ex;
-        }
+        BindException(const BindException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        BindException( const char* file, const int lineNumber,
-                       const std::exception* cause,
-                       const char* msg, ... )
-        : SocketException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        BindException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        BindException( const std::exception* cause )
-            : SocketException( cause ) {}
+        BindException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        BindException( const char* file, const int lineNumber,
-                       const char* msg, ... )
-        : SocketException()
-        {
-            va_list vargs ;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        BindException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -116,10 +89,10 @@ namespace net{
          * @return a new Exception instance that is a copy of this Exception object.
          */
         virtual BindException* clone() const {
-            return new BindException( *this );
+            return new BindException(*this);
         }
 
-        virtual ~BindException() throw() {}
+        virtual ~BindException() throw();
 
     };
 

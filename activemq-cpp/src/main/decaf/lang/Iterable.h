@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/util/Iterator.h>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     /**
      * Implementing this interface allows an object to be cast to an Iterable

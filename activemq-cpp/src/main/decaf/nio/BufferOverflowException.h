@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace nio{
+namespace decaf {
+namespace nio {
 
     class DECAF_API BufferOverflowException : public lang::Exception {
     public:
@@ -30,55 +30,42 @@ namespace nio{
         /**
          * Default Constructor
          */
-        BufferOverflowException() {}
+        BufferOverflowException();
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy
          */
-        BufferOverflowException( const lang::Exception& ex )
-        : lang::Exception() {
-            *(lang::Exception*)this = ex;
-        }
+        BufferOverflowException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy, which is an instance of this type
          */
-        BufferOverflowException( const BufferOverflowException& ex )
-        : lang::Exception() {
-            *(lang::Exception*)this = ex;
-        }
+        BufferOverflowException(const BufferOverflowException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        BufferOverflowException( const char* file, const int lineNumber,
-                                 const std::exception* cause,
-                                 const char* msg, ... ) : lang::Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        BufferOverflowException(const char* file, const int lineNumber,
+                                const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        BufferOverflowException( const std::exception* cause )
-            : lang::Exception( cause ) {}
+        BufferOverflowException(const std::exception* cause);
 
         /**
          * Constructor
@@ -87,17 +74,7 @@ namespace nio{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        BufferOverflowException( const char* file, const int lineNumber,
-                                 const char* msg, ... )
-        : lang::Exception() {
-
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        BufferOverflowException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -105,10 +82,10 @@ namespace nio{
          * All subclasses should override.
          */
         virtual BufferOverflowException* clone() const {
-            return new BufferOverflowException( *this );
+            return new BufferOverflowException(*this);
         }
 
-        virtual ~BufferOverflowException() throw() {}
+        virtual ~BufferOverflowException() throw();
 
     };
 

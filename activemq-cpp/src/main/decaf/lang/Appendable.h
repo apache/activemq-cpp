@@ -21,8 +21,8 @@
 #include <decaf/lang/Exception.h>
 #include <decaf/util/Config.h>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class CharSequence;
 
@@ -47,7 +47,7 @@ namespace lang{
     class DECAF_API Appendable {
     public:
 
-        virtual ~Appendable() {}
+        virtual ~Appendable();
 
         /**
          * Appends the specified character to this Appendable.

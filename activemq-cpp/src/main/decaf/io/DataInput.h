@@ -51,8 +51,7 @@ namespace io {
     class DECAF_API DataInput {
     public:
 
-        virtual ~DataInput() {
-        }
+        virtual ~DataInput();
 
         /**
          * Reads in one byte and returns true if that byte is nonzero, false if that

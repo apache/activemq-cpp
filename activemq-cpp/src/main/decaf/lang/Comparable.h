@@ -20,8 +20,8 @@
 
 #include <decaf/util/Config.h>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     /**
      * This interface imposes a total ordering on the objects of each class that
@@ -30,7 +30,7 @@ namespace lang{
      * comparison method.
      */
     template< typename T >
-    class DECAF_API Comparable{
+    class DECAF_API Comparable {
     public:
 
         virtual ~Comparable() {}

@@ -20,23 +20,22 @@
 
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace lang{
-namespace exceptions{
+namespace decaf {
+namespace lang {
+namespace exceptions {
 
     /*
      * Thrown when an error occurs that involves a pointer being NULL
      *
      * @since 1.0
      */
-    class DECAF_API NullPointerException : public Exception
-    {
+    class DECAF_API NullPointerException : public Exception {
     public:
 
         /**
          * Default Constructor
          */
-        NullPointerException() {}
+        NullPointerException();
 
         /**
          * Conversion Constructor from some other Exception.
@@ -44,11 +43,7 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NullPointerException( const Exception& ex )
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        NullPointerException(const Exception& ex);
 
         /**
          * Copy Constructor
@@ -56,62 +51,40 @@ namespace exceptions{
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        NullPointerException(const NullPointerException& ex)
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        NullPointerException(const NullPointerException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NullPointerException( const char* file, const int lineNumber,
-                              const std::exception* cause,
-                              const char* msg, ... ) : Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        NullPointerException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        NullPointerException( const std::exception* cause ) : Exception( cause ) {}
+        NullPointerException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        NullPointerException( const char* file,
-                              const int lineNumber,
-                              const char* msg, ... )
-        : Exception()
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        NullPointerException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -120,11 +93,11 @@ namespace exceptions{
          *
          * @return an new Exception instance that is a copy of this one.
          */
-        virtual NullPointerException* clone() const{
-            return new NullPointerException( *this );
+        virtual NullPointerException* clone() const {
+            return new NullPointerException(*this);
         }
 
-        virtual ~NullPointerException() throw() {}
+        virtual ~NullPointerException() throw();
 
     };
 

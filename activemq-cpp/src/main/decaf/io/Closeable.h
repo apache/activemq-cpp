@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/io/IOException.h>
 
-namespace decaf{
-namespace io{
+namespace decaf {
+namespace io {
 
     /**
      * Interface for a class that implements the close method.
@@ -30,7 +30,7 @@ namespace io{
     class DECAF_API Closeable {
     public:
 
-        virtual ~Closeable(){}
+        virtual ~Closeable();
 
         /**
          * Closes this object and deallocates the appropriate resources.
