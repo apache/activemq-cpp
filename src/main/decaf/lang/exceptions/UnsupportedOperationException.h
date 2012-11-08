@@ -19,9 +19,9 @@
 
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace lang{
-namespace exceptions{
+namespace decaf {
+namespace lang {
+namespace exceptions {
 
     /*
      * Thrown when an unsupported method is called or an operation cannot be performed
@@ -35,25 +35,19 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        UnsupportedOperationException() {}
+        UnsupportedOperationException();
 
         /**
          * Conversion Constructor from some other Exception
          * @param ex An exception that should become this type of Exception
          */
-        UnsupportedOperationException( const Exception& ex )
-        : Exception() {
-            *(Exception*)this = ex;
-        }
+        UnsupportedOperationException(const Exception& ex);
 
         /**
          * Copy Constructor
          * @param ex An exception that should become this type of Exception
          */
-        UnsupportedOperationException( const UnsupportedOperationException& ex )
-        : Exception() {
-            *(Exception*)this = ex;
-        }
+        UnsupportedOperationException(const UnsupportedOperationException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -65,25 +59,14 @@ namespace exceptions{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        UnsupportedOperationException( const char* file, const int lineNumber,
-                               const std::exception* cause,
-                               const char* msg, ... ) : Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        UnsupportedOperationException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        UnsupportedOperationException( const std::exception* cause )
-            : Exception( cause ) {}
+        UnsupportedOperationException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -94,18 +77,7 @@ namespace exceptions{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        UnsupportedOperationException( const char* file,
-                                       const int lineNumber,
-                                       const char* msg, ... )
-        : Exception()
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        UnsupportedOperationException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -114,11 +86,11 @@ namespace exceptions{
          *
          * @return an new Exception instance that is a copy of this one.
          */
-        virtual UnsupportedOperationException* clone() const{
-            return new UnsupportedOperationException( *this );
+        virtual UnsupportedOperationException* clone() const {
+            return new UnsupportedOperationException(*this);
         }
 
-        virtual ~UnsupportedOperationException() throw() {}
+        virtual ~UnsupportedOperationException() throw();
 
     };
 

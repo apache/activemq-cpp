@@ -21,85 +21,62 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
-namespace decaf{
-namespace nio{
+namespace decaf {
+namespace nio {
 
-    class DECAF_API ReadOnlyBufferException :
-        public lang::exceptions::UnsupportedOperationException {
+    class DECAF_API ReadOnlyBufferException : public lang::exceptions::UnsupportedOperationException {
     public:
 
         /**
          * Default Constructor
          */
-        ReadOnlyBufferException() {}
+        ReadOnlyBufferException();
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy
          */
-        ReadOnlyBufferException( const lang::Exception& ex )
-        : lang::exceptions::UnsupportedOperationException() {
-            *(lang::Exception*)this = ex;
-        }
+        ReadOnlyBufferException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy, which is an instance of this type
          */
-        ReadOnlyBufferException( const ReadOnlyBufferException& ex )
-        : lang::exceptions::UnsupportedOperationException() {
-            *(lang::Exception*)this = ex;
-        }
+        ReadOnlyBufferException(const ReadOnlyBufferException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        ReadOnlyBufferException( const char* file, const int lineNumber,
-                                 const std::exception* cause,
-                                 const char* msg, ... )
-            : lang::exceptions::UnsupportedOperationException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        ReadOnlyBufferException(const char* file, const int lineNumber,
+                                const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        ReadOnlyBufferException( const std::exception* cause )
-            : lang::exceptions::UnsupportedOperationException( cause ) {}
+        ReadOnlyBufferException(const std::exception* cause);
 
         /**
          * Constructor
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        ReadOnlyBufferException( const char* file, const int lineNumber,
-                                  const char* msg, ... )
-        : lang::exceptions::UnsupportedOperationException() {
-
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        ReadOnlyBufferException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -107,10 +84,10 @@ namespace nio{
          * All subclasses should override.
          */
         virtual ReadOnlyBufferException* clone() const {
-            return new ReadOnlyBufferException( *this );
+            return new ReadOnlyBufferException(*this);
         }
 
-        virtual ~ReadOnlyBufferException() throw() {}
+        virtual ~ReadOnlyBufferException() throw ();
 
     };
 

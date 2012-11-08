@@ -35,75 +35,52 @@ namespace io {
         /**
          * Default Constructor
          */
-        UTFDataFormatException() {}
+        UTFDataFormatException();
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy
          */
-        UTFDataFormatException( const lang::Exception& ex )
-        : IOException()
-        {
-            *(lang::Exception*)this = ex;
-        }
+        UTFDataFormatException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex the exception to copy, which is an instance of this type
          */
-        UTFDataFormatException( const UTFDataFormatException& ex )
-        : IOException()
-        {
-            *(lang::Exception*)this = ex;
-        }
+        UTFDataFormatException(const UTFDataFormatException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        UTFDataFormatException( const char* file, const int lineNumber,
-                                const std::exception* cause,
-                                const char* msg, ... ) : IOException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        UTFDataFormatException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        UTFDataFormatException( const std::exception* cause ) : IOException( cause ) {}
+        UTFDataFormatException(const std::exception* cause);
 
         /**
          * Constructor
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        UTFDataFormatException( const char* file, const int lineNumber,
-                                const char* msg, ... )
-        : IOException()
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        UTFDataFormatException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -112,11 +89,11 @@ namespace io {
          *
          * @return A new instance of an Exception object that is a copy of this instance.
          */
-        virtual UTFDataFormatException* clone() const{
-            return new UTFDataFormatException( *this );
+        virtual UTFDataFormatException* clone() const {
+            return new UTFDataFormatException(*this);
         }
 
-        virtual ~UTFDataFormatException() throw() {}
+        virtual ~UTFDataFormatException() throw();
 
     };
 

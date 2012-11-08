@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/io/InterruptedIOException.h>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace net {
 
     class DECAF_API SocketTimeoutException : public io::InterruptedIOException {
     public:
@@ -30,78 +30,54 @@ namespace net{
         /**
          * Default Constructor
          */
-        SocketTimeoutException() {}
+        SocketTimeoutException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex An exception that should become this type of Exception
          */
-        SocketTimeoutException( const Exception& ex ) : io::InterruptedIOException()
-        {
-            *(Exception*)this = ex;
-        }
+        SocketTimeoutException(const Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex An exception that should become this type of Exception
          */
-        SocketTimeoutException( const SocketTimeoutException& ex )
-        : io::InterruptedIOException()
-        {
-            *(Exception*)this = ex;
-        }
+        SocketTimeoutException(const SocketTimeoutException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        SocketTimeoutException( const char* file, const int lineNumber,
-                                const std::exception* cause,
-                                const char* msg, ... )
-        : io::InterruptedIOException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        SocketTimeoutException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
+         *
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        SocketTimeoutException( const std::exception* cause )
-            : io::InterruptedIOException( cause ) {}
+        SocketTimeoutException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        SocketTimeoutException( const char* file, const int lineNumber,
-                                const char* msg, ... )
-        : io::InterruptedIOException()
-        {
-            va_list vargs ;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        SocketTimeoutException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -111,10 +87,10 @@ namespace net{
          * @return a new Exception instance that is a copy of this Exception object.
          */
         virtual SocketTimeoutException* clone() const {
-            return new SocketTimeoutException( *this );
+            return new SocketTimeoutException(*this);
         }
 
-        virtual ~SocketTimeoutException() throw() {}
+        virtual ~SocketTimeoutException() throw();
 
     };
 

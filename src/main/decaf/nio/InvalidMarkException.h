@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
-namespace decaf{
-namespace nio{
+namespace decaf {
+namespace nio {
 
     class DECAF_API InvalidMarkException : public lang::exceptions::IllegalStateException {
     public:
@@ -30,7 +30,7 @@ namespace nio{
         /**
          * Default Constructor
          */
-        InvalidMarkException() {}
+        InvalidMarkException();
 
         /**
          * Conversion Constructor from some other Exception
@@ -38,10 +38,7 @@ namespace nio{
          * @param ex
          *      The Exception whose state data is to be copied into this Exception.
          */
-        InvalidMarkException( const lang::Exception& ex )
-        : lang::exceptions::IllegalStateException() {
-            *(lang::Exception*)this = ex;
-        }
+        InvalidMarkException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
@@ -49,62 +46,39 @@ namespace nio{
          * @param ex
          *      The Exception whose state data is to be copied into this Exception.
          */
-        InvalidMarkException( const InvalidMarkException& ex )
-        : lang::exceptions::IllegalStateException() {
-            *(lang::Exception*)this = ex;
-        }
+        InvalidMarkException(const InvalidMarkException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param cause The exception that was the cause for this one to be thrown.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        InvalidMarkException( const char* file, const int lineNumber,
-                              const std::exception* cause,
-                              const char* msg, ... )
-            : lang::exceptions::IllegalStateException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        InvalidMarkException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        InvalidMarkException( const std::exception* cause )
-            : lang::exceptions::IllegalStateException( cause ) {}
+        InvalidMarkException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
+         *
          * @param file The file name where exception occurs
          * @param lineNumber The line number where the exception occurred.
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        InvalidMarkException( const char* file, const int lineNumber,
-                              const char* msg, ... )
-        : lang::exceptions::IllegalStateException() {
-
-            va_list vargs ;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        InvalidMarkException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -114,10 +88,10 @@ namespace nio{
          * @return A new Exception instance that is a copy of this Exception.
          */
         virtual InvalidMarkException* clone() const {
-            return new InvalidMarkException( *this );
+            return new InvalidMarkException(*this);
         }
 
-        virtual ~InvalidMarkException() throw() {}
+        virtual ~InvalidMarkException() throw();
 
     };
 

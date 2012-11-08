@@ -19,17 +19,17 @@
 
 #include <decaf/util/Config.h>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     /**
      * Interface for a runnable object - defines a task
      * that can be run by a thread.
      */
-    class DECAF_API Runnable{
+    class DECAF_API Runnable {
     public:
 
-        virtual ~Runnable(){}
+        virtual ~Runnable();
 
         /**
          * Run method - called by the Thread class in the context

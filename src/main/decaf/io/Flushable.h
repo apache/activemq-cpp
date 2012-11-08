@@ -34,7 +34,7 @@ namespace io {
     class DECAF_API Flushable {
     public:
 
-        virtual ~Flushable() {}
+        virtual ~Flushable();
 
         /**
          * Flushes this stream by writing any buffered output to the underlying stream.

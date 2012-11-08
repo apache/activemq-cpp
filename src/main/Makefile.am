@@ -386,50 +386,95 @@ cc_sources = \
     decaf/io/BufferedOutputStream.cpp \
     decaf/io/ByteArrayInputStream.cpp \
     decaf/io/ByteArrayOutputStream.cpp \
+    decaf/io/Closeable.cpp \
+    decaf/io/DataInput.cpp \
     decaf/io/DataInputStream.cpp \
+    decaf/io/DataOutput.cpp \
     decaf/io/DataOutputStream.cpp \
+    decaf/io/EOFException.cpp \
     decaf/io/FileDescriptor.cpp \
     decaf/io/FilterInputStream.cpp \
     decaf/io/FilterOutputStream.cpp \
+    decaf/io/Flushable.cpp \
+    decaf/io/IOException.cpp \
     decaf/io/InputStream.cpp \
     decaf/io/InputStreamReader.cpp \
+    decaf/io/InterruptedIOException.cpp \
     decaf/io/OutputStream.cpp \
     decaf/io/OutputStreamWriter.cpp \
     decaf/io/PushbackInputStream.cpp \
     decaf/io/Reader.cpp \
+    decaf/io/UTFDataFormatException.cpp \
+    decaf/io/UnsupportedEncodingException.cpp \
     decaf/io/Writer.cpp \
+    decaf/lang/Appendable.cpp \
     decaf/lang/Boolean.cpp \
     decaf/lang/Byte.cpp \
+    decaf/lang/CharSequence.cpp \
     decaf/lang/Character.cpp \
+    decaf/lang/Comparable.cpp \
     decaf/lang/Double.cpp \
     decaf/lang/Exception.cpp \
     decaf/lang/Float.cpp \
     decaf/lang/Integer.cpp \
+    decaf/lang/Iterable.cpp \
     decaf/lang/Long.cpp \
     decaf/lang/Math.cpp \
+    decaf/lang/Readable.cpp \
+    decaf/lang/Runnable.cpp \
+    decaf/lang/Runtime.cpp \
     decaf/lang/Short.cpp \
     decaf/lang/String.cpp \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
     decaf/lang/ThreadLocal.cpp \
+    decaf/lang/Throwable.cpp \
     decaf/lang/Types.cpp \
+    decaf/lang/exceptions/ClassCastException.cpp \
+    decaf/lang/exceptions/IllegalArgumentException.cpp \
+    decaf/lang/exceptions/IllegalMonitorStateException.cpp \
+    decaf/lang/exceptions/IllegalStateException.cpp \
+    decaf/lang/exceptions/IllegalThreadStateException.cpp \
+    decaf/lang/exceptions/IndexOutOfBoundsException.cpp \
+    decaf/lang/exceptions/InterruptedException.cpp \
+    decaf/lang/exceptions/InvalidStateException.cpp \
+    decaf/lang/exceptions/NegativeArraySizeException.cpp \
+    decaf/lang/exceptions/NullPointerException.cpp \
+    decaf/lang/exceptions/NumberFormatException.cpp \
+    decaf/lang/exceptions/OutOfMemoryError.cpp \
+    decaf/lang/exceptions/RuntimeException.cpp \
+    decaf/lang/exceptions/UnsupportedOperationException.cpp \
+    decaf/net/BindException.cpp \
+    decaf/net/ConnectException.cpp \
     decaf/net/DatagramPacket.cpp \
+    decaf/net/HttpRetryException.cpp \
     decaf/net/Inet4Address.cpp \
     decaf/net/Inet6Address.cpp \
     decaf/net/InetAddress.cpp \
     decaf/net/InetSocketAddress.cpp \
+    decaf/net/MalformedURLException.cpp \
+    decaf/net/NoRouteToHostException.cpp \
+    decaf/net/PortUnreachableException.cpp \
+    decaf/net/ProtocolException.cpp \
     decaf/net/ServerSocket.cpp \
     decaf/net/ServerSocketFactory.cpp \
     decaf/net/Socket.cpp \
+    decaf/net/SocketAddress.cpp \
     decaf/net/SocketError.cpp \
+    decaf/net/SocketException.cpp \
     decaf/net/SocketFactory.cpp \
     decaf/net/SocketImpl.cpp \
+    decaf/net/SocketImplFactory.cpp \
     decaf/net/SocketOptions.cpp \
+    decaf/net/SocketTimeoutException.cpp \
     decaf/net/URI.cpp \
+    decaf/net/URISyntaxException.cpp \
     decaf/net/URL.cpp \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
+    decaf/net/UnknownHostException.cpp \
+    decaf/net/UnknownServiceException.cpp \
     decaf/net/ssl/SSLContext.cpp \
     decaf/net/ssl/SSLContextSpi.cpp \
     decaf/net/ssl/SSLParameters.cpp \
@@ -438,12 +483,16 @@ cc_sources = \
     decaf/net/ssl/SSLSocket.cpp \
     decaf/net/ssl/SSLSocketFactory.cpp \
     decaf/nio/Buffer.cpp \
+    decaf/nio/BufferOverflowException.cpp \
+    decaf/nio/BufferUnderflowException.cpp \
     decaf/nio/ByteBuffer.cpp \
     decaf/nio/CharBuffer.cpp \
     decaf/nio/DoubleBuffer.cpp \
     decaf/nio/FloatBuffer.cpp \
     decaf/nio/IntBuffer.cpp \
+    decaf/nio/InvalidMarkException.cpp \
     decaf/nio/LongBuffer.cpp \
+    decaf/nio/ReadOnlyBufferException.cpp \
     decaf/nio/ShortBuffer.cpp \
     decaf/security/SecureRandom.cpp \
     decaf/security/SecureRandomSpi.cpp \

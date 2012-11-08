@@ -21,8 +21,8 @@
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/util/Config.h>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     /**
      * A CharSequence is a readable sequence of char values. This interface provides
@@ -36,7 +36,7 @@ namespace lang{
     class DECAF_API CharSequence {
     public:
 
-        virtual ~CharSequence() {}
+        virtual ~CharSequence();
 
         /**
          * @returns the length of the underlying character sequence.

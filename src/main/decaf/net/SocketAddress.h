@@ -32,7 +32,7 @@ namespace net {
     class DECAF_API SocketAddress {
     public:
 
-        virtual ~SocketAddress() {}
+        virtual ~SocketAddress();
 
     };
 

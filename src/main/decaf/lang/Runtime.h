@@ -31,11 +31,11 @@ namespace lang {
 
     protected:
 
-        Runtime() {}
+        Runtime();
 
     public:
 
-        virtual ~Runtime() {}
+        virtual ~Runtime();
 
         /**
          * Gets the single instance of the Decaf Runtime for this Process.

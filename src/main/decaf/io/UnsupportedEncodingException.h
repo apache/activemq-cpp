@@ -34,27 +34,19 @@ namespace io {
         /**
          * Default Constructor
          */
-        UnsupportedEncodingException() {}
+        UnsupportedEncodingException();
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        UnsupportedEncodingException( const lang::Exception& ex )
-        : IOException()
-        {
-            *(lang::Exception*)this = ex;
-        }
+        UnsupportedEncodingException(const lang::Exception& ex);
 
         /**
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        UnsupportedEncodingException( const UnsupportedEncodingException& ex )
-        : IOException()
-        {
-            *(lang::Exception*)this = ex;
-        }
+        UnsupportedEncodingException(const UnsupportedEncodingException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -66,24 +58,14 @@ namespace io {
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        UnsupportedEncodingException( const char* file, const int lineNumber,
-                                      const std::exception* cause,
-                                      const char* msg, ... ) : IOException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        UnsupportedEncodingException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
          * @param cause Pointer to the exception that caused this one to
          * be thrown, the object is cloned caller retains ownership.
          */
-        UnsupportedEncodingException( const std::exception* cause ) : IOException( cause ) {}
+        UnsupportedEncodingException(const std::exception* cause);
 
         /**
          * Constructor
@@ -92,17 +74,7 @@ namespace io {
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        UnsupportedEncodingException( const char* file, const int lineNumber,
-                                      const char* msg, ... )
-        : IOException()
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        UnsupportedEncodingException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -111,11 +83,11 @@ namespace io {
          *
          * @return A new instance of an Exception object that is a copy of this instance.
          */
-        virtual UnsupportedEncodingException* clone() const{
-            return new UnsupportedEncodingException( *this );
+        virtual UnsupportedEncodingException* clone() const {
+            return new UnsupportedEncodingException(*this);
         }
 
-        virtual ~UnsupportedEncodingException() throw() {}
+        virtual ~UnsupportedEncodingException() throw();
 
     };
 

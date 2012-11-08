@@ -47,8 +47,7 @@ namespace io {
     class DECAF_API DataOutput {
     public:
 
-        virtual ~DataOutput() {
-        }
+        virtual ~DataOutput();
 
         /**
          * Writes a boolean to the underlying output stream as a 1-byte value. The

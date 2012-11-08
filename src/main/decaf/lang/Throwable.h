@@ -44,9 +44,9 @@ namespace lang{
     class DECAF_API Throwable : public std::exception {
     public:
 
-        Throwable() : std::exception() {}
+        Throwable();
 
-        virtual ~Throwable() throw() {}
+        virtual ~Throwable() throw();
 
         /**
          * Gets the cause of the error, if no message was provided to the instance

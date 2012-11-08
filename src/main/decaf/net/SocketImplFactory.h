@@ -38,7 +38,7 @@ namespace net {
     class DECAF_API SocketImplFactory {
     public:
 
-        virtual ~SocketImplFactory() {}
+        virtual ~SocketImplFactory();
 
         /**
          * Creates a new SokcetImpl instance and returns it, the caller then owns the
