@@ -4825,6 +4825,10 @@
 				Name="lang"
 				>
 				<File
+					RelativePath="..\src\main\decaf\lang\Appendable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Appendable.h"
 					>
 				</File>
@@ -4857,7 +4861,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\CharSequence.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\CharSequence.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\Comparable.cpp"
 					>
 				</File>
 				<File
@@ -4897,6 +4909,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\Iterable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Iterable.h"
 					>
 				</File>
@@ -4925,11 +4941,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\Readable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Readable.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\Runnable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Runnable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\Runtime.cpp"
 					>
 				</File>
 				<File
@@ -4985,6 +5013,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\lang\Throwable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\lang\Throwable.h"
 					>
 				</File>
@@ -5000,6 +5032,10 @@
 					Name="exceptions"
 					>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\ClassCastException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\ClassCastException.h"
 						>
 					</File>
@@ -5008,7 +5044,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\IllegalArgumentException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\IllegalArgumentException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\IllegalMonitorStateException.cpp"
 						>
 					</File>
 					<File
@@ -5016,7 +5060,143 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\IllegalStateException.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\IllegalStateException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\IllegalThreadStateException.cpp"
 						>
 					</File>
 					<File
@@ -5024,7 +5204,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\IndexOutOfBoundsException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\IndexOutOfBoundsException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\InterruptedException.cpp"
 						>
 					</File>
 					<File
@@ -5032,7 +5220,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\InvalidStateException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\InvalidStateException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\NegativeArraySizeException.cpp"
 						>
 					</File>
 					<File
@@ -5040,7 +5236,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\NullPointerException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\NullPointerException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\NumberFormatException.cpp"
 						>
 					</File>
 					<File
@@ -5048,12 +5252,152 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\OutOfMemoryError.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\OutOfMemoryError.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\RuntimeException.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\RuntimeException.h"
 						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\UnsupportedOperationException.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DebugDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="ReleaseDLL-SSL|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\UnsupportedOperationException.h"
@@ -5105,7 +5449,143 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\Closeable.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseDLL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseDLL|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DebugDLL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DebugDLL|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug-SSL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug-SSL|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release-SSL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release-SSL|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DebugDLL-SSL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DebugDLL-SSL|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseDLL-SSL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseDLL-SSL|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\Closeable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\DataInput.cpp"
 					>
 				</File>
 				<File
@@ -5121,6 +5601,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\DataOutput.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\DataOutput.h"
 					>
 				</File>
@@ -5130,6 +5614,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\io\DataOutputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\EOFException.cpp"
 					>
 				</File>
 				<File
@@ -5161,6 +5649,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\Flushable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\Flushable.h"
 					>
 				</File>
@@ -5181,7 +5673,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\InterruptedIOException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\InterruptedIOException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\IOException.cpp"
 					>
 				</File>
 				<File
@@ -5221,7 +5721,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\UnsupportedEncodingException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\UnsupportedEncodingException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\io\UTFDataFormatException.cpp"
 					>
 				</File>
 				<File
@@ -5241,11 +5749,31 @@
 				Name="net"
 				>
 				<File
+					RelativePath="..\src\main\decaf\net\BindException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\BindException.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\ConnectException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\ConnectException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\DatagramPacket.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\DatagramPacket.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\HttpRetryException.cpp"
 					>
 				</File>
 				<File
@@ -5285,7 +5813,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\MalformedURLException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\MalformedURLException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\NoRouteToHostException.cpp"
 					>
 				</File>
 				<File
@@ -5293,7 +5829,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\PortUnreachableException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\PortUnreachableException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\ProtocolException.cpp"
 					>
 				</File>
 				<File
@@ -5325,6 +5869,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\SocketAddress.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\SocketAddress.h"
 					>
 				</File>
@@ -5334,6 +5882,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\net\SocketError.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\SocketException.cpp"
 					>
 				</File>
 				<File
@@ -5357,6 +5909,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\SocketImplFactory.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\SocketImplFactory.h"
 					>
 				</File>
@@ -5369,11 +5925,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\SocketTimeoutException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\SocketTimeoutException.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\net\UnknownHostException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\net\UnknownHostException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\UnknownServiceException.cpp"
 					>
 				</File>
 				<File
@@ -5386,6 +5954,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\net\URI.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\net\URISyntaxException.cpp"
 					>
 				</File>
 				<File
@@ -5489,7 +6061,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\nio\BufferOverflowException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\nio\BufferOverflowException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\nio\BufferUnderflowException.cpp"
 					>
 				</File>
 				<File
@@ -5537,6 +6117,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\nio\InvalidMarkException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\nio\InvalidMarkException.h"
 					>
 				</File>
@@ -5546,6 +6130,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\nio\LongBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\nio\ReadOnlyBufferException.cpp"
 					>
 				</File>
 				<File
@@ -6012,6 +6600,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\CancellationException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\CancellationException.h"
 						>
 					</File>
@@ -6073,6 +6665,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Delayed.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ExecutionException.cpp"
 						>
 					</File>
 					<File
@@ -6144,6 +6740,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionException.h"
 						>
 					</File>
@@ -6172,6 +6772,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Synchronizable.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Synchronizable.h"
 						>
 					</File>
@@ -6197,6 +6801,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\ThreadPoolExecutor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\TimeoutException.cpp"
 						>
 					</File>
 					<File
@@ -6267,8 +6875,144 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\Condition.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\Condition.h"
 							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\Lock.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="ReleaseDLL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="ReleaseDLL|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="DebugDLL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="DebugDLL|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug-SSL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug-SSL|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release-SSL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release-SSL|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="DebugDLL-SSL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="DebugDLL-SSL|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="ReleaseDLL-SSL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="ReleaseDLL-SSL|x64"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(ProjectName)\$(InputName)1.obj"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\Lock.h"
@@ -6280,6 +7024,10 @@
 						</File>
 						<File
 							RelativePath="..\src\main\decaf\util\concurrent\locks\LockSupport.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\ReadWriteLock.cpp"
 							>
 						</File>
 						<File
@@ -6609,6 +7357,10 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\zip\CheckedOutputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\zip\Checksum.cpp"
 						>
 					</File>
 					<File
