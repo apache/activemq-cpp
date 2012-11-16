@@ -158,4 +158,10 @@
    #define DECAF_UNUSED
 #endif
 
+#if defined(_WIN32)
+    #define DECAF_STDCALL __stdcall
+#else
+    #define DECAF_STDCALL
+#endif
+
 #endif /*_DECAF_UTIL_CONFIG_H_*/
