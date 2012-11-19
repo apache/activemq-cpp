@@ -92,3 +92,16 @@ noinst_PROGRAMS += tempdest_advisory_producer
 tempdest_advisory_producer_SOURCES = $(tempdest_advisory_producer_sources)
 tempdest_advisory_producer_LDADD= $(AMQ_TEST_LIBS)
 tempdest_advisory_producer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## CMS Template Stress Test Example
+cmstemplate_stress_sources = cmstemplate-stress/TestSenderAndReceiver.cpp \
+                             cmstemplate-stress/Sender.cpp \
+                             cmstemplate-stress/Receiver.cpp \
+                             cmstemplate-stress/MessagingTask.cpp \
+                             cmstemplate-stress/ConnectionFactoryMgr.cpp \
+                             cmstemplate-stress/CMSTestMultipleSendersReceivers.cpp \
+                             cmstemplate-stress/CmsMessageCreator.cpp
+noinst_PROGRAMS += cmstemplate_stress
+cmstemplate_stress_SOURCES = $(cmstemplate_stress_sources)
+cmstemplate_stress_LDADD= $(AMQ_TEST_LIBS)
+cmstemplate_stress_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
