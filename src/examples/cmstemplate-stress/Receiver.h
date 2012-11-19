@@ -34,7 +34,7 @@ namespace cmstemplate {
     class Receiver : public decaf::lang::Runnable {
     public:
 
-        typedef void DECAF_STDCALL (*RecvMessageListener)( const std::string& message);
+        typedef void (DECAF_STDCALL *RecvMessageListener)( const std::string& message);
 
     private:
         std::string m_url;
