@@ -1361,3 +1361,13 @@ void ThreadPoolExecutorTest::testConcurrentRandomDelayedThreads() {
     executor.shutdown();
     CPPUNIT_ASSERT_MESSAGE("executor terminated", executor.awaitTermination(45, TimeUnit::SECONDS));
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadPoolExecutorTest::testRapidCreateAndDestroyExecutor() {
+
+    for (int i = 0; i < 100; i++) {
+        ThreadPoolExecutor executor(10, Integer::MAX_VALUE, 60LL, TimeUnit::SECONDS, new LinkedBlockingQueue<Runnable*>());
+        executor.shutdown();
+        CPPUNIT_ASSERT_MESSAGE("executor terminated", executor.awaitTermination(45, TimeUnit::SECONDS));
+    }
+}

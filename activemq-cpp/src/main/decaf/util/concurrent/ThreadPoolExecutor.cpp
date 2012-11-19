@@ -1138,9 +1138,10 @@ namespace concurrent{
                 throw;
             }
 
+            t->start();
+
             mainLock.unlock();
 
-            t->start();
             // It is possible (but unlikely) for a thread to have been added to
             // workers, but not yet started, during transition to STOP, which
             // could result in a rare missed interrupt, because Thread::interrupt

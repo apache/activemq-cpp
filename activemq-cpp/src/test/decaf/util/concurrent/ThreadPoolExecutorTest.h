@@ -105,6 +105,7 @@ namespace concurrent{
         CPPUNIT_TEST( testTerminated );
         CPPUNIT_TEST( testBeforeAfter );
         CPPUNIT_TEST( testConcurrentRandomDelayedThreads );
+        CPPUNIT_TEST( testRapidCreateAndDestroyExecutor );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -187,6 +188,7 @@ namespace concurrent{
         void testTerminated();
         void testBeforeAfter();
         void testConcurrentRandomDelayedThreads();
+        void testRapidCreateAndDestroyExecutor();
 
     };
 
