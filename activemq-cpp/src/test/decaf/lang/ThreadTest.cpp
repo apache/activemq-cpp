@@ -19,6 +19,7 @@
 
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/System.h>
+#include <decaf/util/ArrayList.h>
 #include <decaf/util/Random.h>
 #include <decaf/lang/exceptions/InterruptedException.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
@@ -75,8 +76,7 @@ namespace lang{
 
     public:
 
-        ChildThread1(Thread* parent, bool sync) : Thread(), parent(parent), sync(sync) {
-        }
+        ChildThread1(Thread* parent, bool sync) : Thread(), parent(parent), sync(sync) {}
 
         virtual ~ChildThread1() {}
 
@@ -107,11 +107,8 @@ namespace lang{
         bool done;
 
         virtual void run() {
-
-            while (!Thread::currentThread()->isInterrupted())
-                ;
-            while (!done)
-                ;
+            while (!Thread::currentThread()->isInterrupted());
+            while (!done);
         }
     };
 
@@ -138,13 +135,13 @@ namespace lang{
 
         virtual void run() {
             int x = 0;
-            while( true ) {
+            while (true) {
                 ++x;
             }
         }
 
-        YieldThread( int d ) : delay( 0 ) {
-            if( d >= 0 ) {
+        YieldThread(int d) : delay(0) {
+            if (d >= 0) {
                 delay = d;
             }
         }
@@ -157,7 +154,7 @@ namespace lang{
 
     public:
 
-        Delegate(){ stuff = 0; }
+        Delegate() { stuff = 0; }
         virtual ~Delegate(){}
 
         int getStuff(){
@@ -167,7 +164,6 @@ namespace lang{
         virtual void run(){
             stuff = 1;
         }
-
     };
 
     class Derived : public Thread{
@@ -177,31 +173,27 @@ namespace lang{
 
     public:
 
-        Derived(){ stuff = 0; }
-        virtual ~Derived(){}
+        Derived() { stuff = 0; }
+        virtual ~Derived() {}
 
-        int getStuff(){
+        int getStuff() {
             return stuff;
         }
 
-        virtual void run(){
+        virtual void run() {
             stuff = 1;
         }
-
     };
 
     class JoinTest : public Thread{
     public:
 
-        JoinTest(){}
-        virtual ~JoinTest(){}
+        JoinTest() {}
+        virtual ~JoinTest() {}
 
-        virtual void run(){
-
-            // Sleep for 2 seconds.
-            Thread::sleep( 1000 );
+        virtual void run() {
+            Thread::sleep(1000);
         }
-
     };
 
     class RandomSleepRun : public Thread{
@@ -214,12 +206,10 @@ namespace lang{
         RandomSleepRun() {}
         virtual ~RandomSleepRun(){}
 
-        virtual void run(){
-
+        virtual void run() {
             // Sleep for Random time.
-            Thread::sleep( rand.nextInt( 2000 ) );
+            Thread::sleep(rand.nextInt(2000));
         }
-
     };
 
     Random RandomSleepRun::rand( System::currentTimeMillis() );
@@ -230,12 +220,11 @@ namespace lang{
         BadRunnable(){}
         virtual ~BadRunnable(){}
 
-        virtual void run(){
+        virtual void run() {
 
-            Thread::sleep( 100 );
-            throw RuntimeException( __FILE__, __LINE__, "Planned" );
+            Thread::sleep(100);
+            throw RuntimeException(__FILE__, __LINE__, "Planned");
         }
-
     };
 
     class InterruptibleSleeper : public Runnable {
@@ -245,14 +234,13 @@ namespace lang{
 
     public:
 
-        InterruptibleSleeper() : Runnable(), interrupted(false) {
-        }
+        InterruptibleSleeper() : Runnable(), interrupted(false) {}
 
-        virtual ~InterruptibleSleeper(){}
+        virtual ~InterruptibleSleeper() {}
 
         virtual void run() {
 
-            try{
+            try {
                 Thread::sleep(10000);
             } catch(InterruptedException& ex) {
                 interrupted = true;
@@ -272,14 +260,13 @@ namespace lang{
 
     public:
 
-        InterruptibleJoiner(Thread* parent) : Runnable(), interrupted(false), parent(parent) {
-        }
+        InterruptibleJoiner(Thread* parent) : Runnable(), interrupted(false), parent(parent) {}
 
-        virtual ~InterruptibleJoiner(){}
+        virtual ~InterruptibleJoiner() {}
 
         virtual void run() {
 
-            try{
+            try {
                 parent->join(10000);
             } catch(InterruptedException& ex) {
                 interrupted = true;
@@ -300,8 +287,7 @@ namespace lang{
 
         decaf::util::concurrent::Mutex lock;
 
-        InterruptibleWaiter() : Runnable(), interrupted(false), lock() {
-        }
+        InterruptibleWaiter() : Runnable(), interrupted(false), lock() {}
 
         virtual ~InterruptibleWaiter(){}
 
@@ -326,13 +312,11 @@ namespace lang{
 
         bool executed;
 
-        Handler() : executed( false ) {
-        }
+        Handler() : executed(false) {}
 
-        virtual void uncaughtException( const Thread* t, const Throwable& error ) {
+        virtual void uncaughtException(const Thread* t, const Throwable& error) {
             this->executed = true;
         }
-
     };
 
 }}
@@ -838,4 +822,72 @@ void ThreadTest::testInterruptWait() {
     CPPUNIT_ASSERT(runnable->wasInterrupted());
 
     ct.join();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testRapidCreateAndDestroy() {
+
+    for (int i = 0; i < 200; i++) {
+        JoinTest* st = new JoinTest;
+        st->start();
+        delete st;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class QuickThread : public Thread{
+    public:
+
+        QuickThread() {}
+        virtual ~QuickThread() {}
+
+        virtual void run() {
+            Thread::sleep(10);
+        }
+    };
+
+    class RapidCreateDestoryThread : public Thread{
+    public:
+
+        RapidCreateDestoryThread(){}
+        virtual ~RapidCreateDestoryThread(){}
+
+        virtual void run() {
+            for (int i = 0; i < 5000; i++) {
+                QuickThread* t = new QuickThread;
+                t->start();
+                delete t;
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testConcurrentRapidCreateAndDestroy() {
+
+    ArrayList<Thread*> threads;
+    const int NUM_THREADS = 128;
+
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        threads.add(new RapidCreateDestoryThread);
+    }
+
+    Pointer<Iterator<Thread*> > threadsIter(threads.iterator());
+    while (threadsIter->hasNext()) {
+        threadsIter->next()->start();
+    }
+
+    threadsIter.reset(threads.iterator());
+    while (threadsIter->hasNext()) {
+        threadsIter->next()->join();
+    }
+
+    threadsIter.reset(threads.iterator());
+    while (threadsIter->hasNext()) {
+        delete threadsIter->next();
+    }
+
+    threads.clear();
 }
