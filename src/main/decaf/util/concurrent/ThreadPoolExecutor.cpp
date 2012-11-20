@@ -255,6 +255,11 @@ namespace concurrent{
             }
         };
 
+    private:
+
+        ExecutorKernel(const ExecutorKernel&);
+        ExecutorKernel& operator= (const ExecutorKernel&);
+
     public:
 
         static const int COUNT_BITS;

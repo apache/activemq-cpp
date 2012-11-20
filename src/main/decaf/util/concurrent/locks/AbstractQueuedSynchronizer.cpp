@@ -244,6 +244,11 @@ namespace {
         int size;
         decaf_mutex_t lock;
 
+    private:
+
+        NodePool(const NodePool&);
+        NodePool& operator= (const NodePool&);
+
     public:
 
         NodePool() : head(), tail(NULL), size(0), lock() {
