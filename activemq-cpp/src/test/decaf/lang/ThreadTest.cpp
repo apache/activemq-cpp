@@ -855,7 +855,7 @@ namespace {
         virtual ~RapidCreateDestoryThread(){}
 
         virtual void run() {
-            for (int i = 0; i < 5000; i++) {
+            for (int i = 0; i < 500; i++) {
                 QuickThread* t = new QuickThread;
                 t->start();
                 delete t;
@@ -868,7 +868,7 @@ namespace {
 void ThreadTest::testConcurrentRapidCreateAndDestroy() {
 
     ArrayList<Thread*> threads;
-    const int NUM_THREADS = 128;
+    const int NUM_THREADS = 32;
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         threads.add(new RapidCreateDestoryThread);
