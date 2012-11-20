@@ -48,6 +48,11 @@ namespace correlator {
 
         CorrelatorData* impl;
 
+    private:
+
+        ResponseCorrelator(const ResponseCorrelator&);
+        ResponseCorrelator& operator= (const ResponseCorrelator&);
+
     public:
 
         /**

@@ -78,11 +78,9 @@ namespace lang {
 
     public:
 
-        SystemData() : systemProperties() {
-        }
+        SystemData() : cachedEnvValues(), aprPool(), systemProperties() {}
 
-        ~SystemData() {
-        }
+        ~SystemData() {}
     };
 
 }}
