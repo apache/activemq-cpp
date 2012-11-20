@@ -40,6 +40,11 @@ namespace locks {
 
         ReentrantReadWriteLockImpl* impl;
 
+    private:
+
+        ReentrantReadWriteLock(const ReentrantReadWriteLock&);
+        ReentrantReadWriteLock& operator=(const ReentrantReadWriteLock&);
+
     public:
 
         /**

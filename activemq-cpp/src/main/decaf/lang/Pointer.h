@@ -50,7 +50,7 @@ namespace lang {
      * @since 1.0
      */
     template<typename T, typename REFCOUNTER = decaf::util::concurrent::atomic::AtomicRefCounter>
-    class Pointer: public REFCOUNTER {
+    class Pointer : public REFCOUNTER {
     private:
 
         typedef void (*deletionFuncPtr)(T* p);

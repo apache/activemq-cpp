@@ -54,6 +54,11 @@ namespace stomp {
         activemq::util::LongSequenceGenerator messageIdGenerator;
         StompWireFormat* wireFormat;
 
+    private:
+
+        StompHelper(const StompHelper&);
+        StompHelper& operator=(const StompHelper&);
+
     public:
 
         StompHelper(StompWireFormat* wireFormat);

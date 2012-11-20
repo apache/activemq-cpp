@@ -35,7 +35,7 @@ ActiveMQTempDestination::ActiveMQTempDestination() :
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination(const std::string& name) :
-    ActiveMQDestination(name), Closeable(), connection(NULL) {
+    ActiveMQDestination(name), Closeable(), connection(NULL), connectionId(), sequenceId(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

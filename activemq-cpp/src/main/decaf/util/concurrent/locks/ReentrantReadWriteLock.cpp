@@ -70,6 +70,11 @@ namespace {
         static const int MAX_COUNT;
         static const int EXCLUSIVE_MASK;
 
+    private:
+
+        Sync(const Sync&);
+        Sync& operator=(const Sync&);
+
     public:
 
         /** Returns the number of shared holds represented in count  */
@@ -116,6 +121,8 @@ namespace {
     public:
 
         Sync() : readHolds(), cachedHoldCounter(), firstReader(NULL), firstReaderHoldCount(0) {}
+
+        virtual ~Sync() {}
 
         virtual bool isFair() const = 0;
 
@@ -496,6 +503,11 @@ namespace {
     };
 
     class ReadLock : public decaf::util::concurrent::locks::Lock {
+    private:
+
+        ReadLock(const ReadLock&);
+        ReadLock& operator= (const ReadLock&);
+
     public:
 
         Sync* sync;
@@ -668,6 +680,11 @@ namespace {
     };
 
     class WriteLock : public decaf::util::concurrent::locks::Lock {
+    private:
+
+        WriteLock(const WriteLock&);
+        WriteLock& operator= (const WriteLock&);
+
     public:
 
         Sync* sync;
@@ -928,6 +945,11 @@ namespace concurrent {
 namespace locks {
 
     class ReentrantReadWriteLockImpl {
+    private:
+
+        ReentrantReadWriteLockImpl(const ReentrantReadWriteLockImpl&);
+        ReentrantReadWriteLockImpl& operator= (const ReentrantReadWriteLockImpl&);
+
     public:
 
         decaf::util::concurrent::locks::Lock* readLock;
