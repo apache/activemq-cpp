@@ -40,6 +40,11 @@ namespace locks {
 
         decaf::lang::Thread* ownerThread;
 
+    private:
+
+        AbstractOwnableSynchronizer(const AbstractOwnableSynchronizer&);
+        AbstractOwnableSynchronizer& operator= (const AbstractOwnableSynchronizer&);
+
     public:
 
         virtual ~AbstractOwnableSynchronizer();

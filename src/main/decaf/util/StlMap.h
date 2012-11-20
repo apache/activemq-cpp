@@ -63,6 +63,11 @@ namespace util{
 
             StlMap* associatedMap;
 
+        private:
+
+            AbstractMapIterator(const AbstractMapIterator&);
+            AbstractMapIterator& operator= (const AbstractMapIterator&);
+
         public:
 
             AbstractMapIterator(StlMap* parent) : position(0),
@@ -208,6 +213,11 @@ namespace util{
             typename std::map<K,V,COMPARATOR>::const_iterator currentEntry;
 
             const StlMap* associatedMap;
+
+        private:
+
+            ConstAbstractMapIterator(const ConstAbstractMapIterator&);
+            ConstAbstractMapIterator& operator= (const ConstAbstractMapIterator&);
 
         public:
 
@@ -625,7 +635,10 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        StlMap() : Map<K,V>(), valueMap(), mutex(), modCount(0) {}
+        StlMap() : Map<K,V>(), valueMap(), mutex(), modCount(0),
+                               cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                               cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
+        }
 
         /**
          * Copy constructor - copies the content of the given map into this one.
@@ -633,7 +646,9 @@ namespace util{
          * @param source
          *      The source StlMap whose entries are copied into this Map.
          */
-        StlMap(const StlMap& source ) : Map<K,V>(), valueMap(), mutex(), modCount(0) {
+        StlMap(const StlMap& source ) : Map<K,V>(), valueMap(), mutex(), modCount(0),
+                                        cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                        cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             copy(source);
         }
 
@@ -643,7 +658,9 @@ namespace util{
          * @param source
          *      The source ma whose entries are copied into this Map..
          */
-        StlMap(const Map<K,V>& source) : Map<K,V>(), valueMap(), mutex(), modCount(0) {
+        StlMap(const Map<K,V>& source) : Map<K,V>(), valueMap(), mutex(), modCount(0),
+                                         cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                         cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             copy(source);
         }
 

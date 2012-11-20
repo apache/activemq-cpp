@@ -65,6 +65,11 @@ namespace concurrent{
 
         Runnable* task;
 
+    private:
+
+        UnownedTaskWrapper(const UnownedTaskWrapper&);
+        UnownedTaskWrapper& operator=(const UnownedTaskWrapper&);
+
     public:
 
         UnownedTaskWrapper(Runnable* task) : Runnable(), task(task) {
@@ -224,6 +229,11 @@ namespace concurrent{
         private:
 
             ExecutorKernel* kernel;
+
+        private:
+
+            WorkerKiller(const WorkerKiller&);
+            WorkerKiller& operator=(const WorkerKiller&);
 
         public:
 

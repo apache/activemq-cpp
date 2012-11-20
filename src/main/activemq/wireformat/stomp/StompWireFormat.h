@@ -54,6 +54,11 @@ namespace stomp {
         // affecting binary compatibility.
         StompWireformatProperties* properties;
 
+    private:
+
+        StompWireFormat(const StompWireFormat&);
+        StompWireFormat& operator=(const StompWireFormat&);
+
     public:
 
         StompWireFormat();

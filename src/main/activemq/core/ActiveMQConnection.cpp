@@ -155,6 +155,7 @@ namespace core{
         bool userSpecifiedClientID;
 
         decaf::util::concurrent::Mutex ensureConnectionInfoSentMutex;
+        decaf::util::concurrent::Mutex onExceptionLock;
         decaf::util::concurrent::Mutex mutex;
 
         bool dispatchAsync;
@@ -198,6 +199,7 @@ namespace core{
                              transport(transport),
                              clientIdGenerator(),
                              scheduler(),
+                             executor(),
                              sessionIds(),
                              consumerIdGenerator(),
                              tempDestinationIds(),
@@ -207,6 +209,7 @@ namespace core{
                              isConnectionInfoSentToBroker(false),
                              userSpecifiedClientID(false),
                              ensureConnectionInfoSentMutex(),
+                             onExceptionLock(),
                              mutex(),
                              dispatchAsync(true),
                              alwaysSyncSend(false),
@@ -257,9 +260,11 @@ namespace core{
 
         ~ConnectionConfig() {
             try {
-                this->scheduler->shutdown();
-                this->executor->shutdown();
-                this->executor->awaitTermination(1, TimeUnit::MINUTES);
+                synchronized(&onExceptionLock) {
+                    this->scheduler->shutdown();
+                    this->executor->shutdown();
+                    this->executor->awaitTermination(1, TimeUnit::MINUTES);
+                }
             }
             AMQ_CATCHALL_NOTHROW()
         }
@@ -277,6 +282,11 @@ namespace core{
 
         ActiveMQConnection* connection;
         Pointer<ConnectionError> error;
+
+    private:
+
+        ConnectionErrorRunnable(const ConnectionErrorRunnable&);
+        ConnectionErrorRunnable& operator= (const ConnectionErrorRunnable&);
 
     public:
 
@@ -298,6 +308,11 @@ namespace core{
 
         ActiveMQConnection* connection;
         Exception ex;
+
+    private:
+
+        OnAsyncExceptionRunnable(const OnAsyncExceptionRunnable&);
+        OnAsyncExceptionRunnable& operator= (const OnAsyncExceptionRunnable&);
 
     public:
 
@@ -328,6 +343,11 @@ namespace core{
         ActiveMQConnection* connection;
         ConnectionConfig* config;
         Exception* ex;
+
+    private:
+
+        OnExceptionRunnable(const OnExceptionRunnable&);
+        OnExceptionRunnable& operator= (const OnExceptionRunnable&);
 
     public:
 
@@ -372,11 +392,15 @@ namespace core{
         ConnectionConfig* config;
         cms::AsyncCallback* callback;
 
+    private:
+
+        AsyncResponseCallback(const AsyncResponseCallback&);
+        AsyncResponseCallback& operator= (const AsyncResponseCallback&);
+
     public:
 
         AsyncResponseCallback(ConnectionConfig* config, cms::AsyncCallback* callback) :
             ResponseCallback(), config(config), callback(callback) {
-
         }
 
         virtual ~AsyncResponseCallback() {
@@ -1105,11 +1129,14 @@ void ActiveMQConnection::onException(const decaf::lang::Exception& ex) {
 
     try {
 
-        onAsyncException(ex);
+        // Sync with the config destructor in case a client attempt to
+        synchronized(&this->config->onExceptionLock) {
+            onAsyncException(ex);
 
-        // We're disconnected - the asynchronous error is expected.
-        if (!this->isClosed() || !this->closing.get()) {
-            this->config->executor->execute(new OnExceptionRunnable(this, config, ex.clone()));
+            // We're disconnected - the asynchronous error is expected.
+            if (!this->isClosed() || !this->closing.get()) {
+                this->config->executor->execute(new OnExceptionRunnable(this, config, ex.clone()));
+            }
         }
     }
     AMQ_CATCH_RETHROW(ActiveMQException)

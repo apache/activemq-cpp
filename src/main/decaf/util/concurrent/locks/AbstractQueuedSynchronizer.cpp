@@ -202,14 +202,10 @@ namespace {
 
     public:
 
-        Node() : waitStatus(0), prev(NULL), next(NULL), thread(NULL), nextWaiter(NULL), nextFree(NULL) {
-        }
-        Node(Thread* thread, Node* node) : waitStatus(0), prev(NULL), next(NULL), thread(thread), nextWaiter(node), nextFree(NULL) {
-        }
-        Node(Thread* thread, int waitStatus) : waitStatus(waitStatus), prev(NULL), next(NULL), thread(thread), nextWaiter(NULL), nextFree(NULL) {
-        }
-        Node(Thread* thread, int waitStatus, Node* node) : waitStatus(waitStatus), prev(NULL), next(NULL), thread(thread), nextWaiter(node), nextFree(NULL) {
-        }
+        Node() : waitStatus(0), prev(NULL), next(NULL), thread(NULL), nextWaiter(NULL), nextFree(NULL) {}
+        Node(Thread* thread, Node* node) : waitStatus(0), prev(NULL), next(NULL), thread(thread), nextWaiter(node), nextFree(NULL) {}
+        Node(Thread* thread, int waitStatus) : waitStatus(waitStatus), prev(NULL), next(NULL), thread(thread), nextWaiter(NULL), nextFree(NULL) {}
+        Node(Thread* thread, int waitStatus, Node* node) : waitStatus(waitStatus), prev(NULL), next(NULL), thread(thread), nextWaiter(node), nextFree(NULL) {}
 
         ~Node() {}
 
@@ -252,7 +248,6 @@ namespace {
 
         NodePool() : head(), tail(NULL), size(0), lock() {
             PlatformThread::createMutex(&lock);
-
         }
 
         ~NodePool() {
@@ -361,6 +356,11 @@ namespace locks {
          */
         NodePool nodePool;
 
+    private:
+
+        SynchronizerState(const SynchronizerState&);
+        SynchronizerState& operator=(const SynchronizerState&);
+
     public:
 
         SynchronizerState(AbstractQueuedSynchronizer* parent) :
@@ -368,7 +368,6 @@ namespace locks {
         }
 
         virtual ~SynchronizerState() {
-
             while (tail.get() != NULL) {
                 nodePool.returnNode(tail.getAndSet(tail.get()->prev));
             }
