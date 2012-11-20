@@ -154,8 +154,8 @@ namespace concurrent{
 
         private:
 
-            Worker( const Worker& );
-            Worker& operator= ( const Worker& );
+            Worker(const Worker&);
+            Worker& operator=(const Worker&);
 
          public:
 
@@ -170,7 +170,7 @@ namespace concurrent{
                 this->thread.reset(kernel->factory->newThread(this));
             }
 
-            ~Worker() {}
+            virtual ~Worker() {}
 
             void run() {
                 // Delegate the running of this task to the Kernel so that all the logic
