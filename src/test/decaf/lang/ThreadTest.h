@@ -53,6 +53,8 @@ namespace lang{
       CPPUNIT_TEST( testInterruptSleep );
       CPPUNIT_TEST( testInterruptJoin );
       CPPUNIT_TEST( testInterruptWait );
+      CPPUNIT_TEST( testRapidCreateAndDestroy );
+      CPPUNIT_TEST( testConcurrentRapidCreateAndDestroy );
       CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -88,6 +90,8 @@ namespace lang{
         void testInterruptSleep();
         void testInterruptJoin();
         void testInterruptWait();
+        void testRapidCreateAndDestroy();
+        void testConcurrentRapidCreateAndDestroy();
 
     };
 
