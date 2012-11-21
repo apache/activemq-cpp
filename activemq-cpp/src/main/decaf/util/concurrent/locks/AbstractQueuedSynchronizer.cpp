@@ -369,7 +369,7 @@ namespace locks {
     public:
 
         SynchronizerState(AbstractQueuedSynchronizer* parent) :
-            parent(parent), state(0), head(), tail() {
+            parent(parent), state(0), head(), tail(), nodePool() {
         }
 
         virtual ~SynchronizerState() {

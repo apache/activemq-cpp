@@ -52,6 +52,13 @@ namespace lang {
     private:
 
         struct ArrayData {
+        private:
+
+            ArrayData(const ArrayData&);
+            ArrayData& operator= (const ArrayData&);
+
+        public:
+
             T* value;
             int length;
             decaf::util::concurrent::atomic::AtomicInteger refs;

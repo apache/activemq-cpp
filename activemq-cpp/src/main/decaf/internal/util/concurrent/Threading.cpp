@@ -50,6 +50,11 @@ namespace {
 
         ThreadHandle* thread;
 
+    private:
+
+        SuspendedCompletionCondition(const SuspendedCompletionCondition&);
+        SuspendedCompletionCondition& operator= (const SuspendedCompletionCondition&);
+
     public:
 
         SuspendedCompletionCondition(ThreadHandle* thread) : thread(thread) {
@@ -64,6 +69,11 @@ namespace {
     private:
 
         ThreadHandle* handle;
+
+    private:
+
+        MonitorWaitCompletionCondition(const MonitorWaitCompletionCondition&);
+        MonitorWaitCompletionCondition& operator= (const MonitorWaitCompletionCondition&);
 
     public:
 
@@ -975,6 +985,11 @@ namespace {
         ThreadHandle* self;
         ThreadHandle* target;
 
+    private:
+
+        JoinCompletionCondition(const JoinCompletionCondition&);
+        JoinCompletionCondition& operator= (const JoinCompletionCondition&);
+
     public:
 
         JoinCompletionCondition(ThreadHandle* self, ThreadHandle* target) : self(self), target(target) {
@@ -1099,6 +1114,11 @@ namespace {
     private:
 
         ThreadHandle* handle;
+
+    private:
+
+        SleepCompletionCondition(const SleepCompletionCondition&);
+        SleepCompletionCondition& operator= (const SleepCompletionCondition&);
 
     public:
 
@@ -1238,6 +1258,11 @@ namespace {
     private:
 
         ThreadHandle* handle;
+
+    private:
+
+        ParkCompletionCondition(const ParkCompletionCondition&);
+        ParkCompletionCondition& operator= (const ParkCompletionCondition&);
 
     public:
 

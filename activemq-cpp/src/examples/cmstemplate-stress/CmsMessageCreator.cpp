@@ -27,8 +27,7 @@ using namespace activemq::core;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsMessageCreator::CmsMessageCreator(const std::string& txt) {
-    m_txt = txt;
+CmsMessageCreator::CmsMessageCreator(const std::string& txt) : m_txt(txt) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
