@@ -56,7 +56,8 @@ ActiveMQProducerKernel::ActiveMQProducerKernel(ActiveMQSessionKernel* session,
                                                                         closed(false),
                                                                         memoryUsage(),
                                                                         destination(),
-                                                                        messageSequence() {
+                                                                        messageSequence(),
+                                                                        transformer() {
 
     if (session == NULL || producerId == NULL) {
         throw ActiveMQException(
