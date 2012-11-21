@@ -49,6 +49,11 @@ namespace {
         AtomicInteger threadNumber;
         std::string namePrefix;
 
+    private:
+
+        DefaultThreadFactory(const DefaultThreadFactory&);
+        DefaultThreadFactory& operator= (const DefaultThreadFactory&);
+
     public:
 
         DefaultThreadFactory() : ThreadFactory(), threadNumber(1), namePrefix() {
@@ -77,6 +82,11 @@ namespace {
     private:
 
         ExecutorService* service;
+
+    private:
+
+        NonConfigurableExecutorService(const NonConfigurableExecutorService&);
+        NonConfigurableExecutorService& operator= (const NonConfigurableExecutorService&);
 
     public:
 

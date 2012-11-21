@@ -226,6 +226,48 @@ namespace concurrent {
             DECAF_CATCHALL_THROW(decaf::lang::Exception)
         }
 
+        /**
+         * Create a new instance with a Capacity of Integer::MAX_VALUE and adds all the
+         * values contained in the specified LinkedBlockingQueue to this Queue.
+         *
+         * @param queue
+         *      The LinkedBlockingQueue whose elements are to be copied to this Queue.
+         *
+         * @throws IllegalStateException if the number of elements in the collection exceeds
+         *         this Queue's capacity.
+         */
+        LinkedBlockingQueue(const LinkedBlockingQueue& queue) : BlockingQueue<E>(),
+                                                                capacity(lang::Integer::MAX_VALUE), count(),
+                                                                takeLock(), notEmpty(), putLock(), notFull(),
+                                                                head(new QueueNode<E>()), tail() {
+
+            this->tail = this->head;
+            this->notEmpty.reset(this->takeLock.newCondition());
+            this->notFull.reset(this->putLock.newCondition());
+
+            Pointer< Iterator<E> > iter(queue.iterator);
+
+            try {
+
+                int count = 0;
+
+                while(iter->hasNext()) {
+                    if(count == this->capacity) {
+                        throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
+                            "Number of elements in the Collection exceeds this Queue's Capacity.");
+                    }
+
+                    this->enqueue(iter->next());
+                    ++count;
+                }
+
+                this->count.set(count);
+            }
+            DECAF_CATCH_RETHROW(decaf::lang::exceptions::IllegalStateException)
+            DECAF_CATCH_RETHROW(decaf::lang::Exception)
+            DECAF_CATCHALL_THROW(decaf::lang::Exception)
+        }
+
         virtual ~LinkedBlockingQueue() {
             try{
                 this->purgeList();
@@ -623,6 +665,11 @@ namespace concurrent {
             E currentElement;
             LinkedBlockingQueue<E>* parent;
 
+        private:
+
+            LinkedIterator(const LinkedIterator&);
+            LinkedIterator& operator= (const LinkedIterator&);
+
         public:
 
             LinkedIterator(LinkedBlockingQueue<E>* parent) : current(), last(),
@@ -711,6 +758,11 @@ namespace concurrent {
             Pointer< QueueNode<E> > last;
             E currentElement;
             const LinkedBlockingQueue<E>* parent;
+
+        private:
+
+            ConstLinkedIterator(const ConstLinkedIterator&);
+            ConstLinkedIterator& operator= (const ConstLinkedIterator&);
 
         public:
 

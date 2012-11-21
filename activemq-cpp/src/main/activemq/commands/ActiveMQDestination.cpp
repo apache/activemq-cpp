@@ -70,13 +70,15 @@ namespace {
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination() :
-    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
+    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), compositeDestinations(),
+    orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination(const std::string& physicalName) :
-    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
+    BaseDataStructure(), exclusive(false), ordered(false), advisory(false), compositeDestinations(),
+    orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
 
     this->setPhysicalName(physicalName);
 }
