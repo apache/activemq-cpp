@@ -38,10 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo::ConsumerInfo() 
-    : BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false), 
-      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(), 
-      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath() {
+ConsumerInfo::ConsumerInfo()
+    : BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false),
+      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(),
+      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath(), currentPrefetchSize(0) {
 
 }
 
