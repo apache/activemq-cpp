@@ -40,23 +40,22 @@ void TestSenderAndReceiver::onMessage(const string& message) {
     }
 }
 
+Sender* m_sender;
+Receiver* m_receiver;
+decaf::lang::Thread* m_senderThread;
+bool m_isClosing;
+int m_sendIndex;
+int m_receiveIndex;
+
 ////////////////////////////////////////////////////////////////////////////////
 TestSenderAndReceiver::TestSenderAndReceiver(const string& url, const string& queueOrTopicName, bool isTopic,
                                              bool isDeliveryPersistent, int timeToLive, int receiveTimeout) :
-    m_senderThread(NULL) {
+    m_sender(NULL), m_receiver(NULL), m_senderThread(NULL), m_isClosing(false), m_sendIndex(0), m_receiveIndex(0) {
 
     m_sender = new Sender(url, queueOrTopicName, isTopic, isDeliveryPersistent, timeToLive);
-
-    //if you do not want to use the thread pool for the receiver, do the following
     m_receiver = new Receiver(url, queueOrTopicName, isTopic, receiveTimeout, true);
-
     ErrorCode errorCode = CMS_SUCCESS;
     m_receiver->RegisterMessageListener(onMessage, errorCode);
-
-    m_sendIndex = 0;
-    m_receiveIndex = 0;
-
-    m_isClosing = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

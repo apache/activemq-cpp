@@ -34,28 +34,29 @@ using namespace activemq::cmsutil;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPoolExecutor* Receiver::m_threadPoolExecutor=NULL;
+ThreadPoolExecutor* Receiver::m_threadPoolExecutor = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
 Receiver::Receiver(const string & url, const string & queueOrTopicName,
-                   bool isTopic, long long receiveTimeout, bool useThreadPool) : m_ready(1) {
+                   bool isTopic, long long receiveTimeout, bool useThreadPool) :
+        m_url(url),
+        m_mutexForCmsTemplate(),
+        m_mutexGeneral(),
+        m_isClosing(false),
+        m_ready(1),
+        m_messageListener(NULL),
+        m_cmsTemplate(NULL),
+        m_asyncReceiverThread(NULL),
+        m_receiveTimeout(receiveTimeout),
+        m_bUseThreadPool(useThreadPool),
+        m_cmsTemplateCreateTime(0),
+        m_numOfMessagingTasks(0) {
 
-    m_url = url;
-    m_messageListener = NULL;
-
-    m_bUseThreadPool = useThreadPool;
-    m_receiveTimeout = receiveTimeout;
-    m_asyncReceiverThread = NULL;
     ConnectionFactory* connectionFactory = ConnectionFactoryMgr::GetConnectionFactory(m_url);
-    m_cmsTemplateCreateTime = System::currentTimeMillis();
     m_cmsTemplate = new CmsTemplate(connectionFactory);
     m_cmsTemplate->setDefaultDestinationName(queueOrTopicName);
     m_cmsTemplate->setPubSubDomain(isTopic);
     m_cmsTemplate->setReceiveTimeout(receiveTimeout);
-
-    m_numOfMessagingTasks = 0;
-
-    m_isClosing = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

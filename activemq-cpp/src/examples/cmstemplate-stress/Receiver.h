@@ -37,6 +37,7 @@ namespace cmstemplate {
         typedef void (DECAF_STDCALL *RecvMessageListener)( const std::string& message);
 
     private:
+
         std::string m_url;
         decaf::util::concurrent::Mutex m_mutexForCmsTemplate;
         decaf::util::concurrent::Mutex m_mutexGeneral;
@@ -58,6 +59,8 @@ namespace cmstemplate {
 
         static decaf::util::concurrent::ThreadPoolExecutor* m_threadPoolExecutor;
         long m_numOfMessagingTasks; //number of pending messaging tasks created by this receiver that has been queued in the threadpool
+
+    private:
 
         virtual void WaitUntilReady();
 

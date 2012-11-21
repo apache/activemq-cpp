@@ -30,12 +30,12 @@ using namespace activemq::cmsutil;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-Sender::Sender(const string& url, const string& queueOrTopicName, bool isTopic, bool isDeliveryPersistent, int timeToLive) {
+Sender::Sender(const string& url, const string& queueOrTopicName, bool isTopic, bool isDeliveryPersistent, int timeToLive) :
+    m_cmsTemplateMutex(), m_cmsTemplate(NULL) {
 
     ConnectionFactory* connectionFactory = ConnectionFactoryMgr::GetConnectionFactory(url);
 
     m_cmsTemplate = new CmsTemplate(connectionFactory);
-
     m_cmsTemplate->setExplicitQosEnabled(true);
     m_cmsTemplate->setDefaultDestinationName(queueOrTopicName);
     m_cmsTemplate->setPubSubDomain(isTopic);
