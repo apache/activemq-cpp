@@ -132,6 +132,11 @@ namespace util {
 
             HashMap* associatedMap;
 
+        private:
+
+            AbstractMapIterator(const AbstractMapIterator&);
+            AbstractMapIterator& operator= (const AbstractMapIterator&);
+
         public:
 
             AbstractMapIterator(HashMap* parent) : position(0),
@@ -303,6 +308,11 @@ namespace util {
             const HashMapEntry* prevEntry;
 
             const HashMap* associatedMap;
+
+        private:
+
+            ConstAbstractMapIterator(const ConstAbstractMapIterator&);
+            ConstAbstractMapIterator& operator= (const ConstAbstractMapIterator&);
 
         public:
 
@@ -792,7 +802,10 @@ namespace util {
         /**
          * Creates a new empty HashMap with default configuration settings.
          */
-        HashMap() : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(), modCount(0), loadFactor(0.75), threshold(0) {
+        HashMap() : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(),
+                    modCount(0), loadFactor(0.75), threshold(0),
+                    cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                    cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             int capacity = calculateCapacity(12);
             elementCount = 0;
             elementData = decaf::lang::ArrayPointer<HashMapEntry*>(capacity);
@@ -807,7 +820,10 @@ namespace util {
          *
          * @throws IllegalArgumentException when the capacity is less than zero.
          */
-        HashMap(int capacity) : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(), modCount(0), loadFactor(0.75), threshold(0) {
+        HashMap(int capacity) : AbstractMap<K,V>(), hashFunc(), elementCount(0),
+                                elementData(), modCount(0), loadFactor(0.75), threshold(0),
+                                cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             if (capacity >= 0) {
                 capacity = calculateCapacity(capacity);
                 elementCount = 0;
@@ -829,7 +845,10 @@ namespace util {
          *
          * @throws IllegalArgumentException when the capacity is less than zero.
          */
-        HashMap(int capacity, float loadFactor) : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(), modCount(0), loadFactor(0.75), threshold(0) {
+        HashMap(int capacity, float loadFactor) : AbstractMap<K,V>(), hashFunc(), elementCount(0),
+                                                  elementData(), modCount(0), loadFactor(0.75), threshold(0),
+                                                  cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                                  cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             if (capacity >= 0 && loadFactor > 0) {
                 capacity = calculateCapacity(capacity);
                 elementCount = 0;
@@ -849,7 +868,10 @@ namespace util {
          * @param map
          *      The Map instance whose elements are copied into this HashMap instance.
          */
-        HashMap(const HashMap<K,V>& map) : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(), modCount(0), loadFactor(0.75), threshold(0) {
+        HashMap(const HashMap<K,V>& map) : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(),
+                                           modCount(0), loadFactor(0.75), threshold(0),
+                                           cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                           cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             int capacity = calculateCapacity(map.size());
             elementCount = 0;
             elementData = decaf::lang::ArrayPointer<HashMapEntry*>(capacity);
@@ -864,7 +886,10 @@ namespace util {
          * @param map
          * 		The Map instance whose elements are copied into this HashMap instance.
          */
-        HashMap(const Map<K,V>& map) : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(), modCount(0), loadFactor(0.75), threshold(0) {
+        HashMap(const Map<K,V>& map) : AbstractMap<K,V>(), hashFunc(), elementCount(0), elementData(),
+                                       modCount(0), loadFactor(0.75), threshold(0),
+                                       cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                       cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             int capacity = calculateCapacity(map.size());
             elementCount = 0;
             elementData = decaf::lang::ArrayPointer<HashMapEntry*>(capacity);
