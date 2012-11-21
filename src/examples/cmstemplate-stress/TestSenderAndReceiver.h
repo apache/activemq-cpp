@@ -29,7 +29,6 @@
 namespace cmstemplate {
 
     class TestSenderAndReceiver : public decaf::lang::Runnable {
-
     private:
 
         Sender* m_sender;
@@ -40,6 +39,11 @@ namespace cmstemplate {
         int m_receiveIndex;
 
         static void DECAF_STDCALL onMessage(const std::string& message);
+
+    private:
+
+        TestSenderAndReceiver(const TestSenderAndReceiver&);
+        TestSenderAndReceiver& operator= (const TestSenderAndReceiver&);
 
     public:
 

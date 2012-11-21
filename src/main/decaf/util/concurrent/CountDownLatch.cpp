@@ -45,6 +45,7 @@ namespace concurrent{
         LatchSync(int count) : AbstractQueuedSynchronizer() {
             this->setState(count);
         }
+
         virtual ~LatchSync() {}
 
         int getCount() const {
@@ -77,7 +78,7 @@ namespace concurrent{
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-CountDownLatch::CountDownLatch(int count) {
+CountDownLatch::CountDownLatch(int count) : sync(NULL) {
     if (count < 0) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Count must be non-negative.");
     }
