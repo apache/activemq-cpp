@@ -67,6 +67,11 @@ namespace concurrent{
 
             ConcurrentStlMap* associatedMap;
 
+        private:
+
+            AbstractMapIterator(const AbstractMapIterator&);
+            AbstractMapIterator& operator= (const AbstractMapIterator&);
+
         public:
 
             AbstractMapIterator(ConcurrentStlMap* parent) : position(0),
@@ -229,6 +234,11 @@ namespace concurrent{
             typename std::map<K,V,COMPARATOR>::const_iterator currentEntry;
 
             const ConcurrentStlMap* associatedMap;
+
+        private:
+
+            ConstAbstractMapIterator(const ConstAbstractMapIterator&);
+            ConstAbstractMapIterator& operator= (const ConstAbstractMapIterator&);
 
         public:
 
@@ -672,14 +682,20 @@ namespace concurrent{
         /**
          * Default constructor - does nothing.
          */
-        ConcurrentStlMap() : ConcurrentMap<K,V>(), valueMap(), mutex(), modCount(0) {}
+        ConcurrentStlMap() : ConcurrentMap<K,V>(), valueMap(), mutex(), modCount(0),
+                             cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                             cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
+
+        }
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap(const ConcurrentStlMap& source) : ConcurrentMap<K, V>(), valueMap(), mutex(), modCount(0) {
+        ConcurrentStlMap(const ConcurrentStlMap& source) : ConcurrentMap<K, V>(), valueMap(), mutex(), modCount(0),
+                                                           cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                                           cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             copy(source);
         }
 
@@ -688,7 +704,9 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentStlMap(const Map<K, V>& source) : ConcurrentMap<K, V>(), valueMap(), mutex(), modCount(0) {
+        ConcurrentStlMap(const Map<K, V>& source) : ConcurrentMap<K, V>(), valueMap(), mutex(), modCount(0),
+                                                    cachedEntrySet(), cachedKeySet(), cachedValueCollection(),
+                                                    cachedConstEntrySet(), cachedConstKeySet(), cachedConstValueCollection() {
             copy(source);
         }
 
