@@ -33,6 +33,11 @@ namespace cmstemplate {
         decaf::util::concurrent::Mutex m_cmsTemplateMutex;
         activemq::cmsutil::CmsTemplate* m_cmsTemplate;
 
+    private:
+
+        Sender(const Sender&);
+        Sender& operator= (const Sender&);
+
     public:
 
         Sender(const std::string& url, const std::string& queueOrTopicName,

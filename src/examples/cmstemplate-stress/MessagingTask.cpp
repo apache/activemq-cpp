@@ -21,9 +21,7 @@ using namespace std;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessagingTask::MessagingTask(Receiver* receiver, const string& message) {
-    m_receiver = receiver;
-    m_message = string(message);
+MessagingTask::MessagingTask(Receiver* receiver, const string& message) : m_receiver(receiver), m_message(message) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -65,6 +65,11 @@ namespace cmstemplate {
         void DecreaseNumOfMessagingTasks();
         long GetNumOfMessagingTasks();
 
+    private:
+
+        Receiver(const Receiver&);
+        Receiver& operator= (const Receiver&);
+
     public:
 
         Receiver(const std::string& url, const std::string& queueOrTopicName, bool isTopic, long long receiveTimeout = 2000, bool useThreadPool = true);

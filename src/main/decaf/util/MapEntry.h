@@ -35,7 +35,17 @@ namespace util {
         MapEntry() : key(), value() {
         }
 
+        MapEntry(const MapEntry& other) : key(other.getKey()), value(other.getValue()) {
+        }
+
         MapEntry(const K& key, const V& value) : key(key), value(value) {
+        }
+
+        MapEntry& operator= (const MapEntry& other) {
+            this->key = other.getKey();
+            this->value = other.getValue();
+
+            return *this;
         }
 
         virtual ~MapEntry() {};

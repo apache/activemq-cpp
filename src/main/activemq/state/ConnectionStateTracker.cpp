@@ -76,6 +76,7 @@ namespace state {
 ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new Tracked() ),
                                                    connectionStates(),
                                                    messageCache(),
+                                                   messagePullCache(),
                                                    trackTransactions(false),
                                                    restoreSessions(true),
                                                    restoreConsumers(true),

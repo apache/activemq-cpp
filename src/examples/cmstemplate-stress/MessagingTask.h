@@ -29,6 +29,11 @@ namespace cmstemplate {
         Receiver* m_receiver;
         std::string m_message;
 
+    private:
+
+        MessagingTask(const MessagingTask&);
+        MessagingTask& operator= (const MessagingTask&);
+
     public:
 
         MessagingTask(Receiver* m_receiver, const std::string& message);
