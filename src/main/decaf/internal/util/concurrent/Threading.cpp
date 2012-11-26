@@ -116,6 +116,26 @@ namespace {
     };
 
     struct ThreadingLibrary {
+    private:
+
+        ThreadingLibrary(const ThreadingLibrary&);
+        ThreadingLibrary& operator= (const ThreadingLibrary&);
+
+    public:
+
+        ThreadingLibrary() : threadKey(),
+                             selfKey(),
+                             globalLock(),
+                             tlsLock(),
+                             tlsSlots(),
+                             osThreads(),
+                             mainThread(),
+                             activeThreads(),
+                             priorityMapping(),
+                             osThreadId(),
+                             monitors() {
+        }
+
         decaf_tls_key threadKey;
         decaf_tls_key selfKey;
         decaf_mutex_t globalLock;
@@ -1316,6 +1336,10 @@ bool Threading::park( Thread* thread, long long mills, int nanos) {
         } else {
             PlatformThread::interruptibleWaitOnCondition(handle->condition, handle->mutex, completion);
         }
+    }
+
+    if (interrupted) {
+        // TODO
     }
 
     handle->timerSet = false;

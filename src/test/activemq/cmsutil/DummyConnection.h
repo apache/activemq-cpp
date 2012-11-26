@@ -34,13 +34,16 @@ namespace cmsutil {
         std::string clientId;
         MessageContext* messageContext;
 
+    private:
+
+        DummyConnection(const DummyConnection&);
+        DummyConnection& operator= (const DummyConnection&);
+
     public:
 
-        DummyConnection(MessageContext* messageContext) {
-            this->messageContext = messageContext;
-        }
-        virtual ~DummyConnection() {
-        }
+        DummyConnection(MessageContext* messageContext) :
+            listener(), transformer(), clientId(), messageContext(messageContext) {}
+        virtual ~DummyConnection() {}
 
         virtual const cms::ConnectionMetaData* getMetaData() const {
             return NULL;
@@ -55,12 +58,11 @@ namespace cmsutil {
         virtual void stop() {
         }
 
-        virtual cms::Session* createSession() throw (cms::CMSException) {
+        virtual cms::Session* createSession() {
             return new DummySession(messageContext);
         }
 
-        virtual cms::Session* createSession(cms::Session::AcknowledgeMode ackMode) throw (cms::CMSException) {
-
+        virtual cms::Session* createSession(cms::Session::AcknowledgeMode ackMode) {
             DummySession* s = new DummySession(messageContext);
             s->setAcknowledgeMode(ackMode);
             return s;

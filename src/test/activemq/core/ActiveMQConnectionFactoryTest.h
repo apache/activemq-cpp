@@ -44,7 +44,7 @@ namespace core{
         std::string password;
         std::string clientId;
 
-        ActiveMQConnectionFactoryTest(){
+        ActiveMQConnectionFactoryTest() : username(), password(), clientId() {
             username = "timmy";
             password = "auth";
             clientId = "12345";

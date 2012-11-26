@@ -59,7 +59,7 @@ namespace core{
 
         public:
 
-            MyExceptionListener(){ caughtOne = false; }
+            MyExceptionListener() : caughtOne(false) {}
             virtual ~MyExceptionListener(){}
 
             virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
@@ -70,6 +70,11 @@ namespace core{
         std::auto_ptr<ActiveMQConnection> connection;
         transport::mock::MockTransport* dTransport;
         MyExceptionListener exListener;
+
+    private:
+
+        ActiveMQSessionTest(const ActiveMQSessionTest&);
+        ActiveMQSessionTest& operator= (const ActiveMQSessionTest&);
 
     public:    // CPPUNIT Method Overrides.
 
@@ -83,7 +88,7 @@ namespace core{
 
     public:
 
-        ActiveMQSessionTest() {}
+        ActiveMQSessionTest() : connection(), dTransport(), exListener() {}
         virtual ~ActiveMQSessionTest() {}
 
         void testAutoAcking();

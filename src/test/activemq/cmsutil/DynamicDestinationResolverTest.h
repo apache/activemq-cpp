@@ -24,8 +24,8 @@
 namespace activemq{
 namespace cmsutil{
 
-    class DynamicDestinationResolverTest : public CppUnit::TestFixture
-    {
+    class DynamicDestinationResolverTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( DynamicDestinationResolverTest );
         CPPUNIT_TEST( testTopics );
         CPPUNIT_TEST( testQueues );

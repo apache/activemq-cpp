@@ -32,7 +32,14 @@ namespace cmsutil {
         cms::ExceptionListener* listener;
         cms::MessageTransformer* transformer;
 
+    private:
+
+        DummyConnectionFactory(const DummyConnectionFactory&);
+        DummyConnectionFactory& operator= (const DummyConnectionFactory&);
+
     public:
+
+        DummyConnectionFactory() : messageContext(), listener(), transformer() {}
 
         virtual ~DummyConnectionFactory() {}
 

@@ -391,7 +391,12 @@ namespace std {
      * can be stored in STL Maps, etc.
      */
     template<typename T>
-    struct less<decaf::lang::Pointer<T> > : public binary_function<decaf::lang::Pointer<T>, decaf::lang::Pointer<T>, bool> {
+    struct less<decaf::lang::Pointer<T> > { //: public binary_function<decaf::lang::Pointer<T>, decaf::lang::Pointer<T>, bool> {
+
+        typedef decaf::lang::Pointer<T> first_argument_type;
+        typedef decaf::lang::Pointer<T> second_argument_type;
+        typedef bool result_type;
+
         bool operator()(const decaf::lang::Pointer<T>& left, const decaf::lang::Pointer<T>& right) const {
             return less<T*> ()(left.get(), right.get());
         }

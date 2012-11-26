@@ -35,28 +35,25 @@ namespace cmsutil {
         const cms::Destination* dest;
         bool noLocal;
 
+    private:
+
+        DummyConsumer(const DummyConsumer&);
+        DummyConsumer& operator= (const DummyConsumer&);
+
     public:
 
-        DummyConsumer(MessageContext* messageContext, const cms::Destination* dest, const std::string& selector, bool noLocal) {
-            this->messageContext = messageContext;
-            this->selector = selector;
-            this->noLocal = noLocal;
-            this->dest = dest;
-            this->listener = NULL;
-            this->transformer = NULL;
+        DummyConsumer(MessageContext* messageContext, const cms::Destination* dest, const std::string& selector, bool noLocal) :
+            selector(selector), listener(NULL), messageAvailableListener(NULL), transformer(NULL),
+            messageContext(messageContext), dest(dest), noLocal(noLocal) {
         }
 
-        virtual ~DummyConsumer() {
-        }
+        virtual ~DummyConsumer() {}
 
-        virtual void close() {
-        }
+        virtual void close() {}
 
-        virtual void start() {
-        }
+        virtual void start() {}
 
-        virtual void stop() {
-        }
+        virtual void stop() {}
 
         virtual cms::Message* receive() {
             return messageContext->receive(dest, selector, noLocal, 0);

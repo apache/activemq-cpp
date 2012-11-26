@@ -30,6 +30,16 @@
 namespace decaf {
 namespace util {
 
+    template<typename T>
+    struct HashCodeUnaryBase {
+    public:
+
+        typedef T argument_type;
+        typedef int result_type;
+
+        virtual ~HashCodeUnaryBase();
+    };
+
     /**
      * Base HashCode template, specializations are created from this to account for
      * the various native types.
@@ -37,27 +47,28 @@ namespace util {
      * @since 1.0
      */
     template<typename T>
-    struct HashCode : public std::unary_function<T, int> {
+    struct HashCode : HashCodeUnaryBase<T> {
     public:
+
         int operator()(T arg) const;
     };
 
     template<typename T>
-    struct HashCode<T*> : public std::unary_function<T*, int> {
+    struct HashCode<T*> : public HashCodeUnaryBase<T*> {
         int operator()(T* arg)  const {
             return reinterpret_cast<int>(arg);
         }
     };
 
     template<typename T>
-    struct HashCode<const T&> : public std::unary_function<const T&, int> {
+    struct HashCode<const T&> : HashCodeUnaryBase<const T&> {
         int operator()(const T& arg) const {
             return HashCode<const T*>(&arg);
         }
     };
 
     template<>
-    struct HashCode<bool> : public std::unary_function<bool, int> {
+    struct HashCode<bool> : public HashCodeUnaryBase<bool> {
         int operator()(bool arg) const {
             return arg ? 1231 : 1237;
         }
@@ -65,7 +76,7 @@ namespace util {
 
     #if defined(HAVE_WCHAR_T)
     template<>
-    struct HashCode<unsigned char> : public std::unary_function<unsigned char, int> {
+    struct HashCode<unsigned char> : public HashCodeUnaryBase<unsigned char> {
         int operator()(unsigned char arg) const {
             return (int) arg;
         }
@@ -73,70 +84,70 @@ namespace util {
     #endif
 
     template<>
-    struct HashCode<char> : public std::unary_function<char, int> {
+    struct HashCode<char> : public HashCodeUnaryBase<char> {
         int operator()(char arg) const {
             return (int) arg;
         }
     };
 
     template<>
-    struct HashCode<wchar_t> : public std::unary_function<wchar_t, int> {
+    struct HashCode<wchar_t> : public HashCodeUnaryBase<wchar_t> {
         int operator()(wchar_t arg) const {
             return (int) arg;
         }
     };
 
     template<>
-    struct HashCode<unsigned short> : public std::unary_function<unsigned short, int> {
+    struct HashCode<unsigned short> : public HashCodeUnaryBase<unsigned short> {
         int operator()(unsigned short arg) const {
             return (int) arg;
         }
     };
 
     template<>
-    struct HashCode<short> : public std::unary_function<short, int> {
+    struct HashCode<short> : public HashCodeUnaryBase<short> {
         int operator()(short arg) const {
             return (int) arg;
         }
     };
 
     template<>
-    struct HashCode<unsigned int> : public std::unary_function<unsigned int, int> {
+    struct HashCode<unsigned int> : public HashCodeUnaryBase<unsigned int> {
         int operator()(unsigned int arg) const {
             return (int) arg;
         }
     };
 
     template<>
-    struct HashCode<int> : public std::unary_function<int, int> {
+    struct HashCode<int> : public HashCodeUnaryBase<int> {
         int operator()(int arg) const {
             return arg;
         }
     };
 
     template<>
-    struct HashCode<unsigned long long> : public std::unary_function<unsigned long long, int> {
+    struct HashCode<unsigned long long> : public HashCodeUnaryBase<unsigned long long> {
         int operator()(unsigned long long arg) const {
             return (int) (arg ^ (arg >> 32));
         }
     };
 
     template<>
-    struct HashCode<long long> : public std::unary_function<long long, int> {
+    struct HashCode<long long> : public HashCodeUnaryBase<long long> {
         int operator()(long long arg) const {
             return (int) (arg ^ ((unsigned long long) arg >> 32));
         }
     };
 
     template<>
-    struct HashCode<float> : public std::unary_function<float, int> {
+    struct HashCode<float> : public HashCodeUnaryBase<float> {
         int operator()(float arg) const {
             return decaf::lang::Float::floatToIntBits(arg);
         }
     };
 
     template<>
-    struct HashCode<double> : public std::unary_function<double, int> {
+    struct HashCode<double> : public HashCodeUnaryBase<double> {
         int operator()(double arg) const {
             long long value = decaf::lang::Double::doubleToLongBits(arg);
             return (int) (value ^ ((unsigned long long) value >> 32));
@@ -144,7 +155,7 @@ namespace util {
     };
 
     template<>
-    struct HashCode<std::string> : public std::unary_function<const std::string&, int> {
+    struct HashCode<std::string> : public HashCodeUnaryBase<const std::string&> {
         int operator()(const std::string& arg) const {
             int h = 0;
             if (h == 0 && arg.length() > 0) {
@@ -158,7 +169,7 @@ namespace util {
     };
 
     template<typename T>
-    struct HashCode< decaf::lang::Pointer<T> > : public std::unary_function<decaf::lang::Pointer<T>, int> {
+    struct HashCode< decaf::lang::Pointer<T> > : public HashCodeUnaryBase<decaf::lang::Pointer<T> > {
         int operator()(decaf::lang::Pointer<T> arg) const {
             if (arg != NULL) {
                 return HashCode<T>()(*arg);

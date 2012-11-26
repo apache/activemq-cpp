@@ -23,13 +23,14 @@
 #include <decaf/lang/Comparable.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    struct BrokerIdComparitor :
-        public std::binary_function< activemq::commands::BrokerId*,
-                                     activemq::commands::BrokerId*, bool>
-    {
+    struct BrokerIdComparitor {
+        typedef activemq::commands::BrokerId* first_argument_type;
+        typedef activemq::commands::BrokerId* second_argument_type;
+        typedef bool result_type;
+
         bool operator() ( const activemq::commands::BrokerId* left,
                           const activemq::commands::BrokerId* right ) const
         {

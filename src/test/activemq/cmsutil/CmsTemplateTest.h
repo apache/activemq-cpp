@@ -33,8 +33,8 @@ namespace cmsutil{
 
     class DummyConnectionFactory;
 
-    class CmsTemplateTest : public CppUnit::TestFixture
-    {
+    class CmsTemplateTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( CmsTemplateTest );
         CPPUNIT_TEST( testExecuteSession );
         CPPUNIT_TEST( testExecuteProducer );
@@ -47,11 +47,15 @@ namespace cmsutil{
         CPPUNIT_TEST( testReceiveSelected_DestinationName );
         CPPUNIT_TEST_SUITE_END();
 
-
         CmsTemplate* cmsTemplate;
         DummyConnectionFactory* cf;
 
         class MySendListener : public MessageContext::SendListener {
+        private:
+
+            MySendListener(const MySendListener&);
+            MySendListener& operator= (const MySendListener&);
+
         public:
 
             const cms::Destination* dest;
@@ -63,13 +67,7 @@ namespace cmsutil{
             bool noLocal;
             long long timeout;
 
-            MySendListener() {
-                dest = NULL;
-                message = NULL;
-                deliveryMode = 0;
-                priority = 0;
-                ttl = 0LL;
-            }
+            MySendListener() : dest(), message(), deliveryMode(0), priority(), ttl(), selector(), noLocal(), timeout() {}
             virtual ~MySendListener() {}
 
             virtual void onSend(const cms::Destination* destination,
@@ -97,63 +95,69 @@ namespace cmsutil{
         class FailSendListener : public MessageContext::SendListener {
         public:
 
-            FailSendListener() {
-            }
+            FailSendListener() {}
             virtual ~FailSendListener() {}
 
             virtual void onSend(const cms::Destination* destination,
                     cms::Message* message, int deliveryMode, int priority,
-                    long long timeToLive) throw (cms::CMSException){
+                    long long timeToLive) {
                 throw cms::CMSException();
             }
 
             virtual cms::Message* doReceive(const cms::Destination* dest,
-                    const std::string& selector,
-                    bool noLocal,
-                    long long timeout) throw (cms::CMSException){
+                    const std::string& selector, bool noLocal, long long timeout) {
                 throw cms::CMSException();
             }
         };
 
         class MySessionCallback : public SessionCallback {
+        private:
+
+            MySessionCallback(const MySessionCallback&);
+            MySessionCallback& operator= (const MySessionCallback&);
+
         public:
 
             cms::Session* session;
             cms::Session::AcknowledgeMode ackMode;
 
-            MySessionCallback() {
-                session = NULL;
-            }
+            MySessionCallback() :session(), ackMode() {}
             virtual ~MySessionCallback() {}
 
-            virtual void doInCms(cms::Session* session) throw (cms::CMSException) {
+            virtual void doInCms(cms::Session* session) {
                 this->session = session;
                 this->ackMode = session->getAcknowledgeMode();
             }
         };
 
         class MyProducerCallback : public ProducerCallback {
+        private:
+
+            MyProducerCallback(const MyProducerCallback&);
+            MyProducerCallback& operator= (const MyProducerCallback&);
+
         public:
 
             cms::Session* session;
             cms::MessageProducer* producer;
 
-            MyProducerCallback() {
-                session = NULL;
-                producer = NULL;
-            }
+            MyProducerCallback() : session(), producer() {}
             virtual ~MyProducerCallback() {}
 
-            virtual void doInCms(cms::Session* session,
-                    cms::MessageProducer* producer) throw (cms::CMSException) {
+            virtual void doInCms(cms::Session* session, cms::MessageProducer* producer) {
                 this->session = session;
                 this->producer = producer;
             }
         };
 
+    private:
+
+        CmsTemplateTest(const CmsTemplateTest&);
+        CmsTemplateTest& operator= (const CmsTemplateTest&);
+
     public:
 
-        CmsTemplateTest() {}
+        CmsTemplateTest() : cmsTemplate(), cf() {}
         virtual ~CmsTemplateTest() {}
 
         virtual void setUp();

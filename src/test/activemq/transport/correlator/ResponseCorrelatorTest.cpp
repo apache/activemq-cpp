@@ -44,6 +44,9 @@ namespace correlator{
 
     public:
 
+        MyCommand() : commandId() {}
+        virtual ~MyCommand() {}
+
         virtual std::string toString() const{ return ""; }
 
         virtual unsigned char getDataStructureType() const { return 1; }
@@ -69,16 +72,18 @@ namespace correlator{
         bool done;
         std::queue< Pointer<commands::Command> > requests;
 
+    private:
+
+        MyTransport(const MyTransport&);
+        MyTransport& operator= (const MyTransport&);
+
     public:
 
-        MyTransport(){
-            listener = NULL;
-            thread = NULL;
-            done = false;
+        MyTransport() :
+            listener(NULL), thread(NULL), mutex(), startedMutex(), done(false), requests() {
         }
 
         virtual ~MyTransport(){
-
             close();
         }
 
@@ -271,10 +276,9 @@ namespace correlator{
 
     public:
 
-        MyListener(){
-            exCount = 0;
-        }
+        MyListener() : exCount(0), commands(), mutex() {}
         virtual ~MyListener(){}
+
         virtual void onCommand( const Pointer<Command> command ){
 
             synchronized( &mutex ){
@@ -301,17 +305,18 @@ namespace correlator{
         Pointer<MyCommand> cmd;
         Pointer<Response> resp;
 
+    private:
+
+        RequestThread(const RequestThread&);
+        RequestThread& operator= (const RequestThread&);
+
     public:
 
-        RequestThread(){
-            transport = NULL;
-            cmd.reset( new MyCommand() );
-        }
+        RequestThread() : transport(NULL), cmd(new MyCommand()), resp() {}
 
-        virtual ~RequestThread(){
-        }
+        virtual ~RequestThread() {}
 
-        void setTransport( Transport* transport ){
+        void setTransport(Transport* transport) {
             this->transport = transport;
         }
 

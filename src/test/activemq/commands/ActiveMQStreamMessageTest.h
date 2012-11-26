@@ -51,7 +51,7 @@ namespace commands {
 
     public:
 
-        ActiveMQStreamMessageTest() {}
+        ActiveMQStreamMessageTest() : buffer() {}
         virtual ~ActiveMQStreamMessageTest() {}
 
         void setUp();

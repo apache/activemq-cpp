@@ -39,7 +39,7 @@ namespace {
 
     public:
 
-        DummyXid() {
+        DummyXid() : branchQualifier(), globalTransactionId() {
 
             for(int i = 0; i < Xid::MAXBQUALSIZE; ++i ) {
                 this->branchQualifier.push_back( (unsigned char)i );

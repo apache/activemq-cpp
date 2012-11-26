@@ -48,10 +48,7 @@ namespace core{
 
     public:
 
-        MyTransportListener() {
-            this->interrupted = false;
-            this->resumed = true;
-        }
+        MyTransportListener() : interrupted(false), resumed(true) {}
 
         bool isInterrupted() const {
             return this->interrupted;
@@ -62,11 +59,9 @@ namespace core{
         }
 
         virtual void onCommand( const Pointer<Command> command ) {
-
         }
 
         virtual void onException( const decaf::lang::Exception& ex ) {
-
         }
 
         virtual void transportInterrupted() {
@@ -76,7 +71,6 @@ namespace core{
         virtual void transportResumed() {
             this->resumed = true;
         }
-
     };
 
 }}

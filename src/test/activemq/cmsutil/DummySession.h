@@ -30,41 +30,36 @@ namespace cmsutil {
     class MessageContext;
 
     class DummySession : public cms::Session {
-
     private:
 
         cms::Session::AcknowledgeMode mode;
         MessageContext* messageContext;
         cms::MessageTransformer* transformer;
 
+    private:
+
+        DummySession(const DummySession&);
+        DummySession& operator= (const DummySession&);
+
     public:
 
-        DummySession(MessageContext* messageContext) {
-            this->mode = cms::Session::AUTO_ACKNOWLEDGE;
-            this->messageContext = messageContext;
-            this->transformer = NULL;
+        DummySession(MessageContext* messageContext) :
+            mode(cms::Session::AUTO_ACKNOWLEDGE), messageContext(messageContext), transformer() {
         }
 
-        virtual ~DummySession() {
-        }
+        virtual ~DummySession() {}
 
-        virtual void close() {
-        }
+        virtual void close() {}
 
-        virtual void start() {
-        }
+        virtual void start() {}
 
-        virtual void stop() {
-        }
+        virtual void stop() {}
 
-        virtual void commit() {
-        }
+        virtual void commit() {}
 
-        virtual void rollback() {
-        }
+        virtual void rollback() {}
 
-        virtual void recover() {
-        }
+        virtual void recover() {}
 
         virtual cms::MessageConsumer* createConsumer(const cms::Destination* destination) {
 
@@ -79,8 +74,7 @@ namespace cmsutil {
             return new DummyConsumer(messageContext, destination, selector, noLocal);
         }
 
-        virtual cms::MessageConsumer* createDurableConsumer(const cms::Topic* destination, const std::string& name, const std::string& selector,
-            bool noLocal = false) {
+        virtual cms::MessageConsumer* createDurableConsumer(const cms::Topic* destination, const std::string& name, const std::string& selector, bool noLocal = false) {
             return NULL;
         }
 
@@ -152,8 +146,7 @@ namespace cmsutil {
             return mode == cms::Session::SESSION_TRANSACTED;
         }
 
-        virtual void unsubscribe(const std::string& name) {
-        }
+        virtual void unsubscribe(const std::string& name) {}
 
         virtual cms::MessageTransformer* getMessageTransformer() const {
             return transformer;

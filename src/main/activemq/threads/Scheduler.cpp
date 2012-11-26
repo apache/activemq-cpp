@@ -38,7 +38,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Scheduler::Scheduler(const std::string& name) : name(name), timer(NULL), tasks() {
+Scheduler::Scheduler(const std::string& name) : mutex(), name(name), timer(NULL), tasks() {
 
     if (name.empty()) {
         throw IllegalArgumentException(__FILE__, __LINE__, "Scheduler name must not be empty.");

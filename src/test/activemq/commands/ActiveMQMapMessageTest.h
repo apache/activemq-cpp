@@ -52,7 +52,7 @@ namespace commands{
 
     public:
 
-        ActiveMQMapMessageTest() { name = "test-name"; }
+        ActiveMQMapMessageTest() : name("test-name") {}
         virtual ~ActiveMQMapMessageTest() {}
 
         void test();
