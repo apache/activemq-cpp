@@ -52,30 +52,29 @@ namespace {
 
     public:
 
-        MyTransportListener() : exceptionFired( false ), commandsReceived( 0 ) {
-        }
+        MyTransportListener() : exceptionFired(false), commandsReceived(0) {}
 
-        virtual void onCommand( const Pointer<Command> command ) {
+        virtual ~MyTransportListener() {}
+
+        virtual void onCommand(const Pointer<Command> command) {
             this->commandsReceived++;
         }
 
-        virtual void onException( const decaf::lang::Exception& ex ) {
+        virtual void onException(const decaf::lang::Exception& ex) {
             this->exceptionFired = true;
         }
 
         virtual void transportInterrupted() {
-
         }
 
         virtual void transportResumed() {
-
         }
     };
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InactivityMonitorTest::InactivityMonitorTest() {
+InactivityMonitorTest::InactivityMonitorTest() : transport(), localWireFormatInfo() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

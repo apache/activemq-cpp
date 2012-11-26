@@ -28,15 +28,13 @@ namespace cmsutil{
 
     class DummyConnectionFactory;
 
-    class CmsDestinationAccessorTest : public CppUnit::TestFixture
-    {
+    class CmsDestinationAccessorTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( CmsDestinationAccessorTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
-
         class MyAccessor : public CmsDestinationAccessor {
-
         public:
 
             virtual ~MyAccessor() {
@@ -68,9 +66,14 @@ namespace cmsutil{
         MyAccessor* accessor;
         DummyConnectionFactory* cf;
 
+    private:
+
+        CmsDestinationAccessorTest(const CmsDestinationAccessorTest&);
+        CmsDestinationAccessorTest& operator= (const CmsDestinationAccessorTest&);
+
     public:
 
-        CmsDestinationAccessorTest() {}
+        CmsDestinationAccessorTest() : accessor(), cf() {}
         virtual ~CmsDestinationAccessorTest() {}
 
         virtual void setUp();

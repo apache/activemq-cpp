@@ -37,7 +37,6 @@ namespace cmsutil{
         CPPUNIT_TEST_SUITE_END();
 
         class MyAccessor : public CmsAccessor {
-
         public:
 
             virtual ~MyAccessor() {}
@@ -54,9 +53,14 @@ namespace cmsutil{
         MyAccessor* accessor;
         DummyConnectionFactory* cf;
 
+    private:
+
+        CmsAccessorTest(const CmsAccessorTest&);
+        CmsAccessorTest& operator= (const CmsAccessorTest&);
+
     public:
 
-        CmsAccessorTest() {}
+        CmsAccessorTest() : accessor(), cf() {}
         virtual ~CmsAccessorTest() {}
 
         virtual void setUp();

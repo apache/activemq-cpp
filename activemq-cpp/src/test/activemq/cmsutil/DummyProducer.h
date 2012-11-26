@@ -36,23 +36,21 @@ namespace cmsutil {
         MessageContext* messageContext;
         cms::MessageTransformer* transformer;
 
+    private:
+
+        DummyProducer(const DummyProducer&);
+        DummyProducer& operator= (const DummyProducer&);
+
     public:
 
-        DummyProducer(MessageContext* messageContext, const cms::Destination* dest) {
-            this->deliveryMode = 1;
-            this->disableMessageId = false;
-            this->disableMessageTimestamp = false;
-            this->priority = 4;
-            this->ttl = 0L;
-            this->dest = dest;
-            this->messageContext = messageContext;
-            this->transformer = NULL;
-        }
-        virtual ~DummyProducer() {
+        DummyProducer(MessageContext* messageContext, const cms::Destination* dest) :
+            dest(dest), deliveryMode(1), disableMessageId(false), disableMessageTimestamp(false),
+            priority(4), ttl(0LL), messageContext(messageContext), transformer(NULL) {
         }
 
-        virtual void close() {
-        }
+        virtual ~DummyProducer() {}
+
+        virtual void close() {}
 
         virtual void send(cms::Message* message) {
             send(message, deliveryMode, priority, ttl);

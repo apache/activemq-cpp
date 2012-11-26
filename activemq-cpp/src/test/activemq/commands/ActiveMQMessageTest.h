@@ -95,7 +95,10 @@ namespace commands{
 
     public:
 
-        ActiveMQMessageTest() {}
+        ActiveMQMessageTest() : readOnlyMessage(), cmsMessageId(), cmsCorrelationID(),
+                                cmsDestination(), cmsReplyTo(), cmsDeliveryMode(), cmsRedelivered(),
+                                cmsType(), cmsExpiration(), cmsPriority(), cmsTimestamp(), consumerIDs() {
+        }
         virtual ~ActiveMQMessageTest() {}
 
         virtual void setUp();

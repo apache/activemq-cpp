@@ -24,8 +24,8 @@
 namespace activemq{
 namespace cmsutil{
 
-    class SessionPoolTest : public CppUnit::TestFixture
-    {
+    class SessionPoolTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( SessionPoolTest );
         CPPUNIT_TEST( testTakeSession );
         CPPUNIT_TEST( testReturnSession );

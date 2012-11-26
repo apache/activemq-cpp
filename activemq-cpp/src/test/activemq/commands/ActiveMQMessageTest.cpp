@@ -39,8 +39,7 @@ namespace{
     class MyAckHandler : public core::ActiveMQAckHandler {
     public:
 
-        MyAckHandler() {
-            this->wasAcked = false;
+        MyAckHandler() : wasAcked(false) {
         }
 
         /**

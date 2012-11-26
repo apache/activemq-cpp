@@ -45,8 +45,7 @@ using namespace decaf::lang;
 namespace activemq{
 namespace core{
 
-    class MyCMSMessageListener : public cms::MessageListener
-    {
+    class MyCMSMessageListener : public cms::MessageListener {
     public:
 
         std::vector< Pointer<cms::Message> > messages;
@@ -55,8 +54,7 @@ namespace core{
 
     public:
 
-        MyCMSMessageListener( bool ack = false ){
-            this->ack = ack;
+        MyCMSMessageListener(bool ack = false) : messages(), mutex(), ack(ack) {
         }
 
         virtual ~MyCMSMessageListener() {

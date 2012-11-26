@@ -27,22 +27,28 @@ using namespace activemq::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-class UsageRunner : public decaf::lang::Runnable {
-private:
+namespace {
 
-    MemoryUsage* usage;
+    class UsageRunner : public decaf::lang::Runnable {
+    private:
 
-public:
+        UsageRunner(const UsageRunner&);
+        UsageRunner& operator= (const UsageRunner&);
 
-    UsageRunner( MemoryUsage* usage ) {
-        this->usage = usage;
-    }
+    private:
 
-    virtual void run(){
-        Thread::sleep( 50 );
-        this->usage->decreaseUsage( this->usage->getUsage() );
-    }
-};
+        MemoryUsage* usage;
+
+    public:
+
+        UsageRunner(MemoryUsage* usage) : usage(usage) {}
+
+        virtual void run() {
+            Thread::sleep(50);
+            this->usage->decreaseUsage(this->usage->getUsage());
+        }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MemoryUsageTest::testCTors() {

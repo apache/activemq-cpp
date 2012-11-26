@@ -42,7 +42,8 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 class MyCommand : public commands::BaseCommand {
 public:
-    MyCommand(){ c = 0; }
+
+    MyCommand() : c(0) {}
     virtual ~MyCommand(){}
 
     char c;
@@ -65,7 +66,7 @@ public:
 class MyWireFormat : public wireformat::WireFormat {
 public:
 
-    MyWireFormat(){ throwException = false; }
+    MyWireFormat() : throwException(false) {}
     virtual ~MyWireFormat(){}
 
     bool throwException;
@@ -85,8 +86,7 @@ public:
     }
 
     virtual Pointer<commands::Command> unmarshal( const activemq::transport::Transport* transport AMQCPP_UNUSED,
-                                                  decaf::io::DataInputStream* inputStream )
-        throw ( IOException ){
+                                                  decaf::io::DataInputStream* inputStream ) {
 
         try{
             if( throwException ){
@@ -139,7 +139,6 @@ public:
     virtual void marshal( const Pointer<commands::Command> command,
                           const activemq::transport::Transport* transport AMQCPP_UNUSED,
                           decaf::io::DataOutputStream* outputStream )
-        throw (IOException)
     {
         try{
 
@@ -170,16 +169,16 @@ public:
 
     decaf::util::concurrent::Mutex mutex;
     bool caughtOne;
+    std::string str;
 
-    MyTransportListener() : latch(1), caughtOne( false ) {}
-    MyTransportListener( unsigned int num ) : latch( num ), caughtOne( false ) {}
+    MyTransportListener() : latch(1), mutex(), caughtOne(false), str() {}
+    MyTransportListener(unsigned int num) : latch(num), mutex(), caughtOne(false), str() {}
     virtual ~MyTransportListener(){}
 
     virtual void await() {
         latch.await();
     }
 
-    std::string str;
     virtual void onCommand( const Pointer<commands::Command> command ){
         const MyCommand* cmd = dynamic_cast<const MyCommand*>(command.get());
         str += cmd->c;

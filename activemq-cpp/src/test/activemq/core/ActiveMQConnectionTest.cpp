@@ -50,11 +50,14 @@ namespace core{
 
         commands::Command* cmd;
 
+    private:
+
+        MyCommandListener(const MyCommandListener&);
+        MyCommandListener& operator= (const MyCommandListener&);
+
     public:
 
-        MyCommandListener(){
-            cmd = NULL;
-        }
+        MyCommandListener() : cmd(NULL) {}
         virtual ~MyCommandListener(){}
 
         virtual void onCommand( commands::Command* command ){
@@ -69,7 +72,7 @@ namespace core{
 
     public:
 
-        MyExceptionListener(){ caughtOne = false; }
+        MyExceptionListener() : caughtOne(false) {}
         virtual ~MyExceptionListener(){}
 
         virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
@@ -77,13 +80,14 @@ namespace core{
         }
     };
 
-    class MyDispatcher : public Dispatcher
-    {
+    class MyDispatcher : public Dispatcher {
     public:
 
         std::vector< decaf::lang::Pointer<commands::Message> > messages;
 
     public:
+
+        MyDispatcher() : messages() {}
         virtual ~MyDispatcher(){}
 
         virtual void dispatch( const decaf::lang::Pointer<commands::MessageDispatch>& data )

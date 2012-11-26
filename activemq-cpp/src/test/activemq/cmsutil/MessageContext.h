@@ -31,7 +31,7 @@ namespace cmsutil {
         class SendListener {
         public:
 
-            virtual ~SendListener(){}
+            virtual ~SendListener() {}
 
             virtual void onSend(const cms::Destination* destination,
                 cms::Message* message, int deliveryMode, int priority,
@@ -45,12 +45,16 @@ namespace cmsutil {
 
     private:
 
+        MessageContext(const MessageContext&);
+        MessageContext& operator= (const MessageContext&);
+
+    private:
+
         SendListener* listener;
 
     public:
 
-        MessageContext() {
-            listener = NULL;
+        MessageContext() : listener(NULL) {
         }
 
         virtual ~MessageContext(){}
