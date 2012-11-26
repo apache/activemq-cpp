@@ -61,9 +61,14 @@ namespace util{
         unsigned char* testData1;
         static const int testData1Size = 100;
 
+    private:
+
+        ByteArrayAdapterTest(const ByteArrayAdapterTest&);
+        ByteArrayAdapterTest& operator= (const ByteArrayAdapterTest&);
+
     public:
 
-        ByteArrayAdapterTest() {}
+        ByteArrayAdapterTest() : testData1() {}
         virtual ~ByteArrayAdapterTest() {}
 
         void setUp() {

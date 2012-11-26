@@ -39,9 +39,14 @@ namespace marshal{
 
         activemq::util::PrimitiveMap* unmarshaledMap;
 
+    private:
+
+        PrimitiveTypesMarshallerTest(const PrimitiveTypesMarshallerTest&);
+        PrimitiveTypesMarshallerTest& operator= (const PrimitiveTypesMarshallerTest&);
+
     public:
 
-        PrimitiveTypesMarshallerTest() {}
+        PrimitiveTypesMarshallerTest() : unmarshaledMap() {}
         virtual ~PrimitiveTypesMarshallerTest() {}
 
         virtual void setUp() {

@@ -43,8 +43,7 @@ namespace{
 
     public:
 
-        MyCharSequence( std::string value ) {
-            this->value = value;
+        MyCharSequence( std::string value ) : value(value) {
         }
 
         virtual ~MyCharSequence() {}

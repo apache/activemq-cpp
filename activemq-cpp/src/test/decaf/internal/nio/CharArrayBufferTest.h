@@ -76,9 +76,14 @@ namespace nio{
         static const int SMALL_TEST_LENGTH;
         static const int BUFFER_LENGTH;
 
+    private:
+
+        CharArrayBufferTest(const CharArrayBufferTest&);
+        CharArrayBufferTest& operator= (const CharArrayBufferTest&);
+
     public:
 
-        CharArrayBufferTest() {}
+        CharArrayBufferTest() : testBuffer1(), testData1() {}
         virtual ~CharArrayBufferTest() {}
 
         void setUp() {

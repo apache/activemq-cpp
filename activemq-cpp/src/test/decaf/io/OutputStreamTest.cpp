@@ -34,6 +34,8 @@ namespace {
 
     public:
 
+        MockOutputStream() : buffer() {}
+
         virtual ~MockOutputStream() {}
 
         virtual void doWriteByte( unsigned char c ) {

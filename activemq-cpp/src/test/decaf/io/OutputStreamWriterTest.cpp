@@ -32,7 +32,7 @@ const std::string OutputStreamWriterTest::TEST_STRING =
     "Test_All_Tests\nTest_decaf_io_BufferedInputStream\nTest_decaf_io_BufferedOutputStream\nTest_decaf_io_ByteArrayInputStream\nTest_decaf_io_ByteArrayOutputStream\nTest_decaf_io_DataInputStream\n";
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStreamWriterTest::OutputStreamWriterTest() {
+OutputStreamWriterTest::OutputStreamWriterTest() : writer1(), buffer1(), reader() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

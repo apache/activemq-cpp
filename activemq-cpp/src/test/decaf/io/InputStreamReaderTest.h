@@ -44,6 +44,11 @@ namespace io {
 
         static const std::string TEST_STRING;
 
+    private:
+
+        InputStreamReaderTest(const InputStreamReaderTest&);
+        InputStreamReaderTest& operator= (const InputStreamReaderTest&);
+
     public:
 
         InputStreamReaderTest();

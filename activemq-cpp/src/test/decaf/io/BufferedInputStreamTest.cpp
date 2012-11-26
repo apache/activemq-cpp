@@ -88,7 +88,7 @@ namespace {
 
     public:
 
-        MyInputStream( const std::string& data ){
+        MyInputStream( const std::string& data ) : data(), pos(), throwOnRead(), closed() {
             this->data = data;
             this->pos = 0;
             this->throwOnRead = false;
