@@ -51,6 +51,11 @@ namespace io {
         static const int BUFFER_SIZE;
         static const std::string TEST_STRING;
 
+    private:
+
+        OutputStreamWriterTest(const OutputStreamWriterTest&);
+        OutputStreamWriterTest& operator= (const OutputStreamWriterTest&);
+
     public:
 
         OutputStreamWriterTest();

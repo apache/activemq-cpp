@@ -43,15 +43,10 @@ namespace {
 
     public:
 
-        MockReader() : Reader() {
-            this->current_offset = 0;
-            this->length = 0;
+        MockReader() : Reader(), contents(), current_offset(0), length(0) {
         }
 
-        MockReader( std::vector<char>& data ) : Reader() {
-            this->contents = data;
-            this->length = (int)contents.size();
-            this->current_offset = 0;
+        MockReader( std::vector<char>& data ) : Reader(), contents(data), current_offset(0), length((int)contents.size()) {
         }
 
         virtual void close() {

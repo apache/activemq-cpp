@@ -39,7 +39,6 @@ namespace marshal{
     public:
 
         class SimpleDataStructure : public commands::BaseDataStructure {
-
         public:
 
             bool boolValue;
@@ -58,6 +57,10 @@ namespace marshal{
         public:
 
             const static unsigned char TYPE = 0xFF;
+
+            SimpleDataStructure() : boolValue(), charValue(), shortValue(), intValue(),
+                                    longValue1(), longValue2(), longValue3(), longValue4(),
+                                    longValue5(), floatValue(), doubleValue(), stringValue() {}
 
             virtual ~SimpleDataStructure(){}
 
@@ -104,11 +107,11 @@ namespace marshal{
                 return SimpleDataStructure::TYPE;
             }
 
-            virtual void tightUnmarshal( OpenWireFormat* wireFormat,
-                                     commands::DataStructure* dataStructure,
-                                     decaf::io::DataInputStream* dataIn,
-                                     utils::BooleanStream* bs )
-             {
+            virtual void tightUnmarshal(OpenWireFormat* wireFormat,
+                                        commands::DataStructure* dataStructure,
+                                        decaf::io::DataInputStream* dataIn,
+                                        utils::BooleanStream* bs)
+            {
                 BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
                 SimpleDataStructure* info =
@@ -128,9 +131,9 @@ namespace marshal{
                 info->stringValue = tightUnmarshalString( dataIn, bs );
              }
 
-            virtual int tightMarshal1( OpenWireFormat* wireFormat,
-                                       commands::DataStructure* dataStructure,
-                                       utils::BooleanStream* bs )
+            virtual int tightMarshal1(OpenWireFormat* wireFormat,
+                                      commands::DataStructure* dataStructure,
+                                      utils::BooleanStream* bs)
             {
                 SimpleDataStructure* info =
                     dynamic_cast<SimpleDataStructure*>( dataStructure );
@@ -147,10 +150,10 @@ namespace marshal{
                 return 19 + rc;
             }
 
-            virtual void tightMarshal2( OpenWireFormat* wireFormat,
-                                        commands::DataStructure* dataStructure,
-                                        decaf::io::DataOutputStream* dataOut,
-                                        utils::BooleanStream* bs )
+            virtual void tightMarshal2(OpenWireFormat* wireFormat,
+                                       commands::DataStructure* dataStructure,
+                                       decaf::io::DataOutputStream* dataOut,
+                                       utils::BooleanStream* bs)
             {
                 BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -172,9 +175,9 @@ namespace marshal{
 
             }
 
-            virtual void looseUnmarshal( OpenWireFormat* wireFormat,
-                                         commands::DataStructure* dataStructure,
-                                         decaf::io::DataInputStream* dataIn )
+            virtual void looseUnmarshal(OpenWireFormat* wireFormat,
+                                        commands::DataStructure* dataStructure,
+                                        decaf::io::DataInputStream* dataIn)
             {
                 BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
                 SimpleDataStructure* info =
@@ -194,9 +197,9 @@ namespace marshal{
                 info->stringValue = looseUnmarshalString( dataIn );
             }
 
-            virtual void looseMarshal( OpenWireFormat* wireFormat,
-                                       commands::DataStructure* dataStructure,
-                                       decaf::io::DataOutputStream* dataOut )
+            virtual void looseMarshal(OpenWireFormat* wireFormat,
+                                      commands::DataStructure* dataStructure,
+                                      decaf::io::DataOutputStream* dataOut)
             {
                 SimpleDataStructure* info =
                     dynamic_cast<SimpleDataStructure*>( dataStructure );
@@ -218,19 +221,22 @@ namespace marshal{
         };
 
         class ComplexDataStructure : public commands::BaseDataStructure {
-
         public:
 
             bool boolValue;
             SimpleDataStructure* cachedChild;
 
+        private:
+
+            ComplexDataStructure(const ComplexDataStructure&);
+            ComplexDataStructure& operator= (const ComplexDataStructure&);
+
         public:
 
             const static unsigned char TYPE = 0xFE;
 
-            ComplexDataStructure(){
-                cachedChild = NULL;
-            }
+            ComplexDataStructure() : boolValue(), cachedChild(NULL) {}
+
             virtual ~ComplexDataStructure(){
                 setCachedChild( NULL );
             }
@@ -361,9 +367,14 @@ namespace marshal{
 
         ComplexDataStructure* dataStructure;
 
+    private:
+
+        BaseDataStreamMarshallerTest(const BaseDataStreamMarshallerTest&);
+        BaseDataStreamMarshallerTest& operator= (const BaseDataStreamMarshallerTest&);
+
     public:
 
-        BaseDataStreamMarshallerTest() {}
+        BaseDataStreamMarshallerTest() : dataStructure(NULL) {}
         virtual ~BaseDataStreamMarshallerTest() {}
 
         virtual void setUp();

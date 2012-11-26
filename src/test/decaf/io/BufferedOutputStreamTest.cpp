@@ -35,7 +35,7 @@ namespace {
         int pos;
     public:
 
-        MyOutputStream(){
+        MyOutputStream() : buffer(), pos() {
             pos = 0;
             memset( buffer, 0, 100 );
         }

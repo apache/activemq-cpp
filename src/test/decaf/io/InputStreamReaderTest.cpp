@@ -31,7 +31,7 @@ using namespace decaf::lang::exceptions;
 const std::string InputStreamReaderTest::TEST_STRING = "This is a test message with some simple text in it.";
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStreamReaderTest::InputStreamReaderTest() {
+InputStreamReaderTest::InputStreamReaderTest() : buffer1(), reader1() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

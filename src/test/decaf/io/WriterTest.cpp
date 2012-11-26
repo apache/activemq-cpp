@@ -37,12 +37,15 @@ namespace {
         int length;
         int offset;
 
+    private:
+
+        MockWriter(const MockWriter&);
+        MockWriter& operator= (const MockWriter&);
+
     public:
 
-        MockWriter( int capacity ) {
+        MockWriter( int capacity ) : contents(), length(capacity), offset(0) {
             contents = new char[capacity];
-            length = capacity;
-            offset = 0;
         }
 
         virtual ~MockWriter() {

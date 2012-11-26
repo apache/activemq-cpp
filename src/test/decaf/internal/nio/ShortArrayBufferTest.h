@@ -61,9 +61,14 @@ namespace nio{
         static const int SMALL_TEST_LENGTH;
         static const int BUFFER_LENGTH;
 
+    private:
+
+        ShortArrayBufferTest(const ShortArrayBufferTest&);
+        ShortArrayBufferTest& operator= (const ShortArrayBufferTest&);
+
     public:
 
-        ShortArrayBufferTest() {}
+        ShortArrayBufferTest() : testBuffer1(), testData1() {}
         virtual ~ShortArrayBufferTest() {}
 
         void setUp() {
