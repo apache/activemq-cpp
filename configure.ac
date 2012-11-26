@@ -213,7 +213,7 @@ case "${host_os}" in
 
     if ! test "$GCC" = "yes"; then
        # Assuming aCC Compiler unknown yet if any additional settings are needed.
-       PLAT_CXXFLAGS="-Wc,-ansi_for_scope,on"
+       PLAT_CXXFLAGS="-AA"
     fi
     ;;
 
