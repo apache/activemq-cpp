@@ -34,7 +34,7 @@ using namespace decaf::lang::exceptions;
 CompositeTaskRunner::CompositeTaskRunner() :
     tasks(), mutex(), thread(), threadTerminated(false), pending(false), shutDown(false) {
 
-    this->thread.reset(new Thread(this));
+    this->thread.reset(new Thread(this, "CompositeTaskRunner Thread"));
     this->thread->start();
 }
 

@@ -34,7 +34,7 @@ DedicatedTaskRunner::DedicatedTaskRunner(Task* task) :
         throw NullPointerException(__FILE__, __LINE__, "Task passed was null");
     }
 
-    this->thread.reset(new Thread(this));
+    this->thread.reset(new Thread(this, "ActiveMQ Dedicated Task Runner"));
     this->thread->start();
 }
 
