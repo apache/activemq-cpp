@@ -140,7 +140,7 @@ void IOTransport::start() {
         }
 
         // Start the polling thread.
-        thread.reset(new Thread(this));
+        thread.reset(new Thread(this, "IOTransport reader Thread"));
         thread->start();
     }
     AMQ_CATCH_RETHROW(IOException)
