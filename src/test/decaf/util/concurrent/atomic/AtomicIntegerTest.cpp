@@ -77,6 +77,11 @@ private:
 
     AtomicInteger* aip;
 
+private:
+
+    MyIntRunnable(const MyIntRunnable&);
+    MyIntRunnable operator= (const MyIntRunnable&);
+
 public:
 
     MyIntRunnable( AtomicInteger* ai ) :

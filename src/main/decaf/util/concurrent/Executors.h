@@ -60,6 +60,11 @@ namespace concurrent {
             bool owns;
             E result;
 
+        private:
+
+            RunnableAdapter(const RunnableAdapter&);
+            RunnableAdapter operator= (const RunnableAdapter&);
+
         public:
 
             RunnableAdapter(decaf::lang::Runnable* task, bool owns, const E& result) :

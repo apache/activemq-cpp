@@ -37,18 +37,17 @@ namespace {
         std::auto_ptr<Socket> clientS;
         int port;
 
-        SocketClient( int port ) : Runnable(), clientS( NULL ), port( port ) {
-
+        SocketClient(int port) : Runnable(), clientS(NULL), port(port) {
         }
 
         virtual void run() {
 
-            try{
-                Thread::sleep( 1000 );
-                this->clientS.reset( new Socket( "127.0.0.1", port ) );
-                Thread::sleep( 1000 );
-            } catch( InterruptedException& ex ) {
-            } catch( Exception& ex ) {
+            try {
+                Thread::sleep(1000);
+                this->clientS.reset(new Socket("127.0.0.1", port));
+                Thread::sleep(1000);
+            } catch (InterruptedException& ex) {
+            } catch (Exception& ex) {
                 ex.printStackTrace();
             }
         }
@@ -59,7 +58,7 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocketTest::ServerSocketTest() {
+ServerSocketTest::ServerSocketTest() : ssconn(), theThread() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,10 +153,14 @@ namespace{
         bool* interrupted;
         ServerSocket* ss;
 
+    private:
+
+        TestAcceptRunnable(const TestAcceptRunnable&);
+        TestAcceptRunnable& operator= (const TestAcceptRunnable&);
+
     public:
 
-        TestAcceptRunnable( bool* interrupted, ServerSocket* ss ) : interrupted( interrupted ), ss( ss ) {
-        }
+        TestAcceptRunnable(bool* interrupted, ServerSocket* ss) : interrupted(interrupted), ss(ss) {}
 
         virtual void run() {
             try{

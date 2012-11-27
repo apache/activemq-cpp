@@ -49,8 +49,8 @@ namespace test {
 
     public:
 
-        TextMessageCreator(const std::string& text) {
-            this->text = text;
+        TextMessageCreator(const std::string& text) :
+            activemq::cmsutil::MessageCreator(), text(text) {
         }
 
         virtual ~TextMessageCreator() {
@@ -75,17 +75,17 @@ namespace test {
 
     public:
 
-        Sender(const std::string& url, bool pubSub, const std::string& destName, int count) {
+        Sender(const std::string& url, bool pubSub, const std::string& destName, int count) :
+            decaf::lang::Runnable(), cf(), cmsTemplate(), count(count) {
+
             cf.setBrokerURI(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
             cmsTemplate.setDefaultDestinationName(destName);
             cmsTemplate.setDeliveryPersistent(false);
-            this->count = count;
         }
 
-        virtual ~Sender() {
-        }
+        virtual ~Sender() {}
 
         virtual void run() {
             try {
@@ -114,14 +114,13 @@ namespace test {
     public:
 
         Receiver(const std::string& url, bool pubSub, const std::string& destName, int count) :
-            ready(1) {
+            decaf::lang::Runnable(), cf(), cmsTemplate(), count(count), numReceived(), ready(1) {
 
             cf.setBrokerURI(url);
             cmsTemplate.setConnectionFactory(&cf);
             cmsTemplate.setPubSubDomain(pubSub);
             cmsTemplate.setDefaultDestinationName(destName);
             cmsTemplate.setDeliveryPersistent(false);
-            this->count = count;
         }
 
         virtual ~Receiver() {

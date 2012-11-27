@@ -56,7 +56,7 @@ const int OpenwireXATransactionsTest::batchCount = 10;
 const int OpenwireXATransactionsTest::batchSize = 20;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenwireXATransactionsTest::OpenwireXATransactionsTest() {
+OpenwireXATransactionsTest::OpenwireXATransactionsTest() : txIdGen() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,7 +26,7 @@ const unsigned int IntegrationCommon::defaultMsgCount = 200;
 bool IntegrationCommon::debug = false;
 
 ////////////////////////////////////////////////////////////////////////////////
-IntegrationCommon::IntegrationCommon() {
+IntegrationCommon::IntegrationCommon() : urlCommon(), stompURL(), openwireURL() {
 
     this->urlCommon = "tcp://localhost:";
     this->stompURL = this->urlCommon + "61613?wireFormat=stomp";

@@ -69,7 +69,6 @@ void LinkedListBenchmark::run(){
     }
 
     std::string tempStr = "";
-    int tempInt = 0;
 
     for( int i = 0; i < numRuns / 2; ++i ) {
 
@@ -81,7 +80,7 @@ void LinkedListBenchmark::run(){
         }
 
         while( intIter->hasNext() ){
-            tempInt = intIter->next();
+            intIter->next();
         }
 
         delete strIter;

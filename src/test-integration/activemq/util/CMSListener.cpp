@@ -29,7 +29,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-CMSListener::CMSListener( cms::Session* session ) : session( session ) {
+CMSListener::CMSListener(cms::Session* session) : numReceived(), mutex(), session(session) {
     this->reset();
 }
 

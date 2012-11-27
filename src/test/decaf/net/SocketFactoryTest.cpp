@@ -38,7 +38,7 @@ const int SocketFactoryTest::DEFAULT_PORT = 23232;
 ////////////////////////////////////////////////////////////////////////////////
 namespace{
 
-    class MyServerThread : public lang::Thread{
+    class MyServerThread: public lang::Thread {
     private:
 
         bool done;
@@ -51,62 +51,60 @@ namespace{
 
     public:
 
-        MyServerThread(){
-            done = false;
-            numClients = 0;
+        MyServerThread() : done(false), numClients(0), lastMessage(), mutex() {
         }
-        virtual ~MyServerThread(){
+
+        virtual ~MyServerThread() {
             stop();
         }
 
-        std::string getLastMessage(){
+        std::string getLastMessage() {
             return lastMessage;
         }
 
-        int getNumClients(){
+        int getNumClients() {
             return numClients;
         }
 
-        virtual void stop(){
+        virtual void stop() {
             done = true;
         }
 
-        virtual void run(){
-            try{
+        virtual void run() {
+            try {
                 unsigned char buf[1000];
 
                 ServerSocket server;
-                server.bind( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT );
+                server.bind("127.0.0.1", SocketFactoryTest::DEFAULT_PORT);
 
                 net::Socket* socket = server.accept();
                 server.close();
 
-                socket->setSoLinger( false, 0 );
+                socket->setSoLinger(false, 0);
 
-                synchronized(&mutex)
-                {
+                synchronized(&mutex) {
                     numClients++;
                     mutex.notifyAll();
                 }
 
-                while( !done && socket != NULL ){
+                while (!done && socket != NULL) {
 
                     io::InputStream* stream = socket->getInputStream();
-                    memset( buf, 0, 1000 );
-                    try{
-                        if( stream->read( buf, 1000, 0, 1000 ) == -1 ) {
+                    memset(buf, 0, 1000);
+                    try {
+                        if (stream->read(buf, 1000, 0, 1000) == -1) {
                             done = true;
                             continue;
                         }
 
-                        lastMessage = (char*)buf;
+                        lastMessage = (char*) buf;
 
-                        if( strcmp( (char*)buf, "reply" ) == 0 ){
+                        if (strcmp((char*) buf, "reply") == 0) {
                             io::OutputStream* output = socket->getOutputStream();
-                            output->write( (unsigned char*)"hello", (int)strlen("hello"), 0, (int)strlen("hello") );
+                            output->write((unsigned char*) "hello", (int) strlen("hello"), 0, (int) strlen("hello"));
                         }
 
-                    }catch( io::IOException& ex ){
+                    } catch (io::IOException& ex) {
                         done = true;
                     }
                 }
@@ -120,112 +118,96 @@ namespace{
                     mutex.notifyAll();
                 }
 
-            }catch( io::IOException& ex ){
-                printf("%s\n", ex.getMessage().c_str() );
-                CPPUNIT_ASSERT( false );
-            }catch( ... ){
-                CPPUNIT_ASSERT( false );
+            } catch (io::IOException& ex) {
+                printf("%s\n", ex.getMessage().c_str());
+                CPPUNIT_ASSERT( false);
+            } catch (...) {
+                CPPUNIT_ASSERT( false);
             }
         }
     };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketFactoryTest::test()
-{
-    try
-    {
+void SocketFactoryTest::test() {
+    try {
         MyServerThread serverThread;
         serverThread.start();
 
-        Thread::sleep( 500 );
+        Thread::sleep(500);
 
         SocketFactory* factory = SocketFactory::getDefault();
-        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT ) );
+        std::auto_ptr<Socket> client(factory->createSocket("127.0.0.1", SocketFactoryTest::DEFAULT_PORT));
 
-        client->setSoLinger( false, 0 );
+        client->setSoLinger(false, 0);
 
-        synchronized(&serverThread.mutex)
-        {
-            if(serverThread.getNumClients() != 1)
-            {
+        synchronized(&serverThread.mutex) {
+            if (serverThread.getNumClients() != 1) {
                 serverThread.mutex.wait(10000);
             }
         }
 
-        CPPUNIT_ASSERT( client->isConnected() );
+        CPPUNIT_ASSERT( client->isConnected());
 
-        CPPUNIT_ASSERT( serverThread.getNumClients() == 1 );
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 1);
 
         client->close();
 
-        synchronized(&serverThread.mutex)
-        {
-            if(serverThread.getNumClients() != 0)
-            {
+        synchronized(&serverThread.mutex) {
+            if (serverThread.getNumClients() != 0) {
                 serverThread.mutex.wait(10000);
             }
         }
 
-        CPPUNIT_ASSERT( serverThread.getNumClients() == 0 );
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 0);
 
         serverThread.stop();
         serverThread.join();
-    }
-    catch(lang::Exception ex)
-    {
+    } catch (lang::Exception& ex) {
         ex.printStackTrace();
-        CPPUNIT_ASSERT( false );
+        CPPUNIT_ASSERT( false);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketFactoryTest::testNoDelay()
-{
-    try
-    {
+void SocketFactoryTest::testNoDelay() {
+    try {
         MyServerThread serverThread;
         serverThread.start();
 
-        Thread::sleep( 40 );
+        Thread::sleep(40);
 
         SocketFactory* factory = SocketFactory::getDefault();
-        std::auto_ptr<Socket> client( factory->createSocket( "127.0.0.1", SocketFactoryTest::DEFAULT_PORT ) );
+        std::auto_ptr<Socket> client(factory->createSocket("127.0.0.1", SocketFactoryTest::DEFAULT_PORT));
 
-        client->setSoLinger( false, 0 );
-        client->setTcpNoDelay( true );
+        client->setSoLinger(false, 0);
+        client->setTcpNoDelay(true);
 
-        CPPUNIT_ASSERT( client->getTcpNoDelay() == true );
+        CPPUNIT_ASSERT( client->getTcpNoDelay() == true);
 
-        synchronized(&serverThread.mutex)
-        {
-            if(serverThread.getNumClients() != 1)
-            {
+        synchronized(&serverThread.mutex) {
+            if (serverThread.getNumClients() != 1) {
                 serverThread.mutex.wait(1000);
             }
         }
 
-        CPPUNIT_ASSERT( client->isConnected() );
+        CPPUNIT_ASSERT( client->isConnected());
 
-        CPPUNIT_ASSERT( serverThread.getNumClients() == 1 );
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 1);
 
         client->close();
 
-        synchronized(&serverThread.mutex)
-        {
-            if(serverThread.getNumClients() != 0)
-            {
+        synchronized(&serverThread.mutex) {
+            if (serverThread.getNumClients() != 0) {
                 serverThread.mutex.wait(1000);
             }
         }
 
-        CPPUNIT_ASSERT( serverThread.getNumClients() == 0 );
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 0);
 
         serverThread.stop();
         serverThread.join();
-    }
-    catch(lang::Exception ex)
-    {
-        CPPUNIT_ASSERT( false );
+    } catch (lang::Exception& ex) {
+        CPPUNIT_ASSERT( false);
     }
 }

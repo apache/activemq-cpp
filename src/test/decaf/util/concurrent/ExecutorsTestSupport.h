@@ -112,9 +112,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            ShortRunnable(const ShortRunnable&);
+            ShortRunnable operator= (const ShortRunnable&);
+
         public:
 
-            ShortRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            ShortRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~ShortRunnable() {}
@@ -133,9 +138,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            SmallRunnable(const SmallRunnable&);
+            SmallRunnable operator= (const SmallRunnable&);
+
         public:
 
-            SmallRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            SmallRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~SmallRunnable() {}
@@ -154,6 +164,11 @@ namespace concurrent {
         private:
 
             ExecutorsTestSupport* parent;
+
+        private:
+
+            SmallCallable(const SmallCallable&);
+            SmallCallable operator= (const SmallCallable&);
 
         public:
 
@@ -178,9 +193,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            SmallInterruptedRunnable(const SmallInterruptedRunnable&);
+            SmallInterruptedRunnable operator= (const SmallInterruptedRunnable&);
+
         public:
 
-            SmallInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            SmallInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~SmallInterruptedRunnable() {}
@@ -199,9 +219,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            SmallPossiblyInterruptedRunnable(const SmallPossiblyInterruptedRunnable&);
+            SmallPossiblyInterruptedRunnable operator= (const SmallPossiblyInterruptedRunnable&);
+
         public:
 
-            SmallPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            SmallPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~SmallPossiblyInterruptedRunnable() {}
@@ -219,9 +244,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            MediumRunnable(const MediumRunnable&);
+            MediumRunnable operator= (const MediumRunnable&);
+
         public:
 
-            MediumRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            MediumRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~MediumRunnable() {}
@@ -240,9 +270,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            MediumInterruptedRunnable(const MediumInterruptedRunnable&);
+            MediumInterruptedRunnable operator= (const MediumInterruptedRunnable&);
+
         public:
 
-            MediumInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            MediumInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~MediumInterruptedRunnable() {}
@@ -261,9 +296,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            MediumPossiblyInterruptedRunnable(const MediumPossiblyInterruptedRunnable&);
+            MediumPossiblyInterruptedRunnable operator= (const MediumPossiblyInterruptedRunnable&);
+
         public:
 
-            MediumPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            MediumPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~MediumPossiblyInterruptedRunnable() {}
@@ -281,9 +321,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            LongRunnable(const LongRunnable&);
+            LongRunnable operator= (const LongRunnable&);
+
         public:
 
-            LongRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            LongRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~LongRunnable() {}
@@ -302,9 +347,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            LongInterruptedRunnable(const LongInterruptedRunnable&);
+            LongInterruptedRunnable operator= (const LongInterruptedRunnable&);
+
         public:
 
-            LongInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            LongInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~LongInterruptedRunnable() {}
@@ -323,9 +373,14 @@ namespace concurrent {
 
             ExecutorsTestSupport* parent;
 
+        private:
+
+            LongPossiblyInterruptedRunnable(const LongPossiblyInterruptedRunnable&);
+            LongPossiblyInterruptedRunnable operator= (const LongPossiblyInterruptedRunnable&);
+
         public:
 
-            LongPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable() {
+            LongPossiblyInterruptedRunnable(ExecutorsTestSupport* parent) : decaf::lang::Runnable(), parent(parent) {
             }
 
             virtual ~LongPossiblyInterruptedRunnable() {}
@@ -369,6 +424,11 @@ namespace concurrent {
 
             bool* done;
 
+        private:
+
+            TrackedShortRunnable(const TrackedShortRunnable&);
+            TrackedShortRunnable operator= (const TrackedShortRunnable&);
+
         public:
 
             TrackedShortRunnable(bool* done) : decaf::lang::Runnable(), done(done) {
@@ -390,6 +450,11 @@ namespace concurrent {
 
             bool* done;
 
+        private:
+
+            TrackedNoOpRunnable(const TrackedNoOpRunnable&);
+            TrackedNoOpRunnable operator= (const TrackedNoOpRunnable&);
+
         public:
 
             TrackedNoOpRunnable(bool* done) : decaf::lang::Runnable(), done(done) {
@@ -406,6 +471,11 @@ namespace concurrent {
         private:
 
             bool* done;
+
+        private:
+
+            TrackedLongRunnable(const TrackedLongRunnable&);
+            TrackedLongRunnable operator= (const TrackedLongRunnable&);
 
         public:
 

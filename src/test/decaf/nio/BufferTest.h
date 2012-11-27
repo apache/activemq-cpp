@@ -62,9 +62,14 @@ namespace nio{
             bool isReadOnly() const { return false; }
         };
 
+    private:
+
+        BufferTest(const BufferTest&);
+        BufferTest& operator= (const BufferTest&);
+
     public:
 
-        BufferTest() {}
+        BufferTest() : buffer() {}
         virtual ~BufferTest() {}
 
         void setUp() {

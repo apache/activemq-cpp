@@ -47,6 +47,11 @@ namespace openwire {
         cms::Connection* connection;
         cms::Destination* destination;
 
+    private:
+
+        OpenwireJmsRecoverTest(const OpenwireJmsRecoverTest&);
+        OpenwireJmsRecoverTest& operator= (const OpenwireJmsRecoverTest&);
+
     public:
 
         OpenwireJmsRecoverTest();

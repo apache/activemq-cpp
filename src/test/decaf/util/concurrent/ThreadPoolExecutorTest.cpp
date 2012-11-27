@@ -34,6 +34,11 @@ using namespace decaf::util::concurrent;
 namespace {
 
     class MyTask : public lang::Runnable {
+    private:
+
+        MyTask(const MyTask&);
+        MyTask operator= (const MyTask&);
+
     public:
 
         CountDownLatch* latch;
@@ -52,11 +57,16 @@ namespace {
     };
 
     class MyExceptionTask : public lang::Runnable {
+    private:
+
+        MyExceptionTask(const MyExceptionTask&);
+        MyExceptionTask operator= (const MyExceptionTask&);
+
     public:
 
         int value;
 
-        MyExceptionTask() : Runnable() {
+        MyExceptionTask() : Runnable(), value() {
         }
 
         virtual ~MyExceptionTask() {}
@@ -67,14 +77,17 @@ namespace {
     };
 
     class MyWaitingTask : public lang::Runnable {
+    private:
+
+        MyWaitingTask(const MyWaitingTask&);
+        MyWaitingTask operator= (const MyWaitingTask&);
+
     public:
 
         Mutex* mutex;
         CountDownLatch* startedLatch;
 
-        MyWaitingTask( Mutex* mutex, CountDownLatch* startedLatch ) {
-            this->mutex = mutex;
-            this->startedLatch = startedLatch;
+        MyWaitingTask( Mutex* mutex, CountDownLatch* startedLatch ) : mutex(mutex), startedLatch(startedLatch) {
         }
 
         virtual ~MyWaitingTask() {};
@@ -94,6 +107,11 @@ namespace {
     };
 
     class DefaultThreadFactoryRunnable : public Runnable {
+    private:
+
+        DefaultThreadFactoryRunnable(const DefaultThreadFactoryRunnable&);
+        DefaultThreadFactoryRunnable operator= (const DefaultThreadFactoryRunnable&);
+
     private:
 
         CountDownLatch* shutdown;

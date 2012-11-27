@@ -50,7 +50,7 @@ namespace util {
 
     public:
 
-        PropertiesTest() {}
+        PropertiesTest() : testProperties() {}
 
         virtual ~PropertiesTest() {}
 

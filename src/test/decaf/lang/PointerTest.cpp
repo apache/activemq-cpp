@@ -41,12 +41,14 @@ protected:
 
 public:
 
-    virtual ~TestClassBase(){}
+    TestClassBase() : content() {}
+
+    virtual ~TestClassBase() {}
 
     virtual std::string returnHello() = 0;
 
     int getSize() const {
-        return content.size();
+        return (int)content.size();
     }
 };
 
@@ -102,6 +104,8 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 struct X {
     Pointer<X> next;
+
+    X() : next() {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -444,19 +448,24 @@ void PointerTest::testDynamicCast() {
 class Gate {
 private:
 
-    CountDownLatch * enterLatch;
-    CountDownLatch * leaveLatch;
+    CountDownLatch* enterLatch;
+    CountDownLatch* leaveLatch;
     Mutex mutex;
     bool closed;
 
+private:
+
+    Gate(const Gate&);
+    Gate& operator= (const Gate&);
+
 public:
 
-    Gate() : closed( true ) {}
+    Gate() : enterLatch(), leaveLatch(), mutex(), closed(true) {}
     virtual ~Gate() {}
 
-    void open( int count ) {
-        leaveLatch = new CountDownLatch( count );
-        enterLatch = new CountDownLatch( count );
+    void open(int count) {
+        leaveLatch = new CountDownLatch(count);
+        enterLatch = new CountDownLatch(count);
         mutex.lock();
         closed = false;
         mutex.notifyAll();
@@ -465,7 +474,7 @@ public:
 
     void enter() {
         mutex.lock();
-        while( closed )
+        while (closed)
             mutex.wait();
         enterLatch->countDown();
         if (enterLatch->getCount() == 0) {
@@ -492,19 +501,24 @@ private:
     Gate *gate;
     Pointer<std::string> s;
 
+private:
+
+    PointerTestThread(const PointerTestThread&);
+    PointerTestThread& operator= (const PointerTestThread&);
+
 public:
 
-    PointerTestThread( Gate *gate ) : gate( gate ) {}
+    PointerTestThread(Gate *gate) : gate(gate), s() {}
     virtual ~PointerTestThread() {}
 
-    void setString( Pointer<std::string> s ) {
+    void setString(Pointer<std::string> s) {
         this->s = s;
     }
 
     virtual void run() {
-        for( int j = 0; j < 1000; j++ ) {
+        for (int j = 0; j < 1000; j++) {
             gate->enter();
-            s.reset( NULL );
+            s.reset(NULL);
             gate->leave();
         }
     }

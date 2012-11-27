@@ -985,6 +985,11 @@ namespace {
         Random rand;
         CopyOnWriteArrayList<Pointer<Target> >* list;
 
+    private:
+
+        AddRemoveItemRunnable(const AddRemoveItemRunnable&);
+        AddRemoveItemRunnable operator= (const AddRemoveItemRunnable&);
+
     public:
 
         AddRemoveItemRunnable(CopyOnWriteArrayList<Pointer<Target> >* list) :
@@ -1007,6 +1012,11 @@ namespace {
 
         Random rand;
         CopyOnWriteArrayList<Pointer<Target> >* list;
+
+    private:
+
+        IterateAndExecuteMethodRunnable(const IterateAndExecuteMethodRunnable&);
+        IterateAndExecuteMethodRunnable operator= (const IterateAndExecuteMethodRunnable&);
 
     public:
 

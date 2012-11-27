@@ -47,15 +47,19 @@ namespace concurrent{
 
     protected:
 
-        class MyThread : public lang::Thread
-        {
+        class MyThread : public lang::Thread {
         public:
 
             CountDownLatch* latch;
 
+        private:
+
+            MyThread(const MyThread&);
+            MyThread operator= (const MyThread&);
+
         public:
 
-            MyThread(){}
+            MyThread() : latch() {}
             virtual ~MyThread(){}
 
             virtual void run(){

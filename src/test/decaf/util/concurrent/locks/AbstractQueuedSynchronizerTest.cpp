@@ -90,6 +90,11 @@ namespace {
         AbstractQueuedSynchronizerTest* parent;
         TestMutex* mutex;
 
+    private:
+
+        InterruptibleSyncRunnable(const InterruptibleSyncRunnable&);
+        InterruptibleSyncRunnable operator= (const InterruptibleSyncRunnable&);
+
     public:
 
         InterruptibleSyncRunnable(AbstractQueuedSynchronizerTest* parent,
@@ -113,6 +118,11 @@ namespace {
 
         AbstractQueuedSynchronizerTest* parent;
         TestMutex* mutex;
+
+    private:
+
+        InterruptedSyncRunnable(const InterruptedSyncRunnable&);
+        InterruptedSyncRunnable operator= (const InterruptedSyncRunnable&);
 
     public:
 
@@ -426,6 +436,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
 
+    private:
+
+        TestInterruptedException2Runnable(const TestInterruptedException2Runnable&);
+        TestInterruptedException2Runnable operator= (const TestInterruptedException2Runnable&);
+
     public:
 
         TestInterruptedException2Runnable(AbstractQueuedSynchronizerTest* parent, TestMutex* mutex) :
@@ -467,6 +482,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
 
+    private:
+
+        TestTryAcquireWhenSyncedRunnable(const TestTryAcquireWhenSyncedRunnable&);
+        TestTryAcquireWhenSyncedRunnable operator= (const TestTryAcquireWhenSyncedRunnable&);
+
     public:
 
         TestTryAcquireWhenSyncedRunnable(AbstractQueuedSynchronizerTest* parent, TestMutex* mutex) :
@@ -503,6 +523,11 @@ namespace {
 
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
+
+    private:
+
+        TestAcquireNanosTimeoutRunnable(const TestAcquireNanosTimeoutRunnable&);
+        TestAcquireNanosTimeoutRunnable operator= (const TestAcquireNanosTimeoutRunnable&);
 
     public:
 
@@ -544,6 +569,11 @@ namespace {
 
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
+
+    private:
+
+        TestGetStateRunnable(const TestGetStateRunnable&);
+        TestGetStateRunnable operator= (const TestGetStateRunnable&);
 
     public:
 
@@ -656,7 +686,7 @@ void AbstractQueuedSynchronizerTest::testSignalIllegalMonitor() {
     try {
         c->signal();
         shouldThrow();
-    } catch(IllegalMonitorStateException success) {
+    } catch(IllegalMonitorStateException& success) {
     } catch(Exception& ex) {
         unexpectedException();
     }
@@ -716,6 +746,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         Condition* cond;
+
+    private:
+
+        TestAwaitRunnable(const TestAwaitRunnable&);
+        TestAwaitRunnable operator= (const TestAwaitRunnable&);
 
     public:
 
@@ -816,7 +851,7 @@ void AbstractQueuedSynchronizerTest::testHasWaitersIMSE() {
     try {
         mutex.hasWaiters(c);
         shouldThrow();
-    } catch(IllegalMonitorStateException success) {
+    } catch(IllegalMonitorStateException& success) {
     } catch(Exception& ex) {
         unexpectedException();
     }
@@ -831,7 +866,7 @@ void AbstractQueuedSynchronizerTest::testGetWaitQueueLengthIAE() {
     try {
         mutex2.getWaitQueueLength(c);
         shouldThrow();
-    } catch(IllegalArgumentException success) {
+    } catch(IllegalArgumentException& success) {
     } catch(Exception& ex) {
         unexpectedException();
     }
@@ -845,7 +880,7 @@ void AbstractQueuedSynchronizerTest::testGetWaitQueueLengthIMSE() {
     try {
         mutex.getWaitQueueLength(c);
         shouldThrow();
-    } catch(IllegalMonitorStateException success) {
+    } catch(IllegalMonitorStateException& success) {
     } catch(Exception& ex) {
         unexpectedException();
     }
@@ -860,7 +895,7 @@ void AbstractQueuedSynchronizerTest::testGetWaitingThreadsIAE() {
     try {
         mutex2.getWaitingThreads(c);
         shouldThrow();
-    } catch(IllegalArgumentException success) {
+    } catch(IllegalArgumentException& success) {
     } catch(Exception& ex) {
         unexpectedException();
     }
@@ -874,7 +909,7 @@ void AbstractQueuedSynchronizerTest::testGetWaitingThreadsIMSE() {
     try {
         mutex.getWaitingThreads(c);
         shouldThrow();
-    } catch(IllegalMonitorStateException success) {
+    } catch(IllegalMonitorStateException& success) {
     } catch(Exception& ex) {
         unexpectedException();
     }
@@ -890,6 +925,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
+
+    private:
+
+        TestHasWaitersRunnable(const TestHasWaitersRunnable&);
+        TestHasWaitersRunnable operator= (const TestHasWaitersRunnable&);
 
     public:
 
@@ -950,6 +990,11 @@ namespace {
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
 
+    private:
+
+        testGetWaitQueueLengthRunnable1(const testGetWaitQueueLengthRunnable1&);
+        testGetWaitQueueLengthRunnable1 operator= (const testGetWaitQueueLengthRunnable1&);
+
     public:
 
         testGetWaitQueueLengthRunnable1(AbstractQueuedSynchronizerTest* parent, TestMutex* mutex, AbstractQueuedSynchronizer::ConditionObject* cond) :
@@ -976,6 +1021,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
+
+    private:
+
+        testGetWaitQueueLengthRunnable2(const testGetWaitQueueLengthRunnable2&);
+        testGetWaitQueueLengthRunnable2 operator= (const testGetWaitQueueLengthRunnable2&);
 
     public:
 
@@ -1043,6 +1093,11 @@ namespace {
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
 
+    private:
+
+        TestGetWaitingThreadsRunnable1(const TestGetWaitingThreadsRunnable1&);
+        TestGetWaitingThreadsRunnable1 operator= (const TestGetWaitingThreadsRunnable1&);
+
     public:
 
         TestGetWaitingThreadsRunnable1(AbstractQueuedSynchronizerTest* parent, TestMutex* mutex, AbstractQueuedSynchronizer::ConditionObject* cond) :
@@ -1069,6 +1124,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
+
+    private:
+
+        TestGetWaitingThreadsRunnable2(const TestGetWaitingThreadsRunnable2&);
+        TestGetWaitingThreadsRunnable2 operator= (const TestGetWaitingThreadsRunnable2&);
 
     public:
 
@@ -1140,6 +1200,11 @@ namespace {
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
 
+    private:
+
+        TestAwaitUninterruptiblyRunnable(const TestAwaitUninterruptiblyRunnable&);
+        TestAwaitUninterruptiblyRunnable operator= (const TestAwaitUninterruptiblyRunnable&);
+
     public:
 
         TestAwaitUninterruptiblyRunnable(AbstractQueuedSynchronizerTest* parent, TestMutex* mutex, AbstractQueuedSynchronizer::ConditionObject* cond) :
@@ -1186,6 +1251,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
+
+    private:
+
+        TestAwaitInterruptRunnable(const TestAwaitInterruptRunnable&);
+        TestAwaitInterruptRunnable operator= (const TestAwaitInterruptRunnable&);
 
     public:
 
@@ -1235,6 +1305,11 @@ namespace {
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
 
+    private:
+
+        TestAwaitNanosInterruptRunnable(const TestAwaitNanosInterruptRunnable&);
+        TestAwaitNanosInterruptRunnable operator= (const TestAwaitNanosInterruptRunnable&);
+
     public:
 
         TestAwaitNanosInterruptRunnable(AbstractQueuedSynchronizerTest* parent, TestMutex* mutex, AbstractQueuedSynchronizer::ConditionObject* cond) :
@@ -1282,6 +1357,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
+
+    private:
+
+        TestAwaitUntilInterruptRunnable(const TestAwaitUntilInterruptRunnable&);
+        TestAwaitUntilInterruptRunnable operator= (const TestAwaitUntilInterruptRunnable&);
 
     public:
 
@@ -1331,6 +1411,11 @@ namespace {
         TestMutex* mutex;
         AbstractQueuedSynchronizerTest* parent;
         AbstractQueuedSynchronizer::ConditionObject* cond;
+
+    private:
+
+        TestSignalAllRunnable(const TestSignalAllRunnable&);
+        TestSignalAllRunnable operator= (const TestSignalAllRunnable&);
 
     public:
 
@@ -1415,6 +1500,11 @@ namespace {
         BooleanLatch* latch;
         AbstractQueuedSynchronizerTest* parent;
 
+    private:
+
+        TestAcquireSharedInterruptiblyRunnable(const TestAcquireSharedInterruptiblyRunnable&);
+        TestAcquireSharedInterruptiblyRunnable operator= (const TestAcquireSharedInterruptiblyRunnable&);
+
     public:
 
         TestAcquireSharedInterruptiblyRunnable(AbstractQueuedSynchronizerTest* parent, BooleanLatch* latch) :
@@ -1459,6 +1549,11 @@ namespace {
 
         BooleanLatch* latch;
         AbstractQueuedSynchronizerTest* parent;
+
+    private:
+
+        TestAsquireSharedTimedRunnable(const TestAsquireSharedTimedRunnable&);
+        TestAsquireSharedTimedRunnable operator= (const TestAsquireSharedTimedRunnable&);
 
     public:
 
@@ -1505,6 +1600,11 @@ namespace {
         BooleanLatch* latch;
         AbstractQueuedSynchronizerTest* parent;
 
+    private:
+
+        TestAcquireSharedInterruptiblyInterruptedExceptionRunnable(const TestAcquireSharedInterruptiblyInterruptedExceptionRunnable&);
+        TestAcquireSharedInterruptiblyInterruptedExceptionRunnable operator= (const TestAcquireSharedInterruptiblyInterruptedExceptionRunnable&);
+
     public:
 
         TestAcquireSharedInterruptiblyInterruptedExceptionRunnable(AbstractQueuedSynchronizerTest* parent, BooleanLatch* latch) :
@@ -1546,6 +1646,11 @@ namespace {
 
         BooleanLatch* latch;
         AbstractQueuedSynchronizerTest* parent;
+
+    private:
+
+        TestAcquireSharedNanosInterruptedExceptionRunnable(const TestAcquireSharedNanosInterruptedExceptionRunnable&);
+        TestAcquireSharedNanosInterruptedExceptionRunnable operator= (const TestAcquireSharedNanosInterruptedExceptionRunnable&);
 
     public:
 
@@ -1589,6 +1694,11 @@ namespace {
 
         BooleanLatch* latch;
         AbstractQueuedSynchronizerTest* parent;
+
+    private:
+
+        TestAcquireSharedNanosTimeoutRunnable(const TestAcquireSharedNanosTimeoutRunnable&);
+        TestAcquireSharedNanosTimeoutRunnable operator= (const TestAcquireSharedNanosTimeoutRunnable&);
 
     public:
 

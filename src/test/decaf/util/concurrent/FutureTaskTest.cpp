@@ -90,6 +90,11 @@ namespace {
 
         FutureTaskTest* parent;
 
+    private:
+
+        MediumSleepCallable(const MediumSleepCallable&);
+        MediumSleepCallable operator= (const MediumSleepCallable&);
+
     public:
 
         MediumSleepCallable(FutureTaskTest* parent) : Callable<E>(), parent(parent) {
@@ -268,6 +273,11 @@ namespace {
 
         FutureTaskTest* parent;
 
+    private:
+
+        MediumNoInterruptsSleepCallable(const MediumNoInterruptsSleepCallable&);
+        MediumNoInterruptsSleepCallable operator= (const MediumNoInterruptsSleepCallable&);
+
     public:
 
         MediumNoInterruptsSleepCallable(FutureTaskTest* parent) : Callable<E>(), parent(parent) {
@@ -314,6 +324,11 @@ namespace {
 
         FutureTaskTest* parent;
         FutureTask<std::string>* task;
+
+    private:
+
+        MediumNoInterruptsSleepRunnable(const MediumNoInterruptsSleepRunnable&);
+        MediumNoInterruptsSleepRunnable operator= (const MediumNoInterruptsSleepRunnable&);
 
     public:
 
@@ -364,6 +379,11 @@ namespace {
         FutureTaskTest* parent;
         FutureTask<std::string>* task;
 
+    private:
+
+        GetDelayedFutureTaskRunnable(const GetDelayedFutureTaskRunnable&);
+        GetDelayedFutureTaskRunnable operator= (const GetDelayedFutureTaskRunnable&);
+
     public:
 
         GetDelayedFutureTaskRunnable(FutureTaskTest* parent, FutureTask<std::string>* task) :
@@ -413,6 +433,11 @@ namespace {
 
         FutureTaskTest* parent;
 
+    private:
+
+        ShortSleepCallable(const ShortSleepCallable&);
+        ShortSleepCallable operator= (const ShortSleepCallable&);
+
     public:
 
         ShortSleepCallable(FutureTaskTest* parent) : Callable<E>(), parent(parent) {
@@ -437,6 +462,11 @@ namespace {
 
         FutureTaskTest* parent;
         FutureTask<std::string>* task;
+
+    private:
+
+        InterruptedGetDelayedFutureTaskRunnable(const InterruptedGetDelayedFutureTaskRunnable&);
+        InterruptedGetDelayedFutureTaskRunnable operator= (const InterruptedGetDelayedFutureTaskRunnable&);
 
     public:
 
@@ -488,6 +518,11 @@ namespace {
         FutureTaskTest* parent;
         FutureTask<std::string>* task;
 
+    private:
+
+        CancelledGetFutureTaskRunnable(const CancelledGetFutureTaskRunnable&);
+        CancelledGetFutureTaskRunnable operator= (const CancelledGetFutureTaskRunnable&);
+
     public:
 
         CancelledGetFutureTaskRunnable(FutureTaskTest* parent, FutureTask<std::string>* task) :
@@ -537,6 +572,11 @@ namespace {
     private:
 
         FutureTaskTest* parent;
+
+    private:
+
+        ErrorThrowingCallable(const ErrorThrowingCallable&);
+        ErrorThrowingCallable operator= (const ErrorThrowingCallable&);
 
     public:
 
@@ -593,6 +633,11 @@ namespace {
         FutureTaskTest* parent;
         FutureTask<std::string>* task;
 
+    private:
+
+        InterruptableFutureTaskGetRunnable(const InterruptableFutureTaskGetRunnable&);
+        InterruptableFutureTaskGetRunnable operator= (const InterruptableFutureTaskGetRunnable&);
+
     public:
 
         InterruptableFutureTaskGetRunnable(FutureTaskTest* parent, FutureTask<std::string>* task) :
@@ -638,6 +683,11 @@ namespace {
 
         FutureTaskTest* parent;
         FutureTask<std::string>* task;
+
+    private:
+
+        InterruptableFutureTaskLongTimeoutGetRunnable(const InterruptableFutureTaskLongTimeoutGetRunnable&);
+        InterruptableFutureTaskLongTimeoutGetRunnable operator= (const InterruptableFutureTaskLongTimeoutGetRunnable&);
 
     public:
 

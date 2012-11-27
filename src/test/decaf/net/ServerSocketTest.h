@@ -46,6 +46,11 @@ namespace net {
 
         decaf::lang::Thread* theThread;
 
+    private:
+
+        ServerSocketTest(const ServerSocketTest&);
+        ServerSocketTest& operator= (const ServerSocketTest&);
+
     public:
 
         ServerSocketTest();

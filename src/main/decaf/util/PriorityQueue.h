@@ -41,6 +41,7 @@ namespace util {
         static const int DEFAULT_CAPACITY;
         static const int DEFAULT_CAPACITY_RATIO;
 
+        virtual ~PriorityQueueBase() {}
     };
 
     /**
@@ -230,6 +231,7 @@ namespace util {
          */
         PriorityQueue<E>& operator= ( const Collection<E>& source ) {
             this->getFromCollection( source );
+            return *this;
         }
 
         /**
@@ -240,6 +242,7 @@ namespace util {
          */
         PriorityQueue<E>& operator= ( const PriorityQueue<E>& source ) {
             this->getFromPriorityQueue( source );
+            return *this;
         }
 
     public:

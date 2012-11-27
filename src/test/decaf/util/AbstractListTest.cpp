@@ -42,7 +42,7 @@ namespace {
 
     public:
 
-        SimpleList() : AbstractList<E>() {
+        SimpleList() : AbstractList<E>(), array() {
         }
 
         virtual ~SimpleList() {}
@@ -91,7 +91,7 @@ namespace {
 
     public:
 
-        MockArrayList() : AbstractList<E>() {
+        MockArrayList() : AbstractList<E>(), array() {
         }
 
         virtual ~MockArrayList() {}
@@ -166,6 +166,7 @@ namespace {
 
     public:
 
+        MockList() : AbstractList<E>(), array() {}
         virtual ~MockList() {}
 
         virtual E get( int index ) const {

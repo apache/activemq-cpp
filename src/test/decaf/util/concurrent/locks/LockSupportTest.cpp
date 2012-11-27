@@ -47,6 +47,11 @@ namespace {
 
         LockSupportTest* parent;
 
+    private:
+
+        ParkTestThread(const ParkTestThread&);
+        ParkTestThread operator= (const ParkTestThread&);
+
     public:
 
         ParkTestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
@@ -86,6 +91,11 @@ namespace {
     private:
 
         LockSupportTest* parent;
+
+    private:
+
+        ParkTest2Thread(const ParkTest2Thread&);
+        ParkTest2Thread operator= (const ParkTest2Thread&);
 
     public:
 
@@ -134,6 +144,11 @@ namespace {
 
         LockSupportTest* parent;
 
+    private:
+
+        Park3TestThread(const Park3TestThread&);
+        Park3TestThread operator= (const Park3TestThread&);
+
     public:
 
         Park3TestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
@@ -160,7 +175,7 @@ void LockSupportTest::testPark3() {
         t.interrupt();
         t.join();
     }
-    catch(Exception e) {
+    catch(Exception& e) {
         unexpectedException();
     }
 }
@@ -173,6 +188,11 @@ namespace {
 
         LockSupportTest* parent;
         Mutex* lock;
+
+    private:
+
+        Park4TestThread(const Park4TestThread&);
+        Park4TestThread operator= (const Park4TestThread&);
 
     public:
 
@@ -218,6 +238,11 @@ namespace {
 
         LockSupportTest* parent;
 
+    private:
+
+        ParkNanosTestThread(const ParkNanosTestThread&);
+        ParkNanosTestThread operator= (const ParkNanosTestThread&);
+
     public:
 
         ParkNanosTestThread(LockSupportTest* parent) : Thread(), parent(parent) {}
@@ -254,6 +279,11 @@ namespace {
     private:
 
         LockSupportTest* parent;
+
+    private:
+
+        ParkUntilTestThread(const ParkUntilTestThread&);
+        ParkUntilTestThread operator= (const ParkUntilTestThread&);
 
     public:
 

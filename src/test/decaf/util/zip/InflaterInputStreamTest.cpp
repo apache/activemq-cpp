@@ -98,6 +98,8 @@ namespace {
             : InflaterInputStream( in, infl, size ) {
         }
 
+        virtual ~MyInflaterInputStream() {}
+
         void myFill() {
             fill();
         }
@@ -105,7 +107,7 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InflaterInputStreamTest::InflaterInputStreamTest() {
+InflaterInputStreamTest::InflaterInputStreamTest() : deflatedData(), inputBuffer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

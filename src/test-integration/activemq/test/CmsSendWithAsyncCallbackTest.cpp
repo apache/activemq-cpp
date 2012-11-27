@@ -66,6 +66,11 @@ namespace {
 
         CountDownLatch* latch;
 
+    private:
+
+        MyAsyncCallback(const MyAsyncCallback&);
+        MyAsyncCallback& operator= (const MyAsyncCallback&);
+
     public:
 
         MyAsyncCallback(CountDownLatch* latch) : cms::AsyncCallback(), latch(latch) {}

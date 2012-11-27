@@ -45,7 +45,7 @@ namespace test{
         unsigned int count;
         decaf::util::StlSet<long long> threadIds;
 
-        SlowListener() { count = 0; }
+        SlowListener() : MessageListener(), count(0), threadIds() {}
         virtual ~SlowListener() {}
 
         void onMessage( const cms::Message* message ) {
