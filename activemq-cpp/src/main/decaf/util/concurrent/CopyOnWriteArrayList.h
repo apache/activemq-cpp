@@ -75,6 +75,12 @@ namespace concurrent {
                     capacity = newlen;
                 }
             }
+
+        private:
+
+            Array(const Array&);
+            Array operator= (const Array&);
+
         };
 
     private:

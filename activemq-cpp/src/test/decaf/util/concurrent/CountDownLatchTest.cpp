@@ -100,6 +100,11 @@ namespace {
         CountDownLatch* latch;
         CountDownLatchTest* parent;
 
+    private:
+
+        TestAwaitRunnable(const TestAwaitRunnable&);
+        TestAwaitRunnable operator= (const TestAwaitRunnable&);
+
     public:
 
         TestAwaitRunnable(CountDownLatch* latch, CountDownLatchTest* parent) :
@@ -147,6 +152,11 @@ namespace {
         CountDownLatch* latch;
         CountDownLatchTest* parent;
 
+    private:
+
+        TestTimedAwaitRunnable(const TestTimedAwaitRunnable&);
+        TestTimedAwaitRunnable operator= (const TestTimedAwaitRunnable&);
+
     public:
 
         TestTimedAwaitRunnable(CountDownLatch* latch, CountDownLatchTest* parent) :
@@ -193,6 +203,11 @@ namespace {
         CountDownLatch* latch;
         CountDownLatchTest* parent;
 
+    private:
+
+        TestAwaitInterruptedExceptionRunnable(const TestAwaitInterruptedExceptionRunnable&);
+        TestAwaitInterruptedExceptionRunnable operator= (const TestAwaitInterruptedExceptionRunnable&);
+
     public:
 
         TestAwaitInterruptedExceptionRunnable(CountDownLatch* latch, CountDownLatchTest* parent) :
@@ -234,6 +249,11 @@ namespace {
 
         CountDownLatch* latch;
         CountDownLatchTest* parent;
+
+    private:
+
+        TestTimedAwaitInterruptedExceptionRunnable(const TestTimedAwaitInterruptedExceptionRunnable&);
+        TestTimedAwaitInterruptedExceptionRunnable operator= (const TestTimedAwaitInterruptedExceptionRunnable&);
 
     public:
 
@@ -277,6 +297,11 @@ namespace {
 
         CountDownLatch* latch;
         CountDownLatchTest* parent;
+
+    private:
+
+        TestAwaitTimeoutRunnable(const TestAwaitTimeoutRunnable&);
+        TestAwaitTimeoutRunnable operator= (const TestAwaitTimeoutRunnable&);
 
     public:
 

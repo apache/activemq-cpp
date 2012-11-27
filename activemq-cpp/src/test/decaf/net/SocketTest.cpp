@@ -336,10 +336,14 @@ namespace {
 
         ServerSocket* server;
 
+    private:
+
+        GetOutputStreamRunnable(const GetOutputStreamRunnable&);
+        GetOutputStreamRunnable& operator= (const GetOutputStreamRunnable&);
+
     public:
 
         GetOutputStreamRunnable( ServerSocket* server ) : server( server ) {
-
         }
 
         virtual void run() {
@@ -467,7 +471,7 @@ namespace {
 
     public:
 
-        MyServerThread() : Thread(), done( false ), numClients( 0 ), lastMessage() {
+        MyServerThread() : Thread(), done( false ), numClients( 0 ), lastMessage(), server(), mutex() {
             server.reset( new ServerSocket(0) );
         }
 

@@ -26,10 +26,7 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-MathTest::MathTest() {
-    this->HYP = Math::sqrt( 2.0 );
-    this->OPP = 1.0;
-    this->ADJ = 1.0;
+MathTest::MathTest() : HYP(Math::sqrt(2.0)), OPP(1.0), ADJ(1.0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

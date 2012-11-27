@@ -72,6 +72,11 @@ private:
 
     AtomicBoolean* aip;
 
+private:
+
+    MyRunnable(const MyRunnable&);
+    MyRunnable operator= (const MyRunnable&);
+
 public:
 
     MyRunnable( AtomicBoolean* ai ) : aip( ai ) {}

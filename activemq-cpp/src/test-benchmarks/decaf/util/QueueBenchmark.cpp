@@ -71,6 +71,7 @@ void QueueBenchmark::run(){
         resultStr = stringQ.back();
         resultInt = intQ.front();
         resultInt = intQ.back();
+        resultInt++;
         stringQ.pop();
         intQ.pop();
     }

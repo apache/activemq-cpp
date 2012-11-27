@@ -53,7 +53,7 @@ class MyThread : public lang::Thread, public SynchronizableImpl{
 public:
 
     volatile int value;
-    MyThread(){ value = 0;}
+    MyThread() : value(0) {}
     virtual ~MyThread(){}
 
     virtual void run(){
@@ -90,7 +90,7 @@ public:
 
     volatile int value;
     volatile bool started;
-    MyWaitingThread(){ value = 0; started = false; }
+    MyWaitingThread() : value(0), started(false) {}
     virtual ~MyWaitingThread(){}
 
     virtual void run(){
@@ -147,7 +147,7 @@ public:
     volatile int value;
     volatile bool started;
 
-    MyTimedWaitingThread(){ value = 0; started = false; }
+    MyTimedWaitingThread() : value(0), started(false) {}
     virtual ~MyTimedWaitingThread(){}
 
     virtual void run(){
@@ -216,14 +216,16 @@ public:
     Mutex* started;
     Mutex* completed;
 
+private:
+
+    MyNotifiedThread(const MyNotifiedThread&);
+    MyNotifiedThread& operator= (const MyNotifiedThread&);
+
 public:
 
     int value;
-    MyNotifiedThread(Mutex* mutex, Mutex* started, Mutex* completed ){
-        this->mutex = mutex;
-        this->started = started;
-        this->completed = completed;
-        this->done = false;
+    MyNotifiedThread(Mutex* mutex, Mutex* started, Mutex* completed ) :
+        done(false), mutex(mutex), started(started), completed(completed), value() {
     }
     virtual ~MyNotifiedThread(){}
 
@@ -454,14 +456,16 @@ public:
     Mutex* mutex;
     int index;
 
+private:
+
+    MyRecursiveLockThread(const MyRecursiveLockThread&);
+    MyRecursiveLockThread& operator= (const MyRecursiveLockThread&);
+
 public:
 
     volatile int value;
-    MyRecursiveLockThread(Mutex* mutex, int index){
-        this->mutex = mutex;
-        this->done = false;
-        this->index = index;
-    }
+    MyRecursiveLockThread(Mutex* mutex, int index) : done(false), mutex(mutex), index(index), value() {}
+
     virtual ~MyRecursiveLockThread(){}
 
     virtual void lock() {
@@ -583,13 +587,16 @@ public:
     Mutex* mutex1;
     Mutex* mutex2;
 
+private:
+
+    MyDoubleLockThread(const MyDoubleLockThread&);
+    MyDoubleLockThread& operator= (const MyDoubleLockThread&);
+
 public:
 
     volatile int value;
-    MyDoubleLockThread(Mutex* mutex1, Mutex* mutex2) {
-        this->mutex1 = mutex1;
-        this->mutex2 = mutex2;
-        done = false;
+    MyDoubleLockThread(Mutex* mutex1, Mutex* mutex2) :
+        done(false), mutex1(mutex1), mutex2(mutex2), value(0) {
     }
 
     virtual ~MyDoubleLockThread(){}
@@ -653,13 +660,14 @@ public:
     lang::Thread* thread;
     util::Random rand;
 
+private:
+
+    MyStoppableThread(const MyStoppableThread&);
+    MyStoppableThread& operator= (const MyStoppableThread&);
+
 public:
 
-    MyStoppableThread() {
-        this->started = false;
-        this->closed = false;
-        this->thread = NULL;
-    }
+    MyStoppableThread() : started(false), closed(false), mutex(), thread(), rand() {}
 
     virtual ~MyStoppableThread(){ close(); }
 

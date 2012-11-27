@@ -44,21 +44,19 @@ namespace {
 
     public:
 
-        MyMesageListener( bool dontAck = false ) {
-            this->dontAck = dontAck;
-        }
+        MyMesageListener( bool dontAck = false ) : MessageListener(), dontAck(dontAck) {}
 
         virtual ~MyMesageListener() {}
 
-        virtual void onMessage( const Message* message ) {
+        virtual void onMessage(const Message* message) {
 
-            CPPUNIT_ASSERT( message != NULL );
+            CPPUNIT_ASSERT( message != NULL);
 
-            if( !dontAck ) {
+            if (!dontAck) {
 
                 try {
                     message->acknowledge();
-                } catch( Exception& e ) {
+                } catch (Exception& e) {
                     e.printStackTrace();
                 }
             }

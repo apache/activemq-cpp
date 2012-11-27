@@ -55,7 +55,7 @@ namespace util {
 
     public:
 
-        TimerTest() {}
+        TimerTest() : timerCounter(), gsync() {}
         virtual ~TimerTest() {}
 
         void testConstructor();

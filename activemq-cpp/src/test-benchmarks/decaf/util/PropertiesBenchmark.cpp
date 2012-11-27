@@ -33,12 +33,11 @@ void PropertiesBenchmark::run() {
 
     int numRuns = 250;
     std::string result = "";
-    bool hasIt = false;
     Properties copy;
 
     for( int i = 0; i < numRuns; ++i ) {
         properties.setProperty( "test", "value" );
-        hasIt = properties.hasProperty( "test" );
+        properties.hasProperty( "test" );
         result = properties.getProperty( "test" );
         properties.remove( "test" );
     }

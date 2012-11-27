@@ -70,6 +70,11 @@ namespace concurrent {
             bool owns;
             T result;
 
+        private:
+
+            FutureTaskAdapter(const FutureTaskAdapter&);
+            FutureTaskAdapter operator= (const FutureTaskAdapter&);
+
         public:
 
             FutureTaskAdapter(decaf::lang::Runnable* task, const T& result, bool owns = true) :
@@ -136,6 +141,11 @@ namespace concurrent {
              * the results are accessible.
              */
             decaf::lang::Thread* runner;
+
+        private:
+
+            FutureTaskSync(const FutureTaskSync&);
+            FutureTaskSync operator= (const FutureTaskSync&);
 
         public:
 

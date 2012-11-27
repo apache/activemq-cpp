@@ -38,6 +38,9 @@ namespace test {
 
     public:
 
+        CMSTestFixture() : CppUnit::TestFixture(), cmsProvider() {
+        }
+
         virtual ~CMSTestFixture() {
         }
 

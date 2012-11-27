@@ -45,10 +45,15 @@ namespace {
         int num;
         int priority;
 
+    private:
+
+        ProducerThread(const ProducerThread&);
+        ProducerThread& operator= (const ProducerThread&);
+
     public:
 
         ProducerThread( Session* session, Destination* destination, int num, int priority ) :
-            session( session ), destination( destination ), num( num ), priority( priority ) {
+            session(session), destination(destination), num(num), priority(priority) {
         }
 
         virtual ~ProducerThread() {}

@@ -85,6 +85,8 @@ namespace {
 
     struct X {
         ArrayPointer<X> next;
+
+        X() : next() {}
     };
 
     template<typename T>
@@ -464,6 +466,11 @@ namespace {
         Mutex mutex;
         bool closed;
 
+    private:
+
+        Gate(const Gate&);
+        Gate& operator= (const Gate&);
+
     public:
 
         Gate() : enterLatch(NULL), leaveLatch(NULL), mutex(), closed(true) {}
@@ -507,9 +514,14 @@ namespace {
         Gate* gate;
         ArrayPointer<std::string> s;
 
+    private:
+
+        ArrayPointerTestThread(const ArrayPointerTestThread&);
+        ArrayPointerTestThread& operator= (const ArrayPointerTestThread&);
+
     public:
 
-        ArrayPointerTestThread(Gate *gate) : gate(gate) {}
+        ArrayPointerTestThread(Gate *gate) : gate(gate), s() {}
         virtual ~ArrayPointerTestThread() {}
 
         void setString(ArrayPointer<std::string> s) {

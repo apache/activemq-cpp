@@ -42,6 +42,11 @@ namespace {
         ReentrantLock* lock;
         ReentrantLockTest* parent;
 
+    private:
+
+        InterruptibleLockRunnable(const InterruptibleLockRunnable&);
+        InterruptibleLockRunnable operator= (const InterruptibleLockRunnable&);
+
     public:
 
         InterruptibleLockRunnable(ReentrantLock* lock, ReentrantLockTest* parent) :
@@ -60,6 +65,11 @@ namespace {
 
         ReentrantLock* lock;
         ReentrantLockTest* parent;
+
+    private:
+
+        InterruptedLockRunnable(const InterruptedLockRunnable&);
+        InterruptedLockRunnable operator= (const InterruptedLockRunnable&);
 
     public:
 
@@ -96,6 +106,11 @@ namespace {
         Condition* c;
         Mutex monitor;
 
+    private:
+
+        UninterruptableThread(const UninterruptableThread&);
+        UninterruptableThread operator= (const UninterruptableThread&);
+
     public:
 
         volatile bool canAwake;
@@ -103,7 +118,7 @@ namespace {
         volatile bool lockStarted;
 
         UninterruptableThread(ReentrantLock* lock, Condition* c) :
-            Thread(), lock(lock), c(c), canAwake(false), interrupted(false), lockStarted(false) {
+            Thread(), lock(lock), c(c), monitor(), canAwake(false), interrupted(false), lockStarted(false) {
         }
         virtual ~UninterruptableThread() {}
 
@@ -368,6 +383,11 @@ namespace {
         ReentrantLock* lock;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestInterruptedException2Runnable(const TestInterruptedException2Runnable&);
+        TestInterruptedException2Runnable operator= (const TestInterruptedException2Runnable&);
+
     public:
 
         TestInterruptedException2Runnable(ReentrantLock* lock, ReentrantLockTest* parent) :
@@ -410,6 +430,11 @@ namespace {
         ReentrantLock* lock;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestTryLockWhenLockedRunnable(const TestTryLockWhenLockedRunnable&);
+        TestTryLockWhenLockedRunnable operator= (const TestTryLockWhenLockedRunnable&);
+
     public:
 
         TestTryLockWhenLockedRunnable(ReentrantLock* lock, ReentrantLockTest* parent) :
@@ -448,6 +473,11 @@ namespace {
 
         ReentrantLock* lock;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestTryLockTimeoutRunnable(const TestTryLockTimeoutRunnable&);
+        TestTryLockTimeoutRunnable operator= (const TestTryLockTimeoutRunnable&);
 
     public:
 
@@ -505,6 +535,11 @@ namespace {
 
         ReentrantLock* lock;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestIsLockedRunnable(const TestIsLockedRunnable&);
+        TestIsLockedRunnable operator= (const TestIsLockedRunnable&);
 
     public:
 
@@ -666,6 +701,11 @@ namespace {
         ReentrantLock* lock;
         Condition* condition;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestAwaitRunnable(const TestAwaitRunnable&);
+        TestAwaitRunnable operator= (const TestAwaitRunnable&);
 
     public:
 
@@ -835,6 +875,11 @@ namespace {
         Condition* condition;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestHasWaitersRunnable(const TestHasWaitersRunnable&);
+        TestHasWaitersRunnable operator= (const TestHasWaitersRunnable&);
+
     public:
 
         TestHasWaitersRunnable(ReentrantLock* lock, Condition* condition, ReentrantLockTest* parent) :
@@ -893,6 +938,11 @@ namespace {
         Condition* condition;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestGetWaitQueueLengthRunnable1(const TestGetWaitQueueLengthRunnable1&);
+        TestGetWaitQueueLengthRunnable1 operator= (const TestGetWaitQueueLengthRunnable1&);
+
     public:
 
         TestGetWaitQueueLengthRunnable1(ReentrantLock* lock, Condition* condition, ReentrantLockTest* parent) :
@@ -918,6 +968,11 @@ namespace {
         ReentrantLock* lock;
         Condition* condition;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestGetWaitQueueLengthRunnable2(const TestGetWaitQueueLengthRunnable2&);
+        TestGetWaitQueueLengthRunnable2 operator= (const TestGetWaitQueueLengthRunnable2&);
 
     public:
 
@@ -983,6 +1038,11 @@ namespace {
         Condition* condition;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestGetWaitingThreadsRunnable1(const TestGetWaitingThreadsRunnable1&);
+        TestGetWaitingThreadsRunnable1 operator= (const TestGetWaitingThreadsRunnable1&);
+
     public:
 
         TestGetWaitingThreadsRunnable1(PublicReentrantLock* lock, Condition* condition, ReentrantLockTest* parent) :
@@ -1007,6 +1067,11 @@ namespace {
         PublicReentrantLock* lock;
         Condition* condition;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestGetWaitingThreadsRunnable2(const TestGetWaitingThreadsRunnable2&);
+        TestGetWaitingThreadsRunnable2 operator= (const TestGetWaitingThreadsRunnable2&);
 
     public:
 
@@ -1106,6 +1171,11 @@ namespace {
         Condition* condition;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestAwaitInterruptRunnable(const TestAwaitInterruptRunnable&);
+        TestAwaitInterruptRunnable operator= (const TestAwaitInterruptRunnable&);
+
     public:
 
         TestAwaitInterruptRunnable(ReentrantLock* lock, Condition* condition, ReentrantLockTest* parent) :
@@ -1152,6 +1222,11 @@ namespace {
         ReentrantLock* lock;
         Condition* condition;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestAwaitNanosInterruptRunnable(const TestAwaitNanosInterruptRunnable&);
+        TestAwaitNanosInterruptRunnable operator= (const TestAwaitNanosInterruptRunnable&);
 
     public:
 
@@ -1200,6 +1275,11 @@ namespace {
         Condition* condition;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestAwaitUntilInterruptRunnable(const TestAwaitUntilInterruptRunnable&);
+        TestAwaitUntilInterruptRunnable operator= (const TestAwaitUntilInterruptRunnable&);
+
     public:
 
         TestAwaitUntilInterruptRunnable(ReentrantLock* lock, Condition* condition, ReentrantLockTest* parent) :
@@ -1247,6 +1327,11 @@ namespace {
         ReentrantLock* lock;
         Condition* condition;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestSignalAllRunnable(const TestSignalAllRunnable&);
+        TestSignalAllRunnable operator= (const TestSignalAllRunnable&);
 
     public:
 
@@ -1302,6 +1387,11 @@ namespace {
         Condition* condition;
         ReentrantLockTest* parent;
 
+    private:
+
+        TestAwaitLockCountRunnable1(const TestAwaitLockCountRunnable1&);
+        TestAwaitLockCountRunnable1 operator= (const TestAwaitLockCountRunnable1&);
+
     public:
 
         TestAwaitLockCountRunnable1(ReentrantLock* lock, Condition* condition, ReentrantLockTest* parent) :
@@ -1327,6 +1417,11 @@ namespace {
         ReentrantLock* lock;
         Condition* condition;
         ReentrantLockTest* parent;
+
+    private:
+
+        TestAwaitLockCountRunnable2(const TestAwaitLockCountRunnable2&);
+        TestAwaitLockCountRunnable2 operator= (const TestAwaitLockCountRunnable2&);
 
     public:
 

@@ -59,7 +59,7 @@ namespace lang{
             }
         }
 
-        SimpleThread( int d ) : delay( 0 ) {
+        SimpleThread( int d ) : delay(0), lock() {
             if( d >= 0 ) {
                 delay = d;
             }
@@ -74,9 +74,14 @@ namespace lang{
         Thread* parent;
         bool sync;
 
+    private:
+
+        ChildThread1(const ChildThread1&);
+        ChildThread1& operator= (const ChildThread1&);
+
     public:
 
-        ChildThread1(Thread* parent, bool sync) : Thread(), parent(parent), sync(sync) {}
+        ChildThread1(Thread* parent, bool sync) : Thread(), parent(parent), sync(sync), lock() {}
 
         virtual ~ChildThread1() {}
 
@@ -154,7 +159,7 @@ namespace lang{
 
     public:
 
-        Delegate() { stuff = 0; }
+        Delegate() : stuff(0) {}
         virtual ~Delegate(){}
 
         int getStuff(){
@@ -173,7 +178,7 @@ namespace lang{
 
     public:
 
-        Derived() { stuff = 0; }
+        Derived() : stuff(0) {}
         virtual ~Derived() {}
 
         int getStuff() {
@@ -257,6 +262,11 @@ namespace lang{
 
         bool interrupted;
         Thread* parent;
+
+    private:
+
+        InterruptibleJoiner(const InterruptibleJoiner&);
+        InterruptibleJoiner& operator= (const InterruptibleJoiner&);
 
     public:
 

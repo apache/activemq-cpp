@@ -436,13 +436,14 @@ namespace std{
      * can be stored in STL Maps, etc.
      */
     template< typename T >
-    struct less< decaf::lang::ArrayPointer<T> > :
-        public binary_function<decaf::lang::ArrayPointer<T>,
-                               decaf::lang::ArrayPointer<T>, bool>
-    {
+    struct less< decaf::lang::ArrayPointer<T> > {
+
+        typedef decaf::lang::ArrayPointer<T> first_argument_type;
+        typedef decaf::lang::ArrayPointer<T> second_argument_type;
+        typedef bool result_type;
+
         bool operator()(const decaf::lang::ArrayPointer<T>& left,
-                        const decaf::lang::ArrayPointer<T>& right) const
-        {
+                        const decaf::lang::ArrayPointer<T>& right) const {
             return less<T*>()(left.get(), right.get());
         }
     };

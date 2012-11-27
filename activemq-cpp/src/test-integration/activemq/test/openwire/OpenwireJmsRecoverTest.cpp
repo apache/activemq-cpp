@@ -55,7 +55,8 @@ using namespace activemq::test;
 using namespace activemq::test::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenwireJmsRecoverTest::OpenwireJmsRecoverTest() {
+OpenwireJmsRecoverTest::OpenwireJmsRecoverTest() :
+    CppUnit::TestFixture(), factory(), connection(), destination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,6 +155,11 @@ namespace {
         CountDownLatch* doneCountDownLatch;
         int counter;
 
+    private:
+
+        ClientAckMessageListener(const ClientAckMessageListener&);
+        ClientAckMessageListener& operator= (const ClientAckMessageListener&);
+
     public:
 
         ClientAckMessageListener(cms::Session* session, std::vector<string>* errorMessages, CountDownLatch* doneCountDownLatch)
@@ -187,6 +193,7 @@ namespace {
                 default:
                     errorMessages->push_back(string("Got too many messages: ") + Long::toString(counter));
                     doneCountDownLatch->countDown();
+                    break;
                 }
             } catch (Exception& e) {
                 errorMessages->push_back(string("Got exception: ") + e.getMessage());
@@ -235,6 +242,11 @@ namespace {
         CountDownLatch* doneCountDownLatch;
         int counter;
 
+    private:
+
+        AutoAckMessageListener(const AutoAckMessageListener&);
+        AutoAckMessageListener& operator= (const AutoAckMessageListener&);
+
     public:
 
         AutoAckMessageListener(cms::Session* session, std::vector<string>* errorMessages, CountDownLatch* doneCountDownLatch)
@@ -266,6 +278,7 @@ namespace {
                 default:
                     errorMessages->push_back(string("Got too many messages: ") + Long::toString(counter));
                     doneCountDownLatch->countDown();
+                    break;
                 }
             } catch (Exception& e) {
                 errorMessages->push_back(string("Got exception: ") + e.getMessage());

@@ -85,6 +85,11 @@ namespace {
         std::string* result;
         StringThreadLocal* local;
 
+    private:
+
+        TestGetRunnable(const TestGetRunnable&);
+        TestGetRunnable& operator= (const TestGetRunnable&);
+
     public:
 
         TestGetRunnable(StringThreadLocal* local, std::string* result) : Runnable(), result(result), local(local) {}
@@ -135,6 +140,11 @@ namespace {
     private:
 
         StringThreadLocal* local;
+
+    private:
+
+        TestSetRunnable(const TestSetRunnable&);
+        TestSetRunnable& operator= (const TestSetRunnable&);
 
     public:
 

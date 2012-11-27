@@ -57,10 +57,8 @@ namespace openwire{
 
     public:
 
-        Requester( const std::string& url,
-                   const std::string& destination,
-                   unsigned int messageCount )
-        : messageCount( messageCount ), ready( 1 ), responses( messageCount ) {
+        Requester(const std::string& url, const std::string& destination, unsigned int messageCount ) :
+            cmsProvider(), tempTopicConsumer(), numReceived(0), messageCount(messageCount), ready(1), responses(messageCount) {
 
             this->cmsProvider.reset( new CMSProvider( url ) );
             this->cmsProvider->setDestinationName( destination );
@@ -71,8 +69,6 @@ namespace openwire{
                 cmsProvider->getSession()->createConsumer(
                     cmsProvider->getTempDestination() ) );
             this->tempTopicConsumer->setMessageListener( this );
-
-            this->numReceived = 0;
         }
 
         virtual ~Requester() {}
@@ -133,19 +129,13 @@ namespace openwire{
 
     public:
 
-        Responder( const std::string& url,
-                   const std::string& destination,
-                   unsigned int messageCount )
-        : messageCount( messageCount ), requests( messageCount ) {
+        Responder(const std::string& url, const std::string& destination, unsigned int messageCount) :
+            cmsProvider(), numReceived(0), messageCount(messageCount), requests(messageCount) {
 
-            this->cmsProvider.reset( new CMSProvider( url ) );
-
-            this->cmsProvider->setDestinationName( destination );
-            this->cmsProvider->getNoDestProducer()->setDeliveryMode(
-                DeliveryMode::NON_PERSISTENT );
-            this->cmsProvider->getConsumer()->setMessageListener( this );
-
-            this->numReceived = 0;
+            this->cmsProvider.reset(new CMSProvider(url));
+            this->cmsProvider->setDestinationName(destination);
+            this->cmsProvider->getNoDestProducer()->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+            this->cmsProvider->getConsumer()->setMessageListener(this);
         }
 
         virtual ~Responder() {}

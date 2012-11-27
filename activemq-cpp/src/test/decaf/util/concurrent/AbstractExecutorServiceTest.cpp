@@ -245,6 +245,11 @@ namespace {
 
         AbstractExecutorServiceTest* parent;
 
+    private:
+
+        TestInterruptedSubmitCallable(const TestInterruptedSubmitCallable&);
+        TestInterruptedSubmitCallable operator= (const TestInterruptedSubmitCallable&);
+
     public:
 
         TestInterruptedSubmitCallable(AbstractExecutorServiceTest* parent) :
@@ -269,6 +274,11 @@ namespace {
 
         AbstractExecutorServiceTest* parent;
         ThreadPoolExecutor* executor;
+
+    private:
+
+        TestInterruptedSubmitRunnable(const TestInterruptedSubmitRunnable&);
+        TestInterruptedSubmitRunnable operator= (const TestInterruptedSubmitRunnable&);
 
     public:
 
@@ -321,6 +331,11 @@ namespace {
         AbstractExecutorServiceTest* parent;
         Callable<E>* target;
 
+    private:
+
+        CallingRunnable(const CallingRunnable&);
+        CallingRunnable operator= (const CallingRunnable&);
+
     public:
 
         CallingRunnable(AbstractExecutorServiceTest* parent, Callable<E>* target) :
@@ -345,6 +360,11 @@ namespace {
 
         AbstractExecutorServiceTest* parent;
         ThreadPoolExecutor* executor;
+
+    private:
+
+        TestSubmitIECallable(const TestSubmitIECallable&);
+        TestSubmitIECallable operator= (const TestSubmitIECallable&);
 
     public:
 

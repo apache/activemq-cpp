@@ -37,7 +37,7 @@ namespace util {
         typedef T argument_type;
         typedef int result_type;
 
-        virtual ~HashCodeUnaryBase();
+        virtual ~HashCodeUnaryBase() {}
     };
 
     /**

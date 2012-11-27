@@ -42,7 +42,8 @@ using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsConnectionStartStopTest::CmsConnectionStartStopTest() {
+CmsConnectionStartStopTest::CmsConnectionStartStopTest() :
+    CMSTestFixture(), startedConnection(), stoppedConnection() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +125,11 @@ namespace {
         Random rand;
         CopyOnWriteArrayList<std::string>* exceptions;
 
+    private:
+
+        CreateSessionRunnable(const CreateSessionRunnable&);
+        CreateSessionRunnable& operator= (const CreateSessionRunnable&);
+
     public:
 
         CreateSessionRunnable(Connection* connection, CopyOnWriteArrayList<std::string>* exceptions) :
@@ -148,6 +154,11 @@ namespace {
         Connection* connection;
         Random rand;
         CopyOnWriteArrayList<std::string>* exceptions;
+
+    private:
+
+        StartStopRunnable(const StartStopRunnable&);
+        StartStopRunnable& operator= (const StartStopRunnable&);
 
     public:
 

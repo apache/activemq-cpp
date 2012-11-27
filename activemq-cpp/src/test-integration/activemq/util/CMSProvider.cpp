@@ -39,14 +39,12 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 CMSProvider::CMSProvider(const std::string& brokerURL, cms::Session::AcknowledgeMode ackMode) :
-    brokerURL(brokerURL), ackMode(ackMode) {
+    brokerURL(brokerURL), ackMode(ackMode), username(), password(), clientId(),
+    destinationName(), topic(true), durable(false), subscription(), connectionFactory(),
+    connection(), session(), consumer(), producer(), noDestProducer(), destination(), tempDestination() {
 
-    this->topic = true;
     this->destinationName = UUID::randomUUID().toString();
-    this->durable = false;
     this->subscription = UUID::randomUUID().toString();
-    this->username = "";
-    this->password = "";
 
     this->initialize();
 }

@@ -603,6 +603,11 @@ namespace {
         LinkedBlockingQueue<int>* theQ;
         int putValue;
 
+    private:
+
+        PutThread(const PutThread&);
+        PutThread operator= (const PutThread&);
+
     public:
 
         PutThread(LinkedBlockingQueue<int>* q, int putValue) : theQ(q), putValue(putValue) {}
@@ -720,6 +725,11 @@ namespace {
         LinkedBlockingQueue<int>* theQ;
         int count;
 
+    private:
+
+        PuttingThread(const PuttingThread&);
+        PuttingThread operator= (const PuttingThread&);
+
     public:
 
         PuttingThread(LinkedBlockingQueue<int>* q, int count) : theQ(q), count(count) {}
@@ -748,6 +758,11 @@ namespace {
         LinkedBlockingQueue<int>* theQ;
         int count;
         LinkedList<int>* list;
+
+    private:
+
+        TakingThread(const TakingThread&);
+        TakingThread operator= (const TakingThread&);
 
     public:
 
@@ -945,6 +960,11 @@ namespace {
 
         LinkedBlockingQueueTest* test;
 
+    private:
+
+        TestBlockingPutRunnable(const TestBlockingPutRunnable&);
+        TestBlockingPutRunnable operator= (const TestBlockingPutRunnable&);
+
     public:
 
         TestBlockingPutRunnable(LinkedBlockingQueueTest* test) : Runnable(), test(test) {
@@ -994,6 +1014,11 @@ namespace {
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
 
+    private:
+
+        TestTimedOfferRunnable(const TestTimedOfferRunnable&);
+        TestTimedOfferRunnable operator= (const TestTimedOfferRunnable&);
+
     public:
 
         TestTimedOfferRunnable(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
@@ -1042,6 +1067,11 @@ namespace {
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
 
+    private:
+
+        TestTakeFromEmptyRunnable(const TestTakeFromEmptyRunnable&);
+        TestTakeFromEmptyRunnable operator= (const TestTakeFromEmptyRunnable&);
+
     public:
 
         TestTakeFromEmptyRunnable(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
@@ -1084,6 +1114,11 @@ namespace {
     private:
 
         LinkedBlockingQueueTest* test;
+
+    private:
+
+        TestBlockingTakeRunnable(const TestBlockingTakeRunnable&);
+        TestBlockingTakeRunnable operator= (const TestBlockingTakeRunnable&);
 
     public:
 
@@ -1132,6 +1167,11 @@ namespace {
     private:
 
         LinkedBlockingQueueTest* test;
+
+    private:
+
+        TestInterruptedTimedPollRunnable(const TestInterruptedTimedPollRunnable&);
+        TestInterruptedTimedPollRunnable operator= (const TestInterruptedTimedPollRunnable&);
 
     public:
 
@@ -1184,6 +1224,11 @@ namespace {
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
 
+    private:
+
+        TestTimedPollWithOfferRunnable(const TestTimedPollWithOfferRunnable&);
+        TestTimedPollWithOfferRunnable operator= (const TestTimedPollWithOfferRunnable&);
+
     public:
 
         TestTimedPollWithOfferRunnable(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
@@ -1232,6 +1277,11 @@ namespace {
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
 
+    private:
+
+        TestOfferInExecutor1(const TestOfferInExecutor1&);
+        TestOfferInExecutor1 operator= (const TestOfferInExecutor1&);
+
     public:
 
         TestOfferInExecutor1(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
@@ -1256,6 +1306,11 @@ namespace {
 
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
+
+    private:
+
+        TestOfferInExecutor2(const TestOfferInExecutor2&);
+        TestOfferInExecutor2 operator= (const TestOfferInExecutor2&);
 
     public:
 
@@ -1301,6 +1356,11 @@ namespace {
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
 
+    private:
+
+        TestPollInExecutor1(const TestPollInExecutor1&);
+        TestPollInExecutor1 operator= (const TestPollInExecutor1&);
+
     public:
 
         TestPollInExecutor1(LinkedBlockingQueue<int>* queue, LinkedBlockingQueueTest* test) :
@@ -1326,6 +1386,11 @@ namespace {
 
         LinkedBlockingQueue<int>* queue;
         LinkedBlockingQueueTest* test;
+
+    private:
+
+        TestPollInExecutor2(const TestPollInExecutor2&);
+        TestPollInExecutor2 operator= (const TestPollInExecutor2&);
 
     public:
 

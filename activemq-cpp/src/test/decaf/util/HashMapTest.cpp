@@ -341,7 +341,11 @@ namespace decaf {
 namespace util {
 
     template<>
-    struct HashCode<MyKey> : public std::unary_function<const MyKey&, int> {
+    struct HashCode<MyKey> {
+
+        typedef MyKey argument_type;
+        typedef int result_type;
+
         int operator()(const MyKey& arg) const {
             return arg.hashCode();
         }

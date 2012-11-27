@@ -78,6 +78,7 @@ void SetBenchmark::run(){
 
         while( intIter->hasNext() ){
             tempInt = intIter->next();
+            tempInt++;
         }
 
         delete strIter;

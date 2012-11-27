@@ -47,10 +47,10 @@ namespace util{
         long long startedAt;
         long long lastDelta;
 
-        TimerTaskReport() : startedAt( 0 ), lastDelta( 0 ) {}
+        TimerTaskReport() : wasRun(), startedAt(0), lastDelta(0) {}
 
         void reset() {
-            this->wasRun.set( 0 );
+            this->wasRun.set(0);
             this->startedAt = 0;
             this->lastDelta = 0;
         }
@@ -78,36 +78,40 @@ namespace util{
         // The timer we belong to
         Timer* timer;
 
+    private:
+
+        TimerTestTask(const TimerTestTask&);
+        TimerTestTask& operator= (const TimerTestTask&);
+
     public:
 
-        TimerTestTask(AtomicInteger* counter, Mutex* gsync) {
-            this->report = NULL;
-            this->sleepInRun = false;
-            this->incrementCount = false;
-            this->terminateCount = -1;
-            this->timer = NULL;
-            this->timerCounter = counter;
-            this->gsync = gsync;
+        TimerTestTask(AtomicInteger* counter, Mutex* gsync) : gsync(gsync),
+                                                              timerCounter(counter),
+                                                              report(NULL),
+                                                              sleepInRun(false),
+                                                              incrementCount(false),
+                                                              terminateCount(-1),
+                                                              timer(NULL) {
         }
 
-        TimerTestTask(TimerTaskReport* report, AtomicInteger* counter, Mutex* gsync) {
-            this->report = report;
-            this->sleepInRun = false;
-            this->incrementCount = false;
-            this->terminateCount = -1;
-            this->timer = NULL;
-            this->timerCounter = counter;
-            this->gsync = gsync;
+        TimerTestTask(TimerTaskReport* report, AtomicInteger* counter, Mutex* gsync) :
+                gsync(gsync),
+                timerCounter(counter),
+                report(report),
+                sleepInRun(false),
+                incrementCount(false),
+                terminateCount(-1),
+                timer(NULL) {
         }
 
-        TimerTestTask(Timer* t, TimerTaskReport* report, AtomicInteger* counter, Mutex* gsync) {
-            this->report = report;
-            this->sleepInRun = false;
-            this->incrementCount = false;
-            this->terminateCount = -1;
-            this->timer = t;
-            this->timerCounter = counter;
-            this->gsync = gsync;
+        TimerTestTask(Timer* t, TimerTaskReport* report, AtomicInteger* counter, Mutex* gsync) :
+            gsync(gsync),
+            timerCounter(counter),
+            report(report),
+            sleepInRun(false),
+            incrementCount(false),
+            terminateCount(-1),
+            timer(t) {
         }
 
         virtual ~TimerTestTask() {}
@@ -155,10 +159,14 @@ namespace util{
 
         TimerTaskReport* report;
 
+    private:
+
+        SlowThenFastTask(const SlowThenFastTask&);
+        SlowThenFastTask& operator= (const SlowThenFastTask&);
+
     public:
 
-        SlowThenFastTask( TimerTaskReport* report ) {
-            this->report = report;
+        SlowThenFastTask( TimerTaskReport* report ) : report(report) {
         }
 
         virtual ~SlowThenFastTask() {}

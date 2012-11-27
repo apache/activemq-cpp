@@ -38,6 +38,7 @@ namespace {
 
     public:
 
+        SimpleList() : AbstractSequentialList<E>(), list() {}
         virtual ~SimpleList() {}
 
         virtual ListIterator<E>* listIterator( int index ) {

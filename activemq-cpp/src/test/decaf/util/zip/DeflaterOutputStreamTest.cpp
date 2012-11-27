@@ -43,7 +43,7 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace{
+    namespace {
 
     class MyDeflaterOutputStream : public DeflaterOutputStream {
     private:
@@ -52,21 +52,17 @@ namespace{
 
     public:
 
-        MyDeflaterOutputStream( OutputStream* out ) : DeflaterOutputStream( out ) {
-            this->deflateFlag = false;
+        MyDeflaterOutputStream(OutputStream* out) : DeflaterOutputStream(out), deflateFlag(false) {}
+
+        MyDeflaterOutputStream(OutputStream* out, Deflater* defl) :
+            DeflaterOutputStream(out, defl), deflateFlag(false) {
         }
 
-        MyDeflaterOutputStream( OutputStream* out, Deflater* defl ) :
-            DeflaterOutputStream( out, defl ) {
-
-            this->deflateFlag = false;
+        MyDeflaterOutputStream(OutputStream* out, Deflater* defl, int size) :
+            DeflaterOutputStream(out, defl, size), deflateFlag(false) {
         }
 
-        MyDeflaterOutputStream( OutputStream* out, Deflater* defl, int size ) :
-            DeflaterOutputStream( out, defl, size ) {
-
-            this->deflateFlag = false;
-        }
+        virtual ~MyDeflaterOutputStream() {}
 
         std::vector<unsigned char>& getProtectedBuf() {
             return buf;
@@ -88,7 +84,7 @@ namespace{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DeflaterOutputStreamTest::DeflaterOutputStreamTest() {
+DeflaterOutputStreamTest::DeflaterOutputStreamTest() : outputBuffer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

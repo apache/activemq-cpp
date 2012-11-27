@@ -35,6 +35,11 @@ namespace util {
         decaf::util::concurrent::Mutex mutex;
         cms::Session* session;
 
+    private:
+
+        CMSListener(const CMSListener&);
+        CMSListener& operator= (const CMSListener&);
+
     public:
 
         CMSListener( cms::Session* session );

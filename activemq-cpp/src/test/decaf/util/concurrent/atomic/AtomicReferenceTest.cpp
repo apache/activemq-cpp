@@ -76,6 +76,11 @@ private:
 
     AtomicReference<int>* aip;
 
+private:
+
+    MyRefedRunnable(const MyRefedRunnable&);
+    MyRefedRunnable operator= (const MyRefedRunnable&);
+
 public:
 
     int value1;

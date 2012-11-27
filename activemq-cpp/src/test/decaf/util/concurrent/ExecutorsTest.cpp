@@ -37,6 +37,11 @@ namespace {
 
         CountDownLatch* shutdown;
 
+    private:
+
+        DefaultThreadFactoryRunnable(const DefaultThreadFactoryRunnable&);
+        DefaultThreadFactoryRunnable operator= (const DefaultThreadFactoryRunnable&);
+
     public:
 
         DefaultThreadFactoryRunnable(CountDownLatch* shutdown) : Runnable(), shutdown(shutdown) {

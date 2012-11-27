@@ -35,6 +35,11 @@ namespace {
     const int SIZEVAL = 256;
 
     class InterruptibleLockRunnable : public Runnable {
+    private:
+
+        InterruptibleLockRunnable(const InterruptibleLockRunnable&);
+        InterruptibleLockRunnable operator= (const InterruptibleLockRunnable&);
+
     public:
 
         ReentrantReadWriteLockTest* test;
@@ -53,6 +58,11 @@ namespace {
     };
 
     class InterruptedLockRunnable : public Runnable {
+    private:
+
+        InterruptedLockRunnable(const InterruptedLockRunnable&);
+        InterruptedLockRunnable operator= (const InterruptedLockRunnable&);
+
     public:
 
         ReentrantReadWriteLockTest* test;
@@ -185,6 +195,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestWriteLockInterruptiblyInterruptedRunnable(const TestWriteLockInterruptiblyInterruptedRunnable&);
+        TestWriteLockInterruptiblyInterruptedRunnable operator= (const TestWriteLockInterruptiblyInterruptedRunnable&);
+
     public:
 
         TestWriteLockInterruptiblyInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -231,6 +246,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestWriteTryLockInterruptedRunnable(const TestWriteTryLockInterruptedRunnable&);
+        TestWriteTryLockInterruptedRunnable operator= (const TestWriteTryLockInterruptedRunnable&);
+
     public:
 
         TestWriteTryLockInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -272,6 +292,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestReadLockInterruptiblyInterruptedRunnable(const TestReadLockInterruptiblyInterruptedRunnable&);
+        TestReadLockInterruptiblyInterruptedRunnable operator= (const TestReadLockInterruptiblyInterruptedRunnable&);
 
     public:
 
@@ -317,6 +342,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestReadTryLockInterruptedRunnable(const TestReadTryLockInterruptedRunnable&);
+        TestReadTryLockInterruptedRunnable operator= (const TestReadTryLockInterruptedRunnable&);
+
     public:
 
         TestReadTryLockInterruptedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -359,6 +389,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestWriteTryLockWhenLockedRunnable(const TestWriteTryLockWhenLockedRunnable&);
+        TestWriteTryLockWhenLockedRunnable operator= (const TestWriteTryLockWhenLockedRunnable&);
+
     public:
 
         TestWriteTryLockWhenLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -396,6 +431,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestReadTryLockWhenLockedRunnable(const TestReadTryLockWhenLockedRunnable&);
+        TestReadTryLockWhenLockedRunnable operator= (const TestReadTryLockWhenLockedRunnable&);
 
     public:
 
@@ -435,6 +475,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestMultipleReadLocksRunnable(const TestMultipleReadLocksRunnable&);
+        TestMultipleReadLocksRunnable operator= (const TestMultipleReadLocksRunnable&);
+
     public:
 
         TestMultipleReadLocksRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -473,6 +518,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestWriteAfterMultipleReadLocksRunnable1(const TestWriteAfterMultipleReadLocksRunnable1&);
+        TestWriteAfterMultipleReadLocksRunnable1 operator= (const TestWriteAfterMultipleReadLocksRunnable1&);
+
     public:
 
         TestWriteAfterMultipleReadLocksRunnable1(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -490,6 +540,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestWriteAfterMultipleReadLocksRunnable2(const TestWriteAfterMultipleReadLocksRunnable2&);
+        TestWriteAfterMultipleReadLocksRunnable2 operator= (const TestWriteAfterMultipleReadLocksRunnable2&);
 
     public:
 
@@ -537,6 +592,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestReadAfterWriteLockRunnable(const TestReadAfterWriteLockRunnable&);
+        TestReadAfterWriteLockRunnable operator= (const TestReadAfterWriteLockRunnable&);
 
     public:
 
@@ -593,6 +653,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestReadHoldingWriteLockRunnable2(const TestReadHoldingWriteLockRunnable2&);
+        TestReadHoldingWriteLockRunnable2 operator= (const TestReadHoldingWriteLockRunnable2&);
+
     public:
 
         TestReadHoldingWriteLockRunnable2(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -642,6 +707,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestReadHoldingWriteLockRunnable3(const TestReadHoldingWriteLockRunnable3&);
+        TestReadHoldingWriteLockRunnable3 operator= (const TestReadHoldingWriteLockRunnable3&);
+
     public:
 
         TestReadHoldingWriteLockRunnable3(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -690,6 +760,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestWriteHoldingWriteLock4Runnable(const TestWriteHoldingWriteLock4Runnable&);
+        TestWriteHoldingWriteLock4Runnable operator= (const TestWriteHoldingWriteLock4Runnable&);
 
     public:
 
@@ -750,6 +825,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestReadHoldingWriteLockFair2Runnable(const TestReadHoldingWriteLockFair2Runnable&);
+        TestReadHoldingWriteLockFair2Runnable operator= (const TestReadHoldingWriteLockFair2Runnable&);
+
     public:
 
         TestReadHoldingWriteLockFair2Runnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -799,6 +879,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestReadHoldingWriteLockFair3Runnable(const TestReadHoldingWriteLockFair3Runnable&);
+        TestReadHoldingWriteLockFair3Runnable operator= (const TestReadHoldingWriteLockFair3Runnable&);
+
     public:
 
         TestReadHoldingWriteLockFair3Runnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -847,6 +932,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestWriteHoldingWriteLockFair4Runnable(const TestWriteHoldingWriteLockFair4Runnable&);
+        TestWriteHoldingWriteLockFair4Runnable operator= (const TestWriteHoldingWriteLockFair4Runnable&);
 
     public:
 
@@ -899,6 +989,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestTryLockWhenReadLockedRunnable(const TestTryLockWhenReadLockedRunnable&);
+        TestTryLockWhenReadLockedRunnable operator= (const TestTryLockWhenReadLockedRunnable&);
+
     public:
 
         TestTryLockWhenReadLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -937,6 +1032,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestWriteTryLockWhenReadLockedRunnable(const TestWriteTryLockWhenReadLockedRunnable&);
+        TestWriteTryLockWhenReadLockedRunnable operator= (const TestWriteTryLockWhenReadLockedRunnable&);
+
     public:
 
         TestWriteTryLockWhenReadLockedRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -973,6 +1073,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestTryLockWhenReadLockedFairRunnable(const TestTryLockWhenReadLockedFairRunnable&);
+        TestTryLockWhenReadLockedFairRunnable operator= (const TestTryLockWhenReadLockedFairRunnable&);
 
     public:
 
@@ -1012,6 +1117,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestWriteTryLockWhenReadLockedFairRunnable(const TestWriteTryLockWhenReadLockedFairRunnable&);
+        TestWriteTryLockWhenReadLockedFairRunnable operator= (const TestWriteTryLockWhenReadLockedFairRunnable&);
+
     public:
 
         TestWriteTryLockWhenReadLockedFairRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -1048,6 +1158,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestWriteTryLockTimeoutRunnable(const TestWriteTryLockTimeoutRunnable&);
+        TestWriteTryLockTimeoutRunnable operator= (const TestWriteTryLockTimeoutRunnable&);
 
     public:
 
@@ -1090,6 +1205,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
 
+    private:
+
+        TestReadTryLockTimeoutRunnable(const TestReadTryLockTimeoutRunnable&);
+        TestReadTryLockTimeoutRunnable operator= (const TestReadTryLockTimeoutRunnable&);
+
     public:
 
         TestReadTryLockTimeoutRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
@@ -1130,6 +1250,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestWriteLockInterruptiblyRunnable(const TestWriteLockInterruptiblyRunnable&);
+        TestWriteLockInterruptiblyRunnable operator= (const TestWriteLockInterruptiblyRunnable&);
 
     public:
 
@@ -1178,6 +1303,11 @@ namespace {
 
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestReadLockInterruptiblyRunnable(const TestReadLockInterruptiblyRunnable&);
+        TestReadLockInterruptiblyRunnable operator= (const TestReadLockInterruptiblyRunnable&);
 
     public:
 
@@ -1301,6 +1431,11 @@ namespace {
         ReentrantReadWriteLock* lock;
         Condition* cond;
 
+    private:
+
+        TestAwaitRunnable(const TestAwaitRunnable&);
+        TestAwaitRunnable operator= (const TestAwaitRunnable&);
+
     public:
 
         TestAwaitRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
@@ -1348,6 +1483,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         decaf::util::concurrent::locks::Lock& lock;
         Condition* cond;
+
+    private:
+
+        UninterruptableThread(const UninterruptableThread&);
+        UninterruptableThread operator= (const UninterruptableThread&);
 
     public:
 
@@ -1418,6 +1558,11 @@ namespace {
         ReentrantReadWriteLock* lock;
         Condition* cond;
 
+    private:
+
+        TestAwaitInterruptRunnable(const TestAwaitInterruptRunnable&);
+        TestAwaitInterruptRunnable operator= (const TestAwaitInterruptRunnable&);
+
     public:
 
         TestAwaitInterruptRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
@@ -1465,6 +1610,11 @@ namespace {
         ReentrantReadWriteLock* lock;
         Condition* cond;
 
+    private:
+
+        TestAwaitNanosInterruptRunnable(const TestAwaitNanosInterruptRunnable&);
+        TestAwaitNanosInterruptRunnable operator= (const TestAwaitNanosInterruptRunnable&);
+
     public:
 
         TestAwaitNanosInterruptRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
@@ -1510,6 +1660,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
         Condition* cond;
+
+    private:
+
+        TestAwaitUntilInterruptRunnable(const TestAwaitUntilInterruptRunnable&);
+        TestAwaitUntilInterruptRunnable operator= (const TestAwaitUntilInterruptRunnable&);
 
     public:
 
@@ -1557,6 +1712,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
         Condition* cond;
+
+    private:
+
+        TestSignalAllRunnable(const TestSignalAllRunnable&);
+        TestSignalAllRunnable operator= (const TestSignalAllRunnable&);
 
     public:
 
@@ -1865,6 +2025,11 @@ namespace {
         ReentrantReadWriteLock* lock;
         Condition* cond;
 
+    private:
+
+        TestHasWaitersRunnable(const TestHasWaitersRunnable&);
+        TestHasWaitersRunnable operator= (const TestHasWaitersRunnable&);
+
     public:
 
         TestHasWaitersRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock, Condition* cond) :
@@ -1921,6 +2086,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         ReentrantReadWriteLock* lock;
         Condition* cond;
+
+    private:
+
+        TestGetWaitQueueLengthRunnable(const TestGetWaitQueueLengthRunnable&);
+        TestGetWaitQueueLengthRunnable operator= (const TestGetWaitQueueLengthRunnable&);
 
     public:
 
@@ -1979,6 +2149,11 @@ namespace {
         PublicReentrantReadWriteLock* lock;
         Condition* cond;
 
+    private:
+
+        TestGetWaitingThreadsRunnable1(const TestGetWaitingThreadsRunnable1&);
+        TestGetWaitingThreadsRunnable1 operator= (const TestGetWaitingThreadsRunnable1&);
+
     public:
 
         TestGetWaitingThreadsRunnable1(ReentrantReadWriteLockTest* test, PublicReentrantReadWriteLock* lock, Condition* cond) :
@@ -2004,6 +2179,11 @@ namespace {
         ReentrantReadWriteLockTest* test;
         PublicReentrantReadWriteLock* lock;
         Condition* cond;
+
+    private:
+
+        TestGetWaitingThreadsRunnable2(const TestGetWaitingThreadsRunnable2&);
+        TestGetWaitingThreadsRunnable2 operator= (const TestGetWaitingThreadsRunnable2&);
 
     public:
 

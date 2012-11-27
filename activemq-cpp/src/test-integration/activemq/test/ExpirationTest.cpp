@@ -47,14 +47,16 @@ namespace test {
 
     public:
 
-        Producer( const std::string& brokerURL, const std::string& destination,
-                  int numMessages, long long timeToLive ) {
+        Producer(const std::string& brokerURL, const std::string& destination,
+                 int numMessages, long long timeToLive ) : Runnable(),
+                                                           cmsProvider(),
+                                                           numMessages(numMessages),
+                                                           timeToLive(timeToLive),
+                                                           disableTimeStamps(false) {
+
             this->cmsProvider.reset( new CMSProvider( brokerURL ) );
             this->cmsProvider->setDestinationName( destination );
             this->cmsProvider->setTopic( false );
-            this->numMessages = numMessages;
-            this->timeToLive = timeToLive;
-            this->disableTimeStamps = false;
         }
 
         virtual ~Producer(){
@@ -107,16 +109,15 @@ namespace test {
 
     public:
 
-        Consumer( const std::string& brokerURL, const std::string& destination, long waitMillis ) {
+        Consumer( const std::string& brokerURL, const std::string& destination, long waitMillis ) :
+            Runnable(), cmsProvider(), waitMillis(waitMillis), numReceived(0) {
+
             this->cmsProvider.reset( new CMSProvider( brokerURL ) );
             this->cmsProvider->setTopic( false );
             this->cmsProvider->setDestinationName( destination );
-            this->waitMillis = waitMillis;
-            this->numReceived = 0;
         }
 
-        virtual ~Consumer() {
-        }
+        virtual ~Consumer() {}
 
         virtual int getNumReceived() const{
             return numReceived;

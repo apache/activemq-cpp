@@ -58,6 +58,11 @@ namespace {
         Semaphore* lock;
         SemaphoreTest* parent;
 
+    private:
+
+        InterruptibleLockRunnable(const InterruptibleLockRunnable&);
+        InterruptibleLockRunnable operator= (const InterruptibleLockRunnable&);
+
     public:
 
         InterruptibleLockRunnable(Semaphore* l, SemaphoreTest* parent) :
@@ -77,6 +82,11 @@ namespace {
 
         Semaphore* lock;
         SemaphoreTest* parent;
+
+    private:
+
+        InterruptedLockRunnable(const InterruptedLockRunnable&);
+        InterruptedLockRunnable operator= (const InterruptedLockRunnable&);
 
     public:
 
@@ -211,6 +221,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestAcquireReleaseInDifferentThreadsRunnable(const TestAcquireReleaseInDifferentThreadsRunnable&);
+        TestAcquireReleaseInDifferentThreadsRunnable operator= (const TestAcquireReleaseInDifferentThreadsRunnable&);
+
     public:
 
         TestAcquireReleaseInDifferentThreadsRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -260,6 +275,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestUninterruptibleAcquireReleaseInDifferentThreadsRunnable(const TestUninterruptibleAcquireReleaseInDifferentThreadsRunnable&);
+        TestUninterruptibleAcquireReleaseInDifferentThreadsRunnable operator= (const TestUninterruptibleAcquireReleaseInDifferentThreadsRunnable&);
+
     public:
 
         TestUninterruptibleAcquireReleaseInDifferentThreadsRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -304,6 +324,11 @@ namespace {
 
         Semaphore* sem;
         SemaphoreTest* parent;
+
+    private:
+
+        TestTimedAcquireReleaseInDifferentThreadsRunnable(const TestTimedAcquireReleaseInDifferentThreadsRunnable&);
+        TestTimedAcquireReleaseInDifferentThreadsRunnable operator= (const TestTimedAcquireReleaseInDifferentThreadsRunnable&);
 
     public:
 
@@ -353,6 +378,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestAcquireInterruptedExceptionRunnable(const TestAcquireInterruptedExceptionRunnable&);
+        TestAcquireInterruptedExceptionRunnable operator= (const TestAcquireInterruptedExceptionRunnable&);
+
     public:
 
         TestAcquireInterruptedExceptionRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -394,6 +424,11 @@ namespace {
 
         Semaphore* sem;
         SemaphoreTest* parent;
+
+    private:
+
+        TestTryAcquireInterruptedExceptionRunnable(const TestTryAcquireInterruptedExceptionRunnable&);
+        TestTryAcquireInterruptedExceptionRunnable operator= (const TestTryAcquireInterruptedExceptionRunnable&);
 
     public:
 
@@ -685,6 +720,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestAcquireReleaseInDifferentThreadsFairRunnable(const TestAcquireReleaseInDifferentThreadsFairRunnable&);
+        TestAcquireReleaseInDifferentThreadsFairRunnable operator= (const TestAcquireReleaseInDifferentThreadsFairRunnable&);
+
     public:
 
         TestAcquireReleaseInDifferentThreadsFairRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -735,6 +775,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestAcquireReleaseNInDifferentThreadsFairRunnable(const TestAcquireReleaseNInDifferentThreadsFairRunnable&);
+        TestAcquireReleaseNInDifferentThreadsFairRunnable operator= (const TestAcquireReleaseNInDifferentThreadsFairRunnable&);
+
     public:
 
         TestAcquireReleaseNInDifferentThreadsFairRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -779,6 +824,11 @@ namespace {
 
         Semaphore* sem;
         SemaphoreTest* parent;
+
+    private:
+
+        TestAcquireReleaseNInDifferentThreadsFair2Runnable(const TestAcquireReleaseNInDifferentThreadsFair2Runnable&);
+        TestAcquireReleaseNInDifferentThreadsFair2Runnable operator= (const TestAcquireReleaseNInDifferentThreadsFair2Runnable&);
 
     public:
 
@@ -825,6 +875,11 @@ namespace {
 
         Semaphore* sem;
         SemaphoreTest* parent;
+
+    private:
+
+        TestTimedAcquireReleaseInDifferentThreadsFairRunnable(const TestTimedAcquireReleaseInDifferentThreadsFairRunnable&);
+        TestTimedAcquireReleaseInDifferentThreadsFairRunnable operator= (const TestTimedAcquireReleaseInDifferentThreadsFairRunnable&);
 
     public:
 
@@ -874,6 +929,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestTimedAcquireReleaseNInDifferentThreadsFairRunnable(const TestTimedAcquireReleaseNInDifferentThreadsFairRunnable&);
+        TestTimedAcquireReleaseNInDifferentThreadsFairRunnable operator= (const TestTimedAcquireReleaseNInDifferentThreadsFairRunnable&);
+
     public:
 
         TestTimedAcquireReleaseNInDifferentThreadsFairRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -920,6 +980,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestAcquireInterruptedExceptionFairRunnable(const TestAcquireInterruptedExceptionFairRunnable&);
+        TestAcquireInterruptedExceptionFairRunnable operator= (const TestAcquireInterruptedExceptionFairRunnable&);
+
     public:
 
         TestAcquireInterruptedExceptionFairRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -959,6 +1024,11 @@ namespace {
 
         Semaphore* sem;
         SemaphoreTest* parent;
+
+    private:
+
+        TestAcquireNInterruptedExceptionFairRunnable(const TestAcquireNInterruptedExceptionFairRunnable&);
+        TestAcquireNInterruptedExceptionFairRunnable operator= (const TestAcquireNInterruptedExceptionFairRunnable&);
 
     public:
 
@@ -1000,6 +1070,11 @@ namespace {
         Semaphore* sem;
         SemaphoreTest* parent;
 
+    private:
+
+        TestTryAcquireInterruptedExceptionFairRunnable(const TestTryAcquireInterruptedExceptionFairRunnable&);
+        TestTryAcquireInterruptedExceptionFairRunnable operator= (const TestTryAcquireInterruptedExceptionFairRunnable&);
+
     public:
 
         TestTryAcquireInterruptedExceptionFairRunnable(Semaphore* sem, SemaphoreTest* parent)
@@ -1040,6 +1115,11 @@ namespace {
 
         Semaphore* sem;
         SemaphoreTest* parent;
+
+    private:
+
+        TestTryAcquireNInterruptedExceptionFairRunnable(const TestTryAcquireNInterruptedExceptionFairRunnable&);
+        TestTryAcquireNInterruptedExceptionFairRunnable operator= (const TestTryAcquireNInterruptedExceptionFairRunnable&);
 
     public:
 

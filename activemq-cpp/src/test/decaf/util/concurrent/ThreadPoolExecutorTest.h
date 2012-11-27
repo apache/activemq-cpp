@@ -114,7 +114,7 @@ namespace concurrent{
 
     public:
 
-        ThreadPoolExecutorTest() {}
+        ThreadPoolExecutorTest() : myMutex() {}
         virtual ~ThreadPoolExecutorTest() {}
 
         void testConstructor();
