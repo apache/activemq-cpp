@@ -104,18 +104,12 @@
                 <includes>
                   <includes>**\*.cpp</includes>
                 </includes>
-                <excludes>
-                  <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
-                </excludes>
               </sources>
               <headers>
                 <directory>${basedir}/src/test/</directory>
                 <includes>
                   <includes>**\*.h</includes>
                 </includes>
-                <excludes>
-                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
-                </excludes>
               </headers>
             </configuration>
             <phase>generate-resources</phase>
