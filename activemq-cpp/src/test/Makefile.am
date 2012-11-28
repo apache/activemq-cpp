@@ -129,6 +129,9 @@ cc_sources = \
     activemq/wireformat/openwire/utils/BooleanStreamTest.cpp \
     activemq/wireformat/openwire/utils/HexTableTest.cpp \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.cpp \
+    activemq/wireformat/stomp/StompHelperTest.cpp \
+    activemq/wireformat/stomp/StompWireFormatFactoryTest.cpp \
+    activemq/wireformat/stomp/StompWireFormatTest.cpp \
     decaf/internal/net/URIEncoderDecoderTest.cpp \
     decaf/internal/net/URIHelperTest.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactoryTest.cpp \
@@ -367,6 +370,9 @@ h_sources = \
     activemq/wireformat/openwire/utils/BooleanStreamTest.h \
     activemq/wireformat/openwire/utils/HexTableTest.h \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h \
+    activemq/wireformat/stomp/StompHelperTest.h \
+    activemq/wireformat/stomp/StompWireFormatFactoryTest.h \
+    activemq/wireformat/stomp/StompWireFormatTest.h \
     decaf/internal/net/URIEncoderDecoderTest.h \
     decaf/internal/net/URIHelperTest.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactoryTest.h \
