@@ -15,31 +15,31 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_OPENWIREFORMATTEST_H_
-#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_OPENWIREFORMATTEST_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_STOMPWIREFORMATTEST_H_
+#define _ACTIVEMQ_WIREFORMAT_STOMPWIREFORMATTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace activemq {
 namespace wireformat {
-namespace openwire {
+namespace stomp {
 
-    class OpenWireFormatTest : public CppUnit::TestFixture {
+    class StompWireFormatTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( OpenWireFormatTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE( StompWireFormatTest );
+        CPPUNIT_TEST( testChangeDestinationPrefix );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        OpenWireFormatTest() {}
-        virtual ~OpenWireFormatTest() {}
+        StompWireFormatTest();
+        virtual ~StompWireFormatTest();
 
-        virtual void test();
+        virtual void testChangeDestinationPrefix();
 
     };
 
 }}}
 
-#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_OPENWIREFORMATTEST_H_*/
+#endif /* _ACTIVEMQ_WIREFORMAT_STOMPWIREFORMATTEST_H_ */
