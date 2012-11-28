@@ -60,6 +60,7 @@ namespace concurrent{
         decaf_mutex_t mutex;
         decaf_condition_t condition;
         volatile int state;
+        volatile int references;
         int priority;
         bool interrupted;
         bool interruptible;
