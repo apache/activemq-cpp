@@ -66,8 +66,8 @@ namespace concurrent {
 
         private:
 
-            QueueNode( const QueueNode& );
-            QueueNode& operator= ( const QueueNode& );
+            QueueNode(const QueueNode&);
+            QueueNode& operator=(const QueueNode&);
 
         public:
 
@@ -110,8 +110,8 @@ namespace concurrent {
         class TotalLock {
         private:
 
-            TotalLock( const TotalLock& src );
-            TotalLock& operator= ( const TotalLock& src );
+            TotalLock(const TotalLock& src);
+            TotalLock& operator=(const TotalLock& src);
 
         private:
 
@@ -119,7 +119,7 @@ namespace concurrent {
 
         public:
 
-            TotalLock( const LinkedBlockingQueue<E>* parent ) : parent(parent) {
+            TotalLock(const LinkedBlockingQueue<E>* parent) : parent(parent) {
                 parent->putLock.lock();
                 parent->takeLock.lock();
             }
@@ -245,7 +245,7 @@ namespace concurrent {
             this->notEmpty.reset(this->takeLock.newCondition());
             this->notFull.reset(this->putLock.newCondition());
 
-            Pointer< Iterator<E> > iter(queue.iterator);
+            Pointer< Iterator<E> > iter(queue.iterator());
 
             try {
 
