@@ -1574,6 +1574,34 @@
 						</File>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="stomp"
+					>
+					<File
+						RelativePath="..\src\test\activemq\wireformat\stomp\StompHelperTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\wireformat\stomp\StompHelperTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\wireformat\stomp\StompWireFormatFactoryTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\wireformat\stomp\StompWireFormatFactoryTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\wireformat\stomp\StompWireFormatTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\wireformat\stomp\StompWireFormatTest.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="commands"
