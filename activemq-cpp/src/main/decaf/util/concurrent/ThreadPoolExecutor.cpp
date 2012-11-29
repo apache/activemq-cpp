@@ -244,13 +244,17 @@ namespace concurrent{
 
             virtual void run() {
                 kernel->mainLock.lock();
-                try{
-                    Pointer< Iterator<Worker*> > iter( kernel->deadWorkers.iterator() );
-                    while(iter->hasNext()) {
-                        delete iter->next();
-                        iter->remove();
-                    }
-                } catch(...) {}
+
+                if (!kernel->isTerminated()) {
+                    try {
+                        Pointer< Iterator<Worker*> > iter( kernel->deadWorkers.iterator() );
+                        while(iter->hasNext()) {
+                            delete iter->next();
+                            iter->remove();
+                        }
+                    } catch(...) {}
+                }
+
                 kernel->mainLock.unlock();
             }
         };
@@ -384,8 +388,16 @@ namespace concurrent{
 
                 // Turn off the cleanup timer first so that it doesn't fire while
                 // we transition all the remaining workers into the dead workers
-                // queue while can lead to lock contention.
-                this->cleanupTimer.cancel();
+                // queue while can lead to lock contention.  Its run method holds
+                // the mainLock so we need to wait for its release before moving on.
+                try {
+                    this->mainLock.lock();
+                    this->cleanupTimer.cancel();
+                    this->cleanupTimer.purge();
+                    this->mainLock.unlock();
+                } catch(Exception& ex) {
+                    this->mainLock.unlock();
+                }
 
                 this->shutdown();
                 this->awaitTermination();
