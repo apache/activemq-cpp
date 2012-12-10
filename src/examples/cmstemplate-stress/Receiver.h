@@ -38,27 +38,19 @@ namespace cmstemplate {
 
     private:
 
-        std::string m_url;
-        decaf::util::concurrent::Mutex m_mutexForCmsTemplate;
-        decaf::util::concurrent::Mutex m_mutexGeneral;
-        bool m_isClosing;
-
-        decaf::util::concurrent::CountDownLatch m_ready;
-
-        RecvMessageListener m_messageListener;
-
-        activemq::cmsutil::CmsTemplate* m_cmsTemplate;
-
-        decaf::lang::Thread* m_asyncReceiverThread;
-
-        long long m_receiveTimeout;
-
-        bool m_bUseThreadPool; //determines if we should use the thread pool to process async received messages or not
-
-        long long m_cmsTemplateCreateTime;
-
-        static decaf::util::concurrent::ThreadPoolExecutor* m_threadPoolExecutor;
-        long m_numOfMessagingTasks; //number of pending messaging tasks created by this receiver that has been queued in the threadpool
+        std::string url;
+        decaf::util::concurrent::Mutex mutexForCmsTemplate;
+        decaf::util::concurrent::Mutex mutexGeneral;
+        bool closing;
+        decaf::util::concurrent::CountDownLatch ready;
+        RecvMessageListener messageListener;
+        activemq::cmsutil::CmsTemplate* cmsTemplate;
+        decaf::lang::Thread* asyncReceiverThread;
+        long long receiveTimeout;
+        bool bUseThreadPool;
+        long long cmsTemplateCreateTime;
+        static decaf::util::concurrent::ThreadPoolExecutor* threadPoolExecutor;
+        long numOfMessagingTasks;
 
     private:
 

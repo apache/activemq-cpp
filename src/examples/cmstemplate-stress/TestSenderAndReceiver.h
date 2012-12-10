@@ -31,12 +31,12 @@ namespace cmstemplate {
     class TestSenderAndReceiver : public decaf::lang::Runnable {
     private:
 
-        Sender* m_sender;
-        Receiver* m_receiver;
-        decaf::lang::Thread* m_senderThread;
-        bool m_isClosing;
-        int m_sendIndex;
-        int m_receiveIndex;
+        Sender* sender;
+        Receiver* receiver;
+        decaf::lang::Thread* senderThread;
+        bool closing;
+        int sendIndex;
+        int receiveIndex;
 
         static void DECAF_STDCALL onMessage(const std::string& message);
 
@@ -59,6 +59,7 @@ namespace cmstemplate {
         void close();
 
         void waitUntilReady();
+
     };
 }
 
