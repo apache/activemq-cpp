@@ -512,8 +512,9 @@ namespace {
 
         Sync* sync;
 
-        ReadLock(Sync* sync) : Lock(), sync(sync) {
-        }
+        ReadLock(Sync* sync) : Lock(), sync(sync) {}
+
+        virtual ~ReadLock() {}
 
         /**
          * Acquires the read lock.
@@ -689,8 +690,9 @@ namespace {
 
         Sync* sync;
 
-        WriteLock(Sync* sync) : Lock(), sync(sync) {
-        }
+        WriteLock(Sync* sync) : Lock(), sync(sync) {}
+
+        virtual ~WriteLock() {}
 
         /**
          * Acquires the write lock.
