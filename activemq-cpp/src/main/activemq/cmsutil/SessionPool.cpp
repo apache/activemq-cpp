@@ -40,7 +40,9 @@ SessionPool::~SessionPool() {
         // Destroy all of the pooled session objects.
         list<PooledSession*>::iterator iter = sessions.begin();
         for (; iter != sessions.end(); ++iter) {
-            delete *iter;
+            try {
+                delete *iter;
+            } catch (...) {}
         }
 
         sessions.clear();

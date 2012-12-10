@@ -342,7 +342,7 @@ namespace core{
 
         ActiveMQConnection* connection;
         ConnectionConfig* config;
-        Exception* ex;
+        Pointer<Exception> ex;
 
     private:
 
@@ -357,8 +357,13 @@ namespace core{
 
         virtual void run() {
             try {
+
+                // Take control of this pointer, it will be given to the Connection who
+                // will destroy it when it closes.
+                Exception* error = ex.release();
+
                 // Mark this Connection as having a Failed transport.
-                this->connection->setFirstFailureError(ex);
+                this->connection->setFirstFailureError(error);
 
                 Pointer<Transport> transport = this->config->transport;
                 if (transport != NULL) {
@@ -378,7 +383,7 @@ namespace core{
 
                     while (iter->hasNext()) {
                         try{
-                            iter->next()->onException(ex);
+                            iter->next()->onException(error);
                         } catch(...) {}
                     }
                 }
