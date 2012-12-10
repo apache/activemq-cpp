@@ -31,27 +31,27 @@ using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
 Sender::Sender(const string& url, const string& queueOrTopicName, bool isTopic, bool isDeliveryPersistent, int timeToLive) :
-    m_cmsTemplateMutex(), m_cmsTemplate(NULL) {
+    cmsTemplateMutex(), cmsTemplate(NULL) {
 
     ConnectionFactory* connectionFactory = ConnectionFactoryMgr::GetConnectionFactory(url);
 
-    m_cmsTemplate = new CmsTemplate(connectionFactory);
-    m_cmsTemplate->setExplicitQosEnabled(true);
-    m_cmsTemplate->setDefaultDestinationName(queueOrTopicName);
-    m_cmsTemplate->setPubSubDomain(isTopic);
-    m_cmsTemplate->setDeliveryPersistent(isDeliveryPersistent);
-    m_cmsTemplate->setTimeToLive(timeToLive);
+    cmsTemplate = new CmsTemplate(connectionFactory);
+    cmsTemplate->setExplicitQosEnabled(true);
+    cmsTemplate->setDefaultDestinationName(queueOrTopicName);
+    cmsTemplate->setPubSubDomain(isTopic);
+    cmsTemplate->setDeliveryPersistent(isDeliveryPersistent);
+    cmsTemplate->setTimeToLive(timeToLive);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Sender::~Sender() {
     try {
-        m_cmsTemplateMutex.lock();
-        if (m_cmsTemplate) {
-            delete m_cmsTemplate;
-            m_cmsTemplate = NULL;
+        cmsTemplateMutex.lock();
+        if (cmsTemplate) {
+            delete cmsTemplate;
+            cmsTemplate = NULL;
         }
-        m_cmsTemplateMutex.unlock();
+        cmsTemplateMutex.unlock();
     } catch (...) {
     }
 }
@@ -64,12 +64,12 @@ void Sender::SendMessage(string& message, ErrorCode& errorCode) {
 
     // send message through a CmsTemplate
     try {
-        m_cmsTemplateMutex.lock();
-        m_cmsTemplate->send(&messageCreator);
-        m_cmsTemplateMutex.unlock();
+        cmsTemplateMutex.lock();
+        cmsTemplate->send(&messageCreator);
+        cmsTemplateMutex.unlock();
         errorCode = CMS_SUCCESS;
     } catch (cms::CMSException& ex) {
-        m_cmsTemplateMutex.unlock();
+        cmsTemplateMutex.unlock();
         errorCode = CMS_ERROR_CAUGHT_CMS_EXCEPTION;
     }
 }

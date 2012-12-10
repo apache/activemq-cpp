@@ -28,7 +28,7 @@ using namespace activemq::core;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-StlMap<std::string, ConnectionFactory*> * ConnectionFactoryMgr::m_connectionFactories;
+StlMap<std::string, ConnectionFactory*> * ConnectionFactoryMgr::connectionFactories;
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionFactoryMgr::ConnectionFactoryMgr() {
@@ -44,14 +44,14 @@ ConnectionFactoryMgr::~ConnectionFactoryMgr() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionFactoryMgr::Initialize() {
-    m_connectionFactories = new StlMap<std::string, ConnectionFactory*>();
+    connectionFactories = new StlMap<std::string, ConnectionFactory*>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionFactoryMgr::UnInitialize() {
-    m_connectionFactories->lock();
+    connectionFactories->lock();
 
-    Pointer<Iterator<ConnectionFactory*> > iter(m_connectionFactories->values().iterator());
+    Pointer<Iterator<ConnectionFactory*> > iter(connectionFactories->values().iterator());
     while (iter->hasNext()) {
         ConnectionFactory* connectionFactory = iter->next();
         if (connectionFactory != NULL) {
@@ -59,29 +59,29 @@ void ConnectionFactoryMgr::UnInitialize() {
             connectionFactory = NULL;
         }
     }
-    m_connectionFactories->clear();
 
-    m_connectionFactories->unlock();
+    connectionFactories->clear();
+    connectionFactories->unlock();
 
-    delete m_connectionFactories;
-    m_connectionFactories = NULL;
+    delete connectionFactories;
+    connectionFactories = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionFactory* ConnectionFactoryMgr::GetConnectionFactory(const std::string& url) {
     ConnectionFactory* connectionFactory = NULL;
 
-    m_connectionFactories->lock();
+    connectionFactories->lock();
     try {
-        connectionFactory = m_connectionFactories->get(url);
+        connectionFactory = connectionFactories->get(url);
     } catch (NoSuchElementException& ex) {
     }
 
     if (!connectionFactory) {
         connectionFactory = new ActiveMQConnectionFactory(url);
-        m_connectionFactories->put(url, connectionFactory);
+        connectionFactories->put(url, connectionFactory);
     }
-    m_connectionFactories->unlock();
+    connectionFactories->unlock();
 
     return connectionFactory;
 }

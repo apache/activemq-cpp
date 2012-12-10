@@ -26,7 +26,7 @@ namespace cmstemplate {
     class ConnectionFactoryMgr {
     private:
 
-        static decaf::util::StlMap <std::string, cms::ConnectionFactory *> *m_connectionFactories;
+        static decaf::util::StlMap <std::string, cms::ConnectionFactory *> *connectionFactories;
 
         ConnectionFactoryMgr();
 
@@ -35,7 +35,9 @@ namespace cmstemplate {
     public:
 
         static void Initialize();
+
         static void UnInitialize();
+
         static cms::ConnectionFactory* GetConnectionFactory(const std::string& url);
 
     };

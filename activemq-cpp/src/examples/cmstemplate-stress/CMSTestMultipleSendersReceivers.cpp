@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
+#include <vector>
 
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Integer.h>
@@ -58,24 +59,26 @@ int main(int argc, char** argv) {
     int reservedThreads = 3;
     Receiver::Initialize(reservedThreads, maxThreads);
 
-    TestSenderAndReceiver **sar = new TestSenderAndReceiver *[cnt];
+    std::vector<TestSenderAndReceiver*> sar;
+    sar.resize(cnt);
 
     for (int i = 0; i < cnt; i++) {
         string topic("topic");
         stringstream str;
         str << i;
         topic += str.str();
-        sar[i] = new TestSenderAndReceiver(url, topic.c_str(), true, false, 50, 1000);
+        sar[i] = new TestSenderAndReceiver(url, topic, true, false, 50, 1000);
         sar[i]->init();
     }
 
     Thread::sleep(done * 1000);
 
     for (int i = 0; i < cnt; i++) {
-        sar[i]->close();
+        try {
+            sar[i]->close();
+        } catch(...) {}
         delete sar[i];
     }
-    delete sar;
 
     printf("\nTest Completed!\n");
 }

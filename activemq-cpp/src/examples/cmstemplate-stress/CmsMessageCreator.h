@@ -18,15 +18,9 @@
 #ifndef _CMSTEMPLATE_CMSMESSAGECREATOR_H_
 #define _CMSTEMPLATE_CMSMESSAGECREATOR_H_
 
-#include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/core/ActiveMQConnection.h>
-#include <activemq/library/ActiveMQCPP.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
-#include <cms/ExceptionListener.h>
-#include <cms/MessageListener.h>
 
-#include <activemq/cmsutil/CmsTemplate.h>
 #include <activemq/cmsutil/MessageCreator.h>
 
 namespace cmstemplate {
@@ -34,11 +28,11 @@ namespace cmstemplate {
     class CmsMessageCreator : public activemq::cmsutil::MessageCreator {
     private:
 
-        std::string m_txt;
+        std::string text;
 
     public:
 
-        CmsMessageCreator(const std::string& txt);
+        CmsMessageCreator(const std::string& text);
 
         virtual ~CmsMessageCreator();
         virtual cms::Message* createMessage(cms::Session* session);
