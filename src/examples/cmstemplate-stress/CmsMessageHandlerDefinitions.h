@@ -81,8 +81,5 @@ namespace cmstemplate {
     #define ErrorCodeToString(i) (((i >= CMS_SUCCESS) && (i <= CMS_LAST)) ? ErrorDescription[i] : ErrorDescription[CMS_LAST])
     #define IsError(i) (i != CMS_SUCCESS)
 }
-//typedef void (CALLBACK* MessageListener)( IDispatch* message, VARIANT* headerNames, VARIANT* headerValues);
-//
-//typedef void (CALLBACK* BrokerStatusListener)( BSTR brokerIP, BSTR brokerPort, VARIANT_BOOL isBrokerGood, LONGLONG timeStamp);
 
 #endif /** _CMSTEMPLATE_CMSMESSAGEHANDLERDEFINITIONS_H_ */

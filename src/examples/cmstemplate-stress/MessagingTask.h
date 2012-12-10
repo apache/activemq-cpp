@@ -26,8 +26,8 @@ namespace cmstemplate {
     class MessagingTask : public decaf::lang::Runnable {
     private:
 
-        Receiver* m_receiver;
-        std::string m_message;
+        Receiver* receiver;
+        std::string message;
 
     private:
 
@@ -36,7 +36,7 @@ namespace cmstemplate {
 
     public:
 
-        MessagingTask(Receiver* m_receiver, const std::string& message);
+        MessagingTask(Receiver* receiver, const std::string& message);
 
         virtual ~MessagingTask();
 

@@ -30,8 +30,8 @@ namespace cmstemplate {
     class Sender {
     private:
 
-        decaf::util::concurrent::Mutex m_cmsTemplateMutex;
-        activemq::cmsutil::CmsTemplate* m_cmsTemplate;
+        decaf::util::concurrent::Mutex cmsTemplateMutex;
+        activemq::cmsutil::CmsTemplate* cmsTemplate;
 
     private:
 

@@ -17,17 +17,14 @@
 
 #include "CmsMessageCreator.h"
 
+#include <memory>
+
 using namespace std;
 using namespace cms;
-using namespace decaf;
-using namespace decaf::lang;
-using namespace decaf::util;
-using namespace decaf::util::concurrent;
-using namespace activemq::core;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsMessageCreator::CmsMessageCreator(const std::string& txt) : m_txt(txt) {
+CmsMessageCreator::CmsMessageCreator(const std::string& text) : text(text) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,9 +33,11 @@ CmsMessageCreator::~CmsMessageCreator() {
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* CmsMessageCreator::createMessage(cms::Session* session) {
-    cms::Message* message = NULL;
+    std::auto_ptr<cms::Message> message;
+
     if (session) {
-        message = session->createTextMessage(m_txt);
+        message.reset(session->createTextMessage(text));
     }
-    return message;
+
+    return message.release();
 }

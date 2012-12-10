@@ -21,7 +21,7 @@ using namespace std;
 using namespace cmstemplate;
 
 ////////////////////////////////////////////////////////////////////////////////
-MessagingTask::MessagingTask(Receiver* receiver, const string& message) : m_receiver(receiver), m_message(message) {
+MessagingTask::MessagingTask(Receiver* receiver, const string& message) : receiver(receiver), message(message) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,8 +31,8 @@ MessagingTask::~MessagingTask() {
 ////////////////////////////////////////////////////////////////////////////////
 void MessagingTask::run() {
     try {
-        if (m_receiver != NULL) {
-            m_receiver->ExecuteMessagingTask(m_message);
+        if (receiver != NULL) {
+            receiver->ExecuteMessagingTask(message);
         }
     } catch (...) {
     }
