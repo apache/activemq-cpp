@@ -43,12 +43,14 @@ void TestSenderAndReceiver::onMessage(const string& message) {
 ////////////////////////////////////////////////////////////////////////////////
 TestSenderAndReceiver::TestSenderAndReceiver(const string& url, const string& queueOrTopicName, bool isTopic,
                                              bool isDeliveryPersistent, int timeToLive, int receiveTimeout) :
-    sender(NULL), receiver(NULL), senderThread(NULL), closing(false), sendIndex(0), receiveIndex(0) {
+    sender(), receiver(), senderThread(), closing(false), sendIndex(0), receiveIndex(0) {
 
-    sender = new Sender(url, queueOrTopicName, isTopic, isDeliveryPersistent, timeToLive);
-    receiver = new Receiver(url, queueOrTopicName, isTopic, receiveTimeout, true);
+    sender.reset(new Sender(url, queueOrTopicName, isTopic, isDeliveryPersistent, timeToLive));
+    receiver.reset(new Receiver(url, queueOrTopicName, isTopic, receiveTimeout, true));
+
     ErrorCode errorCode = CMS_SUCCESS;
-    receiver->RegisterMessageListener(this, errorCode);
+
+    receiver->registerMessageListener(this, errorCode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +61,8 @@ TestSenderAndReceiver::~TestSenderAndReceiver() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TestSenderAndReceiver::init() {
-    senderThread = new Thread(this, "TestSenderAndReceiver");
+void TestSenderAndReceiver::initialize() {
+    senderThread.reset(new Thread(this, "TestSenderAndReceiver"));
     senderThread->start();
 }
 
@@ -105,22 +107,16 @@ void TestSenderAndReceiver::close() {
     if (!closing) {
         closing = true;
 
-        if (senderThread) {
-            senderThread->join();
-            delete senderThread;
-            senderThread = NULL;
-        }
+        try {
+            if (senderThread.get() != NULL) {
+                senderThread->join();
+            }
+        } catch (Exception& ex) {}
 
         try {
-            delete sender;
-            sender = NULL;
-        } catch(Exception& ex) {}
-
-        try {
-            receiver->Close();
-        } catch(Exception& ex) {}
-
-        delete receiver;
-        receiver = NULL;
+            if (receiver.get() != NULL) {
+                receiver->close();
+            }
+        } catch (Exception& ex) {}
     }
 }

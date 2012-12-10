@@ -33,9 +33,9 @@ using namespace cmstemplate;
 Sender::Sender(const string& url, const string& queueOrTopicName, bool isTopic, bool isDeliveryPersistent, int timeToLive) :
     cmsTemplateMutex(), cmsTemplate(NULL) {
 
-    ConnectionFactory* connectionFactory = ConnectionFactoryMgr::GetConnectionFactory(url);
+    ConnectionFactory* connectionFactory = ConnectionFactoryMgr::getConnectionFactory(url);
 
-    cmsTemplate = new CmsTemplate(connectionFactory);
+    cmsTemplate.reset(new CmsTemplate(connectionFactory));
     cmsTemplate->setExplicitQosEnabled(true);
     cmsTemplate->setDefaultDestinationName(queueOrTopicName);
     cmsTemplate->setPubSubDomain(isTopic);
@@ -47,10 +47,7 @@ Sender::Sender(const string& url, const string& queueOrTopicName, bool isTopic, 
 Sender::~Sender() {
     try {
         cmsTemplateMutex.lock();
-        if (cmsTemplate) {
-            delete cmsTemplate;
-            cmsTemplate = NULL;
-        }
+        cmsTemplate.reset(NULL);
         cmsTemplateMutex.unlock();
     } catch (...) {
     }

@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 
     printf("Test Started\n");
     int cnt = 25;
-    int done = 3600;
+    int done = 240;
 
     if (argc > 1) {
         cnt = Integer::parseInt(argv[1]);
@@ -54,10 +54,10 @@ int main(int argc, char** argv) {
     string url = "tcp://127.0.0.1:61616?connection.sendTimeout=1000";
 
     ActiveMQCPP::initializeLibrary();
-    ConnectionFactoryMgr::Initialize();
+    ConnectionFactoryMgr::initialize();
     int maxThreads = 30;
     int reservedThreads = 3;
-    Receiver::Initialize(reservedThreads, maxThreads);
+    Receiver::initialize(reservedThreads, maxThreads);
 
     std::vector<TestSenderAndReceiver*> sar;
     sar.resize(cnt);
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
         str << i;
         topic += str.str();
         sar[i] = new TestSenderAndReceiver(url, topic, true, false, 50, 1000);
-        sar[i]->init();
+        sar[i]->initialize();
     }
 
     Thread::sleep(done * 1000);
@@ -79,6 +79,11 @@ int main(int argc, char** argv) {
         } catch(...) {}
         delete sar[i];
     }
+
+    Receiver::unInitialize();
+    ConnectionFactoryMgr::unInitialize();
+
+    ActiveMQCPP::shutdownLibrary();
 
     printf("\nTest Completed!\n");
 }
