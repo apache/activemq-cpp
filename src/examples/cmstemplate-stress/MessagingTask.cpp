@@ -32,7 +32,7 @@ MessagingTask::~MessagingTask() {
 void MessagingTask::run() {
     try {
         if (receiver != NULL) {
-            receiver->ExecuteMessagingTask(message);
+            receiver->executeMessagingTask(message);
         }
     } catch (...) {
     }

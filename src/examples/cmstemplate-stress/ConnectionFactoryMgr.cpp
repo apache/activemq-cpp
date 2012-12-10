@@ -37,18 +37,18 @@ ConnectionFactoryMgr::ConnectionFactoryMgr() {
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionFactoryMgr::~ConnectionFactoryMgr() {
     try {
-        UnInitialize();
+        unInitialize();
     } catch(...) {
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionFactoryMgr::Initialize() {
+void ConnectionFactoryMgr::initialize() {
     connectionFactories = new StlMap<std::string, ConnectionFactory*>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionFactoryMgr::UnInitialize() {
+void ConnectionFactoryMgr::unInitialize() {
     connectionFactories->lock();
 
     Pointer<Iterator<ConnectionFactory*> > iter(connectionFactories->values().iterator());
@@ -68,7 +68,7 @@ void ConnectionFactoryMgr::UnInitialize() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionFactory* ConnectionFactoryMgr::GetConnectionFactory(const std::string& url) {
+ConnectionFactory* ConnectionFactoryMgr::getConnectionFactory(const std::string& url) {
     ConnectionFactory* connectionFactory = NULL;
 
     connectionFactories->lock();

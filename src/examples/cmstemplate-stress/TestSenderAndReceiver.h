@@ -32,9 +32,9 @@ namespace cmstemplate {
                                   public ReceiverListener {
     private:
 
-        Sender* sender;
-        Receiver* receiver;
-        decaf::lang::Thread* senderThread;
+        std::auto_ptr<Sender> sender;
+        std::auto_ptr<Receiver> receiver;
+        std::auto_ptr<decaf::lang::Thread> senderThread;
         bool closing;
         int sendIndex;
         int receiveIndex;
@@ -51,7 +51,7 @@ namespace cmstemplate {
 
         virtual ~TestSenderAndReceiver();
 
-        void init();
+        void initialize();
 
         virtual void run();
 

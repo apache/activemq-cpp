@@ -28,6 +28,7 @@
 
 #include <decaf/util/concurrent/TimeUnit.h>
 #include <string>
+#include <memory>
 
 namespace cmstemplate {
 
@@ -49,21 +50,24 @@ namespace cmstemplate {
         bool closing;
         decaf::util::concurrent::CountDownLatch ready;
         ReceiverListener* messageListener;
-        activemq::cmsutil::CmsTemplate* cmsTemplate;
-        decaf::lang::Thread* asyncReceiverThread;
+        std::auto_ptr<activemq::cmsutil::CmsTemplate> cmsTemplate;
+        std::auto_ptr<decaf::lang::Thread> asyncReceiverThread;
         long long receiveTimeout;
         bool bUseThreadPool;
         long long cmsTemplateCreateTime;
-        static decaf::util::concurrent::ThreadPoolExecutor* threadPoolExecutor;
         long numOfMessagingTasks;
 
     private:
 
-        virtual void WaitUntilReady();
+        static decaf::util::concurrent::ThreadPoolExecutor* threadPoolExecutor;
 
-        void IncreaseNumOfMessagingTasks();
-        void DecreaseNumOfMessagingTasks();
-        long GetNumOfMessagingTasks();
+    private:
+
+        virtual void waitUntilReady();
+
+        void increaseNumOfMessagingTasks();
+        void decreaseNumOfMessagingTasks();
+        long getNumOfMessagingTasks();
 
     private:
 
@@ -76,22 +80,22 @@ namespace cmstemplate {
 
         virtual ~Receiver();
 
-        static void Initialize(int reservedThreads, int maxThreads);
-        static void UnInitialize();
+        static void initialize(int reservedThreads, int maxThreads);
+        static void unInitialize();
 
-        void Close();
+        void close();
 
         virtual void run();
 
-        void RegisterMessageListener(ReceiverListener* messageListener, ErrorCode& errorCode);
+        void registerMessageListener(ReceiverListener* messageListener, ErrorCode& errorCode);
 
-        void ReceiveMessage(std::string& message, ErrorCode& errorCode, bool retryOnError = true);
+        void receiveMessage(std::string& message, ErrorCode& errorCode, bool retryOnError = true);
 
-        static bool IsMessageExpired(cms::Message* message);
+        static bool isMessageExpired(cms::Message* message);
 
-        void QueueMessagingTask(const std::string& message);
+        void queueMessagingTask(const std::string& message);
 
-        void ExecuteMessagingTask(const std::string& message, bool bDecreaseNumOfMessagingTasks = true);
+        void executeMessagingTask(const std::string& message, bool bDecreaseNumOfMessagingTasks = true);
 
     };
 }

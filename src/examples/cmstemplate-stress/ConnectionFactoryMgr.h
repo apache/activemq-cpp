@@ -34,11 +34,11 @@ namespace cmstemplate {
 
     public:
 
-        static void Initialize();
+        static void initialize();
 
-        static void UnInitialize();
+        static void unInitialize();
 
-        static cms::ConnectionFactory* GetConnectionFactory(const std::string& url);
+        static cms::ConnectionFactory* getConnectionFactory(const std::string& url);
 
     };
 }
