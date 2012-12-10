@@ -40,22 +40,15 @@ void TestSenderAndReceiver::onMessage(const string& message) {
     }
 }
 
-Sender* m_sender;
-Receiver* m_receiver;
-decaf::lang::Thread* m_senderThread;
-bool m_isClosing;
-int m_sendIndex;
-int m_receiveIndex;
-
 ////////////////////////////////////////////////////////////////////////////////
 TestSenderAndReceiver::TestSenderAndReceiver(const string& url, const string& queueOrTopicName, bool isTopic,
                                              bool isDeliveryPersistent, int timeToLive, int receiveTimeout) :
-    m_sender(NULL), m_receiver(NULL), m_senderThread(NULL), m_isClosing(false), m_sendIndex(0), m_receiveIndex(0) {
+    sender(NULL), receiver(NULL), senderThread(NULL), closing(false), sendIndex(0), receiveIndex(0) {
 
-    m_sender = new Sender(url, queueOrTopicName, isTopic, isDeliveryPersistent, timeToLive);
-    m_receiver = new Receiver(url, queueOrTopicName, isTopic, receiveTimeout, true);
+    sender = new Sender(url, queueOrTopicName, isTopic, isDeliveryPersistent, timeToLive);
+    receiver = new Receiver(url, queueOrTopicName, isTopic, receiveTimeout, true);
     ErrorCode errorCode = CMS_SUCCESS;
-    m_receiver->RegisterMessageListener(onMessage, errorCode);
+    receiver->RegisterMessageListener(onMessage, errorCode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,8 +60,8 @@ TestSenderAndReceiver::~TestSenderAndReceiver() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TestSenderAndReceiver::init() {
-    m_senderThread = new Thread(this, "TestSenderAndReceiver");
-    m_senderThread->start();
+    senderThread = new Thread(this, "TestSenderAndReceiver");
+    senderThread->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,9 +72,9 @@ void TestSenderAndReceiver::run() {
 
     j = (int) ((random.nextInt() * 50) / RAND_MAX);
 
-    while (!m_isClosing) {
+    while (!closing) {
         std::stringstream str;
-        str << m_sendIndex;
+        str << sendIndex;
 
         string message;
         str >> message;
@@ -94,9 +87,9 @@ void TestSenderAndReceiver::run() {
         }
 
         errorReturn = CMS_SUCCESS;
-        m_sender->SendMessage(message, errorReturn);
+        sender->SendMessage(message, errorReturn);
         if (errorReturn == CMS_SUCCESS) {
-            m_sendIndex++;
+            sendIndex++;
         } else {
             // Exclamation point for error
             printf("%c", 33);
@@ -109,20 +102,23 @@ void TestSenderAndReceiver::run() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void TestSenderAndReceiver::close() {
-    if (!m_isClosing) {
-        m_isClosing = true;
+    if (!closing) {
+        closing = true;
 
-        if (m_senderThread) {
-            m_senderThread->join();
-            delete m_senderThread;
-            m_senderThread = NULL;
+        if (senderThread) {
+            senderThread->join();
+            delete senderThread;
+            senderThread = NULL;
         }
 
-        delete m_sender;
-        m_sender = NULL;
+        delete sender;
+        sender = NULL;
 
-        m_receiver->Close();
-        delete m_receiver;
-        m_receiver = NULL;
+        try {
+            receiver->Close();
+        } catch(Exception& ex) {}
+
+        delete receiver;
+        receiver = NULL;
     }
 }
