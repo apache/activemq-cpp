@@ -48,7 +48,7 @@ TestSenderAndReceiver::TestSenderAndReceiver(const string& url, const string& qu
     sender = new Sender(url, queueOrTopicName, isTopic, isDeliveryPersistent, timeToLive);
     receiver = new Receiver(url, queueOrTopicName, isTopic, receiveTimeout, true);
     ErrorCode errorCode = CMS_SUCCESS;
-    receiver->RegisterMessageListener(onMessage, errorCode);
+    receiver->RegisterMessageListener(this, errorCode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,8 +111,10 @@ void TestSenderAndReceiver::close() {
             senderThread = NULL;
         }
 
-        delete sender;
-        sender = NULL;
+        try {
+            delete sender;
+            sender = NULL;
+        } catch(Exception& ex) {}
 
         try {
             receiver->Close();
