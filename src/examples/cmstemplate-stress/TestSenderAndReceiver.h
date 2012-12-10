@@ -28,7 +28,8 @@
 
 namespace cmstemplate {
 
-    class TestSenderAndReceiver : public decaf::lang::Runnable {
+    class TestSenderAndReceiver : public decaf::lang::Runnable,
+                                  public ReceiverListener {
     private:
 
         Sender* sender;
@@ -37,8 +38,6 @@ namespace cmstemplate {
         bool closing;
         int sendIndex;
         int receiveIndex;
-
-        static void DECAF_STDCALL onMessage(const std::string& message);
 
     private:
 
@@ -59,6 +58,10 @@ namespace cmstemplate {
         void close();
 
         void waitUntilReady();
+
+    public:
+
+        virtual void onMessage(const std::string& message);
 
     };
 }

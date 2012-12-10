@@ -31,11 +31,16 @@
 
 namespace cmstemplate {
 
-    class Receiver : public decaf::lang::Runnable {
+    class ReceiverListener {
     public:
 
-        typedef void (DECAF_STDCALL *RecvMessageListener)( const std::string& message);
+        virtual ~ReceiverListener() {}
 
+        virtual void onMessage(const std::string& message) = 0;
+
+    };
+
+    class Receiver : public decaf::lang::Runnable {
     private:
 
         std::string url;
@@ -43,7 +48,7 @@ namespace cmstemplate {
         decaf::util::concurrent::Mutex mutexGeneral;
         bool closing;
         decaf::util::concurrent::CountDownLatch ready;
-        RecvMessageListener messageListener;
+        ReceiverListener* messageListener;
         activemq::cmsutil::CmsTemplate* cmsTemplate;
         decaf::lang::Thread* asyncReceiverThread;
         long long receiveTimeout;
@@ -78,7 +83,7 @@ namespace cmstemplate {
 
         virtual void run();
 
-        void RegisterMessageListener(const RecvMessageListener m_messageListener, ErrorCode& errorCode);
+        void RegisterMessageListener(ReceiverListener* messageListener, ErrorCode& errorCode);
 
         void ReceiveMessage(std::string& message, ErrorCode& errorCode, bool retryOnError = true);
 

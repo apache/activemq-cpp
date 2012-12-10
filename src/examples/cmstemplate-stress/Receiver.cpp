@@ -170,7 +170,7 @@ void Receiver::WaitUntilReady() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Receiver::RegisterMessageListener(const RecvMessageListener messageListener, ErrorCode& errorCode) {
+void Receiver::RegisterMessageListener(ReceiverListener* messageListener, ErrorCode& errorCode) {
     errorCode = CMS_SUCCESS;
 
     mutexGeneral.lock();
@@ -238,10 +238,10 @@ void Receiver::QueueMessagingTask(const string& message) {
 void Receiver::ExecuteMessagingTask(const string& message, bool bDecreaseNumOfMessagingTasks/*=true*/) {
     if ((!closing)) {
         mutexGeneral.lock();
-        RecvMessageListener copy = messageListener;
+        ReceiverListener* copy = this->messageListener;
         mutexGeneral.unlock();
         if (copy) {
-            (*copy)(message); //listener will release the message and make reference count 0
+            copy->onMessage(message);
         }
     }
 
