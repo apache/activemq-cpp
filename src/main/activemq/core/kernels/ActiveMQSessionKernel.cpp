@@ -212,7 +212,13 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
     this->sessionInfo->setAckMode(ackMode);
     this->sessionInfo->setSessionId(id);
 
-    this->connection->oneway(this->sessionInfo);
+    try {
+        this->connection->oneway(this->sessionInfo);
+    } catch (...) {
+        this->sessionInfo.reset(NULL);
+        delete this->config;
+        throw;
+    }
 
     this->closed.set(false);
     this->lastDeliveredSequenceId = -1;

@@ -62,16 +62,20 @@ AdvisoryConsumer::AdvisoryConsumer(ActiveMQConnection* connection, Pointer<comma
 
     this->config->info.reset(new ConsumerInfo());
 
-    Pointer<ActiveMQDestination> destination(AdvisorySupport::getTempDestinationCompositeAdvisoryTopic());
-
     this->config->info->setConsumerId(consumerId);
-    this->config->info->setDestination(destination);
+    this->config->info->setDestination(
+        Pointer<ActiveMQDestination>(AdvisorySupport::getTempDestinationCompositeAdvisoryTopic()));
     this->config->info->setPrefetchSize(1000);
     this->config->info->setNoLocal(true);
     this->config->info->setDispatchAsync(true);
 
-    this->connection->addDispatcher(this->config->info->getConsumerId(), this);
-    this->connection->syncRequest(this->config->info);
+    try {
+        this->connection->addDispatcher(this->config->info->getConsumerId(), this);
+        this->connection->syncRequest(this->config->info);
+    } catch(...) {
+        delete this->config;
+        throw;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
