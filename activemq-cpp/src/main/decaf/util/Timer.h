@@ -22,7 +22,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/util/Date.h>
-
+#include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -89,6 +89,23 @@ namespace util {
          * This method may be called repeatedly; the second and subsequent calls have no effect.
          */
         void cancel();
+
+        /**
+         * The caller will block until the Timer has completed termination meaning all tasks
+         * that where scheduled before cancelation have now completed and the executor is ready for
+         * deletion.  If the timeout period elapses before the Timer reaches the terminated
+         * state then this method return false to indicate it has not terminated.
+         *
+         * @param timeout
+         *      The amount of time to wait before abandoning the wait for termination.
+         * @param unit
+         *      The unit of time that the timeout value represents.
+         *
+         * @return true if the Timer terminated or false if the timeout expired.
+         *
+         * @throws InterruptedException if this call is interrupted while awaiting termination.
+         */
+        bool awaitTermination(long long timeout, const decaf::util::concurrent::TimeUnit& unit);
 
         /**
          * Removes all canceled tasks from this timer's task queue. Calling this method has no effect on the
