@@ -72,8 +72,6 @@ void TestSenderAndReceiver::run() {
     Random random;
     int i, j;
 
-    j = random.nextInt(100);
-
     while (!closing) {
         std::stringstream str;
         str << sendIndex;
@@ -83,9 +81,9 @@ void TestSenderAndReceiver::run() {
         message.append(";");
 
         // Add variable payload
-        j = (int) ((rand() * 1024) / RAND_MAX);
+        j = random.nextInt(1024);
         for (i = 0; i < j; i++) {
-            message += string(1, (char) (65 + ((rand() * 26) / RAND_MAX)));
+            message += string(1, (char) (65 + random.nextInt(26)));
         }
 
         errorReturn = CMS_SUCCESS;
