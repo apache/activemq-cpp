@@ -147,7 +147,6 @@ namespace {
         MonitorPool* monitors;
     };
 
-    #define MAX_TLS_SLOTS 128
     #define MONITOR_POOL_BLOCK_SIZE 64
 
     ThreadingLibrary* library = NULL;
@@ -450,7 +449,7 @@ namespace {
 
     void threadExitTlsCleanup(ThreadHandle* thread) {
 
-        for (int index = 0; index < MAX_TLS_SLOTS; ++index) {
+        for (int index = 0; index < DECAF_MAX_TLS_SLOTS; ++index) {
             if (thread->tls[index] != NULL) {
                 ThreadLocalImpl* handler = NULL;
                 void *value = NULL;
@@ -820,7 +819,7 @@ void Threading::initialize() {
     library->monitors->head = batchAllocateMonitors();
     library->monitors->count = MONITOR_POOL_BLOCK_SIZE;
 
-    library->tlsSlots.resize(MAX_TLS_SLOTS);
+    library->tlsSlots.resize(DECAF_MAX_TLS_SLOTS);
 
     // We mark the thread where Decaf's Init routine is called from as our Main Thread.
     library->mainThread = PlatformThread::getCurrentThread();
@@ -1549,7 +1548,7 @@ int Threading::createThreadLocalSlot(ThreadLocalImpl* threadLocal) {
 
     PlatformThread::lockMutex(library->tlsLock);
 
-    for (index = 0; index < MAX_TLS_SLOTS; index++) {
+    for (index = 0; index < DECAF_MAX_TLS_SLOTS; index++) {
         if (library->tlsSlots[index] == NULL) {
             library->tlsSlots[index] = threadLocal;
             break;
@@ -1558,7 +1557,7 @@ int Threading::createThreadLocalSlot(ThreadLocalImpl* threadLocal) {
 
     PlatformThread::unlockMutex(library->tlsLock);
 
-    return index < MAX_TLS_SLOTS ? index : -1;
+    return index < DECAF_MAX_TLS_SLOTS ? index : -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

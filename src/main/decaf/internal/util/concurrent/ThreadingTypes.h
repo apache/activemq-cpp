@@ -36,6 +36,11 @@ namespace util{
 namespace concurrent{
 
     /**
+     * Max number of TLS keys that a thread can use.
+     */
+    #define DECAF_MAX_TLS_SLOTS 256
+
+    /**
      * This is the main method for thread instances, this value is valid
      * on any platform, the PlatformThread methods will handle calling this
      * method and providing it with its assigned arg.
@@ -75,7 +80,7 @@ namespace concurrent{
         bool suspended;
         char* name;
         long long stackSize;
-        void *tls[128];
+        void *tls[DECAF_MAX_TLS_SLOTS];
         threadingTask threadMain;
         void* threadArg;
         long long threadId;
