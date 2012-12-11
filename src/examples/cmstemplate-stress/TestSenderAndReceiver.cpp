@@ -72,7 +72,7 @@ void TestSenderAndReceiver::run() {
     Random random;
     int i, j;
 
-    j = (int) ((random.nextInt() * 50) / RAND_MAX);
+    j = random.nextInt(100);
 
     while (!closing) {
         std::stringstream str;
@@ -98,7 +98,7 @@ void TestSenderAndReceiver::run() {
         }
 
         // Sleep for up to 1 second between sends
-        Thread::sleep(((random.nextInt() * 1000) / RAND_MAX));
+        Thread::sleep(random.nextInt(500));
     }
 }
 
