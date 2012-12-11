@@ -384,6 +384,7 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
     applyDestinationOptions(this->consumerInfo);
 
     if (this->consumerInfo->getPrefetchSize() < 0) {
+        delete this->internal;
         throw IllegalArgumentException(__FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
     }
 }
