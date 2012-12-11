@@ -384,7 +384,7 @@ namespace concurrent{
         }
 
         ~ExecutorKernel() {
-            try{
+            try {
 
                 // Turn off the cleanup timer first so that it doesn't fire while
                 // we transition all the remaining workers into the dead workers
@@ -401,6 +401,10 @@ namespace concurrent{
 
                 this->shutdown();
                 this->awaitTermination();
+
+                // We need to wait for the worker cleanup timer to shutdown, otherwise
+                // it could segfault if it's still running when the destructor finishes.
+                this->cleanupTimer.awaitTermination(10, TimeUnit::MINUTES);
 
                 // Ensure dead Worker Threads are destroyed, the Timer might not have
                 // run recently.
