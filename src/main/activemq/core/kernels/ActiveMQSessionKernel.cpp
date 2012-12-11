@@ -234,7 +234,14 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
 
     // If the connection is already started, start the session.
     if (this->connection->isStarted()) {
-        this->start();
+        try {
+            this->start();
+        } catch (...) {
+            this->transaction.reset(NULL);
+            this->executor.reset(NULL);
+            delete this->config;
+            throw;
+        }
     }
 }
 
