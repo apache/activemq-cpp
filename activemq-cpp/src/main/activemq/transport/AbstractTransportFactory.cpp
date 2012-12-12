@@ -38,23 +38,16 @@ using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 AbstractTransportFactory::~AbstractTransportFactory() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<WireFormat> AbstractTransportFactory::createWireFormat(
-    const decaf::util::Properties& properties ) {
-
-    try{
-
-        std::string wireFormat = properties.getProperty( "wireFormat", "openwire" );
-
-        WireFormatFactory* factory =
-            WireFormatRegistry::getInstance().findFactory( wireFormat );
-
-        return factory->createWireFormat( properties );
+Pointer<WireFormat> AbstractTransportFactory::createWireFormat(const decaf::util::Properties& properties) {
+    try {
+        std::string wireFormat = properties.getProperty("wireFormat", "openwire");
+        WireFormatFactory* factory = WireFormatRegistry::getInstance().findFactory(wireFormat);
+        return factory->createWireFormat(properties);
     }
-    AMQ_CATCH_RETHROW( NoSuchElementException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NoSuchElementException )
-    AMQ_CATCHALL_THROW( NoSuchElementException )
+    AMQ_CATCH_RETHROW(NoSuchElementException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, NoSuchElementException)
+    AMQ_CATCHALL_THROW(NoSuchElementException)
 }
