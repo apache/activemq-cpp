@@ -71,6 +71,7 @@ void IOTransport::fire(decaf::lang::Exception& ex) {
 void IOTransport::fire(const Pointer<Command> command) {
 
     try {
+
         // If we have been closed then we don't deliver any messages that
         // might have sneaked in while we where closing.
         if (this->listener == NULL || this->closed == true) {
@@ -78,7 +79,6 @@ void IOTransport::fire(const Pointer<Command> command) {
         }
 
         this->listener->onCommand(command);
-
     }
     AMQ_CATCHALL_NOTHROW()
 }
@@ -153,9 +153,9 @@ void IOTransport::stop() {
 
     try {
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -168,9 +168,8 @@ void IOTransport::close() {
 
     public:
 
-        Finalizer(Pointer<Thread> target) :
-                target(target) {
-        }
+        Finalizer(Pointer<Thread> target) : target(target) {}
+
         ~Finalizer() {
             try {
                 target->join();
@@ -232,9 +231,9 @@ void IOTransport::close() {
             throw error;
         }
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

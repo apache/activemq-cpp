@@ -130,9 +130,9 @@ void TransportFilter::reconnect(const decaf::net::URI& uri) {
     try {
         next->reconnect(uri);
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
