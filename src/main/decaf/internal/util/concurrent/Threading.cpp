@@ -389,8 +389,9 @@ namespace {
 
         try {
             PlatformThread::createMutex(&thread->mutex);
+        } catch(RuntimeException& ex) {
+            throw ex;
         }
-        DECAF_CATCH_RETHROW( RuntimeException );
 
         try {
             PlatformThread::createCondition(&thread->condition);
@@ -871,7 +872,9 @@ ThreadHandle* Threading::createNewThread(Thread* parent, const char* name, long 
         throw NullPointerException(__FILE__, __LINE__, "One or more arguments was NULL");
     }
 
-    Pointer<ThreadHandle> thread(initThreadHandle(new ThreadHandle()));
+    Pointer<ThreadHandle> thread(new ThreadHandle());
+
+    initThreadHandle(thread.get());
 
     thread->parent = parent;
     thread->name = ::strdup(name);
