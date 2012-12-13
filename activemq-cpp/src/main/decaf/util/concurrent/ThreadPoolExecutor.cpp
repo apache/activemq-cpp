@@ -1153,6 +1153,8 @@ namespace concurrent{
                 if (t == NULL || (rs >= SHUTDOWN && !(rs == SHUTDOWN && firstTask == NULL))) {
                     decrementWorkerCount();
                     tryTerminate();
+                    t.reset(NULL);
+                    w.reset(NULL);
                     mainLock.unlock();
                     return false;
                 }
