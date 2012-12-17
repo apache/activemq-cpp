@@ -1,4 +1,136 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.5.0                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-369] - dynamic library segfaults on load under Mac OS/X
+    [AMQCPP-370] - pkg-config does not properly indicate static dependencies
+    [AMQCPP-371] - bytesmessages's size doubled If Message body compression enabled
+    [AMQCPP-373] - AMQ_CATCH_RETHROW upcasts the re-thrown exception
+    [AMQCPP-374] - BaseDataStreamMarshaller::tightUnmarshalByteArray crashes
+    [AMQCPP-375] - decaf::lang::Long::to{Hex,Binary,Octal}String problems
+    [AMQCPP-376] - Deadlock in IOTransport when network of brokers restart and failover is used.
+    [AMQCPP-382] - Spurious error messages printed by consumer when no messages available to consumer
+    [AMQCPP-384] - Failover and prefetch=0 can result in hung consumers if the MessagePull command is lost
+    [AMQCPP-385] - Compilation errors with Sun Studio 12 / libCstd
+    [AMQCPP-387] - Credentials are not propagated correctly when passed through the ActiveMQConnectionFactory constructor in the CPP client API (However, it works correctly when passed through the createConnection method)
+    [AMQCPP-389] - activemq-cpp build fails with gcc 4.7
+    [AMQCPP-391] - Potential hang on connect if wireformatinfo response is not received before timeout and failover transport is in use.
+    [AMQCPP-392] - Class Priority Queue defines constant in non-spec complaint manner
+    [AMQCPP-393] - TimeToLive feature makes some messages disappear
+    [AMQCPP-402] - Fix ConnectionStateTracker processMessageAck
+    [AMQCPP-405] - CMS sender thread hangs after restarting broker
+    [AMQCPP-406] - TcpTransport can leak memory if the connect method fails midway through
+    [AMQCPP-407] - Application crashes after stopping message broker
+    [AMQCPP-410] - prefetchSize=0 is ignored when set via PrefetchPolicy
+    [AMQCPP-414] - Remove bundled zlib and using external library
+    [AMQCPP-415] - compiler flags with HPUX 11_31 aCC A.06.26
+    [AMQCPP-416] - help wrong for configure
+    [AMQCPP-417] - decaf/lang/System.cpp error with HPUX aCC
+    [AMQCPP-418] - HPUX aCC compiler const char[] to initialize char*
+    [AMQCPP-419] - Missing dependency on apr/apr-util in pkg-config and config files
+    [AMQCPP-420] - The same fix should have been applied to SSLTransportFactory.cpp
+    [AMQCPP-424] - Cannot clone() and then update properties of the newly cloned message
+    [AMQCPP-426] - Connection setClientID doesn't catch and convert all exceptions to CMSException
+    [AMQCPP-429] - Response correlator can let a future into its mapping after its been closed causing a hang
+    [AMQCPP-430] - CMS crashes in decaf::internal::util::concurrent::MutexImpl::destroy
+    [AMQCPP-431] - Memory leak possible in OpenWireFormat and BaseDataStreamMarshaller when connection drops during read.
+    [AMQCPP-432] - Possible Segfault on Connection close during a failover cycle
+    [AMQCPP-433] - Message::getCMSCorrelationID() returns different value from Java's Message.getJMSCorrelationID()
+    [AMQCPP-437] - ActiveMQ crashes on subscribing one listener on several topics with a same session.
+    [AMQCPP-441] - Incorrect propagation of AMQ-2489 to CMS/C++ (causes performance degradation) in r833769.
+    [AMQCPP-443] - Configure adding invalid option
+    [AMQCPP-445] - Prefetch_size = 0 and failover: consumer blocked in receive() when broker restarts
+
+Improvement
+
+    [AMQCPP-383] - Implement the Session recover method.
+    [AMQCPP-386] - Run-time Setting of Destination Prefix
+    [AMQCPP-395] - Add advisory message monitoring for Temp Destination create / destory
+    [AMQCPP-396] - Add method reset() to the cms::StreamMessage interface.
+    [AMQCPP-397] - Add utility class for working with Advisory Topics
+    [AMQCPP-398] - Add support for transforming cms::Message and cms::Destination from non activemq client implementations.
+    [AMQCPP-399] - Add support for closing Session consumers with active transaction
+    [AMQCPP-400] - Add new accessor in CMS Message types to get the type of a Property value or MapMessage value
+    [AMQCPP-401] - Add get and set methods for ObjectMessage that grants access to the payload as bytes.
+    [AMQCPP-435] - Support doing non-blocking sends that uses an async callback that gets notified when the send has been received by the broker
+    [AMQCPP-436] - Add MessageAvailableListener to CMS API
+
+New Feature
+
+    [AMQCPP-160] - Add MessageTransformer
+    [AMQCPP-411] - Add new get method in StreamMessage to allow for checking the type of the next value
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.5                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-426] - Connection setClientID doesn't catch and convert all exceptions to CMSException
+    [AMQCPP-429] - Response correlator can let a future into its mapping after its been closed causing a hang
+    [AMQCPP-430] - CMS crashes in decaf::internal::util::concurrent::MutexImpl::destroy
+    [AMQCPP-431] - Memory leak possible in OpenWireFormat and BaseDataStreamMarshaller when connection
+                   drops during read.
+    [AMQCPP-432] - Possible Segfault on Connection close during a failover cycle
+    [AMQCPP-433] - Message::getCMSCorrelationID() returns different value from Java's Message.
+                   getJMSCorrelationID()
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.4                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-404] - compilation errors on Windows because of Unicode set in project file
+    [AMQCPP-407] - Application crashes after stopping message broker
+    [AMQCPP-408] - CMS opens a large number of threads
+    [AMQCPP-410] - prefetchSize=0 is ignored when set via PrefetchPolicy
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.3                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-402] - Fix ConnectionStateTracker processMessageAck
+    [AMQCPP-403] - Possible for memory to leak when using transacted producer with failover
+    [AMQCPP-406] - TcpTransport can leak memory if the connect method fails midway through
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.2                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-387] - Credentials are not propagated correctly when passed through the
+                   ActiveMQConnectionFactory constructor in the CPP client API (However,
+                   it works correctly when passed through the createConnection method)
+    [AMQCPP-391] - Potential hang on connect if wireformatinfo response is not received
+                   before timeout and failover transport is in use.
+    [AMQCPP-392] - Class Priority Queue defines constant in non-spec complaint manner
+    [AMQCPP-393] - TimeToLive feature makes some messages disappear
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.4.1                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-369] - dynamic library segfaults on load under Mac OS/X
+    [AMQCPP-370] - pkg-config does not properly indicate static dependencies
+    [AMQCPP-371] - bytesmessages's size doubled If Message body compression enabled
+    [AMQCPP-373] - AMQ_CATCH_RETHROW upcasts the re-thrown exception
+    [AMQCPP-374] - BaseDataStreamMarshaller::tightUnmarshalByteArray crashes
+    [AMQCPP-382] - Spurious error messages printed by consumer when no messages
+                   available to consumer
+
+Improvement
+
+    [AMQCPP-383] - Implement the Session recover method.
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.4.0                               ==
 =========================================================================
 
