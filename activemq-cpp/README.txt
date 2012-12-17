@@ -16,32 +16,17 @@ Visual Studio product.
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.60
+autoconf    >= 2.61
 automake    >= 1.10
 libtool     >= 1.5.24
 APR         >= 1.3*
-APR-Util    >= 1.3*
-CPPUnit     >= 1.10.2*
-libuuid     >= ?*
+APR-Util    >= 1.3* or higher
+CPPUnit     >= 1.10.2* ( 1.12.1 is recommended )
+OpenSSL     >= 0.9.8m* ( 1.0.0 or higher is recommended, this is an optional dependency)
 
 * Requires that the Development package also be installed.
 
-1.1 libuuid
---------------------------------------------------------------------------
-
-The build requires the *libuuid* library that is part of the e2fsprogs
-package and is available from http://e2fsprogs.sourceforge.net/ which is
-not always installed by default.
-
-On Fedora, type the following:
-
-  sudo yum install e2fsprogs-devel
-
-On Debian/Ubuntu, type the following:
-
-  sudo apt-get install uuid-dev
-
-1.2 CppUnit
+1.1 CppUnit
 --------------------------------------------------------------------------
 
 The package contains a complete set of CppUnit tests.  In order for you to
@@ -70,7 +55,7 @@ The included Visual Studio projects are configured with the assumption
 that you will configure Visual Studio with the locations of the Platform
 SDK and the CPPUnit and APR libraries and headers.
 
-1.3 APR and APR Util
+1.2 APR and APR Util
 -------------------------------------------------------------------------
 
 The build requires the APR library and the APR-Util.  These libraries can
@@ -86,6 +71,47 @@ Many of the Unix type OS'es currently shipping include APR 1.2.x and
 APR-Util 1.2.x, this implies that you will need to build and install APR from
 the source download at Apache.
 
+    -----------------------------------------------------------------------
+    |MacOS X Note:                                                        |
+    | If you have installed APR and APR-Util via MacPorts                 |
+    | (http://www.macports.org/) and you are building ActiveMQ-CPP from   |
+    | source, you will need to specify the location of the APR libraries  |
+    | to the configure script. This is easy to do and only requires one   |
+    | extra option for compilation. An example of this is shown below     |
+    | using the standard location for these libraries as installed by     |
+    | MacPorts:                                                           |
+    |                                                                     |
+    | $ ./configure \                                                     |
+    | --with-apr=/opt/local/var/macports/software/apr/1.3.3_0/opt/local/  |
+    |                                                                     |
+    | Please notice that this is simply a single option to the            |
+    | configure script that has been broken into two lines by escaping    |
+    | the newline character to fit the formatting of this file.           |
+    |                                                                     |
+    | If you have manually compiled and installed the APR libraries into  |
+    | a custom location, then you will need to point to that location     |
+    | using the argument above.                                           |
+    -----------------------------------------------------------------------
+
+1.3 OpenSSL
+--------------------------------------------------------------------------
+
+If you wish to use the SSL Transport then you will need to have OpenSSL and
+its includes installed on your system.  We recommend that you use version 1.0.0
+or higher for best performance and security, but version from 0.9.8 are also
+known to work.  The autoconf script will search for the library and enabled support
+automatically if it is found.
+
+You can disable the OpenSSL checks in the configure script with the --disable-ssl
+option or you can specify a custom location for the OpenSSL package with the
+--with-openssl option.  See the --help option on the configure script for more
+information.
+
+On Windows you need to obtain an OpenSSL binary package and place the libraries on
+the system path or in the System32 directory.  In the Visual Studio project you must
+add the HAVE_OPENSSL flag to the preprocessor directives and add the paths for the
+includes and libraries so that the compiler and linker can find them.
+
 1.4 GNU Build System (for building on Unix/Linux/OS X)
 --------------------------------------------------------------------------
 
@@ -94,7 +120,7 @@ the following software installed:
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.60
+autoconf    >= 2.61
 automake    >= 1.10
 libtool     >= 1.5.24
 
@@ -103,31 +129,16 @@ in separate packages. If you have multiple versions of autoconf or automake
 installed on your system, you may have to configure the versions to use
 using /usr/sbin/update-alternatives.
 
+    -----------------------------------------------------------------------
+    |Ubuntu Note:                                                         |
+    |                                                                     |
+    |In order to build you will need the Build Essentials Package         |
+    |                                                                     |
+    | sudo apt-get install build-essential                                |
+    -----------------------------------------------------------------------
+
 2 Building on Unix/Linux/OS X
 --------------------------------------------------------------------------
-
-This assumes you have all of the project dependencies installed.  We're
-now ready to create the configure script.  To do this, run:
-
-  ./autogen.sh
-
-This should be run the first time and any time you change configure.ac or
-any of the Makefile.am files.
-
-    -----------------------------------------------------------------------
-    |MacOS X Note:                                                        |
-    | Make sure to set the LIBTOOLIZE environment variable to point to    |
-    | /usr/bin/glibtoolize for the build to complete successfully. Below  |
-    | is an example:                                                      |
-    |                                                                     |
-    | $ export LIBTOOLIZE=/usr/bin/glibtoolize                            |
-    |                                                                     |
-    | If you do not use this environment variable you will encounter an   |
-    | error stating:                                                      |
-    |                                                                     |
-    | Can't exec "libtoolize": No such file or directory at               |
-    | /opt/local/share/autoconf/Autom4te/FileUtils.pm line 290...         |
-    -----------------------------------------------------------------------
 
     -----------------------------------------------------------------------
     |Solaris 10 Note:  CppUnit might not build until you correct the file |
@@ -160,6 +171,31 @@ install the code into the system directories, run:
 
 You will have to become the superuser in order to be able to install the
 files.
+
+** A Note For ActiveMQ-CPP Developers **
+
+If you need to make any changes to the configure.ac or any of the included
+m4 files then you need to regenerate the configure script.
+
+  ./autogen.sh
+
+This should be run the first time and any time you change configure.ac or
+any of the Makefile.am files.
+
+    -----------------------------------------------------------------------
+    |MacOS X Note:                                                        |
+    | Make sure to set the LIBTOOLIZE environment variable to point to    |
+    | /usr/bin/glibtoolize for the build to complete successfully. Below  |
+    | is an example:                                                      |
+    |                                                                     |
+    | $ export LIBTOOLIZE=/usr/bin/glibtoolize                            |
+    |                                                                     |
+    | If you do not use this environment variable you will encounter an   |
+    | error stating:                                                      |
+    |                                                                     |
+    | Can't exec "libtoolize": No such file or directory at               |
+    | /opt/local/share/autoconf/Autom4te/FileUtils.pm line 290...         |
+    -----------------------------------------------------------------------
 
 3 Doxygen
 --------------------------------------------------------------------------
