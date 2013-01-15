@@ -60,6 +60,7 @@ void TcpTransport::close() {
     try {
 
         this->closed = true;
+        this->setTransportListener(NULL);
 
         // Close the socket.
         if (socket.get() != NULL) {

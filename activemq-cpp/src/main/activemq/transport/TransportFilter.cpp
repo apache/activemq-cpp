@@ -106,6 +106,7 @@ void TransportFilter::stop() {
 void TransportFilter::close() {
 
     if (next != NULL) {
+        next->setTransportListener(NULL);
         next->close();
         next.reset(NULL);
     }

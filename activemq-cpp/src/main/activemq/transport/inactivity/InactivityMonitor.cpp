@@ -294,6 +294,7 @@ void InactivityMonitor::setKeepAliveResponseRequired(bool value) {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::close() {
     try {
+        setTransportListener(NULL);
         stopMonitorThreads();
         TransportFilter::close();
     }
