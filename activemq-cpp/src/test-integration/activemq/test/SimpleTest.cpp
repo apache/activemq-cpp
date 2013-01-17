@@ -400,6 +400,81 @@ void SimpleTest::testBytesMessageSendRecv() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class Listener : public cms::MessageListener {
+    private:
+
+        bool passed;
+        bool triggered;
+
+    public:
+
+        Listener() : MessageListener(), passed(false), triggered(false) {}
+
+        virtual ~Listener() {}
+
+        bool isPassed() {
+            return passed;
+        }
+
+        bool isTriggered() {
+            return triggered;
+        }
+
+        void onMessage( const cms::Message* message ) {
+            try {
+                triggered = true;
+                const BytesMessage* bytesMessage = dynamic_cast<const cms::BytesMessage*>( message );
+
+                CPPUNIT_ASSERT( bytesMessage != NULL );
+                CPPUNIT_ASSERT( bytesMessage->getBodyLength() > 0 );
+
+                unsigned char* result = bytesMessage->getBodyBytes();
+                CPPUNIT_ASSERT( result != NULL );
+                delete result;
+
+                passed = true;
+            } catch(...) {
+                passed = false;
+            }
+        }
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testBytesMessageSendRecvAsync() {
+
+    Listener listener;
+
+    // Create CMS Object for Comms
+    cms::Session* session(cmsProvider->getSession());
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    consumer->setMessageListener( &listener );
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+
+    auto_ptr<cms::BytesMessage> bytesMessage(session->createBytesMessage());
+
+    bytesMessage->writeBoolean(true);
+    bytesMessage->writeByte(127);
+    bytesMessage->writeDouble(123456.789);
+    bytesMessage->writeInt(65537);
+    bytesMessage->writeString("TEST-STRING");
+
+    // Send some text messages
+    producer->send( bytesMessage.get() );
+
+    int count = 0;
+    while (!listener.isTriggered() && count++ < 30) {
+        decaf::lang::Thread::sleep(100);
+    }
+
+    CPPUNIT_ASSERT( listener.isPassed() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SimpleTest::testLibraryInitShutdownInit() {
 
     {
