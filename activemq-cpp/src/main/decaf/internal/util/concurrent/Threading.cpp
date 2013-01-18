@@ -833,9 +833,8 @@ void Threading::initialize() {
 ////////////////////////////////////////////////////////////////////////////////
 void Threading::shutdown() {
 
-    // First shutdown the Executors and Atomics static data to remove dependencies on Threading.
+    // First shutdown the Executors static data to remove dependencies on Threading.
     Executors::shutdown();
-    Atomics::shutdown();
 
     // Destroy any Foreign Thread Facades that were created during runtime.
     std::vector<Thread*>::iterator iter = library->osThreads.begin();
@@ -851,8 +850,12 @@ void Threading::shutdown() {
 
     purgeMonitorsPool(library->monitors);
     delete library->monitors;
-
     delete library;
+
+    // Atomics only uses platform Thread primitives when there are no atomic
+    // builtins and Atomics are used in thread so make sure this is always last
+    // in the shutdown order.
+    Atomics::shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
