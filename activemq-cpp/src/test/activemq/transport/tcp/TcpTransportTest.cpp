@@ -23,6 +23,7 @@
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 
 #include <decaf/lang/Pointer.h>
+#include <decaf/lang/Integer.h>
 #include <decaf/net/Socket.h>
 #include <decaf/net/SocketFactory.h>
 #include <decaf/net/ServerSocket.h>
@@ -61,14 +62,17 @@ namespace {
         Pointer<ServerSocket> server;
         Pointer<OpenWireFormat> wireFormat;
         CountDownLatch started;
+        Random rand;
 
     public:
 
-        TestServer() : Thread(), done(false), error(false), server(), started(1) {
+        TestServer() : Thread(), done(false), error(false), server(), started(1), rand() {
             server.reset(new ServerSocket(0));
 
             Properties properties;
             this->wireFormat.reset(new OpenWireFormat(properties));
+
+            this->rand.setSeed(System::currentTimeMillis());
         }
 
         virtual ~TestServer() {
@@ -108,8 +112,20 @@ namespace {
                     std::auto_ptr<Socket> socket(server->accept());
                     socket->setSoLinger(false, 0);
 
+                    // Immediate fail sometimes.
+                    if (rand.nextBoolean()) {
+                        socket->close();
+                        continue;
+                    }
+
+                    OutputStream* os = socket->getOutputStream();
+                    DataOutputStream dataOut(os);
+
                     InputStream* is = socket->getInputStream();
-                    DataInputStream ds(is);
+                    DataInputStream dataIn(is);
+
+                    // random sleep before terminate
+                    TimeUnit::MILLISECONDS.sleep(rand.nextInt(20));
 
                     socket->close();
                 }
@@ -150,4 +166,24 @@ void TcpTransportTest::testTransportCreateWithRadomFailures() {
     Properties properties;
     OpenWireFormat wireFormat(properties);
     TcpTransportFactory factory;
+
+    int port = server->getLocalPort();
+    URI connectUri("tcp://localhost:" + Integer::toString(port));
+
+    Pointer<Transport> transport;
+
+    // Test rapid creation with random connect failures.
+    for (int i = 0; i < 1000; ++i) {
+        try {
+             transport = factory.create(connectUri);
+        } catch (Exception& ex) {}
+
+        try {
+            transport->start();
+        } catch (Exception& ex) {}
+
+        try {
+            transport->close();
+        } catch (Exception& ex) {}
+    }
 }
