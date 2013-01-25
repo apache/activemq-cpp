@@ -105,6 +105,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::TransactionStateTest );
 #include <activemq/transport/failover/FailoverTransportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
 
+#include <activemq/transport/tcp/TcpTransportTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::tcp::TcpTransportTest );
+
 #include <activemq/transport/correlator/ResponseCorrelatorTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrelatorTest );
 
