@@ -411,6 +411,7 @@ namespace {
             free(thread->name);
             PlatformThread::destroyMutex(thread->mutex);
             PlatformThread::destroyCondition(thread->condition);
+            PlatformThread::detachOSThread(thread->handle);
 
             delete thread;
         }
