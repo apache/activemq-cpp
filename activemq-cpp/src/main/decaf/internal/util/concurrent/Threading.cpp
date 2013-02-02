@@ -870,6 +870,38 @@ void Threading::unlockThreadsLib() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void Threading::dumpRunningThreads() {
+    lockThreadsLib();
+
+    if (library == NULL) {
+        return;
+    }
+
+    std::list<ThreadHandle*>::const_iterator threads = library->activeThreads.begin();
+
+    std::cout << "------------------------------------------------------------------------" << std::endl;
+    std::cout << " Active Threads: " << library->activeThreads.size() << std::endl;
+    std::cout << " Wrapped OS Threads: " << library->osThreads.size() << std::endl;
+    std::cout << std::endl;
+
+    for(; threads != library->activeThreads.end(); ++threads) {
+        ThreadHandle* thread = *threads;
+
+        if (thread == NULL) {
+            continue;
+        }
+
+        std::string threadName = thread->name;
+
+        std::cout << "Thread name = " << threadName << std::endl;
+    }
+
+    std::cout << "------------------------------------------------------------------------" << std::endl;
+
+    unlockThreadsLib();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ThreadHandle* Threading::createNewThread(Thread* parent, const char* name, long long stackSize) {
 
     if (parent == NULL || name == NULL) {

@@ -67,6 +67,11 @@ namespace concurrent {
          */
         static void unlockThreadsLib();
 
+        /**
+         * Diagnostic method dumps all threads info to console.
+         */
+        static void dumpRunningThreads();
+
     public:  // Monitors
 
         /**
