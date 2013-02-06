@@ -466,6 +466,10 @@ void InactivityMonitor::startMonitorThreads() {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::stopMonitorThreads() {
 
+    if (this->members == NULL) {
+        return;
+    }
+
     synchronized(&this->members->monitor) {
 
         if (this->members->monitorStarted.compareAndSet(true, false)) {
