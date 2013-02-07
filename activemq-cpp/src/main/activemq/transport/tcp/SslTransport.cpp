@@ -38,7 +38,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-SslTransport::SslTransport(const Pointer<Transport> next) : TcpTransport(next) {
+SslTransport::SslTransport(const Pointer<Transport> next, const decaf::net::URI& location) :
+    TcpTransport(next, location) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +60,7 @@ Socket* SslTransport::createSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SslTransport::configureSocket(Socket* socket, decaf::util::Properties& properties) {
+void SslTransport::configureSocket(Socket* socket) {
 
     try {
 
@@ -73,7 +74,7 @@ void SslTransport::configureSocket(Socket* socket, decaf::util::Properties& prop
                 "Socket passed was not an SSLSocket instance.");
         }
 
-        TcpTransport::configureSocket(socket, properties);
+        TcpTransport::configureSocket(socket);
     }
     DECAF_CATCH_RETHROW(NullPointerException)
     DECAF_CATCH_RETHROW(IllegalArgumentException)

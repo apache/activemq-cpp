@@ -32,11 +32,13 @@
 #include <decaf/io/DataOutputStream.h>
 #include <memory>
 
-namespace activemq{
-namespace transport{
-namespace tcp{
+namespace activemq {
+namespace transport {
+namespace tcp {
 
     using decaf::lang::Pointer;
+
+    class TcpTransportImpl;
 
     /**
      * Implements a TCP/IP based transport filter, this transport is meant to
@@ -46,30 +48,7 @@ namespace tcp{
     class AMQCPP_API TcpTransport: public TransportFilter {
     private:
 
-        /**
-         * Stores the URI configured Socket connect timeout.
-         */
-        int connectTimeout;
-
-        /**
-         * has close been called.
-         */
-        bool closed;
-
-        /**
-         * Socket that this Transport Communicates with
-         */
-        std::auto_ptr<decaf::net::Socket> socket;
-
-        /**
-         * Input Stream for Reading in Messages
-         */
-        std::auto_ptr<decaf::io::DataInputStream> dataInputStream;
-
-        /**
-         * Output Stream for Writing out Messages.
-         */
-        std::auto_ptr<decaf::io::DataOutputStream> dataOutputStream;
+        TcpTransportImpl* impl;
 
     private:
 
@@ -84,24 +63,45 @@ namespace tcp{
          *
          * @param next
          *      The next transport in the chain
+         * @param location
+         *      The URI of the host this transport is to connect to.
          */
-        TcpTransport(const Pointer<Transport> next);
+        TcpTransport(const Pointer<Transport> next, const decaf::net::URI& location);
 
         virtual ~TcpTransport();
 
-        /**
-         * Creates a Socket and configures it before attempting to connect to the location specified
-         * by the URI passed in.  The Socket is configured using parameters in the properties that
-         * are passed to this method.
-         *
-         * @param uri
-         *      The URI that the Transport is to connect to once initialized.
-         * @param properties
-         *      The Properties that have been parsed from the URI or from configuration files.
-         */
-        void connect(const decaf::net::URI& uri, const decaf::util::Properties& properties);
+        void setConnectTimeout(int soConnectTimeout);
+        int getConnectTimeout() const;
+
+        void setOutputBufferSize(int outputBufferSize);
+        int getOutputBufferSize() const;
+
+        void setInputBufferSize(int inputBufferSize);
+        int getInputBufferSize() const;
+
+        void setTrace(bool trace);
+        bool isTrace() const;
+
+        void setLinger(int soLinger);
+        int getLinger() const;
+
+        void setKeepAlive(bool soKeepAlive);
+        bool isKeepAlive() const;
+
+        void setReceiveBufferSize(int soReceiveBufferSize);
+        int getReceiveBufferSize() const;
+
+        void setSendBufferSize(int soSendBufferSize);
+        int getSendBufferSize() const;
+
+        void setTcpNoDelay(bool tcpNoDelay);
+        bool isTcpNoDelay() const;
 
     public: // Transport Methods
+
+        virtual void start();
+
+        virtual void stop();
 
         virtual void close();
 
@@ -109,19 +109,17 @@ namespace tcp{
             return false;
         }
 
-        virtual bool isConnected() const {
-            if (this->socket.get() != NULL) {
-                return this->socket->isConnected();
-            }
+        virtual bool isConnected() const;
 
-            return false;
-        }
-
-        virtual bool isClosed() const {
-            return this->closed;
-        }
+        virtual bool isClosed() const;
 
     protected:
+
+        /**
+         * Creates a Socket and configures it before attempting to connect to the location specified
+         * by the URI passed in.
+         */
+        void connect();
 
         /**
          * Create an unconnected Socket instance to be used by the transport to communicate
@@ -146,7 +144,7 @@ namespace tcp{
          * @throw IllegalArgumentException if the socket instance is not handled by the class.
          * @throw SocketException if there is an error while setting one of the Socket options.
          */
-        virtual void configureSocket(decaf::net::Socket* socket, const decaf::util::Properties& properties);
+        virtual void configureSocket(decaf::net::Socket* socket);
 
     };
 

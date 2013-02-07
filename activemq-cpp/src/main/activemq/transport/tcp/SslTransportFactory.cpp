@@ -50,9 +50,13 @@ Pointer<Transport> SslTransportFactory::doCreateComposite(const decaf::net::URI&
 
     try {
 
-        Pointer<Transport> transport(new SslTransport(Pointer<Transport>(new IOTransport(wireFormat))));
+        Pointer<Transport> transport(new IOTransport(wireFormat));
 
-        transport.dynamicCast<SslTransport>()->connect(location, properties);
+        transport.reset(new SslTransport(transport, location));
+
+        // Give this class and any derived classes a chance to apply value that
+        // are set in the properties object.
+        doConfigureTransport(transport, properties);
 
         if (properties.getProperty("transport.useInactivityMonitor", "true") == "true") {
             transport.reset(new InactivityMonitor(transport, properties, wireFormat));

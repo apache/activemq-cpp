@@ -44,7 +44,10 @@ namespace tcp{
 
         virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
                                                      const Pointer<wireformat::WireFormat> wireFormat,
-                                                     const decaf::util::Properties& properties );
+                                                     const decaf::util::Properties& properties);
+
+        virtual void doConfigureTransport(Pointer<Transport>, const decaf::util::Properties& properties);
+
     };
 
 }}}

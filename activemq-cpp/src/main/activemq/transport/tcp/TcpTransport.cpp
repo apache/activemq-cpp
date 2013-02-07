@@ -22,9 +22,8 @@
 
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
-#include <decaf/lang/Integer.h>
-#include <decaf/lang/Boolean.h>
 #include <decaf/net/SocketFactory.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 
 #include <memory>
 
@@ -37,13 +36,68 @@ using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
+using namespace decaf::util::concurrent::atomic;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
+namespace activemq {
+namespace transport {
+namespace tcp {
+
+    class TcpTransportImpl {
+    private:
+
+        TcpTransportImpl(const TcpTransportImpl&);
+        TcpTransportImpl& operator= (const TcpTransportImpl&);
+
+    public:
+
+        int connectTimeout;
+
+        AtomicBoolean closed;
+        AtomicBoolean started;
+
+        std::auto_ptr<decaf::net::Socket> socket;
+        std::auto_ptr<decaf::io::DataInputStream> dataInputStream;
+        std::auto_ptr<decaf::io::DataOutputStream> dataOutputStream;
+
+        const decaf::net::URI& location;
+
+        int outputBufferSize;
+        int inputBufferSize;
+
+        bool trace;
+
+        int soLinger;
+        bool soKeepAlive;
+        int soReceiveBufferSize;
+        int soSendBufferSize;
+        bool tcpNoDelay;
+
+        TcpTransportImpl(const decaf::net::URI& location) :
+            connectTimeout(0),
+            closed(false),
+            socket(),
+            dataInputStream(),
+            dataOutputStream(),
+            location(location),
+            outputBufferSize(8192),
+            inputBufferSize(8192),
+            trace(false),
+            soLinger(-1),
+            soKeepAlive(false),
+            soReceiveBufferSize(-1),
+            soSendBufferSize(-1),
+            tcpNoDelay(true) {
+        }
+    };
+}}}
+
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport(const Pointer<Transport> next) :
-    TransportFilter(next), connectTimeout(0), closed(false), socket(), dataInputStream(), dataOutputStream() {
+TcpTransport::TcpTransport(const Pointer<Transport> next, const decaf::net::URI& location) :
+    TransportFilter(next), impl(new TcpTransportImpl(location)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,23 +106,25 @@ TcpTransport::~TcpTransport() {
         close();
     }
     AMQ_CATCHALL_NOTHROW()
+
+    try {
+        delete this->impl;
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::close() {
-
+void TcpTransport::start() {
     try {
 
-        this->closed = true;
-        this->setTransportListener(NULL);
-
-        // Close the socket.
-        if (socket.get() != NULL) {
-            socket->close();
+        if (this->impl->closed.get()) {
+            throw IOException(__FILE__, __LINE__, "Transport is closed");
         }
 
-        // Invoke the paren't close first.
-        TransportFilter::close();
+        if (this->impl->started.compareAndSet(false, true)) {
+            connect();
+            TransportFilter::start();
+        }
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
@@ -76,25 +132,72 @@ void TcpTransport::close() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::connect(const decaf::net::URI& uri, const decaf::util::Properties& properties) {
+void TcpTransport::stop() {
+    try {
+
+        if (this->impl->closed.get()) {
+            throw IOException(__FILE__, __LINE__, "Transport is closed");
+        }
+
+        if (this->impl->started.compareAndSet(true, false)) {
+
+            // Close the socket.
+            if (impl->socket.get() != NULL) {
+                impl->socket->close();
+            }
+
+            TransportFilter::stop();
+        }
+    }
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::close() {
 
     try {
 
-        socket.reset(this->createSocket());
+        if (this->impl->closed.compareAndSet(false, true)) {
+            this->setTransportListener(NULL);
+
+            // Close the socket.
+            if (impl->socket.get() != NULL) {
+                impl->socket->close();
+            }
+
+            TransportFilter::close();
+        }
+    }
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::connect() {
+
+    try {
+
+        impl->socket.reset(this->createSocket());
 
         // Set all Socket Options from the URI options.
-        this->configureSocket(socket.get(), properties);
+        this->configureSocket(impl->socket.get());
+
+        URI uri = this->impl->location;
 
         // Ensure something is actually passed in for the URI
         if (uri.getAuthority() == "") {
-            throw SocketException(__FILE__, __LINE__, "Connection URI was not provided or is invalid: %s", uri.toString().c_str());
+            throw SocketException(__FILE__, __LINE__,
+                "Connection URI was not provided or is invalid: %s", uri.toString().c_str());
         }
 
         // Connect the socket.
         string host = uri.getHost();
         int port = uri.getPort();
 
-        socket->connect(host, port, connectTimeout);
+        impl->socket->connect(host, port, impl->connectTimeout);
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
@@ -105,20 +208,20 @@ void TcpTransport::connect(const decaf::net::URI& uri, const decaf::util::Proper
         }
 
         // Get the read buffer size.
-        int inputBufferSize = Integer::parseInt(properties.getProperty("inputBufferSize", "8192"));
+        int inputBufferSize = this->impl->inputBufferSize;
 
         // Get the write buffer size.
-        int outputBufferSize = Integer::parseInt(properties.getProperty("outputBufferSize", "8192"));
+        int outputBufferSize = this->impl->outputBufferSize;
 
         // We don't own these ever, socket object owns.
-        InputStream* socketIStream = socket->getInputStream();
-        OutputStream* sokcetOStream = socket->getOutputStream();
+        InputStream* socketIStream = impl->socket->getInputStream();
+        OutputStream* sokcetOStream = impl->socket->getOutputStream();
 
         Pointer<InputStream> inputStream;
         Pointer<OutputStream> outputStream;
 
         // If tcp tracing was enabled, wrap the input / output streams with logging streams
-        if (properties.getProperty("transport.tcpTracingEnabled", "false") == "true") {
+        if (this->impl->trace) {
             // Wrap with logging stream, we don't own the wrapped streams
             inputStream.reset(new LoggingInputStream(socketIStream));
             outputStream.reset(new LoggingOutputStream(sokcetOStream));
@@ -135,12 +238,12 @@ void TcpTransport::connect(const decaf::net::URI& uri, const decaf::util::Proper
         // Now wrap the Buffered Streams with DataInput based streams.  We own
         // the Source streams, all the streams in the chain that we own are
         // destroyed when these are.
-        this->dataInputStream.reset(new DataInputStream(inputStream.release(), true));
-        this->dataOutputStream.reset(new DataOutputStream(outputStream.release(), true));
+        this->impl->dataInputStream.reset(new DataInputStream(inputStream.release(), true));
+        this->impl->dataOutputStream.reset(new DataOutputStream(outputStream.release(), true));
 
         // Give the IOTransport the streams.
-        ioTransport->setInputStream(dataInputStream.get());
-        ioTransport->setOutputStream(dataOutputStream.get());
+        ioTransport->setInputStream(impl->dataInputStream.get());
+        ioTransport->setOutputStream(impl->dataOutputStream.get());
     }
     AMQ_CATCH_RETHROW(ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
@@ -160,31 +263,17 @@ Socket* TcpTransport::createSocket() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::configureSocket(Socket* socket, const Properties& properties) {
+void TcpTransport::configureSocket(Socket* socket) {
 
     try {
 
-        // Get the linger flag.
-        int soLinger = Integer::parseInt(properties.getProperty("soLinger", "-1"));
-
-        // Get the keepAlive flag.
-        bool soKeepAlive = Boolean::parseBoolean(properties.getProperty("soKeepAlive", "false"));
-
-        // Get the socket receive buffer size.
-        int soReceiveBufferSize = Integer::parseInt(properties.getProperty("soReceiveBufferSize", "-1"));
-
-        // Get the socket send buffer size.
-        int soSendBufferSize = Integer::parseInt(properties.getProperty("soSendBufferSize", "-1"));
-
-        // Get the socket TCP_NODELAY flag.
-        bool tcpNoDelay = Boolean::parseBoolean(properties.getProperty("tcpNoDelay", "true"));
-
-        // Get the socket connect timeout in microseconds. (default to infinite wait).
-        this->connectTimeout = Integer::parseInt(properties.getProperty("soConnectTimeout", "0"));
+        int soLinger = this->impl->soLinger;
+        int soReceiveBufferSize = this->impl->soReceiveBufferSize;
+        int soSendBufferSize = this->impl->soSendBufferSize;
 
         // Set the socket options.
-        socket->setKeepAlive(soKeepAlive);
-        socket->setTcpNoDelay(tcpNoDelay);
+        socket->setKeepAlive(this->impl->soKeepAlive);
+        socket->setTcpNoDelay(this->impl->tcpNoDelay);
 
         if (soLinger > 0) {
             socket->setSoLinger(true, soLinger);
@@ -203,4 +292,108 @@ void TcpTransport::configureSocket(Socket* socket, const Properties& properties)
     DECAF_CATCH_RETHROW(SocketException)
     DECAF_CATCH_EXCEPTION_CONVERT(Exception, SocketException)
     DECAF_CATCHALL_THROW(SocketException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TcpTransport::isClosed() const {
+    return this->impl->closed.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TcpTransport::isConnected() const {
+    if (this->impl->socket.get() != NULL) {
+        return this->impl->socket->isConnected();
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setConnectTimeout(int soConnectTimeout) {
+    this->impl->connectTimeout = soConnectTimeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpTransport::getConnectTimeout() const {
+    return this->impl->connectTimeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setOutputBufferSize(int outputBufferSize) {
+    this->impl->outputBufferSize = outputBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpTransport::getOutputBufferSize() const {
+    return this->impl->outputBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setInputBufferSize(int inputBufferSize) {
+    this->impl->inputBufferSize = inputBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpTransport::getInputBufferSize() const {
+    return this->impl->inputBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setTrace(bool trace) {
+    this->impl->trace = trace;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TcpTransport::isTrace() const {
+    return this->impl->trace;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setLinger(int soLinger) {
+    this->impl->soLinger = soLinger;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpTransport::getLinger() const {
+    return this->impl->soLinger;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setKeepAlive(bool soKeepAlive) {
+    this->impl->soKeepAlive = soKeepAlive;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TcpTransport::isKeepAlive() const {
+    return this->impl->soKeepAlive;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setReceiveBufferSize(int soReceiveBufferSize) {
+    this->impl->soReceiveBufferSize = soReceiveBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpTransport::getReceiveBufferSize() const {
+    return this->impl->soReceiveBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setSendBufferSize(int soSendBufferSize) {
+    this->impl->soSendBufferSize = soSendBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int TcpTransport::getSendBufferSize() const {
+    return this->impl->soSendBufferSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::setTcpNoDelay(bool tcpNoDelay) {
+    this->impl->tcpNoDelay = tcpNoDelay;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TcpTransport::isTcpNoDelay() const {
+    return this->impl->tcpNoDelay;
 }

@@ -18,6 +18,7 @@
 #include "IOTransport.h"
 
 #include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -34,18 +35,46 @@ using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util::concurrent;
+using namespace decaf::util::concurrent::atomic;
 
 ////////////////////////////////////////////////////////////////////////////////
 LOGDECAF_INITIALIZE( logger, IOTransport, "activemq.transport.IOTransport")
 
+namespace activemq {
+namespace transport {
+
+    class IOTransportImpl {
+    private:
+
+        IOTransportImpl(const IOTransportImpl&);
+        IOTransportImpl& operator= (const IOTransportImpl&);
+
+    public:
+
+        Pointer<wireformat::WireFormat> wireFormat;
+        TransportListener* listener;
+        decaf::io::DataInputStream* inputStream;
+        decaf::io::DataOutputStream* outputStream;
+        Pointer<decaf::lang::Thread> thread;
+        AtomicBoolean closed;
+        AtomicBoolean started;
+
+        IOTransportImpl() : wireFormat(), listener(NULL), inputStream(NULL), outputStream(NULL), thread(), closed(false) {
+        }
+
+        IOTransportImpl(const Pointer<WireFormat> wireFormat) :
+            wireFormat(wireFormat), listener(NULL), inputStream(NULL), outputStream(NULL), thread(), closed(false) {
+        }
+    };
+
+}}
+
 ////////////////////////////////////////////////////////////////////////////////
-IOTransport::IOTransport() :
-    wireFormat(), listener(NULL), inputStream(NULL), outputStream(NULL), thread(), closed(false) {
+IOTransport::IOTransport() : impl(new IOTransportImpl()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IOTransport::IOTransport(const Pointer<WireFormat> wireFormat) :
-    wireFormat(wireFormat), listener(NULL), inputStream(NULL), outputStream(NULL), thread(), closed(false) {
+IOTransport::IOTransport(const Pointer<WireFormat> wireFormat) : impl(new IOTransportImpl(wireFormat)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,14 +83,19 @@ IOTransport::~IOTransport() {
         close();
     }
     AMQ_CATCHALL_NOTHROW()
+
+    try {
+        delete this->impl;
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::fire(decaf::lang::Exception& ex) {
 
-    if (this->listener != NULL && !this->closed) {
+    if (this->impl->listener != NULL && this->impl->started.get() && !this->impl->closed.get()) {
         try {
-            this->listener->onException(ex);
+            this->impl->listener->onException(ex);
         } catch (...) {
         }
     }
@@ -74,11 +108,11 @@ void IOTransport::fire(const Pointer<Command> command) {
 
         // If we have been closed then we don't deliver any messages that
         // might have sneaked in while we where closing.
-        if (this->listener == NULL || this->closed == true) {
+        if (this->impl->listener == NULL || this->impl->closed.get()) {
             return;
         }
 
-        this->listener->onCommand(command);
+        this->impl->listener->onCommand(command);
     }
     AMQ_CATCHALL_NOTHROW()
 }
@@ -88,12 +122,12 @@ void IOTransport::oneway(const Pointer<Command> command) {
 
     try {
 
-        if (closed) {
+        if (impl->closed.get()) {
             throw IOException(__FILE__, __LINE__, "IOTransport::oneway() - transport is closed!");
         }
 
         // Make sure the thread has been started.
-        if (thread == NULL) {
+        if (impl->thread == NULL) {
             throw IOException(__FILE__, __LINE__, "IOTransport::oneway() - transport is not started");
         }
 
@@ -103,14 +137,14 @@ void IOTransport::oneway(const Pointer<Command> command) {
         }
 
         // Make sure we have an output stream to write to.
-        if (outputStream == NULL) {
+        if (impl->outputStream == NULL) {
             throw IOException(__FILE__, __LINE__, "IOTransport::oneway() - invalid output stream");
         }
 
-        synchronized(outputStream) {
+        synchronized(impl->outputStream) {
             // Write the command to the output stream.
-            this->wireFormat->marshal(command, this, this->outputStream);
-            this->outputStream->flush();
+            this->impl->wireFormat->marshal(command, this, this->impl->outputStream);
+            this->impl->outputStream->flush();
         }
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -123,25 +157,22 @@ void IOTransport::start() {
 
     try {
 
-        // Can't restart a closed transport.
-        if (closed) {
-            throw IOException(__FILE__, __LINE__, "IOTransport::start() - transport is already closed - cannot restart");
-        }
+        if (impl->started.compareAndSet(false, true)) {
 
-        // If it's already started, do nothing.
-        if (thread != NULL) {
-            return;
-        }
+            if (impl->closed.get()) {
+                throw IOException(__FILE__, __LINE__, "IOTransport::start() - transport is already closed - cannot restart");
+            }
 
-        // Make sure all variables that we need have been set.
-        if (inputStream == NULL || outputStream == NULL || wireFormat.get() == NULL) {
-            throw IOException(__FILE__, __LINE__, "IOTransport::start() - "
-                    "IO streams and wireFormat instances must be set before calling start");
-        }
+            // Make sure all variables that we need have been set.
+            if (impl->inputStream == NULL || impl->outputStream == NULL || impl->wireFormat.get() == NULL) {
+                throw IOException(__FILE__, __LINE__, "IOTransport::start() - "
+                        "IO streams and wireFormat instances must be set before calling start");
+            }
 
-        // Start the polling thread.
-        thread.reset(new Thread(this, "IOTransport reader Thread"));
-        thread->start();
+            // Start the polling thread.
+            impl->thread.reset(new Thread(this, "IOTransport reader Thread"));
+            impl->thread->start();
+        }
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
@@ -181,54 +212,51 @@ void IOTransport::close() {
 
     try {
 
-        if (closed) {
-            return;
-        }
-
         // Mark this transport as closed.
-        closed = true;
+        if (impl->closed.compareAndSet(false, true)) {
 
-        Finalizer finalize(thread);
+            Finalizer finalize(impl->thread);
 
-        // No need to fire anymore async events now.
-        this->listener = NULL;
+            // No need to fire anymore async events now.
+            this->impl->listener = NULL;
 
-        IOException error;
-        bool hasException = false;
+            IOException error;
+            bool hasException = false;
 
-        // We have to close the input stream before we stop the thread.  this will
-        // force us to wake up the thread if it's stuck in a read (which is likely).
-        // Otherwise, the join that follows will block forever.
-        try {
-            if (inputStream != NULL) {
-                inputStream->close();
-                inputStream = NULL;
-            }
-        } catch (IOException& ex) {
-            error = ex;
-            error.setMark(__FILE__, __LINE__);
-            hasException = true;
-        }
-
-        try {
-            // Close the output stream.
-            if (outputStream != NULL) {
-                outputStream->close();
-                outputStream = NULL;
-            }
-        } catch (IOException& ex) {
-            if (!hasException) {
+            // We have to close the input stream before we stop the thread.  this will
+            // force us to wake up the thread if it's stuck in a read (which is likely).
+            // Otherwise, the join that follows will block forever.
+            try {
+                if (impl->inputStream != NULL) {
+                    impl->inputStream->close();
+                    impl->inputStream = NULL;
+                }
+            } catch (IOException& ex) {
                 error = ex;
                 error.setMark(__FILE__, __LINE__);
                 hasException = true;
             }
-        }
 
-        // Clear the WireFormat so we can't use it anymore
-        this->wireFormat.reset(NULL);
+            try {
+                // Close the output stream.
+                if (impl->outputStream != NULL) {
+                    impl->outputStream->close();
+                    impl->outputStream = NULL;
+                }
+            } catch (IOException& ex) {
+                if (!hasException) {
+                    error = ex;
+                    error.setMark(__FILE__, __LINE__);
+                    hasException = true;
+                }
+            }
 
-        if (hasException) {
-            throw error;
+            // Clear the WireFormat so we can't use it anymore
+            this->impl->wireFormat.reset(NULL);
+
+            if (hasException) {
+                throw error;
+            }
         }
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -241,10 +269,10 @@ void IOTransport::run() {
 
     try {
 
-        while (!closed) {
+        while (!isClosed()) {
 
             // Read the next command from the input stream.
-            Pointer<Command> command(wireFormat->unmarshal(this, this->inputStream));
+            Pointer<Command> command(impl->wireFormat->unmarshal(this, this->impl->inputStream));
 
             // Notify the listener.
             fire(command);
@@ -266,15 +294,58 @@ void IOTransport::run() {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<FutureResponse> IOTransport::asyncRequest(const Pointer<Command> command AMQCPP_UNUSED,
                                                   const Pointer<ResponseCallback> responseCallback AMQCPP_UNUSED) {
-    throw UnsupportedOperationException(__FILE__, __LINE__, "IOTransport::asyncRequest() - unsupported operation");
+    throw UnsupportedOperationException(__FILE__, __LINE__,
+        "IOTransport::asyncRequest() - unsupported operation");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> IOTransport::request(const Pointer<Command> command AMQCPP_UNUSED) {
-    throw UnsupportedOperationException(__FILE__, __LINE__, "IOTransport::request() - unsupported operation");
+    throw UnsupportedOperationException(__FILE__, __LINE__,
+        "IOTransport::request() - unsupported operation");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> IOTransport::request(const Pointer<Command> command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED) {
-    throw UnsupportedOperationException(__FILE__, __LINE__, "IOTransport::request() - unsupported operation");
+    throw UnsupportedOperationException(__FILE__, __LINE__,
+        "IOTransport::request() - unsupported operation");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::setInputStream(decaf::io::DataInputStream* is) {
+    this->impl->inputStream = is;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::setOutputStream(decaf::io::DataOutputStream* os) {
+    this->impl->outputStream = os;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<wireformat::WireFormat> IOTransport::getWireFormat() const {
+    return this->impl->wireFormat;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::setWireFormat(const Pointer<wireformat::WireFormat> wireFormat) {
+    this->impl->wireFormat = wireFormat;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::setTransportListener(TransportListener* listener) {
+    this->impl->listener = listener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+TransportListener* IOTransport::getTransportListener() const {
+    return this->impl->listener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool IOTransport::isConnected() const {
+    return !this->impl->closed.get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool IOTransport::isClosed() const {
+    return this->impl->closed.get();
 }

@@ -45,9 +45,12 @@ namespace tcp {
          * Creates a new instance of the SslTransport, the transport will not attempt to
          * connect to a remote host until the connect method is called.
          *
-         * @param next the next transport in the chain
+         * @param next
+         *      The next transport in the chain
+         * @param location
+         *      The URI of the host this transport is to connect to.
          */
-        SslTransport(const Pointer<Transport> next);
+        SslTransport(const Pointer<Transport> next, const decaf::net::URI& location);
 
         virtual ~SslTransport();
 
@@ -61,7 +64,7 @@ namespace tcp {
         /**
          * {@inheritDoc}
          */
-        virtual void configureSocket(decaf::net::Socket* socket, decaf::util::Properties& properties);
+        virtual void configureSocket(decaf::net::Socket* socket);
 
     };
 

@@ -40,6 +40,8 @@ namespace transport {
     using activemq::commands::Command;
     using activemq::commands::Response;
 
+    class IOTransportImpl;
+
     /**
      * Implementation of the Transport interface that performs marshaling of commands
      * to IO streams.  This class does not implement the request method, it only handles
@@ -56,35 +58,7 @@ namespace transport {
 
     private:
 
-        /**
-         * WireFormat instance to use to Encode / Decode.
-         */
-        Pointer<wireformat::WireFormat> wireFormat;
-
-        /**
-         * Listener of this transport.
-         */
-        TransportListener* listener;
-
-        /**
-         * The input stream for incoming commands.
-         */
-        decaf::io::DataInputStream* inputStream;
-
-        /**
-         * The output stream for out-going commands.
-         */
-        decaf::io::DataOutputStream* outputStream;
-
-        /**
-         * The polling thread.
-         */
-        Pointer<decaf::lang::Thread> thread;
-
-        /**
-         * Flag marking this transport as closed.
-         */
-        volatile bool closed;
+        IOTransportImpl* impl;
 
     private:
 
@@ -129,19 +103,14 @@ namespace transport {
          * @param is
          *      The InputStream that will be read from by this object.
          */
-        virtual void setInputStream(decaf::io::DataInputStream* is) {
-            this->inputStream = is;
-        }
-
+        virtual void setInputStream(decaf::io::DataInputStream* is);
         /**
          * Sets the stream to which this Transport implementation will write its data.
          *
          * @param os
          *      The OuputStream that will be written to by this object.
          */
-        virtual void setOutputStream(decaf::io::DataOutputStream* os) {
-            this->outputStream = os;
-        }
+        virtual void setOutputStream(decaf::io::DataOutputStream* os);
 
     public:  // Transport methods
 
@@ -169,21 +138,13 @@ namespace transport {
          */
         virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
-        virtual Pointer<wireformat::WireFormat> getWireFormat() const {
-            return this->wireFormat;
-        }
+        virtual Pointer<wireformat::WireFormat> getWireFormat() const;
 
-        virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat) {
-            this->wireFormat = wireFormat;
-        }
+        virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat);
 
-        virtual void setTransportListener(TransportListener* listener) {
-            this->listener = listener;
-        }
+        virtual void setTransportListener(TransportListener* listener);
 
-        virtual TransportListener* getTransportListener() const {
-            return this->listener;
-        }
+        virtual TransportListener* getTransportListener() const;
 
         virtual void start();
 
@@ -203,13 +164,9 @@ namespace transport {
             return false;
         }
 
-        virtual bool isConnected() const {
-            return !this->closed;
-        }
+        virtual bool isConnected() const;
 
-        virtual bool isClosed() const {
-            return this->closed;
-        }
+        virtual bool isClosed() const;
 
         virtual std::string getRemoteAddress() const {
             return "";

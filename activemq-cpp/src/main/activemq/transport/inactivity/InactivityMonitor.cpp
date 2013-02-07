@@ -50,9 +50,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace transport{
-namespace inactivity{
+namespace activemq {
+namespace transport {
+namespace inactivity {
 
     class InactivityMonitorData {
     private:
@@ -98,28 +98,29 @@ namespace inactivity{
 
         bool keepAliveResponseRequired;
 
-        InactivityMonitorData() : wireFormat(),
-                                  localWireFormatInfo(),
-                                  remoteWireFormatInfo(),
-                                  readCheckerTask(),
-                                  writeCheckerTask(),
-                                  readCheckTimer("InactivityMonitor Read Check Timer"),
-                                  writeCheckTimer("InactivityMonitor Write Check Timer"),
-                                  asyncTasks(),
-                                  asyncReadTask(),
-                                  asyncWriteTask(),
-                                  monitorStarted(),
-                                  commandSent(),
-                                  commandReceived(),
-                                  failed(),
-                                  inRead(),
-                                  inWrite(),
-                                  inWriteMutex(),
-                                  monitor(),
-                                  readCheckTime(0),
-                                  writeCheckTime(0),
-                                  initialDelayTime(0),
-                                  keepAliveResponseRequired(false) {
+        InactivityMonitorData(const Pointer<WireFormat> wireFormat) :
+            wireFormat(wireFormat),
+            localWireFormatInfo(),
+            remoteWireFormatInfo(),
+            readCheckerTask(),
+            writeCheckerTask(),
+            readCheckTimer("InactivityMonitor Read Check Timer"),
+            writeCheckTimer("InactivityMonitor Write Check Timer"),
+            asyncTasks(),
+            asyncReadTask(),
+            asyncWriteTask(),
+            monitorStarted(),
+            commandSent(),
+            commandReceived(true),
+            failed(),
+            inRead(),
+            inWrite(),
+            inWriteMutex(),
+            monitor(),
+            readCheckTime(0),
+            writeCheckTime(0),
+            initialDelayTime(0),
+            keepAliveResponseRequired(false) {
         }
     };
 
@@ -206,35 +207,13 @@ namespace inactivity{
 
 ////////////////////////////////////////////////////////////////////////////////
 InactivityMonitor::InactivityMonitor(const Pointer<Transport> next, const Pointer<WireFormat> wireFormat) :
-    TransportFilter(next), members(new InactivityMonitorData()) {
-
-    this->members->wireFormat = wireFormat;
-    this->members->monitorStarted.set(false);
-    this->members->commandSent.set(false);
-    this->members->commandReceived.set(true);
-    this->members->failed.set(false);
-    this->members->inRead.set(false);
-    this->members->inWrite.set(false);
-    this->members->readCheckTime = 0;
-    this->members->writeCheckTime = 0;
-    this->members->initialDelayTime = 0;
-    this->members->keepAliveResponseRequired = false;
+    TransportFilter(next), members(new InactivityMonitorData(wireFormat)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 InactivityMonitor::InactivityMonitor(const Pointer<Transport> next, const decaf::util::Properties& properties, const Pointer<wireformat::WireFormat> wireFormat) :
-    TransportFilter(next), members(new InactivityMonitorData()) {
+    TransportFilter(next), members(new InactivityMonitorData(wireFormat)) {
 
-    this->members->wireFormat = wireFormat;
-    this->members->monitorStarted.set(false);
-    this->members->commandSent.set(false);
-    this->members->commandReceived.set(true);
-    this->members->failed.set(false);
-    this->members->inRead.set(false);
-    this->members->inWrite.set(false);
-    this->members->readCheckTime = 0;
-    this->members->writeCheckTime = 0;
-    this->members->initialDelayTime = 0;
     this->members->keepAliveResponseRequired = Boolean::parseBoolean(properties.getProperty("keepAliveResponseRequired", "false"));
 }
 
@@ -289,6 +268,28 @@ bool InactivityMonitor::isKeepAliveResponseRequired() const {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::setKeepAliveResponseRequired(bool value) {
     this->members->keepAliveResponseRequired = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InactivityMonitor::start() {
+    try {
+        TransportFilter::start();
+        startMonitorThreads();
+    }
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InactivityMonitor::stop() {
+    try {
+        stopMonitorThreads();
+        TransportFilter::stop();
+    }
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,17 +427,19 @@ void InactivityMonitor::writeCheck() {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::startMonitorThreads() {
 
-    synchronized( &this->members->monitor ) {
+    if (this->members->monitorStarted.get()) {
+        return;
+    }
 
-        if (this->members->monitorStarted.get()) {
-            return;
-        }
-        if (this->members->localWireFormatInfo == NULL) {
-            return;
-        }
-        if (this->members->remoteWireFormatInfo == NULL) {
-            return;
-        }
+    if (this->members->localWireFormatInfo == NULL) {
+        return;
+    }
+
+    if (this->members->remoteWireFormatInfo == NULL) {
+        return;
+    }
+
+    synchronized( &this->members->monitor ) {
 
         this->members->asyncTasks.reset(new CompositeTaskRunner());
         this->members->asyncReadTask.reset(new AsyncSignalReadErrorkTask(this, this->getRemoteAddress()));
@@ -467,13 +470,9 @@ void InactivityMonitor::startMonitorThreads() {
 ////////////////////////////////////////////////////////////////////////////////
 void InactivityMonitor::stopMonitorThreads() {
 
-    if (this->members == NULL) {
-        return;
-    }
+    if (this->members->monitorStarted.compareAndSet(true, false)) {
 
-    synchronized(&this->members->monitor) {
-
-        if (this->members->monitorStarted.compareAndSet(true, false)) {
+        synchronized(&this->members->monitor) {
 
             this->members->readCheckerTask->cancel();
             this->members->writeCheckerTask->cancel();

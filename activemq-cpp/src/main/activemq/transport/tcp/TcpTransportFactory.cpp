@@ -25,6 +25,8 @@
 #include <activemq/util/URISupport.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <decaf/util/Properties.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Boolean.h>
 
 using namespace activemq;
 using namespace activemq::util;
@@ -37,6 +39,7 @@ using namespace activemq::transport::inactivity;
 using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> TcpTransportFactory::create(const decaf::net::URI& location) {
@@ -47,10 +50,10 @@ Pointer<Transport> TcpTransportFactory::create(const decaf::net::URI& location) 
 
         Pointer<WireFormat> wireFormat = this->createWireFormat(properties);
 
-        // Create the initial Transport, then wrap it in the normal Filters
+        // Create the initial Composite Transport, then wrap it in the normal Filters
+        // for a non-composite Transport which right now is just a ResponseCorrelator
         Pointer<Transport> transport(doCreateComposite(location, wireFormat, properties));
 
-        // Create the Transport for response correlator
         transport.reset(new ResponseCorrelator(transport));
 
         return transport;
@@ -84,10 +87,13 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite(const decaf::net::URI&
 
     try {
 
-        Pointer<Transport> transport(new TcpTransport(Pointer<Transport>(new IOTransport(wireFormat))));
+        Pointer<Transport> transport(new IOTransport(wireFormat));
 
-        // Initialize the Transport, creates Sockets and configures defaults.
-        transport.dynamicCast<TcpTransport>()->connect(location, properties);
+        transport.reset(new TcpTransport(transport, location));
+
+        // Give this class and any derived classes a chance to apply value that
+        // are set in the properties object.
+        doConfigureTransport(transport, properties);
 
         if (properties.getProperty("transport.useInactivityMonitor", "true") == "true") {
             transport.reset(new InactivityMonitor(transport, properties, wireFormat));
@@ -100,16 +106,37 @@ Pointer<Transport> TcpTransportFactory::doCreateComposite(const decaf::net::URI&
             properties.getProperty("transport.useLogging", "false") == "true" ||
             properties.getProperty("transport.trace", "false") == "true") {
 
-            // Create the Transport for response correlator
             transport.reset(new LoggingTransport(transport));
         }
 
-        // If there is a negotiator need then we create and wrap here.
         if (wireFormat->hasNegotiator()) {
             transport = wireFormat->createNegotiator(transport);
         }
 
         return transport;
+    }
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransportFactory::doConfigureTransport(Pointer<Transport> transport,
+                                               const decaf::util::Properties& properties) {
+
+    try {
+
+        Pointer<TcpTransport> tcp = transport.dynamicCast<TcpTransport>();
+
+        tcp->setInputBufferSize(Integer::parseInt(properties.getProperty("inputBufferSize", "8192")));
+        tcp->setOutputBufferSize(Integer::parseInt(properties.getProperty("outputBufferSize", "8192")));
+        tcp->setTrace(Boolean::parseBoolean(properties.getProperty("transport.tcpTracingEnabled", "false")));
+        tcp->setLinger(Integer::parseInt(properties.getProperty("soLinger", "-1")));
+        tcp->setKeepAlive(Boolean::parseBoolean(properties.getProperty("soKeepAlive", "false")));
+        tcp->setReceiveBufferSize(Integer::parseInt(properties.getProperty("soReceiveBufferSize", "-1")));
+        tcp->setSendBufferSize(Integer::parseInt(properties.getProperty("soSendBufferSize", "-1")));
+        tcp->setTcpNoDelay(Boolean::parseBoolean(properties.getProperty("tcpNoDelay", "true")));
+        tcp->setConnectTimeout(Integer::parseInt(properties.getProperty("soConnectTimeout", "0")));
     }
     AMQ_CATCH_RETHROW(ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)

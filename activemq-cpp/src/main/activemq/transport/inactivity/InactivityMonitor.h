@@ -68,6 +68,10 @@ namespace inactivity {
 
     public: // TransportFilter Methods
 
+        virtual void start();
+
+        virtual void stop();
+
         virtual void close();
 
         virtual void onException(const decaf::lang::Exception& ex);
