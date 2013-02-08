@@ -87,6 +87,7 @@ void ActiveMQSessionExecutor::wakeup() {
     synchronized(messageQueue.get()) {
         if (this->taskRunner == NULL) {
             this->taskRunner.reset(new DedicatedTaskRunner(this));
+            this->taskRunner->start();
         }
 
         taskRunner = this->taskRunner;

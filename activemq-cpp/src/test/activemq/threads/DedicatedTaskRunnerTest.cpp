@@ -31,44 +31,46 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-class SimpleCountingTask : public Task {
-private:
+namespace {
 
-    unsigned int count;
+    class SimpleCountingTask : public Task {
+    private:
 
-public:
+        unsigned int count;
 
-    SimpleCountingTask() : count(0) {}
-    virtual ~SimpleCountingTask() {}
+    public:
 
-    virtual bool iterate() {
+        SimpleCountingTask() : count(0) {}
+        virtual ~SimpleCountingTask() {}
 
-        count++;
-        return false;
-    }
+        virtual bool iterate() {
 
-    unsigned int getCount() const { return count; }
-};
+            count++;
+            return false;
+        }
 
-////////////////////////////////////////////////////////////////////////////////
-class InfiniteCountingTask : public Task {
-private:
+        unsigned int getCount() const { return count; }
+    };
 
-    unsigned int count;
+    class InfiniteCountingTask : public Task {
+    private:
 
-public:
+        unsigned int count;
 
-    InfiniteCountingTask() : count(0) {}
-    virtual ~InfiniteCountingTask() {}
+    public:
 
-    virtual bool iterate() {
+        InfiniteCountingTask() : count(0) {}
+        virtual ~InfiniteCountingTask() {}
 
-        count++;
-        return true;
-    }
+        virtual bool iterate() {
 
-    unsigned int getCount() const { return count; }
-};
+            count++;
+            return true;
+        }
+
+        unsigned int getCount() const { return count; }
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void DedicatedTaskRunnerTest::testSimple() {
@@ -82,6 +84,8 @@ void DedicatedTaskRunnerTest::testSimple() {
     CPPUNIT_ASSERT( simpleTask.getCount() == 0 );
     DedicatedTaskRunner simpleTaskRunner( &simpleTask );
 
+    simpleTaskRunner.start();
+
     simpleTaskRunner.wakeup();
     Thread::sleep( 250 );
     CPPUNIT_ASSERT( simpleTask.getCount() >= 1 );
@@ -92,11 +96,11 @@ void DedicatedTaskRunnerTest::testSimple() {
     InfiniteCountingTask infiniteTask;
     CPPUNIT_ASSERT( infiniteTask.getCount() == 0 );
     DedicatedTaskRunner infiniteTaskRunner( &infiniteTask );
+    infiniteTaskRunner.start();
     Thread::sleep( 500 );
     CPPUNIT_ASSERT( infiniteTask.getCount() != 0 );
     infiniteTaskRunner.shutdown();
     unsigned int count = infiniteTask.getCount();
     Thread::sleep( 250 );
     CPPUNIT_ASSERT( infiniteTask.getCount() == count );
-
 }

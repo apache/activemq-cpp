@@ -447,6 +447,7 @@ void InactivityMonitor::startMonitorThreads() {
 
         this->members->asyncTasks->addTask(this->members->asyncReadTask.get());
         this->members->asyncTasks->addTask(this->members->asyncWriteTask.get());
+        this->members->asyncTasks->start();
 
         this->members->readCheckTime = Math::min(this->members->localWireFormatInfo->getMaxInactivityDuration(),
                 this->members->remoteWireFormatInfo->getMaxInactivityDuration());

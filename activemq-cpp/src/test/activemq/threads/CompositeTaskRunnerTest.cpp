@@ -68,6 +68,7 @@ void CompositeTaskRunnerTest::test() {
     runner.addTask( &task1 );
     runner.addTask( &task2 );
 
+    runner.start();
     runner.wakeup();
 
     while( attempts++ != 10 ) {

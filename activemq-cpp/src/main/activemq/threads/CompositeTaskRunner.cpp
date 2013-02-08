@@ -52,6 +52,7 @@ void CompositeTaskRunner::start() {
         if (this->thread == NULL) {
             this->thread.reset(new Thread(this, "ActiveMQ CompositeTaskRunner Thread"));
             this->thread->start();
+            this->wakeup();
         }
     }
 }

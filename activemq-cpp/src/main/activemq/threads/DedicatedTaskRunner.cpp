@@ -51,6 +51,7 @@ void DedicatedTaskRunner::start() {
         if (this->thread == NULL) {
             this->thread.reset(new Thread(this, "ActiveMQ Dedicated Task Runner"));
             this->thread->start();
+            this->wakeup();
         }
     }
 }
