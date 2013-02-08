@@ -265,6 +265,8 @@ namespace {
                 delete node;
             }
 
+            this->size = 0;
+
             PlatformThread::unlockMutex(lock);
 
             PlatformThread::destroyMutex(lock);
