@@ -34,6 +34,7 @@ DedicatedTaskRunner::DedicatedTaskRunner(Task* task) :
         throw NullPointerException(__FILE__, __LINE__, "Task passed was null");
     }
 
+    this->thread.reset(new Thread(this, "ActiveMQ Dedicated Task Runner"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,8 +49,7 @@ DedicatedTaskRunner::~DedicatedTaskRunner() {
 void DedicatedTaskRunner::start() {
 
     synchronized(&mutex) {
-        if (this->thread == NULL) {
-            this->thread.reset(new Thread(this, "ActiveMQ Dedicated Task Runner"));
+        if (!shutDown && !this->thread->isAlive()) {
             this->thread->start();
             this->wakeup();
         }

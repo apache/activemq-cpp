@@ -33,6 +33,8 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 CompositeTaskRunner::CompositeTaskRunner() :
     tasks(), mutex(), thread(), threadTerminated(false), pending(false), shutDown(false) {
+
+    this->thread.reset(new Thread(this, "ActiveMQ CompositeTaskRunner Thread"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +51,7 @@ CompositeTaskRunner::~CompositeTaskRunner() {
 void CompositeTaskRunner::start() {
 
     synchronized(&mutex) {
-        if (this->thread == NULL) {
-            this->thread.reset(new Thread(this, "ActiveMQ CompositeTaskRunner Thread"));
+        if (!shutDown && !this->thread->isAlive()) {
             this->thread->start();
             this->wakeup();
         }
