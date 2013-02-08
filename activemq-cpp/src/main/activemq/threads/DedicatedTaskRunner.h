@@ -30,20 +30,16 @@
 namespace activemq {
 namespace threads {
 
-    using decaf::lang::Pointer;
-
     class AMQCPP_API DedicatedTaskRunner : public TaskRunner,
                                            public decaf::lang::Runnable {
     private:
 
-        decaf::util::concurrent::Mutex mutex;
-
-        Pointer<decaf::lang::Thread> thread;
+        mutable decaf::util::concurrent::Mutex mutex;
+        decaf::lang::Pointer<decaf::lang::Thread> thread;
 
         bool threadTerminated;
         bool pending;
         bool shutDown;
-
         Task* task;
 
     private:
@@ -55,6 +51,10 @@ namespace threads {
 
         DedicatedTaskRunner(Task* task);
         virtual ~DedicatedTaskRunner();
+
+        virtual void start();
+
+        virtual bool isStarted() const;
 
         /**
          * Shutdown after a timeout, does not guarantee that the task's iterate

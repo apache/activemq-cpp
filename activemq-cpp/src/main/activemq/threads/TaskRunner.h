@@ -30,6 +30,18 @@ namespace threads {
         virtual ~TaskRunner();
 
         /**
+         * Starts the task runner.  Prior to call this method tasks can be added to a
+         * Runner, but no executions will occur.  The start method will create the
+         * background Thread(s) which do the work for this task runner.
+         */
+        virtual void start() = 0;
+
+        /**
+         * @retuns true if the start method has been called.
+         */
+        virtual bool isStarted() const = 0;
+
+        /**
          * Shutdown after a timeout, does not guarantee that the task's iterate
          * method has completed and the thread halted.
          *

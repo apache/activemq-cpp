@@ -34,8 +34,6 @@ DedicatedTaskRunner::DedicatedTaskRunner(Task* task) :
         throw NullPointerException(__FILE__, __LINE__, "Task passed was null");
     }
 
-    this->thread.reset(new Thread(this, "ActiveMQ Dedicated Task Runner"));
-    this->thread->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,9 +45,39 @@ DedicatedTaskRunner::~DedicatedTaskRunner() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void DedicatedTaskRunner::start() {
+
+    synchronized(&mutex) {
+        if (this->thread == NULL) {
+            this->thread.reset(new Thread(this, "ActiveMQ Dedicated Task Runner"));
+            this->thread->start();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool DedicatedTaskRunner::isStarted() const {
+
+    bool result = false;
+
+    synchronized(&mutex) {
+        if (this->thread != NULL) {
+            result = true;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void DedicatedTaskRunner::shutdown(unsigned int timeout) {
 
     synchronized(&mutex) {
+
+        if (this->thread == NULL) {
+            return;
+        }
+
         shutDown = true;
         pending = true;
         mutex.notifyAll();
@@ -66,6 +94,11 @@ void DedicatedTaskRunner::shutdown(unsigned int timeout) {
 void DedicatedTaskRunner::shutdown() {
 
     synchronized(&mutex) {
+
+        if (this->thread == NULL) {
+            return;
+        }
+
         shutDown = true;
         pending = true;
         mutex.notifyAll();

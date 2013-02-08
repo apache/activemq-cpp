@@ -329,13 +329,15 @@ void FailoverTransport::start() {
 
     try {
 
-        synchronized( &reconnectMutex ) {
+        synchronized(&reconnectMutex) {
 
             if (this->started) {
                 return;
             }
 
             started = true;
+
+            taskRunner->start();
 
             stateTracker.setMaxCacheSize(this->getMaxCacheSize());
             stateTracker.setTrackMessages(this->isTrackMessages());
@@ -348,9 +350,9 @@ void FailoverTransport::start() {
             }
         }
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

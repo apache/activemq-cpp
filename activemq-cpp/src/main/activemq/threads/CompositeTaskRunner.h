@@ -31,8 +31,6 @@
 namespace activemq {
 namespace threads {
 
-    using decaf::lang::Pointer;
-
     /**
      * A Task Runner that can contain one or more CompositeTasks that are each checked
      * for pending work and run if any is present in the order that the tasks were added.
@@ -45,9 +43,9 @@ namespace threads {
     private:
 
         decaf::util::LinkedList<CompositeTask*> tasks;
-        decaf::util::concurrent::Mutex mutex;
+        mutable decaf::util::concurrent::Mutex mutex;
 
-        Pointer<decaf::lang::Thread> thread;
+        decaf::lang::Pointer<decaf::lang::Thread> thread;
 
         bool threadTerminated;
         bool pending;
@@ -63,6 +61,10 @@ namespace threads {
         CompositeTaskRunner();
 
         virtual ~CompositeTaskRunner();
+
+        virtual void start();
+
+        virtual bool isStarted() const;
 
         /**
          * Adds a new CompositeTask to the Set of Tasks that this class manages.

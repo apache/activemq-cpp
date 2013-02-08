@@ -33,9 +33,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 CompositeTaskRunner::CompositeTaskRunner() :
     tasks(), mutex(), thread(), threadTerminated(false), pending(false), shutDown(false) {
-
-    this->thread.reset(new Thread(this, "CompositeTaskRunner Thread"));
-    this->thread->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +43,31 @@ CompositeTaskRunner::~CompositeTaskRunner() {
         this->thread.reset(NULL);
     }
     AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CompositeTaskRunner::start() {
+
+    synchronized(&mutex) {
+        if (this->thread == NULL) {
+            this->thread.reset(new Thread(this, "ActiveMQ CompositeTaskRunner Thread"));
+            this->thread->start();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool CompositeTaskRunner::isStarted() const {
+
+    bool result = false;
+
+    synchronized(&mutex) {
+        if (this->thread != NULL) {
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
