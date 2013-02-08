@@ -19,6 +19,7 @@
 #include <cms/MessageTransformer.h>
 #include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Pointer.h>
@@ -44,6 +45,7 @@ using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -61,6 +63,8 @@ namespace core{
         FactorySettings& operator=(const FactorySettings&);
 
     public:
+
+        Mutex configLock;
 
         Pointer<Properties> properties;
 
@@ -86,7 +90,8 @@ namespace core{
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
 
-        FactorySettings() : properties(new Properties()),
+        FactorySettings() : configLock(),
+                            properties(new Properties()),
                             username(),
                             password(),
                             clientId(),
@@ -265,40 +270,43 @@ cms::Connection* ActiveMQConnectionFactory::doCreateConnection(const decaf::net:
 
     try {
 
-        this->setBrokerURI(uri);
+        synchronized(&this->settings->configLock) {
 
-        // Store login data in the properties
-        if (!username.empty()) {
-            this->settings->username = username;
-        }
-        if (!password.empty()) {
-            this->settings->password = password;
-        }
-        if (!clientId.empty()) {
-            this->settings->clientId = clientId;
-        }
+            this->setBrokerURI(uri);
 
-        // Use the TransportBuilder to get our Transport
-        transport = TransportRegistry::getInstance().findFactory(uri.getScheme())->create(uri);
+            // Store login data in the properties
+            if (!username.empty()) {
+                this->settings->username = username;
+            }
+            if (!password.empty()) {
+                this->settings->password = password;
+            }
+            if (!clientId.empty()) {
+                this->settings->clientId = clientId;
+            }
 
-        if (transport == NULL) {
-            throw ActiveMQException(__FILE__, __LINE__, "ActiveMQConnectionFactory::createConnection - "
-                    "failed creating new Transport");
-        }
+            // Use the TransportBuilder to get our Transport
+            transport = TransportRegistry::getInstance().findFactory(uri.getScheme())->create(uri);
 
-        Pointer<Properties> properties(this->settings->properties->clone());
+            if (transport == NULL) {
+                throw ActiveMQException(__FILE__, __LINE__, "ActiveMQConnectionFactory::createConnection - "
+                        "failed creating new Transport");
+            }
 
-        // Create and Return the new connection object.
-        connection.reset(createActiveMQConnection(transport, properties));
+            Pointer<Properties> properties(this->settings->properties->clone());
 
-        // Set all options parsed from the URI.
-        configureConnection(connection.get());
+            // Create and Return the new connection object.
+            connection.reset(createActiveMQConnection(transport, properties));
 
-        // Now start the connection since all other configuration is done.
-        transport->start();
+            // Set all options parsed from the URI.
+            configureConnection(connection.get());
 
-        if (!this->settings->clientId.empty()) {
-            connection->setDefaultClientId(this->settings->clientId);
+            // Now start the connection since all other configuration is done.
+            transport->start();
+
+            if (!this->settings->clientId.empty()) {
+                connection->setDefaultClientId(this->settings->clientId);
+            }
         }
 
         return connection.release();
@@ -400,7 +408,9 @@ void ActiveMQConnectionFactory::setBrokerURI(const std::string& uri) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setBrokerURI(const decaf::net::URI& uri) {
-    this->settings->updateConfiguration(uri);
+    synchronized(&this->settings->configLock) {
+        this->settings->updateConfiguration(uri);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
