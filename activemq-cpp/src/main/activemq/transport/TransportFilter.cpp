@@ -228,16 +228,22 @@ void TransportFilter::close() {
 
     try {
 
-        if (this->impl->closed.compareAndSet(false, true)) {
+        IOException error;
+        bool hasException = false;
 
-            this->impl->started.set(false);
+        try {
+            stop();
+        } catch (IOException& ex) {
+            error = ex;
+            error.setMark(__FILE__, __LINE__);
+            hasException = true;
+        }
+
+        if (this->impl->closed.compareAndSet(false, true)) {
 
             if (this->next == NULL) {
                 throw decaf::io::IOException(__FILE__, __LINE__, "Transport chain is invalid");
             }
-
-            IOException error;
-            bool hasException = false;
 
             next->setTransportListener(NULL);
 
@@ -256,10 +262,10 @@ void TransportFilter::close() {
                 error.setMark(__FILE__, __LINE__);
                 hasException = true;
             }
+        }
 
-            if (hasException) {
-                throw error;
-            }
+        if (hasException) {
+            throw error;
         }
     }
     AMQ_CATCH_RETHROW(IOException)
