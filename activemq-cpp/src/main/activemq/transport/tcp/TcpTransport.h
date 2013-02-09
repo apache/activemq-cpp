@@ -105,8 +105,6 @@ namespace tcp {
 
         virtual bool isConnected() const;
 
-        virtual bool isClosed() const;
-
     protected:
 
         virtual void beforeNextIsStarted();

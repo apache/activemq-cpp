@@ -56,9 +56,6 @@ namespace tcp {
 
         int connectTimeout;
 
-        AtomicBoolean closed;
-        AtomicBoolean started;
-
         std::auto_ptr<decaf::net::Socket> socket;
         std::auto_ptr<decaf::io::DataInputStream> dataInputStream;
         std::auto_ptr<decaf::io::DataOutputStream> dataOutputStream;
@@ -78,7 +75,6 @@ namespace tcp {
 
         TcpTransportImpl(const decaf::net::URI& location) :
             connectTimeout(0),
-            closed(false),
             socket(),
             dataInputStream(),
             dataOutputStream(),
@@ -116,9 +112,7 @@ TcpTransport::~TcpTransport() {
 ////////////////////////////////////////////////////////////////////////////////
 void TcpTransport::beforeNextIsStarted() {
     try {
-        if (this->impl->started.compareAndSet(false, true)) {
-            connect();
-        }
+        connect();
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
@@ -130,10 +124,8 @@ void TcpTransport::afterNextIsStopped() {
     try {
         // The IOTransport is now stopped, so we can safely closed the socket
         // and no asynchronous exceptions should be triggered.
-        if (this->impl->started.compareAndSet(true, false)) {
-            if (impl->socket.get() != NULL) {
-                impl->socket->close();
-            }
+        if (impl->socket.get() != NULL) {
+            impl->socket->close();
         }
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -144,10 +136,8 @@ void TcpTransport::afterNextIsStopped() {
 ////////////////////////////////////////////////////////////////////////////////
 void TcpTransport::doClose() {
     try {
-        if (this->impl->closed.compareAndSet(false, true)) {
-            if (impl->socket.get() != NULL) {
-                impl->socket->close();
-            }
+        if (impl->socket.get() != NULL) {
+            impl->socket->close();
         }
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -272,11 +262,6 @@ void TcpTransport::configureSocket(Socket* socket) {
     DECAF_CATCH_RETHROW(SocketException)
     DECAF_CATCH_EXCEPTION_CONVERT(Exception, SocketException)
     DECAF_CATCHALL_THROW(SocketException)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool TcpTransport::isClosed() const {
-    return this->impl->closed.get();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
