@@ -58,11 +58,6 @@ namespace openwire{
          */
         OpenWireFormat* openWireFormat;
 
-        /**
-         * Indicates Transport has shut down
-         */
-        bool closed;
-
     private:
 
         OpenWireFormatNegotiator(const OpenWireFormatNegotiator&);
@@ -79,75 +74,23 @@ namespace openwire{
 
         virtual ~OpenWireFormatNegotiator();
 
-        /**
-         * Sends a one-way command.  Does not wait for any response from the
-         * broker.
-         * First waits for the WireFormatInfo exchange to happen so that we
-         * know how to encode out-bound data.
-         * @param command the command to be sent.
-         * @throws IOException if an exception occurs during writing of
-         * the command.
-         * @throws UnsupportedOperationException if this method is not implemented
-         * by this transport.
-         */
         virtual void oneway(const Pointer<commands::Command> command);
 
-        /**
-         * Sends the given request to the server and waits for the response.
-         * First waits for the WireFormatInfo exchange to happen so that we
-         * know how to encode out-bound data.
-         * @param command The request to send.
-         * @return the response from the server.
-         * @throws IOException if an error occurs with the request.
-         */
         virtual Pointer<commands::Response> request(const Pointer<commands::Command> command);
 
-        /**
-         * Sends the given request to the server and waits for the response.
-         * First waits for the WireFormatInfo exchange to happen so that we
-         * know how to encode out-bound data.
-         * @param command The request to send.
-         * @param timeout The time to wait for the response.
-         * @return the response from the server.
-         * @throws IOException if an error occurs with the request.
-         */
         virtual Pointer<commands::Response> request(const Pointer<commands::Command> command, unsigned int timeout);
 
-        /**
-         * This is called in the context of the nested transport's
-         * reading thread.  In the case of a response object,
-         * updates the request map and notifies those waiting on the
-         * response.  Non-response messages are just delegated to
-         * the command listener.
-         * @param command the received from the nested transport.
-         */
+    public:
+
         virtual void onCommand(const Pointer<commands::Command> command);
 
-        /**
-         * Event handler for an exception from a command transport.
-         * @param source The source of the exception
-         * @param ex The exception.
-         */
         virtual void onException(const decaf::lang::Exception& ex);
 
-        /**
-         * Starts this transport object and creates the thread for
-         * polling on the input stream for commands.  If this object
-         * has been closed, throws an exception.  Before calling start,
-         * the caller must set the IO streams and the reader and writer
-         * objects.
-         * @throws IOException if an error occurs or if this transport
-         * has already been closed.
-         */
-        virtual void start();
+    protected:
 
-        /**
-         * Stops the polling thread and closes the streams.  This can
-         * be called explicitly, but is also called in the destructor. Once
-         * this object has been closed, it cannot be restarted.
-         * @throws IOException if errors occur.
-         */
-        virtual void close();
+        virtual void afterNextIsStarted();
+
+        virtual void afterNextIsStopped();
 
     };
 

@@ -271,9 +271,8 @@ void InactivityMonitor::setKeepAliveResponseRequired(bool value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::start() {
+void InactivityMonitor::afterNextIsStarted() {
     try {
-        TransportFilter::start();
         startMonitorThreads();
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -282,10 +281,9 @@ void InactivityMonitor::start() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::stop() {
+void InactivityMonitor::beforeNextIsStopped() {
     try {
         stopMonitorThreads();
-        TransportFilter::stop();
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
@@ -293,11 +291,9 @@ void InactivityMonitor::stop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InactivityMonitor::close() {
+void InactivityMonitor::doClose() {
     try {
-        setTransportListener(NULL);
         stopMonitorThreads();
-        TransportFilter::close();
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
@@ -340,7 +336,7 @@ void InactivityMonitor::onCommand(const Pointer<Command> command) {
     } catch (Exception& ex) {
         this->members->inRead.set(false);
         ex.setMark(__FILE__, __LINE__);
-        throw ex;
+        throw;
     }
 }
 
@@ -375,9 +371,8 @@ void InactivityMonitor::oneway(const Pointer<Command> command) {
             } catch (Exception& ex) {
                 this->members->commandSent.set(true);
                 this->members->inWrite.set(false);
-
                 ex.setMark(__FILE__, __LINE__);
-                throw ex;
+                throw;
             }
         }
     }

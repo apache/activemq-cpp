@@ -78,10 +78,6 @@ namespace correlator {
 
         virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout);
 
-        virtual void start();
-
-        virtual void close();
-
         /**
          * This is called in the context of the nested transport's reading thread.  In
          * the case of a response object, updates the request map and notifies those
@@ -102,6 +98,10 @@ namespace correlator {
          *      The exception that was caught.
          */
         virtual void onException(const decaf::lang::Exception& ex);
+
+    protected:
+
+        virtual void doClose();
 
     private:
 

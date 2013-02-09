@@ -43,8 +43,7 @@ OpenWireFormatNegotiator::OpenWireFormatNegotiator(OpenWireFormat* wireFormat, c
     firstTime(true),
     wireInfoSentDownLatch(1),
     readyCountDownLatch(1),
-    openWireFormat(wireFormat),
-    closed(true) {
+    openWireFormat(wireFormat) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,9 +59,7 @@ void OpenWireFormatNegotiator::oneway(const Pointer<Command> command) {
 
     try {
 
-        if (closed || next == NULL) {
-            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::oneway - transport already closed");
-        }
+        checkClosed();
 
         if (!readyCountDownLatch.await(negotiationTimeout)) {
             throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::oneway"
@@ -83,9 +80,7 @@ Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command> comma
 
     try {
 
-        if (closed || next == NULL) {
-            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request - transport already closed");
-        }
+        checkClosed();
 
         if (!readyCountDownLatch.await(negotiationTimeout)) {
             throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request"
@@ -106,9 +101,7 @@ Pointer<Response> OpenWireFormatNegotiator::request(const Pointer<Command> comma
 
     try {
 
-        if (closed || next == NULL) {
-            throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request - transport already closed");
-        }
+        checkClosed();
 
         if (!readyCountDownLatch.await(negotiationTimeout)) {
             throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::request"
@@ -143,44 +136,29 @@ void OpenWireFormatNegotiator::onCommand(const Pointer<Command> command) {
             readyCountDownLatch.countDown();
         } catch (exceptions::ActiveMQException& ex) {
             readyCountDownLatch.countDown();
-            fire(ex);
+            TransportFilter::onCommand(command);
         }
     }
 
     // Send along to the next interested party.
-    fire(command);
+    TransportFilter::onCommand(command);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onException(const decaf::lang::Exception& ex) {
     readyCountDownLatch.countDown();
-    fire(ex);
+    TransportFilter::onException(ex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::start() {
+void OpenWireFormatNegotiator::afterNextIsStopped() {
+    readyCountDownLatch.countDown();
+}
 
-    if (!closed) {
-        return;
-    }
-
-    if (listener == NULL) {
-        throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::start - TransportListener is invalid");
-    }
-
-    if (next == NULL) {
-        throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::start - next transport is NULL");
-    }
-
-    if (openWireFormat == NULL) {
-        throw IOException(__FILE__, __LINE__, "OpenWireFormatNegotiator::start - openWireFormat is NULL");
-    }
-
-    // Start the delegate transport object.
-    next->start();
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireFormatNegotiator::afterNextIsStarted() {
 
     if (firstTime.compareAndSet(true, false)) {
-
         try {
 
             // We first send the WireFormat that we'd prefer.
@@ -196,23 +174,4 @@ void OpenWireFormatNegotiator::start() {
             throw;
         }
     }
-
-    // Mark it as open.
-    closed = false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::close() {
-
-    try {
-
-        if (!closed && next != NULL) {
-            next->close();
-        }
-
-        closed = true;
-    }
-    AMQ_CATCH_RETHROW(IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW(IOException)
 }

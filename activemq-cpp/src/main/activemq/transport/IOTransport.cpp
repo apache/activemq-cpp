@@ -183,6 +183,7 @@ void IOTransport::start() {
 void IOTransport::stop() {
 
     try {
+        this->impl->started.set(false);
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)

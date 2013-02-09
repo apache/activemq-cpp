@@ -114,16 +114,10 @@ TcpTransport::~TcpTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::start() {
+void TcpTransport::beforeNextIsStarted() {
     try {
-
-        if (this->impl->closed.get()) {
-            throw IOException(__FILE__, __LINE__, "Transport is closed");
-        }
-
         if (this->impl->started.compareAndSet(false, true)) {
             connect();
-            TransportFilter::start();
         }
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -132,21 +126,14 @@ void TcpTransport::start() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::stop() {
+void TcpTransport::afterNextIsStopped() {
     try {
-
-        if (this->impl->closed.get()) {
-            throw IOException(__FILE__, __LINE__, "Transport is closed");
-        }
-
+        // The IOTransport is now stopped, so we can safely closed the socket
+        // and no asynchronous exceptions should be triggered.
         if (this->impl->started.compareAndSet(true, false)) {
-
-            // Close the socket.
             if (impl->socket.get() != NULL) {
                 impl->socket->close();
             }
-
-            TransportFilter::stop();
         }
     }
     AMQ_CATCH_RETHROW(IOException)
@@ -155,19 +142,12 @@ void TcpTransport::stop() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::close() {
-
+void TcpTransport::doClose() {
     try {
-
         if (this->impl->closed.compareAndSet(false, true)) {
-            this->setTransportListener(NULL);
-
-            // Close the socket.
             if (impl->socket.get() != NULL) {
                 impl->socket->close();
             }
-
-            TransportFilter::close();
         }
     }
     AMQ_CATCH_RETHROW(IOException)

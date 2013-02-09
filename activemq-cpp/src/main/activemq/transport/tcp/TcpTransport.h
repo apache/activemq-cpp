@@ -99,12 +99,6 @@ namespace tcp {
 
     public: // Transport Methods
 
-        virtual void start();
-
-        virtual void stop();
-
-        virtual void close();
-
         virtual bool isFaultTolerant() const {
             return false;
         }
@@ -114,6 +108,12 @@ namespace tcp {
         virtual bool isClosed() const;
 
     protected:
+
+        virtual void beforeNextIsStarted();
+
+        virtual void afterNextIsStopped();
+
+        virtual void doClose();
 
         /**
          * Creates a Socket and configures it before attempting to connect to the location specified

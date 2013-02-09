@@ -26,12 +26,14 @@
 #include <decaf/lang/Pointer.h>
 #include <typeinfo>
 
-namespace activemq{
-namespace transport{
+namespace activemq {
+namespace transport {
 
     using decaf::lang::Pointer;
     using activemq::commands::Command;
     using activemq::commands::Response;
+
+    class TransportFilterImpl;
 
     /**
      * A filter on the transport layer.  Transport filters implement the Transport
@@ -40,6 +42,10 @@ namespace transport{
      * @since 1.0
      */
     class AMQCPP_API TransportFilter: public Transport, public TransportListener {
+    private:
+
+        TransportFilterImpl* impl;
+
     protected:
 
         /**
@@ -51,20 +57,6 @@ namespace transport{
          * Listener of this transport.
          */
         TransportListener* listener;
-
-    protected:
-
-        /**
-         * Notify the listener of the thrown Exception.
-         * @param ex - the exception to send to listeners
-         */
-        void fire(const decaf::lang::Exception& ex);
-
-        /**
-         * Notify the listener of the new incoming Command.
-         * @param command - the command to send to the listener
-         */
-        void fire(const Pointer<Command> command);
 
     private:
 
@@ -81,8 +73,20 @@ namespace transport{
 
         virtual ~TransportFilter();
 
+        void start();
+
+        void stop();
+
+        void close();
+
+    protected:
+
+        /**
+         * Throws an IOException if this filter chain has already been closed.
+         */
+        void checkClosed() const;
+
     public:
-        // TransportListener methods
 
         /**
          * Event handler for the receipt of a command.
@@ -108,22 +112,25 @@ namespace transport{
         virtual void transportResumed();
 
     public:
-        // Transport Methods.
 
         virtual void oneway(const Pointer<Command> command) {
+            checkClosed();
             next->oneway(command);
         }
 
         virtual Pointer<FutureResponse> asyncRequest(const Pointer<Command> command,
                                                      const Pointer<ResponseCallback> responseCallback) {
+            checkClosed();
             return next->asyncRequest(command, responseCallback);
         }
 
         virtual Pointer<Response> request(const Pointer<Command> command) {
+            checkClosed();
             return next->request(command);
         }
 
         virtual Pointer<Response> request(const Pointer<Command> command, unsigned int timeout) {
+            checkClosed();
             return next->request(command, timeout);
         }
 
@@ -139,43 +146,78 @@ namespace transport{
 
         virtual void setWireFormat(const Pointer<wireformat::WireFormat> wireFormat);
 
-        virtual void start();
-
-        virtual void stop();
-
-        virtual void close();
-
         virtual Transport* narrow(const std::type_info& typeId);
 
         virtual bool isFaultTolerant() const {
-            return next->isFaultTolerant();
+            return !isClosed() && next->isFaultTolerant();
         }
 
         virtual bool isConnected() const {
-            return next->isConnected();
+            return !isClosed() && next->isConnected();
         }
 
         virtual bool isReconnectSupported() const {
-            return next->isReconnectSupported();
+            return !isClosed() && next->isReconnectSupported();
         }
 
         virtual bool isUpdateURIsSupported() const {
-            return next->isUpdateURIsSupported();
+            return !isClosed() && next->isUpdateURIsSupported();
         }
 
-        virtual bool isClosed() const {
-            return next->isClosed();
-        }
+        virtual bool isClosed() const;
 
         virtual std::string getRemoteAddress() const {
+
+            if (isClosed()) {
+                return "";
+            }
+
             return next->getRemoteAddress();
         }
 
         virtual void reconnect(const decaf::net::URI& uri);
 
         virtual void updateURIs(bool rebalance, const decaf::util::List<decaf::net::URI>& uris) {
+            checkClosed();
             next->updateURIs(rebalance, uris);
         }
+
+    protected:
+
+        /**
+         * Subclasses can override this method to do their own startup work.  This method
+         * will always be called before the next transport in the chain is called in order
+         * to allow this transport a chance to initialize required resources.
+         */
+        virtual void beforeNextIsStarted() {}
+
+        /**
+         * Subclasses can override this method to do their own post startup work.  This method
+         * will always be called after the doStart() method and the next transport's own start()
+         * methods have been successfully run.
+         */
+        virtual void afterNextIsStarted() {}
+
+        /**
+         * Subclasses can override this method to do their own pre-stop work.  This method
+         * will always be called before the next transport's own stop() method or this filter's
+         * own doStop() method is called.
+         */
+        virtual void beforeNextIsStopped() {}
+
+        /**
+         * Subclasses can override this method to do their own stop work.  This method is
+         * always called after all the next transports have been stopped to prevent this
+         * transport for destroying resources needed by the lower level transports.
+         */
+        virtual void afterNextIsStopped() {}
+
+        /**
+         * Subclasses can override this method to do their own close work.  This method is
+         * always called after all the next transports have been closed to prevent this
+         * transport for destroying resources needed by the lower level transports.
+         */
+        virtual void doClose() {}
 
     };
 

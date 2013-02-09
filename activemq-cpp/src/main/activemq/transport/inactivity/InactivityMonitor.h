@@ -68,12 +68,6 @@ namespace inactivity {
 
     public: // TransportFilter Methods
 
-        virtual void start();
-
-        virtual void stop();
-
-        virtual void close();
-
         virtual void onException(const decaf::lang::Exception& ex);
 
         virtual void onCommand(const Pointer<Command> command);
@@ -97,6 +91,14 @@ namespace inactivity {
         long long getInitialDelayTime() const;
 
         void setInitialDelayTime(long long value) const;
+
+    protected:
+
+        virtual void afterNextIsStarted();
+
+        virtual void beforeNextIsStopped();
+
+        virtual void doClose();
 
     private:
 

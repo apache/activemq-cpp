@@ -85,20 +85,16 @@ namespace correlator{
         // Sync object for accessing the request map.
         decaf::util::concurrent::Mutex mapMutex;
 
-        // Flag to indicate the closed state.
-        bool closed;
-
         // Indicates that an the filter is now unusable from some error.
         Pointer<Exception> priorError;
 
     public:
 
-        CorrelatorData() : nextCommandId(1), requestMap(), mapMutex(), closed(true), priorError(NULL) {}
+        CorrelatorData() : nextCommandId(1), requestMap(), mapMutex(), priorError(NULL) {}
 
     };
 
 }}}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::ResponseCorrelator(Pointer<Transport> next) : TransportFilter(next), impl(new CorrelatorData) {
@@ -120,12 +116,11 @@ ResponseCorrelator::~ResponseCorrelator() {
 void ResponseCorrelator::oneway(const Pointer<Command> command) {
 
     try {
+
+        checkClosed();
+
         command->setCommandId(this->impl->nextCommandId.getAndIncrement());
         command->setResponseRequired(false);
-
-        if (this->impl->closed || next == NULL) {
-            throw IOException(__FILE__, __LINE__, "transport already closed");
-        }
 
         next->oneway(command);
     }
@@ -140,6 +135,8 @@ void ResponseCorrelator::oneway(const Pointer<Command> command) {
 Pointer<FutureResponse> ResponseCorrelator::asyncRequest(const Pointer<Command> command, const Pointer<ResponseCallback> responseCallback) {
 
     try {
+
+        checkClosed();
 
         command->setCommandId(this->impl->nextCommandId.getAndIncrement());
         command->setResponseRequired(true);
@@ -190,6 +187,8 @@ Pointer<Response> ResponseCorrelator::request(const Pointer<Command> command) {
 
     try {
 
+        checkClosed();
+
         command->setCommandId(this->impl->nextCommandId.getAndIncrement());
         command->setResponseRequired(true);
 
@@ -239,6 +238,8 @@ Pointer<Response> ResponseCorrelator::request(const Pointer<Command> command) {
 Pointer<Response> ResponseCorrelator::request(const Pointer<Command> command, unsigned int timeout) {
 
     try {
+
+        checkClosed();
 
         command->setCommandId(this->impl->nextCommandId.getAndIncrement());
         command->setResponseRequired(true);
@@ -291,7 +292,7 @@ void ResponseCorrelator::onCommand(const Pointer<Command> command) {
     // Let's see if the incoming command is a response, if not we just pass it along
     // and allow outstanding requests to keep waiting without stalling control commands.
     if (!command->isResponse()) {
-        fire(command);
+        TransportFilter::onCommand(command);
         return;
     }
 
@@ -316,45 +317,9 @@ void ResponseCorrelator::onCommand(const Pointer<Command> command) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::start() {
-
-    try{
-
-        if (!this->impl->closed) {
-            return;
-        }
-
-        if (listener == NULL) {
-            throw IOException(__FILE__, __LINE__, "exceptionListener is invalid");
-        }
-
-        if (next == NULL) {
-            throw IOException(__FILE__, __LINE__, "next transport is NULL");
-        }
-
-        // Start the delegate transport object.
-        next->start();
-
-        // Mark it as open.
-        this->impl->closed = false;
-    }
-    AMQ_CATCH_RETHROW(IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
-    AMQ_CATCHALL_THROW(IOException)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::close() {
-
+void ResponseCorrelator::doClose() {
     try {
-
         dispose(Pointer<Exception>(new IOException(__FILE__, __LINE__, "Transport Stopped")));
-
-        if (!this->impl->closed && next != NULL) {
-            next->close();
-        }
-
-        this->impl->closed = true;
     }
     AMQ_CATCH_RETHROW(IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
@@ -371,7 +336,7 @@ void ResponseCorrelator::onException(const decaf::lang::Exception& ex) {
 void ResponseCorrelator::dispose(Pointer<Exception> error) {
 
     ArrayList<Pointer<FutureResponse> > requests;
-    synchronized(&this->impl->mapMutex){
+    synchronized(&this->impl->mapMutex) {
         if (this->impl->priorError == NULL) {
             this->impl->priorError = error;
             requests.ensureCapacity((int)this->impl->requestMap.size());
