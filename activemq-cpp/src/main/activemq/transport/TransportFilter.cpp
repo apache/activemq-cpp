@@ -230,6 +230,8 @@ void TransportFilter::close() {
 
         if (this->impl->closed.compareAndSet(false, true)) {
 
+            this->impl->started.set(false);
+
             if (this->next == NULL) {
                 throw decaf::io::IOException(__FILE__, __LINE__, "Transport chain is invalid");
             }
