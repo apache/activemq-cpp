@@ -118,8 +118,8 @@ void InactivityMonitorTest::testReadTimeout() {
 
     MyTransportListener listener;
     InactivityMonitor monitor( this->transport, this->transport->getWireFormat() );
-
     monitor.setTransportListener( &listener );
+    monitor.start();
 
     // Send the local one for the monitor to record.
     monitor.oneway( this->localWireFormatInfo );
@@ -143,8 +143,8 @@ void InactivityMonitorTest::testWriteMessageFail() {
 
     MyTransportListener listener;
     InactivityMonitor monitor( this->transport, this->transport->getWireFormat() );
-
     monitor.setTransportListener( &listener );
+    monitor.start();
 
     // Send the local one for the monitor to record.
     monitor.oneway( this->localWireFormatInfo );
@@ -168,8 +168,8 @@ void InactivityMonitorTest::testNonFailureSendCase() {
 
     MyTransportListener listener;
     InactivityMonitor monitor( this->transport, this->transport->getWireFormat() );
-
     monitor.setTransportListener( &listener );
+    monitor.start();
 
     // Send the local one for the monitor to record.
     monitor.oneway( this->localWireFormatInfo );

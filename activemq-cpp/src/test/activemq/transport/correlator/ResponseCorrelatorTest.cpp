@@ -298,7 +298,7 @@ namespace correlator{
 
     };
 
-    class RequestThread : public decaf::lang::Thread{
+    class RequestThread : public decaf::lang::Thread {
     public:
 
         Transport* transport;
@@ -320,7 +320,7 @@ namespace correlator{
             this->transport = transport;
         }
 
-        void run(){
+        void run() {
 
             try{
                 resp = transport->request(cmd);
@@ -336,80 +336,70 @@ namespace correlator{
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelatorTest::testBasics() {
 
-    try{
+    MyListener listener;
+    Pointer<MyTransport> transport( new MyTransport() );
+    ResponseCorrelator correlator( transport );
+    correlator.setTransportListener( &listener );
+    CPPUNIT_ASSERT( transport->listener == &correlator );
 
-        MyListener listener;
-        Pointer<MyTransport> transport( new MyTransport() );
-        ResponseCorrelator correlator( transport );
-        correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport->listener == &correlator );
-
-        // Give the thread a little time to get up and running.
-        synchronized( &(transport->startedMutex) ) {
-            // Start the transport.
-            correlator.start();
-            transport->startedMutex.wait();
-        }
-
-        // Send one request.
-        Pointer<MyCommand> cmd( new MyCommand );
-        Pointer<Response> resp = correlator.request( cmd );
-        CPPUNIT_ASSERT( resp != NULL );
-        CPPUNIT_ASSERT( resp->getCorrelationId() == cmd->getCommandId() );
-
-        // Wait to get the message back asynchronously.
-        decaf::lang::Thread::sleep( 100 );
-
-        // Since our transport relays our original command back at us as a
-        // non-response message, check to make sure we received it and that
-        // it is the original command.
-        CPPUNIT_ASSERT( listener.commands.size() == 1 );
-        CPPUNIT_ASSERT( listener.exCount == 0 );
-
-        correlator.close();
+    // Give the thread a little time to get up and running.
+    synchronized( &(transport->startedMutex) ) {
+        // Start the transport.
+        correlator.start();
+        transport->startedMutex.wait();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    // Send one request.
+    Pointer<MyCommand> cmd( new MyCommand );
+    Pointer<Response> resp = correlator.request( cmd );
+    CPPUNIT_ASSERT( resp != NULL );
+    CPPUNIT_ASSERT( resp->getCorrelationId() == cmd->getCommandId() );
+
+    // Wait to get the message back asynchronously.
+    decaf::lang::Thread::sleep( 100 );
+
+    // Since our transport relays our original command back at us as a
+    // non-response message, check to make sure we received it and that
+    // it is the original command.
+    CPPUNIT_ASSERT( listener.commands.size() == 1 );
+    CPPUNIT_ASSERT( listener.exCount == 0 );
+
+    correlator.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelatorTest::testOneway(){
 
-    try{
+    MyListener listener;
+    Pointer<MyTransport> transport( new MyTransport() );
+    ResponseCorrelator correlator( transport );
+    correlator.setTransportListener( &listener );
+    CPPUNIT_ASSERT( transport->listener == &correlator );
 
-        MyListener listener;
-        Pointer<MyTransport> transport( new MyTransport() );
-        ResponseCorrelator correlator( transport );
-        correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport->listener == &correlator );
+    // Give the thread a little time to get up and running.
+    synchronized( &(transport->startedMutex) ) {
 
-        // Give the thread a little time to get up and running.
-        synchronized( &(transport->startedMutex) ) {
+        // Start the transport.
+        correlator.start();
 
-            // Start the transport.
-            correlator.start();
-
-            transport->startedMutex.wait();
-        }
-
-        // Send many oneway request (we'll get them back asynchronously).
-        const unsigned int numCommands = 1000;
-        for( unsigned int ix = 0; ix < numCommands; ++ix ) {
-            Pointer<MyCommand> command( new MyCommand() );
-            correlator.oneway( command );
-        }
-
-        // Give the thread a little time to get all the messages back.
-        decaf::lang::Thread::sleep( 500 );
-
-        // Make sure we got them all back.
-        CPPUNIT_ASSERT( listener.commands.size() == numCommands );
-        CPPUNIT_ASSERT( listener.exCount == 0 );
-
-        correlator.close();
+        transport->startedMutex.wait();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    // Send many oneway request (we'll get them back asynchronously).
+    const unsigned int numCommands = 1000;
+    for( unsigned int ix = 0; ix < numCommands; ++ix ) {
+        Pointer<MyCommand> command( new MyCommand() );
+        correlator.oneway( command );
+    }
+
+    // Give the thread a little time to get all the messages back.
+    decaf::lang::Thread::sleep( 500 );
+
+    // Make sure we got them all back.
+    CPPUNIT_ASSERT( listener.commands.size() == numCommands );
+    CPPUNIT_ASSERT( listener.exCount == 0 );
+
+    correlator.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -452,69 +442,64 @@ void ResponseCorrelatorTest::testTransportException(){
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelatorTest::testMultiRequests(){
 
-    try{
+    MyListener listener;
+    Pointer<MyTransport> transport( new MyTransport() );
+    ResponseCorrelator correlator( transport );
+    correlator.setTransportListener( &listener );
+    CPPUNIT_ASSERT( transport->listener == &correlator );
 
-        MyListener listener;
-        Pointer<MyTransport> transport( new MyTransport() );
-        ResponseCorrelator correlator( transport );
-        correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport->listener == &correlator );
+    // Start the transport.
+    correlator.start();
 
-        // Start the transport.
-        correlator.start();
+    // Make sure the start command got down to the thread.
+    CPPUNIT_ASSERT( transport->thread != NULL );
 
-        // Make sure the start command got down to the thread.
-        CPPUNIT_ASSERT( transport->thread != NULL );
+    // Give the thread a little time to get up and running.
+    synchronized( &(transport->startedMutex) ) {
+        transport->startedMutex.wait(500);
+    }
 
-        // Give the thread a little time to get up and running.
-        synchronized( &(transport->startedMutex) ) {
-            transport->startedMutex.wait(500);
-        }
+    // Start all the requester threads.
+    const unsigned int numRequests = 20;
+    RequestThread requesters[numRequests];
+    for( unsigned int ix=0; ix<numRequests; ++ix ){
+        requesters[ix].setTransport( &correlator );
+        requesters[ix].start();
+    }
 
-        // Start all the requester threads.
-        const unsigned int numRequests = 20;
-        RequestThread requesters[numRequests];
-        for( unsigned int ix=0; ix<numRequests; ++ix ){
-            requesters[ix].setTransport( &correlator );
-            requesters[ix].start();
-        }
+    // Make sure we got all the responses and that they were all
+    // what we expected.
+    for( unsigned int ix=0; ix<numRequests; ++ix ){
+        requesters[ix].join();
+        CPPUNIT_ASSERT( requesters[ix].resp != NULL );
+        CPPUNIT_ASSERT( requesters[ix].cmd->getCommandId() ==
+                        requesters[ix].resp->getCorrelationId() );
+    }
 
-        // Make sure we got all the responses and that they were all
-        // what we expected.
-        for( unsigned int ix=0; ix<numRequests; ++ix ){
-            requesters[ix].join();
-            CPPUNIT_ASSERT( requesters[ix].resp != NULL );
-            CPPUNIT_ASSERT( requesters[ix].cmd->getCommandId() ==
-                            requesters[ix].resp->getCorrelationId() );
-        }
+    decaf::lang::Thread::sleep( 60 );
+    synchronized( &listener.mutex )
+    {
+        unsigned int count = 0;
 
-        decaf::lang::Thread::sleep( 60 );
-        synchronized( &listener.mutex )
+        while( listener.commands.size() != numRequests )
         {
-            unsigned int count = 0;
+            listener.mutex.wait( 75 );
 
-            while( listener.commands.size() != numRequests )
-            {
-                listener.mutex.wait( 75 );
+            ++count;
 
-                ++count;
-
-                if( count == numRequests ) {
-                    break;
-                }
+            if( count == numRequests ) {
+                break;
             }
         }
-
-        // Since our transport relays our original command back at us as a
-        // non-response message, check to make sure we received it and that
-        // it is the original command.
-        CPPUNIT_ASSERT( listener.commands.size() == numRequests );
-        CPPUNIT_ASSERT( listener.exCount == 0 );
-
-        correlator.close();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+
+    // Since our transport relays our original command back at us as a
+    // non-response message, check to make sure we received it and that
+    // it is the original command.
+    CPPUNIT_ASSERT( listener.commands.size() == numRequests );
+    CPPUNIT_ASSERT( listener.exCount == 0 );
+
+    correlator.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -537,5 +522,4 @@ void ResponseCorrelatorTest::testNarrow(){
 
     narrowed = correlator.narrow( typeid( correlator ) );
     CPPUNIT_ASSERT( narrowed == &correlator );
-
 }
