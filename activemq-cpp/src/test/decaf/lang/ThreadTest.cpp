@@ -721,7 +721,7 @@ void ThreadTest::testIsInterrupted() {
     SpinThread spin;
     Thread spinner(&spin);
     spinner.start();
-    Thread::yield();
+    Thread::sleep(100);
 
     try {
         CPPUNIT_ASSERT_MESSAGE("Non-Interrupted thread returned true", !spinner.isInterrupted());
