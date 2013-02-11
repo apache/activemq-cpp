@@ -1628,7 +1628,7 @@ RejectedExecutionHandler* ThreadPoolExecutor::getRejectedExecutionHandler() cons
 void ThreadPoolExecutor::setRejectedExecutionHandler(RejectedExecutionHandler* handler) {
 
     if (handler == NULL) {
-        throw NullPointerException(__FILE__, __LINE__, "Cannot assign a NULL ThreadFactory.");
+        throw NullPointerException(__FILE__, __LINE__, "Cannot assign a NULL RejectedExecutionHandler.");
     }
 
     if (handler != this->kernel->rejectionHandler) {
