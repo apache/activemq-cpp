@@ -25,7 +25,7 @@
 namespace decaf {
 namespace net {
 
-    class DECAF_API Inet6Address : public InetAddress {
+    class DECAF_API Inet6Address: public InetAddress {
     private:
 
         friend class InetAddress;
@@ -33,8 +33,8 @@ namespace net {
     protected:
 
         Inet6Address();
-        Inet6Address( const unsigned char* ipAddress, int numBytes );
-        Inet6Address( const std::string& hostname, const unsigned char* ipAddress, int numBytes );
+        Inet6Address(const unsigned char* ipAddress, int numBytes);
+        Inet6Address(const std::string& hostname, const unsigned char* ipAddress, int numBytes);
 
     public:
 

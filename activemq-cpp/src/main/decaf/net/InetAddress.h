@@ -45,8 +45,8 @@ namespace net {
     protected:
 
         InetAddress();
-        InetAddress( const unsigned char* ipAddress, int numBytes );
-        InetAddress( const std::string& hostname, const unsigned char* ipAddress, int numBytes );
+        InetAddress(const unsigned char* ipAddress, int numBytes);
+        InetAddress(const std::string& hostname, const unsigned char* ipAddress, int numBytes);
 
     public:
 
@@ -96,7 +96,8 @@ namespace net {
          */
         virtual InetAddress* clone() const;
 
-    public:  // Address Property Tests, override in the subclasses for correct results
+    public:
+        // Address Property Tests, override in the subclasses for correct results
 
         /**
          * Check if this InetAddress is a valid wildcard address.
@@ -188,7 +189,8 @@ namespace net {
             return false;
         }
 
-    public:  // Static Create methods.
+    public:
+        // Static Create methods.
 
         /**
          * Given a raw IP Address in byte array form, create and return a new InetAddress instance.
@@ -199,7 +201,7 @@ namespace net {
          *
          * @throws UnknownHostException if the address array length is invalid.
          */
-        static InetAddress getByAddress( const unsigned char* bytes, int numBytes );
+        static InetAddress getByAddress(const unsigned char* bytes, int numBytes);
 
         /**
          * Given a host name and IPAddress return a new InetAddress.  There is no name service checking or
@@ -212,7 +214,7 @@ namespace net {
          *
          * @throws UnknownHostException if the address array length is invalid.
          */
-        static InetAddress getByAddress( const std::string& hostname, const unsigned char* bytes, int numBytes );
+        static InetAddress getByAddress(const std::string& hostname, const unsigned char* bytes, int numBytes);
 
         /**
          * Gets an InetAddress that is the local host address.  If the localhost value cannot
@@ -237,7 +239,7 @@ namespace net {
          *
          * @return an unsigned int that represents the address value.
          */
-        static unsigned int bytesToInt( const unsigned char* bytes, int start );
+        static unsigned int bytesToInt(const unsigned char* bytes, int start);
 
         static InetAddress getAnyAddress();
 
