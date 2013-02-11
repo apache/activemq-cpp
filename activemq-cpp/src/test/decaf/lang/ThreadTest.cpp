@@ -901,3 +901,23 @@ void ThreadTest::testConcurrentRapidCreateAndDestroy() {
 
     threads.clear();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ThreadTest::testCreatedButNotStarted() {
+
+    RunThread runnable;
+
+    ArrayList<Thread*> threads;
+    const int NUM_THREADS = 32;
+
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        threads.add(new Thread(&runnable));
+    }
+
+    Pointer<Iterator<Thread*> > threadsIter(threads.iterator());
+    while (threadsIter->hasNext()) {
+        delete threadsIter->next();
+    }
+
+    threads.clear();
+}

@@ -924,6 +924,22 @@ ThreadHandle* Threading::createNewThread(Thread* parent, const char* name, long 
 void Threading::destroyThread(ThreadHandle* thread) {
 
     if (!thread->osThread) {
+
+        // If the thread was created but never started then we need to wake it
+        // up from the suspended state so that it can terminate, we mark it
+        // canceled to ensure it doesn't call its runnable.
+        if (thread->state == Thread::NEW) {
+            PlatformThread::lockMutex(thread->mutex);
+
+            if (thread->state == Thread::NEW && thread->suspended == true) {
+                thread->canceled = true;
+                thread->suspended = false;
+                PlatformThread::notifyAll(thread->condition);
+            }
+
+            PlatformThread::unlockMutex(thread->mutex);
+        }
+
         try {
             Threading::join(thread, 0, 0);
         } catch (InterruptedException& ex) {}
@@ -1109,8 +1125,8 @@ bool Threading::join(ThreadHandle* thread, long long mills, int nanos) {
         interrupted = true;
     } else if (self == thread && self->state != Thread::TERMINATED) {
 
-        // When blocking on ourself, we just enter a wait and hope their's
-        // either a timeout, or we interrupted.
+        // When blocking on ourself, we just enter a wait and hope there's
+        // either a timeout, or we are interrupted.
 
         JoinCompletionCondition completion(self, NULL);
 

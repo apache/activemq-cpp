@@ -55,6 +55,7 @@ namespace lang{
       CPPUNIT_TEST( testInterruptWait );
       CPPUNIT_TEST( testRapidCreateAndDestroy );
       CPPUNIT_TEST( testConcurrentRapidCreateAndDestroy );
+      CPPUNIT_TEST( testCreatedButNotStarted );
       CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -92,6 +93,7 @@ namespace lang{
         void testInterruptWait();
         void testRapidCreateAndDestroy();
         void testConcurrentRapidCreateAndDestroy();
+        void testCreatedButNotStarted();
 
     };
 
