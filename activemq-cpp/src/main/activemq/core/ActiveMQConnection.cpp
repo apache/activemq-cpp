@@ -93,21 +93,23 @@ namespace core{
     class ConnectionThreadFactory : public ThreadFactory {
     private:
 
-        Pointer<Transport> transport;
+        std::string connectionId;
 
     public:
 
-        ConnectionThreadFactory(Pointer<Transport> transport) : transport(transport) {
-            if (transport == NULL) {
-                throw NullPointerException(__FILE__, __LINE__, "Transport cannot be null");
+        ConnectionThreadFactory(std::string connectionId) : connectionId(connectionId) {
+            if (connectionId.empty()) {
+                throw NullPointerException(__FILE__, __LINE__, "Connection Id must be set.");
             }
         }
 
         virtual ~ConnectionThreadFactory() {}
 
         virtual Thread* newThread(decaf::lang::Runnable* runnable) {
-            Thread* thread = new Thread(runnable,
-                    std::string("ActiveMQ Connection Executor: ") + transport->getRemoteAddress());
+            static std::string prefix = "ActiveMQ Connection Executor: ";
+
+            std::string name = prefix + connectionId;
+            Thread* thread = new Thread(runnable, name);
             return thread;
         }
 
@@ -245,14 +247,16 @@ namespace core{
             this->connectionInfo.reset(new ConnectionInfo());
             this->brokerInfoReceived.reset(new CountDownLatch(1));
 
-            this->executor.reset(
-                new ThreadPoolExecutor(1, 1, 5, TimeUnit::SECONDS,
-                    new LinkedBlockingQueue<Runnable*>(), new ConnectionThreadFactory(transport)));
-
             // Generate a connectionId
             std::string uniqueId = CONNECTION_ID_GENERATOR.generateId();
             decaf::lang::Pointer<ConnectionId> connectionId(new ConnectionId());
             connectionId->setValue(uniqueId);
+
+            this->executor.reset(
+                new ThreadPoolExecutor(1, 1, 5, TimeUnit::SECONDS,
+                    new LinkedBlockingQueue<Runnable*>(),
+                    new ConnectionThreadFactory(connectionId->toString())));
+
             this->connectionInfo->setConnectionId(connectionId);
             this->scheduler.reset(new Scheduler(std::string("ActiveMQConnection[")+uniqueId+"] Scheduler"));
             this->scheduler->start();
@@ -263,7 +267,7 @@ namespace core{
                 synchronized(&onExceptionLock) {
                     this->scheduler->shutdown();
                     this->executor->shutdown();
-                    this->executor->awaitTermination(1, TimeUnit::MINUTES);
+                    this->executor->awaitTermination(10, TimeUnit::MINUTES);
                 }
             }
             AMQ_CATCHALL_NOTHROW()
@@ -455,13 +459,13 @@ ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport> trans
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnection::~ActiveMQConnection() {
+
     try {
+        this->close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 
-        try {
-            this->close();
-        }
-        AMQ_CATCHALL_NOTHROW()
-
+    try {
         // This must happen even if exceptions occur in the Close attempt.
         delete this->config;
     }
@@ -476,7 +480,8 @@ void ActiveMQConnection::addDispatcher(const decaf::lang::Pointer<ConsumerId>& c
             this->config->dispatchers.put(consumer, dispatcher);
         }
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()}
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::removeDispatcher(const decaf::lang::Pointer<ConsumerId>& consumer) {
@@ -486,7 +491,8 @@ void ActiveMQConnection::removeDispatcher(const decaf::lang::Pointer<ConsumerId>
             this->config->dispatchers.remove(consumer);
         }
     }
-    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()}
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Session* ActiveMQConnection::createSession() {
