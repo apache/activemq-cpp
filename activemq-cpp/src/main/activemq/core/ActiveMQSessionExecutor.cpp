@@ -60,6 +60,13 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 
         // Empty the message queue and destroy any remaining messages.
         clear();
+
+        // Ensure that we shutdown the taskRunner Thread before we are done.
+        Pointer<TaskRunner> taskRunner = this->taskRunner;
+        if (taskRunner != NULL) {
+            this->taskRunner.reset(NULL);
+            taskRunner->shutdown();
+        }
     }
     AMQ_CATCHALL_NOTHROW()
 }
