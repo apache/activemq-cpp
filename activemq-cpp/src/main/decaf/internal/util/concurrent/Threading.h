@@ -174,6 +174,13 @@ namespace concurrent {
          */
         static void notifyAllWaiters(MonitorHandle* monitor);
 
+        /**
+         * Query the monitor object to determine if it is currently locked.  This method is a mainly
+         * a diagnostic tool and its return value is not guaranteed to reflect the locked state after
+         * its been called as the state can change quickly.
+         */
+        static bool isMonitorLocked(MonitorHandle* monitor);
+
     public:  // Threads
 
         /**

@@ -46,6 +46,14 @@ void MutexTest::testConstructor() {
     CPPUNIT_ASSERT( mutex.tryLock() == true );
 
     mutex.unlock();
+
+    try {
+        synchronized(&mutex) {
+            throw Exception();
+        }
+    } catch (...) {}
+
+    CPPUNIT_ASSERT(!mutex.isLocked());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -23,9 +23,9 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/util/Config.h>
 
-namespace decaf{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace util {
+namespace concurrent {
 
     class MutexProperties;
 
@@ -36,21 +36,21 @@ namespace concurrent{
      *
      * @since 1.0
      */
-    class DECAF_API Mutex : public Synchronizable {
+    class DECAF_API Mutex: public Synchronizable {
     private:
 
         MutexProperties* properties;
 
     private:
 
-        Mutex( const Mutex& src );
-        Mutex& operator= ( const Mutex& src );
+        Mutex(const Mutex& src);
+        Mutex& operator=(const Mutex& src);
 
     public:
 
         Mutex();
 
-        Mutex( const std::string& name );
+        Mutex(const std::string& name);
 
         virtual ~Mutex();
 
@@ -58,7 +58,9 @@ namespace concurrent{
 
         std::string toString() const;
 
-    public:  // Synchronizable API Implementation
+        bool isLocked() const;
+
+    public:
 
         virtual void lock();
 
@@ -68,9 +70,9 @@ namespace concurrent{
 
         virtual void wait();
 
-        virtual void wait( long long millisecs );
+        virtual void wait(long long millisecs);
 
-        virtual void wait( long long millisecs, int nanos );
+        virtual void wait(long long millisecs, int nanos);
 
         virtual void notify();
 

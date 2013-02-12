@@ -1507,6 +1507,16 @@ void Threading::returnMonitor(MonitorHandle* monitor, bool alreadyLocked) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Threading::isMonitorLocked(MonitorHandle* monitor) {
+
+    if (monitor != NULL) {
+        return monitor->owner != NULL;
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Threading::enterMonitor(MonitorHandle* monitor) {
 
     ThreadHandle* thisThread = getCurrentThreadHandle();

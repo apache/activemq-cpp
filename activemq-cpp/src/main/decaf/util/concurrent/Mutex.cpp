@@ -32,15 +32,15 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace util {
+namespace concurrent {
 
     class MutexProperties {
     private:
 
-        MutexProperties( const MutexProperties& );
-        MutexProperties& operator= ( const MutexProperties& );
+        MutexProperties(const MutexProperties&);
+        MutexProperties& operator=(const MutexProperties&);
 
     public:
 
@@ -49,8 +49,8 @@ namespace concurrent{
         }
 
         MutexProperties(const std::string& name) : monitor(NULL), name(name) {
-            if( this->name.empty() ) {
-                this->name = DEFAULT_NAME_PREFIX + Integer::toString( ++id );
+            if (this->name.empty()) {
+                this->name = DEFAULT_NAME_PREFIX + Integer::toString(++id);
             }
         }
 
@@ -95,6 +95,15 @@ std::string Mutex::getName() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string Mutex::toString() const {
     return this->properties->name;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Mutex::isLocked() const {
+    if (this->properties->monitor != NULL) {
+        Threading::isMonitorLocked(this->properties->monitor);
+    }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
