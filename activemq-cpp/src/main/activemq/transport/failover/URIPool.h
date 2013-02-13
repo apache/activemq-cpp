@@ -34,7 +34,7 @@ namespace failover {
     class AMQCPP_API URIPool {
     private:
 
-        LinkedList<URI> uriPool;
+        mutable LinkedList<URI> uriPool;
         bool randomize;
 
     public:
@@ -107,6 +107,21 @@ namespace failover {
         void setRandomize(bool value) {
             this->randomize = value;
         }
+
+        /**
+         * Returns true if the given URI is contained in this set of URIs.
+         *
+         * @returns true if the URI is in the list.
+         */
+        bool contains(const decaf::net::URI& uri) const;
+
+        /**
+         * Returns true if the URI given is the first in the list of
+         * URIs contained in this pool.
+         *
+         * @returns true if the URI is index 0 in the URI list.
+         */
+        bool isPriority(const decaf::net::URI& uri) const;
 
     };
 

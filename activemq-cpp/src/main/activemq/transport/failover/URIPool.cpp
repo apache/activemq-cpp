@@ -101,3 +101,21 @@ void URIPool::removeURI(const URI& uri) {
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+bool URIPool::contains(const decaf::net::URI& uri) const {
+    synchronized(&uriPool) {
+        return uriPool.contains(uri);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool URIPool::isPriority(const decaf::net::URI& uri) const {
+    synchronized(&uriPool) {
+        if (uriPool.isEmpty()) {
+            return false;
+        }
+
+        return uriPool.getFirst().equals(uri);
+    }
+}

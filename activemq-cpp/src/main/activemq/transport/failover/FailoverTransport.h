@@ -45,11 +45,10 @@ namespace transport {
 namespace failover {
 
     using namespace decaf::lang;
-    using decaf::net::URI;
-    using namespace decaf::util;
-    using namespace activemq::threads;
     using activemq::commands::Command;
     using activemq::commands::Response;
+
+    class FailoverTransportImpl;
 
     class AMQCPP_API FailoverTransport : public CompositeTransport,
                                          public activemq::threads::CompositeTask {
@@ -57,45 +56,10 @@ namespace failover {
 
         friend class FailoverTransportListener;
 
-        bool closed;
-        bool connected;
-        bool started;
-
-        long long timeout;
-        long long initialReconnectDelay;
-        long long maxReconnectDelay;
-        long long backOffMultiplier;
-        bool useExponentialBackOff;
-        bool initialized;
-        int maxReconnectAttempts;
-        int startupMaxReconnectAttempts;
-        int connectFailures;
-        long long reconnectDelay;
-        bool trackMessages;
-        bool trackTransactionProducers;
-        int maxCacheSize;
-        bool connectionInterruptProcessingComplete;
-        bool firstConnection;
-        bool updateURIsSupported;
-        bool reconnectSupported;
-
-        mutable decaf::util::concurrent::Mutex reconnectMutex;
-        mutable decaf::util::concurrent::Mutex sleepMutex;
-        mutable decaf::util::concurrent::Mutex listenerMutex;
-
         state::ConnectionStateTracker stateTracker;
-        decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
-        Pointer<URIPool> uris;
-        decaf::util::LinkedList<URI> updated;
-        Pointer<URI> connectedTransportURI;
-        Pointer<Transport> connectedTransport;
-        Pointer<Exception> connectionFailure;
-        Pointer<BackupTransportPool> backups;
-        Pointer<CloseTransportsTask> closeTask;
-        Pointer<CompositeTaskRunner> taskRunner;
-        Pointer<TransportListener> disposedListener;
-        Pointer<TransportListener> myTransportListener;
+        FailoverTransportImpl* impl;
+
         TransportListener* transportListener;
 
     private:
@@ -127,9 +91,9 @@ namespace failover {
 
     public: // CompositeTransport methods
 
-        virtual void addURI(bool rebalance, const List<URI>& uris);
+        virtual void addURI(bool rebalance, const List<decaf::net::URI>& uris);
 
-        virtual void removeURI(bool rebalance, const List<URI>& uris);
+        virtual void removeURI(bool rebalance, const List<decaf::net::URI>& uris);
 
     public:
 
@@ -259,6 +223,16 @@ namespace failover {
 
         void setUpdateURIsSupported(bool value);
 
+        bool isRebalanceUpdateURIs() const;
+
+        void setRebalanceUpdateURIs(bool rebalanceUpdateURIs);
+
+        bool isPriorityBackup() const;
+
+        void setPriorityBackup(bool priorityBackup);
+
+        void setPriorityURIs(const std::string& priorityURIs);
+
         void setConnectionInterruptProcessingComplete(const Pointer<commands::ConnectionId> connectionId);
 
     protected:
@@ -301,7 +275,7 @@ namespace failover {
          *
          * @throw IOException if an I/O error occurs while creating the new Transport.
          */
-        Pointer<Transport> createTransport(const URI& location) const;
+        Pointer<Transport> createTransport(const decaf::net::URI& location) const;
 
         void processNewTransports(bool rebalance, std::string newTransports);
 
