@@ -648,7 +648,7 @@ void ActiveMQConnection::close() {
                 this->stop();
             } catch (cms::CMSException& error) {
                 if (!hasException) {
-                    ex = Exception(&error);
+                    ex = Exception(new CMSException(error));
                     ex.setMark(__FILE__, __LINE__);
                     hasException = true;
                 }
@@ -713,13 +713,7 @@ void ActiveMQConnection::close() {
             }
         } catch (cms::CMSException& error) {
             if (!hasException) {
-                ex = Exception(&error);
-                ex.setMark(__FILE__, __LINE__);
-                hasException = true;
-            }
-        } catch (std::exception& stdex) {
-            if (!hasException) {
-                ex = Exception(&stdex);
+                ex = Exception(new CMSException(error));
                 ex.setMark(__FILE__, __LINE__);
                 hasException = true;
             }
