@@ -253,6 +253,14 @@ ActiveMQSessionKernel::~ActiveMQSessionKernel() {
     AMQ_CATCHALL_NOTHROW()
 
     try {
+        // Free the executor here so that its threads are gone before any of the
+        // other member data of this class is destroyed as it might be accessing
+        // from its run thread.
+        this->executor.reset(NULL);
+    }
+    AMQ_CATCHALL_NOTHROW()
+
+    try {
         delete this->config;
     }
     AMQ_CATCHALL_NOTHROW()
@@ -340,7 +348,7 @@ void ActiveMQSessionKernel::dispose() {
         }
     };
 
-    try{
+    try {
 
         Finalizer final(this, this->connection);
 
@@ -1334,6 +1342,10 @@ Pointer<ActiveMQConsumerKernel> ActiveMQSessionKernel::lookupConsumerKernel(Poin
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSessionKernel::iterateConsumers() {
+
+    if (this->closed.get()) {
+        return false;
+    }
 
     this->config->consumerLock.readLock().lock();
     try {

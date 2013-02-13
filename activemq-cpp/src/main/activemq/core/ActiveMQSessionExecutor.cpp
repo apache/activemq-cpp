@@ -51,21 +51,28 @@ ActiveMQSessionExecutor::ActiveMQSessionExecutor(ActiveMQSessionKernel* session)
 ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 
     try {
-
         // Terminate the thread.
         stop();
+    }
+    AMQ_CATCHALL_NOTHROW()
 
+    try {
         // Close out the Message Channel.
         close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 
+    try {
         // Empty the message queue and destroy any remaining messages.
         clear();
+    }
+    AMQ_CATCHALL_NOTHROW()
 
+    try {
         // Ensure that we shutdown the taskRunner Thread before we are done.
-        Pointer<TaskRunner> taskRunner = this->taskRunner;
         if (taskRunner != NULL) {
-            this->taskRunner.reset(NULL);
             taskRunner->shutdown();
+            taskRunner.reset(NULL);
         }
     }
     AMQ_CATCHALL_NOTHROW()
