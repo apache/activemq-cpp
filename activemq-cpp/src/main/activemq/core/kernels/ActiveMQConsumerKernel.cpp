@@ -333,13 +333,15 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
         std::string connectionId = session->getConnection()->getConnectionInfo().getConnectionId()->getValue();
 
         if (physicalName.find(connectionId) == std::string::npos) {
-            throw cms::InvalidDestinationException("Cannot use a Temporary destination from another Connection");
+            throw cms::InvalidDestinationException(
+                "Cannot use a Temporary destination from another Connection");
         }
 
         Pointer<ActiveMQTempDestination> tempDest = destination.dynamicCast<ActiveMQTempDestination>();
 
         if (session->getConnection()->isDeleted(tempDest)) {
-            throw cms::InvalidDestinationException("Cannot use a Temporary destination that has been deleted");
+            throw cms::InvalidDestinationException(
+                "Cannot use a Temporary destination that has been deleted");
         }
     }
 
@@ -385,7 +387,8 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
 
     if (this->consumerInfo->getPrefetchSize() < 0) {
         delete this->internal;
-        throw IllegalArgumentException(__FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
+        throw IllegalArgumentException(
+            __FILE__, __LINE__, "Cannot create a consumer with a negative prefetch");
     }
 }
 
@@ -461,9 +464,9 @@ void ActiveMQConsumerKernel::doClose() {
         info->setLastDeliveredSequenceId(this->internal->lastDeliveredSequenceId);
         this->session->oneway(info);
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -486,7 +489,7 @@ void ActiveMQConsumerKernel::dispose() {
             // Purge all the pending messages
             try{
                 this->internal->unconsumedMessages->clear();
-            } catch ( ActiveMQException& ex ){
+            } catch (ActiveMQException& ex){
                 if( !haveException ){
                     ex.setMark( __FILE__, __LINE__ );
                     error = ex;
@@ -527,9 +530,9 @@ void ActiveMQConsumerKernel::dispose() {
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -784,9 +787,9 @@ void ActiveMQConsumerKernel::afterMessageIsConsumed(const Pointer<MessageDispatc
             throw IllegalStateException( __FILE__, __LINE__, "Invalid Session State" );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -828,9 +831,9 @@ void ActiveMQConsumerKernel::deliverAcks() {
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1122,9 +1125,9 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1170,10 +1173,10 @@ Pointer<cms::Message> ActiveMQConsumerKernel::createCMSMessage(Pointer<MessageDi
 
         return message.dynamicCast<cms::Message>();
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(cms::CMSException)
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1198,9 +1201,9 @@ void ActiveMQConsumerKernel::sendPullRequest(long long timeout) {
             this->session->oneway(messagePull);
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

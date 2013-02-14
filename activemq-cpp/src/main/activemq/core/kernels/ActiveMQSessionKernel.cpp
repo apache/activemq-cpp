@@ -267,7 +267,7 @@ ActiveMQSessionKernel::~ActiveMQSessionKernel() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionKernel::fire(const activemq::exceptions::ActiveMQException& ex) {
+void ActiveMQSessionKernel::fire(const ActiveMQException& ex) {
     if (connection != NULL) {
         connection->fire(ex);
     }
@@ -307,9 +307,9 @@ void ActiveMQSessionKernel::doClose() {
         info->setLastDeliveredSequenceId(this->lastDeliveredSequenceId);
         this->connection->oneway(info);
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -408,9 +408,9 @@ void ActiveMQSessionKernel::dispose() {
             throw;
         }
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -590,7 +590,7 @@ cms::MessageConsumer* ActiveMQSessionKernel::createConsumer(const cms::Destinati
             this->connection->syncRequest(consumer->getConsumerInfo());
         } catch (Exception& ex) {
             this->removeConsumer(consumer);
-            throw ex;
+            throw;
         }
 
         consumer->setMessageTransformer(this->config->transformer);
@@ -634,7 +634,7 @@ cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer(const cms::To
             this->connection->syncRequest(consumer->getConsumerInfo());
         } catch (Exception& ex) {
             this->removeConsumer(consumer);
-            throw ex;
+            throw;
         }
 
         consumer->setMessageTransformer(this->config->transformer);
@@ -684,7 +684,7 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
             this->connection->oneway(producer->getProducerInfo());
         } catch (Exception& ex) {
             this->removeProducer(producer);
-            throw ex;
+            throw;
         }
 
         producer->setMessageTransformer(this->config->transformer);
@@ -1118,9 +1118,9 @@ void ActiveMQSessionKernel::createTemporaryDestination(commands::ActiveMQTempDes
         tempDestination->setConnection(this->connection);
         this->connection->addTempDestination(Pointer<ActiveMQTempDestination>(tempDestination->cloneDataStructure()));
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1161,9 +1161,9 @@ void ActiveMQSessionKernel::destroyTemporaryDestination(
         // Send the message to the broker.
         this->connection->syncRequest(command);
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1173,9 +1173,9 @@ std::string ActiveMQSessionKernel::createTemporaryDestinationName() {
         return this->connection->getConnectionId().getValue() + ":" +
                Long::toString(this->connection->getNextTempDestinationId());
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1184,9 +1184,9 @@ void ActiveMQSessionKernel::oneway(Pointer<Command> command) {
     try {
         this->connection->oneway(command);
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1196,9 +1196,9 @@ Pointer<Response> ActiveMQSessionKernel::syncRequest(Pointer<Command> command, u
         this->checkClosed();
         return this->connection->syncRequest(command, timeout);
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1227,9 +1227,9 @@ void ActiveMQSessionKernel::addConsumer(Pointer<ActiveMQConsumerKernel> consumer
         // Register this as a message dispatcher for the consumer.
         this->connection->addDispatcher(consumer->getConsumerInfo()->getConsumerId(), this);
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1246,9 +1246,9 @@ void ActiveMQSessionKernel::removeConsumer(Pointer<ActiveMQConsumerKernel> consu
             throw;
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1268,9 +1268,9 @@ void ActiveMQSessionKernel::addProducer(Pointer<ActiveMQProducerKernel> producer
 
         this->connection->addProducer(producer);
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1287,9 +1287,9 @@ void ActiveMQSessionKernel::removeProducer(Pointer<ActiveMQProducerKernel> produ
             throw;
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW(ActiveMQException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+    AMQ_CATCHALL_THROW(ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
