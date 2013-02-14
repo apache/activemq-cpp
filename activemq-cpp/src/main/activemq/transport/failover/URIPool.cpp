@@ -114,20 +114,22 @@ bool URIPool::removeURI(const URI& uri) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool URIPool::contains(const decaf::net::URI& uri) const {
+    bool result = false;
     synchronized(&uriPool) {
-        return uriPool.contains(uri);
+        result = uriPool.contains(uri);
     }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool URIPool::isPriority(const decaf::net::URI& uri) const {
     synchronized(&uriPool) {
-        if (uriPool.isEmpty()) {
-            return false;
+        if (!uriPool.isEmpty()) {
+            return uriPool.getFirst().equals(uri);
         }
-
-        return uriPool.getFirst().equals(uri);
     }
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
