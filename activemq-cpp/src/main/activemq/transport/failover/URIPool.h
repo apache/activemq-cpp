@@ -131,6 +131,11 @@ namespace failover {
          */
         bool isPriority(const decaf::net::URI& uri) const;
 
+        /**
+         * Remove all URIs from the pool.
+         */
+        void clear();
+
     };
 
 }}}

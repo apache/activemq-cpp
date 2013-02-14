@@ -129,3 +129,10 @@ bool URIPool::isPriority(const decaf::net::URI& uri) const {
         return uriPool.getFirst().equals(uri);
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void URIPool::clear() {
+    synchronized(&uriPool) {
+        this->uriPool.clear();
+    }
+}
