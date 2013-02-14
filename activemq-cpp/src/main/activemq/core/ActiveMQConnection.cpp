@@ -320,7 +320,7 @@ namespace core{
 
     public:
 
-        OnAsyncExceptionRunnable(ActiveMQConnection* connection, Exception ex) :
+        OnAsyncExceptionRunnable(ActiveMQConnection* connection, const Exception& ex) :
             Runnable(), connection(connection), ex(ex) {}
         virtual ~OnAsyncExceptionRunnable() {}
 
@@ -386,8 +386,8 @@ namespace core{
                     Pointer< Iterator<TransportListener*> > iter( this->config->transportListeners.iterator() );
 
                     while (iter->hasNext()) {
-                        try{
-                            iter->next()->onException(error);
+                        try {
+                            iter->next()->onException(*error);
                         } catch(...) {}
                     }
                 }
@@ -648,7 +648,8 @@ void ActiveMQConnection::close() {
                 this->stop();
             } catch (cms::CMSException& error) {
                 if (!hasException) {
-                    ex = Exception(new CMSException(error));
+//                    ex = Exception(new CMSException(error)); // TODO
+                    ex = Exception();
                     ex.setMark(__FILE__, __LINE__);
                     hasException = true;
                 }
@@ -713,7 +714,8 @@ void ActiveMQConnection::close() {
             }
         } catch (cms::CMSException& error) {
             if (!hasException) {
-                ex = Exception(new CMSException(error));
+//                ex = Exception(new CMSException(error));  TODO
+                ex = Exception();
                 ex.setMark(__FILE__, __LINE__);
                 hasException = true;
             }
