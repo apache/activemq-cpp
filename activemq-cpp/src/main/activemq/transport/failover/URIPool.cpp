@@ -66,20 +66,24 @@ URI URIPool::getURI() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::addURI(const URI& uri) {
+bool URIPool::addURI(const URI& uri) {
 
     synchronized(&uriPool) {
         if (!uriPool.contains(uri)) {
             uriPool.add(uri);
+            return true;
         }
     }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::addURIs(const LinkedList<URI>& uris) {
+bool URIPool::addURIs(const LinkedList<URI>& uris) {
+
+    bool result = false;
 
     synchronized(&uriPool) {
-
         std::auto_ptr<Iterator<URI> > iter(uris.iterator());
 
         while (iter->hasNext()) {
@@ -87,19 +91,25 @@ void URIPool::addURIs(const LinkedList<URI>& uris) {
 
             if (!uriPool.contains(uri)) {
                 uriPool.add(uri);
+                result = true;
             }
         }
     }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIPool::removeURI(const URI& uri) {
+bool URIPool::removeURI(const URI& uri) {
 
     synchronized(&uriPool) {
         if (uriPool.contains(uri)) {
             uriPool.remove(uri);
+            return true;
         }
     }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

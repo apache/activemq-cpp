@@ -71,22 +71,30 @@ namespace failover {
          * the resource that was connected to that URI.
          *
          * @param uri - a URI previously taken from the pool.
+         *
+         * @returns true if the URI was added or false if its already in the list.
          */
-        void addURI(const URI& uri);
+        bool addURI(const URI& uri);
 
         /**
          * Adds a List of URIs to this Pool, the method checks for duplicates already
          * in the pool and does not add those.
          *
          * @param uris - List of URIs to add into the Pool.
+         *
+         * @returns true if any URI was added or false if they were already in the list.
          */
-        void addURIs(const LinkedList<URI>& uris);
+        bool addURIs(const LinkedList<URI>& uris);
 
         /**
          * Remove a given URI from the Free List.
-         * @param uri - the URI to find and remove from the free list
+         *
+         * @param uri
+         *      The URI to find and remove from the free list
+         *
+         * @returns true if the URI was removed or false if no change was made.
          */
-        void removeURI(const URI& uri);
+        bool removeURI(const URI& uri);
 
         /**
          * Is the URI that is given randomly picked from the pool or is
