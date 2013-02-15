@@ -48,6 +48,22 @@ namespace failover {
          */
         URIPool(const decaf::util::List<decaf::net::URI>& uris);
 
+        /**
+         * Creates a new URI Pool which will be a copy of the given URI Pool
+         *
+         * @param uris
+         *      The URIPool instance to copy.
+         */
+        URIPool(const URIPool& uris);
+
+        /**
+         * Assignment operator, copies the contents of the given URIPool into this one.
+         *
+         * @param uris
+         *      The URIPool whose contents are to be copied.
+         */
+        URIPool& operator= (const URIPool& uris);
+
         ~URIPool();
 
         /**
@@ -137,6 +153,13 @@ namespace failover {
          * Remove all URIs from the pool.
          */
         void clear();
+
+        /**
+         * Compares the URIs in this set to that of another URIPool
+         *
+         * @returns true if the URIPool instance contains the same values.
+         */
+        bool equals(const URIPool& other) const;
 
     };
 

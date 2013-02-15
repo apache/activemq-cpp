@@ -31,12 +31,28 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool() : uriPool(), randomize( false ) {
+URIPool::URIPool() : uriPool(), randomize(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool(const decaf::util::List<URI>& uris) : uriPool(), randomize( false ) {
-    this->uriPool.copy( uris );
+URIPool::URIPool(const decaf::util::List<URI>& uris) : uriPool(), randomize(false) {
+    this->uriPool.copy(uris);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URIPool::URIPool(const URIPool& uris) : uriPool(), randomize(false) {
+    synchronized(&uris.uriPool) {
+        this->uriPool.copy(uris.uriPool);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URIPool& URIPool::operator= (const URIPool& uris) {
+    synchronized(&uris.uriPool) {
+        this->uriPool.copy(uris.uriPool);
+    }
+
+    return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,22 +63,21 @@ URIPool::~URIPool() {
 URI URIPool::getURI() {
 
     synchronized(&uriPool) {
-        if( !uriPool.isEmpty() ) {
+        if (!uriPool.isEmpty()) {
 
-            int index = 0;  // Take the first one in the list unless random is on.
+            int index = 0; // Take the first one in the list unless random is on.
 
-            if( isRandomize() ) {
+            if (isRandomize()) {
                 Random rand;
-                rand.setSeed( decaf::lang::System::currentTimeMillis() );
-                index = rand.nextInt( (int)uriPool.size() );
+                rand.setSeed(decaf::lang::System::currentTimeMillis());
+                index = rand.nextInt((int) uriPool.size());
             }
 
-            return uriPool.removeAt( index );
+            return uriPool.removeAt(index);
         }
     }
 
-    throw NoSuchElementException(
-        __FILE__, __LINE__, "URI Pool is currently empty." );
+    throw NoSuchElementException(__FILE__, __LINE__, "URI Pool is currently empty.");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +94,7 @@ bool URIPool::addURI(const URI& uri) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool URIPool::addURIs(const LinkedList<URI>& uris) {
+bool URIPool::addURIs(const List<URI>& uris) {
 
     bool result = false;
 
@@ -146,4 +161,21 @@ bool URIPool::isEmpty() const {
         result = this->uriPool.isEmpty();
     }
     return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool URIPool::equals(const URIPool& other) const {
+
+    LinkedList<URI> mine;
+    LinkedList<URI> others;
+
+    synchronized(&other.uriPool) {
+        others.copy(other.uriPool);
+    }
+
+    synchronized(&this->uriPool) {
+        mine.copy(this->uriPool);
+    }
+
+    return mine.equals(others);
 }
