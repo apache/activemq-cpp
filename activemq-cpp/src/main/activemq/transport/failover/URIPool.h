@@ -32,6 +32,7 @@ namespace failover {
     private:
 
         mutable decaf::util::LinkedList<decaf::net::URI> uriPool;
+        decaf::net::URI priorityURI;
         bool randomize;
 
     public:
@@ -70,6 +71,14 @@ namespace failover {
          * @returns true if this URI Pool is empty.
          */
         bool isEmpty() const;
+
+        /**
+         * Returns the URI that is considered to be this Pools Priority URI, this is
+         * always the first URI in the list of URIs that this pool was created with.
+         */
+        const decaf::net::URI& getPriorityURI() const {
+            return this->priorityURI;
+        }
 
         /**
          * Fetches the next available URI from the pool, if there are no more

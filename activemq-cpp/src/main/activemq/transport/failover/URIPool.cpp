@@ -31,18 +31,26 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool() : uriPool(), randomize(false) {
+URIPool::URIPool() : uriPool(), priorityURI(), randomize(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool(const decaf::util::List<URI>& uris) : uriPool(), randomize(false) {
+URIPool::URIPool(const decaf::util::List<URI>& uris) : uriPool(), priorityURI(), randomize(false) {
     this->uriPool.copy(uris);
+
+    if (!this->uriPool.isEmpty()) {
+        this->priorityURI = this->uriPool.getFirst();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URIPool::URIPool(const URIPool& uris) : uriPool(), randomize(false) {
+URIPool::URIPool(const URIPool& uris) : uriPool(), priorityURI(), randomize(false) {
     synchronized(&uris.uriPool) {
         this->uriPool.copy(uris.uriPool);
+    }
+
+    if (!this->uriPool.isEmpty()) {
+        this->priorityURI = this->uriPool.getFirst();
     }
 }
 
@@ -50,6 +58,10 @@ URIPool::URIPool(const URIPool& uris) : uriPool(), randomize(false) {
 URIPool& URIPool::operator= (const URIPool& uris) {
     synchronized(&uris.uriPool) {
         this->uriPool.copy(uris.uriPool);
+    }
+
+    if (!this->uriPool.isEmpty()) {
+        this->priorityURI = this->uriPool.getFirst();
     }
 
     return *this;
