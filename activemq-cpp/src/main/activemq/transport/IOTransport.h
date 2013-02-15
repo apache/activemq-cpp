@@ -23,7 +23,6 @@
 #include <activemq/transport/TransportListener.h>
 #include <activemq/commands/Command.h>
 #include <activemq/commands/Response.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/lang/Runnable.h>
@@ -31,7 +30,6 @@
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/util/logging/LoggerDefines.h>
-#include <memory>
 
 namespace activemq {
 namespace transport {
@@ -44,10 +42,16 @@ namespace transport {
 
     /**
      * Implementation of the Transport interface that performs marshaling of commands
-     * to IO streams.  This class does not implement the request method, it only handles
+     * to IO streams.
+     *
+     * This class does not implement the Transport::request method, it only handles
      * oneway messages.  A thread polls on the input stream for in-coming commands.  When
      * a command is received, the command listener is notified.  The polling thread is not
-     * started until the start method is called.  The close method will close the associated
+     * started until the start method is called.  Polling can be suspending by calling stop;
+     * however, because the read operation is blocking the transport my still pull one command
+     * off the wire even after the stop method has been called.
+     *
+     * The close method will close the associated
      * streams.  Close can be called explicitly by the user, but is also called in the
      * destructor.  Once this object has been closed, it cannot be restarted.
      */
@@ -69,13 +73,17 @@ namespace transport {
 
         /**
          * Notify the exception listener
-         * @param ex the exception to send
+         *
+         * @param ex
+         *      The exception to send to any registered listener.
          */
         void fire(decaf::lang::Exception& ex);
 
         /**
          * Notify the command listener.
-         * @param command the command the send
+         *
+         * @param
+         *      The command the command the send to any registered listener.
          */
         void fire(const Pointer<Command> command);
 
@@ -104,6 +112,7 @@ namespace transport {
          *      The InputStream that will be read from by this object.
          */
         virtual void setInputStream(decaf::io::DataInputStream* is);
+
         /**
          * Sets the stream to which this Transport implementation will write its data.
          *
@@ -193,9 +202,6 @@ namespace transport {
 
     public:  // Runnable methods.
 
-        /**
-         * Runs the polling thread.
-         */
         virtual void run();
 
     };

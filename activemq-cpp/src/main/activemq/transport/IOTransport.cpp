@@ -230,7 +230,6 @@ void IOTransport::close() {
             try {
                 if (impl->inputStream != NULL) {
                     impl->inputStream->close();
-                    impl->inputStream = NULL;
                 }
             } catch (IOException& ex) {
                 error = ex;
@@ -242,7 +241,6 @@ void IOTransport::close() {
                 // Close the output stream.
                 if (impl->outputStream != NULL) {
                     impl->outputStream->close();
-                    impl->outputStream = NULL;
                 }
             } catch (IOException& ex) {
                 if (!hasException) {
@@ -251,9 +249,6 @@ void IOTransport::close() {
                     hasException = true;
                 }
             }
-
-            // Clear the WireFormat so we can't use it anymore
-            this->impl->wireFormat.reset(NULL);
 
             if (hasException) {
                 throw error;
@@ -270,7 +265,7 @@ void IOTransport::run() {
 
     try {
 
-        while (!isClosed()) {
+        while (this->impl->started.get() && !this->impl->closed.get()) {
 
             // Read the next command from the input stream.
             Pointer<Command> command(impl->wireFormat->unmarshal(this, this->impl->inputStream));
