@@ -308,7 +308,7 @@ namespace {
                 head.nextFree = tail;
             }
 
-            if (size == 50) {
+            if (size == 1024) {
                 Node* toDelete = head.nextFree;
                 head.nextFree = toDelete->nextFree;
                 delete toDelete;
