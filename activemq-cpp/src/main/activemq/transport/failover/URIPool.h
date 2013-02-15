@@ -28,13 +28,10 @@ namespace activemq {
 namespace transport {
 namespace failover {
 
-    using decaf::util::LinkedList;
-    using decaf::net::URI;
-
     class AMQCPP_API URIPool {
     private:
 
-        mutable LinkedList<URI> uriPool;
+        mutable decaf::util::LinkedList<decaf::net::URI> uriPool;
         bool randomize;
 
     public:
@@ -49,9 +46,14 @@ namespace failover {
          *
          * @param uris - List of URI to place in the Pool.
          */
-        URIPool(const decaf::util::List<URI>& uris);
+        URIPool(const decaf::util::List<decaf::net::URI>& uris);
 
         ~URIPool();
+
+        /**
+         * @returns true if this URI Pool is empty.
+         */
+        bool isEmpty() const;
 
         /**
          * Fetches the next available URI from the pool, if there are no more
@@ -63,7 +65,7 @@ namespace failover {
          *
          * @throw NoSuchElementException if there are none free currently.
          */
-        URI getURI();
+        decaf::net::URI getURI();
 
         /**
          * Adds a URI to the free list, callers that have previously taken one using
@@ -74,7 +76,7 @@ namespace failover {
          *
          * @returns true if the URI was added or false if its already in the list.
          */
-        bool addURI(const URI& uri);
+        bool addURI(const decaf::net::URI& uri);
 
         /**
          * Adds a List of URIs to this Pool, the method checks for duplicates already
@@ -84,7 +86,7 @@ namespace failover {
          *
          * @returns true if any URI was added or false if they were already in the list.
          */
-        bool addURIs(const LinkedList<URI>& uris);
+        bool addURIs(const decaf::util::List<decaf::net::URI>& uris);
 
         /**
          * Remove a given URI from the Free List.
@@ -94,7 +96,7 @@ namespace failover {
          *
          * @returns true if the URI was removed or false if no change was made.
          */
-        bool removeURI(const URI& uri);
+        bool removeURI(const decaf::net::URI& uri);
 
         /**
          * Is the URI that is given randomly picked from the pool or is

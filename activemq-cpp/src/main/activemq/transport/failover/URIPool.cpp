@@ -138,3 +138,12 @@ void URIPool::clear() {
         this->uriPool.clear();
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+bool URIPool::isEmpty() const {
+    bool result = true;
+    synchronized(&uriPool) {
+        result = this->uriPool.isEmpty();
+    }
+    return result;
+}
