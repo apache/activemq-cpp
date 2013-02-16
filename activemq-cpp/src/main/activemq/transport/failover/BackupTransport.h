@@ -34,7 +34,7 @@ namespace failover {
 
     class BackupTransportPool;
 
-    class AMQCPP_API BackupTransport: public DefaultTransportListener {
+    class AMQCPP_API BackupTransport : public DefaultTransportListener {
     private:
 
         // The parent of this Backup
@@ -48,6 +48,9 @@ namespace failover {
 
         // Indicates that the contained transport is not valid any longer.
         bool closed;
+
+        // Is this Transport one of the priority backups.
+        bool priority;
 
     private:
 
@@ -126,6 +129,22 @@ namespace failover {
             this->closed = value;
         }
 
+        /**
+         * @returns true if this transport was in the priority backup list.
+         */
+        bool isPriority() const {
+            return this->priority;
+        }
+
+        /**
+         * Set if this transport is a Priority backup or not.
+         *
+         * @param value
+         *      True if this is a priority backup.
+         */
+        void setPriority(bool value) {
+            this->priority = value;
+        }
     };
 
 }}}

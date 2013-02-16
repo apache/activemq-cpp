@@ -25,7 +25,7 @@ using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
 BackupTransport::BackupTransport(BackupTransportPool* parent) :
-    parent(parent), transport(), uri(), closed(true) {
+    parent(parent), transport(), uri(), closed(true), priority(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
