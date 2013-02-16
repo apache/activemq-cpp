@@ -559,12 +559,14 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
     FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
         transport->narrow( typeid( FailoverTransport ) ) );
 
+    failover->setUpdateURIsSupported(true);
+
     CPPUNIT_ASSERT( failover != NULL );
     CPPUNIT_ASSERT( failover->isRandomize() == false );
 
     transport->start();
 
-    Thread::sleep( 1000 );
+    Thread::sleep( 3000 );
     CPPUNIT_ASSERT( failover->isConnected() == true );
 
     MockTransport* mock = NULL;
@@ -577,7 +579,7 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
     removals.add( URI("mock://localhost:61616") );
 
     mock->fireCommand( control );
-    Thread::sleep( 1000 );
+    Thread::sleep( 2000 );
     failover->removeURI( true, removals );
 
     Thread::sleep( 2000 );
@@ -588,5 +590,5 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
     }
 
-    CPPUNIT_ASSERT_EQUAL( mock->getName() ,std::string( "Reconnect" ) );
+    CPPUNIT_ASSERT_EQUAL(std::string("Reconnect"), mock->getName());
 }
