@@ -39,7 +39,7 @@ CompositeTaskRunner::CompositeTaskRunner() :
 
 ////////////////////////////////////////////////////////////////////////////////
 CompositeTaskRunner::~CompositeTaskRunner() {
-    try{
+    try {
         this->shutdown();
         this->thread->join();
         this->thread.reset(NULL);
@@ -79,12 +79,12 @@ void CompositeTaskRunner::shutdown(long long timeout) {
         shutDown = true;
         pending = true;
         mutex.notifyAll();
+    }
 
-        // Wait till the thread stops ( no need to wait if shutdown
-        // is called from thread that is shutting down)
-        if (Thread::currentThread() != this->thread.get() && !threadTerminated) {
-            mutex.wait(timeout);
-        }
+    // Wait till the thread stops ( no need to wait if shutdown
+    // is called from thread that is shutting down)
+    if (Thread::currentThread() != this->thread.get() && !threadTerminated) {
+        this->thread->join(timeout);
     }
 }
 
@@ -130,14 +130,14 @@ void CompositeTaskRunner::run() {
                 }
             }
 
-            if( !this->iterate() ) {
+            if (!this->iterate()) {
 
                 // wait to be notified.
                 synchronized(&mutex) {
                     if (shutDown) {
                         return;
                     }
-                    while (!pending) {
+                    while (!pending && !shutDown) {
                         mutex.wait();
                     }
                 }
