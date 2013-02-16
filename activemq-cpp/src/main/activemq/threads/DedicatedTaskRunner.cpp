@@ -71,7 +71,7 @@ bool DedicatedTaskRunner::isStarted() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DedicatedTaskRunner::shutdown(unsigned int timeout) {
+void DedicatedTaskRunner::shutdown(long long timeout) {
 
     synchronized(&mutex) {
 

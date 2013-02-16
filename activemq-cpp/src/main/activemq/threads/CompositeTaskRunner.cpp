@@ -73,7 +73,7 @@ bool CompositeTaskRunner::isStarted() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CompositeTaskRunner::shutdown(unsigned int timeout) {
+void CompositeTaskRunner::shutdown(long long timeout) {
 
     synchronized(&mutex) {
         shutDown = true;

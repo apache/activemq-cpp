@@ -84,7 +84,7 @@ namespace threads {
          *
          * @param timeout - Time in Milliseconds to wait for the task to stop.
          */
-        virtual void shutdown(unsigned int timeout);
+        virtual void shutdown(long long timeout);
 
         /**
          * Shutdown once the task has finished and the TaskRunner's thread has exited.
