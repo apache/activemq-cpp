@@ -87,9 +87,9 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(const decaf::net:
         transport->setUseExponentialBackOff(
             Boolean::parseBoolean(topLvlProperties.getProperty("useExponentialBackOff", "true")));
         transport->setMaxReconnectAttempts(
-            Integer::parseInt(topLvlProperties.getProperty("maxReconnectAttempts", "0")));
+            Integer::parseInt(topLvlProperties.getProperty("maxReconnectAttempts", "-1")));
         transport->setStartupMaxReconnectAttempts(
-            Integer::parseInt(topLvlProperties.getProperty("startupMaxReconnectAttempts", "0")));
+            Integer::parseInt(topLvlProperties.getProperty("startupMaxReconnectAttempts", "-1")));
         transport->setRandomize(
             Boolean::parseBoolean(topLvlProperties.getProperty("randomize", "true")));
         transport->setBackup(
@@ -104,6 +104,9 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(const decaf::net:
             Integer::parseInt(topLvlProperties.getProperty("maxCacheSize", "131072")));
         transport->setUpdateURIsSupported(
             Boolean::parseBoolean(topLvlProperties.getProperty("updateURIsSupported", "true")));
+        transport->setPriorityBackup(
+            Boolean::parseBoolean(topLvlProperties.getProperty("priorityBackup", "false")));
+        transport->setPriorityURIs(topLvlProperties.getProperty("priorityURIs", ""));
 
         transport->addURI(false, data.getComponents());
 

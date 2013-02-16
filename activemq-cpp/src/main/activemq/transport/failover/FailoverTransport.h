@@ -26,17 +26,9 @@
 #include <activemq/threads/CompositeTaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
-#include <activemq/transport/failover/BackupTransportPool.h>
-#include <activemq/transport/failover/CloseTransportsTask.h>
-#include <activemq/transport/failover/FailoverTransportListener.h>
-#include <activemq/transport/failover/URIPool.h>
 #include <activemq/wireformat/WireFormat.h>
 
-#include <decaf/util/LinkedList.h>
-#include <decaf/util/StlMap.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/concurrent/atomic/AtomicReference.h>
 #include <decaf/net/URI.h>
 #include <decaf/io/IOException.h>
 
@@ -48,6 +40,8 @@ namespace failover {
     using activemq::commands::Command;
     using activemq::commands::Response;
 
+    class FailoverTransportListener;
+    class BackupTransportPool;
     class FailoverTransportImpl;
 
     class AMQCPP_API FailoverTransport : public CompositeTransport,
@@ -55,12 +49,11 @@ namespace failover {
     private:
 
         friend class FailoverTransportListener;
+        friend class BackupTransportPool;
 
         state::ConnectionStateTracker stateTracker;
 
         FailoverTransportImpl* impl;
-
-        TransportListener* transportListener;
 
     private:
 
@@ -84,10 +77,13 @@ namespace failover {
 
         /**
          * Adds a New URI to the List of URIs this transport can Connect to.
+         *
+         * @param rebalance
+         *      Should the transport reconnect to a different broker to balance load.
          * @param uri
-         *        A String version of a URI to add to the URIs to failover to.
+         *      A String version of a URI to add to the URIs to failover to.
          */
-        void add(const std::string& uri);
+        void add(bool rebalance, const std::string& uri);
 
     public: // CompositeTransport methods
 

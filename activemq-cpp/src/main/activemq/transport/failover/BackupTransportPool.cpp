@@ -35,19 +35,48 @@ using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace activemq {
+namespace transport {
+namespace failover {
+
+    class BackupTransportPoolImpl {
+    private:
+
+        BackupTransportPoolImpl(const BackupTransportPoolImpl&);
+        BackupTransportPoolImpl& operator= (const BackupTransportPoolImpl&);
+
+    public:
+
+        LinkedList< Pointer<BackupTransport> > backups;
+        volatile bool pending;
+        volatile bool closed;
+        volatile int priorityBackups;
+
+        BackupTransportPoolImpl() : backups(), pending(false), closed(false), priorityBackups(0) {
+        }
+
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
 BackupTransportPool::BackupTransportPool(const Pointer<CompositeTaskRunner> taskRunner,
                                          const Pointer<CloseTransportsTask> closeTask,
-                                         const Pointer<URIPool> uriPool) : backups(),
-                                                                           taskRunner(taskRunner),
-                                                                           closeTask(closeTask),
-                                                                           uriPool(uriPool),
-                                                                           backupPoolSize(1),
-                                                                           enabled(false),
-                                                                           pending(false) {
+                                         const Pointer<URIPool> uriPool,
+                                         const Pointer<URIPool> updates,
+                                         const Pointer<URIPool> priorityUriPool) : impl(new BackupTransportPoolImpl),
+                                                                                   taskRunner(taskRunner),
+                                                                                   closeTask(closeTask),
+                                                                                   uriPool(uriPool),
+                                                                                   updates(updates),
+                                                                                   priorityUriPool(priorityUriPool),
+                                                                                   backupPoolSize(1),
+                                                                                   enabled(false) {
 
     if (taskRunner == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "TaskRunner passed is NULL");
@@ -55,6 +84,10 @@ BackupTransportPool::BackupTransportPool(const Pointer<CompositeTaskRunner> task
 
     if (uriPool == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "URIPool passed is NULL");
+    }
+
+    if (priorityUriPool == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Piroirty URIPool passed is NULL");
     }
 
     if (closeTask == NULL) {
@@ -70,13 +103,16 @@ BackupTransportPool::BackupTransportPool(const Pointer<CompositeTaskRunner> task
 BackupTransportPool::BackupTransportPool(int backupPoolSize,
                                          const Pointer<CompositeTaskRunner> taskRunner,
                                          const Pointer<CloseTransportsTask> closeTask,
-                                         const Pointer<URIPool> uriPool ) : backups(),
-                                                                            taskRunner(taskRunner),
-                                                                            closeTask(closeTask),
-                                                                            uriPool(uriPool),
-                                                                            backupPoolSize(backupPoolSize),
-                                                                            enabled(false),
-                                                                            pending(false) {
+                                         const Pointer<URIPool> uriPool,
+                                         const Pointer<URIPool> updates,
+                                         const Pointer<URIPool> priorityUriPool) : impl(new BackupTransportPoolImpl),
+                                                                                   taskRunner(taskRunner),
+                                                                                   closeTask(closeTask),
+                                                                                   uriPool(uriPool),
+                                                                                   updates(updates),
+                                                                                   priorityUriPool(priorityUriPool),
+                                                                                   backupPoolSize(backupPoolSize),
+                                                                                   enabled(false) {
 
     if (taskRunner == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "TaskRunner passed is NULL");
@@ -84,6 +120,10 @@ BackupTransportPool::BackupTransportPool(int backupPoolSize,
 
     if (uriPool == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "URIPool passed is NULL");
+    }
+
+    if (priorityUriPool == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Piroirty URIPool passed is NULL");
     }
 
     if (closeTask == NULL) {
@@ -98,17 +138,41 @@ BackupTransportPool::BackupTransportPool(int backupPoolSize,
 ////////////////////////////////////////////////////////////////////////////////
 BackupTransportPool::~BackupTransportPool() {
     this->taskRunner->removeTask(this);
+
+    try {
+        delete this->impl;
+    }
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BackupTransportPool::close() {
+
+    if (this->impl->closed) {
+        return;
+    }
+
+    synchronized(&this->impl->backups) {
+        this->enabled = false;
+        this->impl->closed = true;
+        this->impl->backups.clear();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void BackupTransportPool::setEnabled(bool value) {
+
+    if (this->impl->closed) {
+        return;
+    }
+
     this->enabled = value;
 
     if (enabled == true) {
         this->taskRunner->wakeup();
     } else {
-        synchronized(&backups) {
-            this->backups.clear();
+        synchronized(&this->impl->backups) {
+            this->impl->backups.clear();
         }
     }
 }
@@ -122,14 +186,14 @@ Pointer<BackupTransport> BackupTransportPool::getBackup() {
 
     Pointer<BackupTransport> result;
 
-    synchronized(&backups) {
-        if (!backups.isEmpty()) {
-            result = backups.removeAt(0);
+    synchronized(&this->impl->backups) {
+        if (!this->impl->backups.isEmpty()) {
+            result = this->impl->backups.removeAt(0);
         }
     }
 
     // Flag as pending so the task gets run again and new backups are created.
-    this->pending = true;
+    this->impl->pending = true;
     this->taskRunner->wakeup();
 
     return result;
@@ -139,7 +203,7 @@ Pointer<BackupTransport> BackupTransportPool::getBackup() {
 bool BackupTransportPool::isPending() const {
 
     if (this->isEnabled()) {
-        return this->pending;
+        return this->impl->pending;
     }
 
     return false;
@@ -150,9 +214,16 @@ bool BackupTransportPool::iterate() {
 
     LinkedList<URI> failures;
 
-    synchronized(&backups) {
+    synchronized(&this->impl->backups) {
 
-        while (isEnabled() && (int) backups.size() < backupPoolSize) {
+        Pointer<URIPool> uriPool = this->uriPool;
+
+        // We prefer the Broker updated URIs list if it has any URIs.
+        if (!updates->isEmpty()) {
+            uriPool = updates;
+        }
+
+        while (isEnabled() && (int) this->impl->backups.size() < backupPoolSize) {
 
             URI connectTo;
 
@@ -168,23 +239,37 @@ bool BackupTransportPool::iterate() {
             Pointer<BackupTransport> backup(new BackupTransport(this));
             backup->setUri(connectTo);
 
+            if (priorityUriPool->contains(connectTo)) {
+                backup->setPriority(true);
+            }
+
             try {
                 Pointer<Transport> transport = createTransport(connectTo);
+
                 transport->setTransportListener(backup.get());
                 transport->start();
                 backup->setTransport(transport);
-                backups.add(backup);
+
+                // Put any priority connections first so a reconnect picks them
+                // up automatically.
+                if (backup->isPriority()) {
+                    this->impl->priorityBackups++;
+                    this->impl->backups.addFirst(backup);
+                } else {
+                    this->impl->backups.addLast(backup);
+                }
             } catch (...) {
                 // Store it in the list of URIs that didn't work, once done we
                 // return those to the pool.
                 failures.add(connectTo);
             }
         }
+
+        // return all failures to the URI Pool, we can try again later.
+        uriPool->addURIs(failures);
     }
 
-    // return all failures to the URI Pool, we can try again later.
-    uriPool->addURIs(failures);
-    this->pending = false;
+    this->impl->pending = false;
 
     return false;
 }
@@ -192,13 +277,17 @@ bool BackupTransportPool::iterate() {
 ////////////////////////////////////////////////////////////////////////////////
 void BackupTransportPool::onBackupTransportFailure(BackupTransport* failedTransport) {
 
-    synchronized(&backups) {
+    synchronized(&this->impl->backups) {
 
-        std::auto_ptr<Iterator<Pointer<BackupTransport> > > iter(backups.iterator());
+        std::auto_ptr<Iterator<Pointer<BackupTransport> > > iter(this->impl->backups.iterator());
 
         while (iter->hasNext()) {
             if (iter->next() == failedTransport) {
                 iter->remove();
+            }
+
+            if (failedTransport->isPriority() && this->impl->priorityBackups > 0) {
+                this->impl->priorityBackups--;
             }
 
             this->uriPool->addURI(failedTransport->getUri());
@@ -206,6 +295,16 @@ void BackupTransportPool::onBackupTransportFailure(BackupTransport* failedTransp
             this->taskRunner->wakeup();
         }
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool BackupTransportPool::isPriorityBackupAvailable() const {
+    bool result = false;
+    synchronized(&this->impl->backups) {
+        result = this->impl->priorityBackups > 0;
+    }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

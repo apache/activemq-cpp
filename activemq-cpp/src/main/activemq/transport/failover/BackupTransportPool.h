@@ -37,31 +37,45 @@ namespace failover {
     using decaf::util::LinkedList;
     using activemq::threads::CompositeTaskRunner;
 
+    class BackupTransportPoolImpl;
+
     class AMQCPP_API BackupTransportPool : public activemq::threads::CompositeTask {
     private:
 
         friend class BackupTransport;
 
-        mutable LinkedList< Pointer<BackupTransport> > backups;
+        BackupTransportPoolImpl* impl;
+
         Pointer<CompositeTaskRunner> taskRunner;
         Pointer<CloseTransportsTask> closeTask;
         Pointer<URIPool> uriPool;
+        Pointer<URIPool> updates;
+        Pointer<URIPool> priorityUriPool;
         volatile int backupPoolSize;
         volatile bool enabled;
-        volatile bool pending;
+        volatile int maxReconnectDelay;
 
     public:
 
         BackupTransportPool(const Pointer<CompositeTaskRunner> taskRunner,
                             const Pointer<CloseTransportsTask> closeTask,
-                            const Pointer<URIPool> uriPool);
+                            const Pointer<URIPool> uriPool,
+                            const Pointer<URIPool> updates,
+                            const Pointer<URIPool> priorityUriPool);
 
         BackupTransportPool(int backupPoolSize,
                             const Pointer<CompositeTaskRunner> taskRunner,
                             const Pointer<CloseTransportsTask> closeTask,
-                            const Pointer<URIPool> uriPool);
+                            const Pointer<URIPool> uriPool,
+                            const Pointer<URIPool> updates,
+                            const Pointer<URIPool> priorityUriPool);
 
         virtual ~BackupTransportPool();
+
+        /**
+         * Closes down the pool and destroys any Backups contained in the pool.
+         */
+        void close();
 
         /**
          * Return true if we don't currently have enough Connected Transports
@@ -116,6 +130,14 @@ namespace failover {
          */
         void setEnabled(bool value);
 
+        /**
+         * Returns true if there is a Backup in the pool that's on the priority
+         * backups list.
+         *
+         * @returns true if there is a priority backup available.
+         */
+        bool isPriorityBackupAvailable() const;
+
     private:
 
         // The backups report their failure to the pool, the pool removes them
@@ -123,7 +145,7 @@ namespace failover {
         // the internal transport to the close transport's task for cleanup.
         void onBackupTransportFailure(BackupTransport* failedTransport);
 
-        Pointer<Transport> createTransport(const URI& location) const;
+        Pointer<Transport> createTransport(const decaf::net::URI& location) const;
 
     };
 
