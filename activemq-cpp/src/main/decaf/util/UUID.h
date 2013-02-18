@@ -20,12 +20,13 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Comparable.h>
-#include <apr_uuid.h>
 #include <string>
 #include <vector>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
+
+    class UUIDImpl;
 
     /**
      * A class that represents an immutable universally unique identifier (UUID).
@@ -65,17 +66,7 @@ namespace util{
     class DECAF_API UUID : public lang::Comparable<UUID> {
     private:
 
-        // APR Uuid Type
-        apr_uuid_t apr_uuid;
-
-        // Copy of the High part of the data
-        unsigned long long mostSigBits;
-
-        // Copy of the Low part of the data
-        unsigned long long leastSigBits;
-
-        // Version indicator, set when a UUID is generated
-        int uuidVersion;
+        UUIDImpl* uuid;
 
     public:
 

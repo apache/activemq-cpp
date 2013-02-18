@@ -17,7 +17,9 @@
 
 #include "UUID.h"
 #include <apr_strings.h>
+#include <stdio.h>
 #include <apr_md5.h>
+#include <apr_uuid.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -28,18 +30,147 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID::UUID(long long mostSigBits, long long leastSigBits) :
-        apr_uuid(), mostSigBits(mostSigBits), leastSigBits(leastSigBits), uuidVersion(0) {
+namespace decaf {
+namespace util {
 
-    memcpy(&apr_uuid.data[0], &mostSigBits, sizeof(long long));
-    memcpy(&apr_uuid.data[sizeof(long long)], &leastSigBits, sizeof(long long));
+    class UUIDImpl {
+    private:
 
-    // Version indicator, set when a UUID is generated
-    this->uuidVersion = (int) (mostSigBits & 0x000000000000F000LL) >> 12;
+        UUIDImpl(const UUIDImpl&);
+        UUIDImpl& operator= (const UUIDImpl&);
+
+    public:
+
+        unsigned char data[16];
+        unsigned long long mostSigBits;
+        unsigned long long leastSigBits;
+        int uuidVersion;
+
+        UUIDImpl() : mostSigBits(0), leastSigBits(0), uuidVersion(0) {
+        }
+
+        UUIDImpl(long long mostSigBits, long long leastSigBits) :
+            mostSigBits(mostSigBits), leastSigBits(leastSigBits), uuidVersion(0) {
+
+            memcpy(&data[0], &mostSigBits, sizeof(long long));
+            memcpy(&data[sizeof(long long)], &leastSigBits, sizeof(long long));
+
+            // Version indicator, set when a UUID is generated
+            this->uuidVersion = (int) (mostSigBits & 0x000000000000F000LL) >> 12;
+        }
+
+        void format(char *buffer) {
+            sprintf(buffer,
+                    "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+                    data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],
+                    data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15]);
+        }
+
+    private:
+
+        /* convert a pair of hex digits to an integer value [0,255] */
+        #if 'A' == 65
+        static unsigned char parseHexpair(const char* s) {
+            int result;
+            int temp;
+
+            result = s[0] - '0';
+            if (result > 48) {
+                result = (result - 39) << 4;
+            } else if (result > 16) {
+                result = (result - 7) << 4;
+            } else {
+                result = result << 4;
+            }
+
+            temp = s[1] - '0';
+            if (temp > 48) {
+                result |= temp - 39;
+            } else if (temp > 16) {
+                result |= temp - 7;
+            } else {
+                result |= temp;
+            }
+
+            return (unsigned char)result;
+        }
+        #else
+        static unsigned char parseHexpair(const char* s) {
+            int result;
+
+            if (isdigit(*s)) {
+                result = (*s - '0') << 4;
+            } else {
+                if (isupper(*s)) {
+                    result = (*s - 'A' + 10) << 4;
+                } else {
+                    result = (*s - 'a' + 10) << 4;
+                }
+            }
+
+            ++s;
+            if (isdigit(*s)) {
+                result |= (*s - '0');
+            } else {
+                if (isupper(*s)) {
+                    result |= (*s - 'A' + 10);
+                } else {
+                    result |= (*s - 'a' + 10);
+                }
+            }
+
+            return (unsigned char)result;
+        }
+        #endif
+
+    public:
+
+        void parse(const char* uuidString) {
+            int i;
+
+            for (i = 0; i < 36; ++i) {
+                char c = uuidString[i];
+                if (!isxdigit(c) && !(c == '-' && (i == 8 || i == 13 || i == 18 || i == 23)))
+                    throw lang::exceptions::IllegalArgumentException(
+                        __FILE__, __LINE__, "Invalid UUID String: ", uuidString);
+            }
+
+            if (uuidString[36] != '\0') {
+                throw lang::exceptions::IllegalArgumentException(
+                    __FILE__, __LINE__, "Invalid UUID String: ", uuidString);
+            }
+
+            data[0] = parseHexpair(&uuidString[0]);
+            data[1] = parseHexpair(&uuidString[2]);
+            data[2] = parseHexpair(&uuidString[4]);
+            data[3] = parseHexpair(&uuidString[6]);
+
+            data[4] = parseHexpair(&uuidString[9]);
+            data[5] = parseHexpair(&uuidString[11]);
+
+            data[6] = parseHexpair(&uuidString[14]);
+            data[7] = parseHexpair(&uuidString[16]);
+
+            data[8] = parseHexpair(&uuidString[19]);
+            data[9] = parseHexpair(&uuidString[21]);
+
+            for (i = 6; i--;) {
+                data[10 + i] = parseHexpair(&uuidString[i*2+24]);
+            }
+        }
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
+UUID::UUID(long long mostSigBits, long long leastSigBits) : uuid(new UUIDImpl(mostSigBits, leastSigBits)) {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID::~UUID() {}
+UUID::~UUID() {
+    delete this->uuid;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 int UUID::compareTo(const UUID& value) const {
@@ -64,21 +195,21 @@ bool UUID::operator<(const UUID& value) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string UUID::toString() const {
-    char buffer[APR_UUID_FORMATTED_LENGTH + 1] = { 0 };
-    apr_uuid_format(&buffer[0], &apr_uuid);
+    char buffer[37] = { 0 };
+    this->uuid->format(&buffer[0]);
     return &buffer[0];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long UUID::getLeastSignificantBits() const {
-    return this->leastSigBits;
+    return this->uuid->leastSigBits;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long UUID::getMostSignificantBits() const {
     long long result = 0;
-    memcpy(&result, &this->apr_uuid.data[sizeof(long long)], sizeof(long long));
-    return this->mostSigBits;
+    memcpy(&result, &this->uuid->data[sizeof(long long)], sizeof(long long));
+    return this->uuid->mostSigBits;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +220,7 @@ long long UUID::node() {
             __FILE__, __LINE__, "UUID::node - Only a Version 1 UUID supports this operation.");
     }
 
-    return (this->leastSigBits & 0x0000FFFFFFFFFFFFULL);
+    return (this->uuid->leastSigBits & 0x0000FFFFFFFFFFFFULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,9 +232,9 @@ long long UUID::timestamp() {
     }
 
     // Mask out the version and shift values around to make time.
-    long long timeLow = (mostSigBits & 0xFFFFFFFF00000000ULL) >> 32;
-    long long timeMid = (mostSigBits & 0x00000000FFFF0000ULL) << 16;
-    long long timeHigh = (mostSigBits & 0x0000000000000FFFULL) << 48;
+    long long timeLow = (uuid->mostSigBits & 0xFFFFFFFF00000000ULL) >> 32;
+    long long timeMid = (uuid->mostSigBits & 0x00000000FFFF0000ULL) << 16;
+    long long timeHigh = (uuid->mostSigBits & 0x0000000000000FFFULL) << 48;
 
     return timeLow | timeMid | timeHigh;
 }
@@ -116,19 +247,19 @@ int UUID::clockSequence() {
             __FILE__, __LINE__, "UUID::node - Only a Version 1 UUID supports this operation.");
     }
 
-    return (int) ((this->leastSigBits & 0x3FFF000000000000ULL) >> 48);
+    return (int) ((this->uuid->leastSigBits & 0x3FFF000000000000ULL) >> 48);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int UUID::variant() {
 
     // determine variant field
-    if ((this->leastSigBits & 0x8000000000000000ULL) == 0) {
+    if ((this->uuid->leastSigBits & 0x8000000000000000ULL) == 0) {
         // MSB0 not set, NCS backwards compatibility variant
         return 0;
-    } else if ((this->leastSigBits & 0x4000000000000000ULL) != 0) {
+    } else if ((this->uuid->leastSigBits & 0x4000000000000000ULL) != 0) {
         // MSB1 set, either MS reserved or future reserved
-        return (int) ((this->leastSigBits & 0xE000000000000000ULL) >> 61);
+        return (int) ((this->uuid->leastSigBits & 0xE000000000000000ULL) >> 61);
     }
 
     // MSB1 not set, RFC 4122 variant
@@ -137,7 +268,7 @@ int UUID::variant() {
 
 ////////////////////////////////////////////////////////////////////////////////
 int UUID::version() {
-    return this->uuidVersion;
+    return this->uuid->uuidVersion;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,12 +348,9 @@ UUID UUID::nameUUIDFromBytes(const char* name, std::size_t size) {
 ////////////////////////////////////////////////////////////////////////////////
 UUID UUID::fromString(const std::string& name) {
 
-    apr_uuid_t temp;
+    UUIDImpl temp;
 
-    if (apr_uuid_parse(&temp, name.c_str()) != APR_SUCCESS) {
-        throw lang::exceptions::IllegalArgumentException(
-            __FILE__, __LINE__, "UUID::fromString - Invalid UUID String: ", name.c_str());
-    }
+    temp.parse(name.c_str());
 
     long long mostSigBits = 0;
     long long leastSigBits = 0;
