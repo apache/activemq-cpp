@@ -231,6 +231,8 @@ namespace failover {
 
         void setConnectionInterruptProcessingComplete(const Pointer<commands::ConnectionId> connectionId);
 
+        bool isConnectedToPriority() const;
+
     protected:
 
         /**

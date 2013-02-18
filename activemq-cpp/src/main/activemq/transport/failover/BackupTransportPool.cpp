@@ -22,6 +22,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportRegistry.h>
+#include <activemq/transport/failover/FailoverTransport.h>
 
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -65,11 +66,13 @@ namespace failover {
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransportPool::BackupTransportPool(const Pointer<CompositeTaskRunner> taskRunner,
+BackupTransportPool::BackupTransportPool(FailoverTransport* parent,
+                                         const Pointer<CompositeTaskRunner> taskRunner,
                                          const Pointer<CloseTransportsTask> closeTask,
                                          const Pointer<URIPool> uriPool,
                                          const Pointer<URIPool> updates,
-                                         const Pointer<URIPool> priorityUriPool) : impl(new BackupTransportPoolImpl),
+                                         const Pointer<URIPool> priorityUriPool) : impl(NULL),
+                                                                                   parent(parent),
                                                                                    taskRunner(taskRunner),
                                                                                    closeTask(closeTask),
                                                                                    uriPool(uriPool),
@@ -78,6 +81,10 @@ BackupTransportPool::BackupTransportPool(const Pointer<CompositeTaskRunner> task
                                                                                    backupPoolSize(1),
                                                                                    enabled(false) {
 
+    if (parent == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Parent transport passed is NULL");
+    }
+
     if (taskRunner == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "TaskRunner passed is NULL");
     }
@@ -94,18 +101,22 @@ BackupTransportPool::BackupTransportPool(const Pointer<CompositeTaskRunner> task
         throw NullPointerException(__FILE__, __LINE__, "Close Transport Task passed is NULL");
     }
 
+    this->impl = new BackupTransportPoolImpl();
+
     // Add this instance as a Task so that we can create backups when nothing else is
     // going on.
     this->taskRunner->addTask(this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransportPool::BackupTransportPool(int backupPoolSize,
+BackupTransportPool::BackupTransportPool(FailoverTransport* parent,
+                                         int backupPoolSize,
                                          const Pointer<CompositeTaskRunner> taskRunner,
                                          const Pointer<CloseTransportsTask> closeTask,
                                          const Pointer<URIPool> uriPool,
                                          const Pointer<URIPool> updates,
-                                         const Pointer<URIPool> priorityUriPool) : impl(new BackupTransportPoolImpl),
+                                         const Pointer<URIPool> priorityUriPool) : impl(NULL),
+                                                                                   parent(parent),
                                                                                    taskRunner(taskRunner),
                                                                                    closeTask(closeTask),
                                                                                    uriPool(uriPool),
@@ -114,6 +125,10 @@ BackupTransportPool::BackupTransportPool(int backupPoolSize,
                                                                                    backupPoolSize(backupPoolSize),
                                                                                    enabled(false) {
 
+    if (parent == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Parent transport passed is NULL");
+    }
+
     if (taskRunner == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "TaskRunner passed is NULL");
     }
@@ -129,6 +144,8 @@ BackupTransportPool::BackupTransportPool(int backupPoolSize,
     if (closeTask == NULL) {
         throw NullPointerException(__FILE__, __LINE__, "Close Transport Task passed is NULL");
     }
+
+    this->impl = new BackupTransportPoolImpl();
 
     // Add this instance as a Task so that we can create backups when nothing else is
     // going on.
@@ -223,6 +240,8 @@ bool BackupTransportPool::iterate() {
             uriPool = updates;
         }
 
+        bool wakeupParent = false;
+
         while (isEnabled() && (int) this->impl->backups.size() < backupPoolSize) {
 
             URI connectTo;
@@ -230,6 +249,7 @@ bool BackupTransportPool::iterate() {
             // Try for a URI, if one isn't free return and indicate this task
             // is done for now, the next time a backup is requested this task
             // will become pending again and we will attempt to fill the pool.
+            // This will break the loop once we've tried all possible UIRs.
             try {
                 connectTo = uriPool->getURI();
             } catch (NoSuchElementException& ex) {
@@ -241,6 +261,10 @@ bool BackupTransportPool::iterate() {
 
             if (priorityUriPool->contains(connectTo)) {
                 backup->setPriority(true);
+
+                if (!parent->isConnectedToPriority()) {
+                    wakeupParent = true;
+                }
             }
 
             try {
@@ -263,13 +287,19 @@ bool BackupTransportPool::iterate() {
                 // return those to the pool.
                 failures.add(connectTo);
             }
+
+            // We connected to a priority backup and the parent isn't already using one
+            // so wake it up and quick the backups process for now.
+            if (wakeupParent) {
+                this->parent->reconnect(true);
+                break;
+            }
         }
 
         // return all failures to the URI Pool, we can try again later.
         uriPool->addURIs(failures);
+        this->impl->pending = false;
     }
-
-    this->impl->pending = false;
 
     return false;
 }

@@ -160,7 +160,8 @@ namespace failover {
             myTransportListener(new FailoverTransportListener(parent)),
             transportListener(NULL) {
 
-            this->backups.reset(new BackupTransportPool(taskRunner, closeTask, uris, updated, priorityUris));
+            this->backups.reset(
+                new BackupTransportPool(parent, taskRunner, closeTask, uris, updated, priorityUris));
 
             this->taskRunner->addTask(parent);
             this->taskRunner->addTask(this->closeTask.get());
@@ -711,6 +712,7 @@ void FailoverTransport::handleTransportFailure(const decaf::lang::Exception& err
             this->impl->uris->addURI(failedUri);
             this->impl->connectedTransportURI.reset(NULL);
             this->impl->connected = false;
+            this->impl->connectedToPrioirty = false;
 
             // Place the State Tracker into a reconnection state.
             this->stateTracker.transportInterrupted();
@@ -935,6 +937,9 @@ bool FailoverTransport::iterate() {
                         this->impl->connectedTransport = transport;
                         this->impl->reconnectMutex.notifyAll();
                         this->impl->connectFailures = 0;
+
+                        this->impl->connectedToPrioirty =
+                            connectList->getPriorityURI().equals(uri) || this->impl->connectedToPrioirty;
 
                         // Make sure on initial startup, that the transportListener
                         // has been initialized for this instance.
@@ -1288,6 +1293,11 @@ bool FailoverTransport::isPriorityBackup() const {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::setPriorityBackup(bool priorityBackup) {
     this->impl->priorityBackup = priorityBackup;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::isConnectedToPriority() const {
+    return this->impl->connectedToPrioirty;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

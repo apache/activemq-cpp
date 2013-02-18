@@ -38,6 +38,7 @@ namespace failover {
     using activemq::threads::CompositeTaskRunner;
 
     class BackupTransportPoolImpl;
+    class FailoverTransport;
 
     class AMQCPP_API BackupTransportPool : public activemq::threads::CompositeTask {
     private:
@@ -46,6 +47,7 @@ namespace failover {
 
         BackupTransportPoolImpl* impl;
 
+        FailoverTransport* parent;
         Pointer<CompositeTaskRunner> taskRunner;
         Pointer<CloseTransportsTask> closeTask;
         Pointer<URIPool> uriPool;
@@ -57,13 +59,15 @@ namespace failover {
 
     public:
 
-        BackupTransportPool(const Pointer<CompositeTaskRunner> taskRunner,
+        BackupTransportPool(FailoverTransport* parent,
+                            const Pointer<CompositeTaskRunner> taskRunner,
                             const Pointer<CloseTransportsTask> closeTask,
                             const Pointer<URIPool> uriPool,
                             const Pointer<URIPool> updates,
                             const Pointer<URIPool> priorityUriPool);
 
-        BackupTransportPool(int backupPoolSize,
+        BackupTransportPool(FailoverTransport* parent,
+                            int backupPoolSize,
                             const Pointer<CompositeTaskRunner> taskRunner,
                             const Pointer<CloseTransportsTask> closeTask,
                             const Pointer<URIPool> uriPool,
