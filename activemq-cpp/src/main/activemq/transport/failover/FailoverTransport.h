@@ -28,6 +28,7 @@
 #include <activemq/transport/CompositeTransport.h>
 #include <activemq/wireformat/WireFormat.h>
 
+#include <decaf/util/List.h>
 #include <decaf/util/Properties.h>
 #include <decaf/net/URI.h>
 #include <decaf/io/IOException.h>
@@ -228,6 +229,8 @@ namespace failover {
         void setPriorityBackup(bool priorityBackup);
 
         void setPriorityURIs(const std::string& priorityURIs);
+
+        const decaf::util::List<decaf::net::URI>& getPriorityURIs() const;
 
         void setConnectionInterruptProcessingComplete(const Pointer<commands::ConnectionId> connectionId);
 

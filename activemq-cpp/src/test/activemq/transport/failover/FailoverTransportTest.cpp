@@ -582,7 +582,7 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
     Thread::sleep( 2000 );
     failover->removeURI( true, removals );
 
-    Thread::sleep( 2000 );
+    Thread::sleep( 20000 );
 
     mock = NULL;
     while( mock == NULL ) {
@@ -591,4 +591,80 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
     }
 
     CPPUNIT_ASSERT_EQUAL(std::string("Reconnect"), mock->getName());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testPriorityBackupConfig() {
+
+    std::string uri = "failover://(mock://localhost:61616,"
+                                  "mock://localhost:61618)?randomize=false&priorityBackup=true";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT( failover->isPriorityBackup() == true );
+
+    transport->start();
+
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+    CPPUNIT_ASSERT( failover->isConnectedToPriority() == true );
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testUriOptionsApplied() {
+
+    std::string uri = "failover://(mock://localhost:61616,mock://localhost:61618)?"
+            "randomize=true&"
+            "priorityBackup=true&"
+            "initialReconnectDelay=222&"
+            "useExponentialBackOff=false&"
+            "maxReconnectAttempts=27&"
+            "startupMaxReconnectAttempts=44&"
+            "backup=true&"
+            "trackMessages=false&"
+            "maxCacheSize=16543217&"
+            "timeout=500&"
+            "updateURIsSupported=false&"
+            "maxReconnectDelay=55555&"
+            "priorityURIs=mock://localhost:61617,mock://localhost:61619";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == true );
+    CPPUNIT_ASSERT( failover->isPriorityBackup() == true );
+    CPPUNIT_ASSERT( failover->isUseExponentialBackOff() == false );
+    CPPUNIT_ASSERT( failover->getInitialReconnectDelay() == 222 );
+    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 27 );
+    CPPUNIT_ASSERT( failover->getStartupMaxReconnectAttempts() == 44 );
+    CPPUNIT_ASSERT( failover->isBackup() == true );
+    CPPUNIT_ASSERT( failover->isTrackMessages() == false );
+    CPPUNIT_ASSERT( failover->getMaxCacheSize() == 16543217 );
+    CPPUNIT_ASSERT( failover->isUpdateURIsSupported() == false );
+    CPPUNIT_ASSERT( failover->getMaxReconnectDelay() == 55555 );
+
+    const List<URI>& priorityUris = failover->getPriorityURIs();
+    CPPUNIT_ASSERT( priorityUris.size() == 2 );
+
+    transport->close();
 }

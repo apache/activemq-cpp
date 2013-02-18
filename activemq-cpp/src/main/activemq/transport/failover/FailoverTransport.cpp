@@ -868,7 +868,7 @@ bool FailoverTransport::iterate() {
             } else {
 
                 if (this->impl->doRebalance) {
-                    if (connectList->getPriorityURI().equals(*this->impl->connectedTransportURI)) {
+                    if (isPriorityBackup() && connectList->getPriorityURI().equals(*this->impl->connectedTransportURI)) {
                         // already connected to first in the list, no need to rebalance
                         this->impl->doRebalance = false;
                         return false;
@@ -939,7 +939,7 @@ bool FailoverTransport::iterate() {
                         this->impl->connectFailures = 0;
 
                         this->impl->connectedToPrioirty =
-                            connectList->getPriorityURI().equals(uri) || this->impl->connectedToPrioirty;
+                            connectList->getPriorityURI().equals(uri) || this->impl->priorityUris->contains(uri);
 
                         // Make sure on initial startup, that the transportListener
                         // has been initialized for this instance.
@@ -1310,4 +1310,9 @@ void FailoverTransport::setPriorityURIs(const std::string& priorityURIs AMQCPP_U
         } catch (Exception& e) {
         }
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const List<URI>& FailoverTransport::getPriorityURIs() const {
+    return this->impl->priorityUris->getURIList();
 }

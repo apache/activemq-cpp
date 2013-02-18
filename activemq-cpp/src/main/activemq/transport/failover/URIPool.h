@@ -68,6 +68,15 @@ namespace failover {
         ~URIPool();
 
         /**
+         * Gets a static view of the URI List contained in this URI Pool
+         *
+         * @returns a static reference to this Pools list of URIs.
+         */
+        const decaf::util::List<decaf::net::URI>& getURIList() const {
+            return this->uriPool;
+        }
+
+        /**
          * @returns true if this URI Pool is empty.
          */
         bool isEmpty() const;
