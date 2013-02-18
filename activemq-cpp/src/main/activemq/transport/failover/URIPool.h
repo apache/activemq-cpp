@@ -81,6 +81,16 @@ namespace failover {
         }
 
         /**
+         * Sets the URI that is considered this Pool's priority URI.
+         *
+         * @param uri
+         *      The configured priority URI for this pool.
+         */
+        void setPriorityURI(const decaf::net::URI& uri) {
+            this->priorityURI = uri;
+        }
+
+        /**
          * Fetches the next available URI from the pool, if there are no more
          * URIs free when this method is called it throws a NoSuchElementException.
          * Receiving the exception is not an indication that a URI won't be available
