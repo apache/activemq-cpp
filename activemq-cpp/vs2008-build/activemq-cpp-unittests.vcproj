@@ -846,6 +846,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="tcp"
+					>
+					<File
+						RelativePath="..\src\test\activemq\transport\tcp\TcpTransportTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\transport\tcp\TcpTransportTest.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="util"
