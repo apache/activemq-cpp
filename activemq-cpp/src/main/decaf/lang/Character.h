@@ -289,7 +289,43 @@ namespace lang{
          * @param radix - the radix of the number
          * @returns the numeric value of the number represented in the given radix
          */
-        static int digit( char c, int radix );
+        static int digit(char c, int radix);
+
+        /**
+         * Returns the lower case equivalent for the specified character if the
+         * character is an upper case letter. Otherwise, the specified character is
+         * returned unchanged.
+         *
+         * @param value
+         *      the character to convert if needed.
+         * @return if value is an upper case character then its lower case
+         *         counterpart, otherwise just returns value unchanged.
+         */
+        static char toLowerCase(char value) {
+            if ('A' <= value && value <= 'Z') {
+                return (char) (value + ('a' - 'A'));
+            }
+
+            return value;
+        }
+
+        /**
+         * Returns the upper case equivalent for the specified character if the
+         * character is a lower case letter. Otherwise, the specified character is
+         * returned unchanged.
+         *
+         * @param value
+         *      the character to convert to upper case if needed.
+         * @return if value is a lower case character then its upper case
+         *         counterpart, otherwise just returns value unchanged.
+         */
+        static char toUpperCase(char value) {
+            if ('a' <= value && value <= 'z') {
+                return (char) (value - ('a' - 'A'));
+            }
+
+            return value;
+        }
 
     };
 

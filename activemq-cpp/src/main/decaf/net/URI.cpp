@@ -17,11 +17,10 @@
 
 #include "URI.h"
 
-#include <apr_strings.h>
-#include <apr_lib.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Character.h>
 #include <decaf/internal/net/URIHelper.h>
-
+#include <decaf/internal/util/StringUtils.h>
 #include <decaf/internal/net/URIEncoderDecoder.h>
 
 using namespace std;
@@ -29,6 +28,7 @@ using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
+using namespace decaf::internal::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -271,7 +271,7 @@ int URI::compareTo( const URI& uri ) const {
     } else if( this->uri.getScheme() != "" && uri.getScheme() == "" ) {
         return 1;
     } else if( this->uri.getScheme() != "" && uri.getScheme() != "" ) {
-        ret = apr_strnatcasecmp( this->uri.getScheme().c_str(), uri.getScheme().c_str() );
+        ret = StringUtils::compareIgnoreCase(this->uri.getScheme().c_str(), uri.getScheme().c_str());
         if( ret != 0 ) {
             return ret > 0 ? 1 : -1;
         }
@@ -283,8 +283,8 @@ int URI::compareTo( const URI& uri ) const {
     } else if( this->uri.isOpaque() && !uri.isOpaque() ) {
         return 1;
     } else if( this->uri.isOpaque() && uri.isOpaque() ) {
-        ret = apr_strnatcmp( this->getSchemeSpecificPart().c_str(),
-                             uri.getSchemeSpecificPart().c_str() );
+        ret = StringUtils::compare(this->getSchemeSpecificPart().c_str(),
+                                   uri.getSchemeSpecificPart().c_str());
         if( ret != 0 ) {
             return ret > 0 ? 1 : -1;
         }
@@ -307,15 +307,15 @@ int URI::compareTo( const URI& uri ) const {
                 } else if( this->getUserInfo() == "" && uri.getUserInfo() != "" ) {
                     return -1;
                 } else if( this->getUserInfo() != "" && uri.getUserInfo() != "" ) {
-                    ret = apr_strnatcmp( this->getUserInfo().c_str(),
-                                         uri.getUserInfo().c_str() );
+                    ret = StringUtils::compare(this->getUserInfo().c_str(),
+                                               uri.getUserInfo().c_str());
                     if( ret != 0 ) {
                         return ret > 0 ? 1 : -1;
                     }
                 }
 
                 // userinfo's are the same, compare hostname
-                ret = apr_strnatcasecmp( this->uri.getHost().c_str(), uri.getHost().c_str() );
+                ret = StringUtils::compareIgnoreCase(this->uri.getHost().c_str(), uri.getHost().c_str());
                 if( ret != 0 ) {
                     return ret > 0 ? 1 : -1;
                 }
@@ -328,8 +328,7 @@ int URI::compareTo( const URI& uri ) const {
             } else {
 
                 // one or both are registry based, compare the whole authority
-                ret = apr_strnatcmp( this->uri.getAuthority().c_str(),
-                                     uri.getAuthority().c_str() );
+                ret = StringUtils::compare(this->uri.getAuthority().c_str(), uri.getAuthority().c_str());
                 if( ret != 0 ) {
                     return ret > 0 ? 1 : -1;
                 }
@@ -338,7 +337,7 @@ int URI::compareTo( const URI& uri ) const {
 
         // authorities are the same
         // compare paths
-        ret = apr_strnatcmp( this->getPath().c_str(), uri.getPath().c_str() );
+        ret = StringUtils::compare(this->getPath().c_str(), uri.getPath().c_str());
         if( ret != 0 ) {
             return ret > 0 ? 1 : -1;
         }
@@ -349,7 +348,7 @@ int URI::compareTo( const URI& uri ) const {
         } else if( this->getQuery() == "" && uri.getQuery() != "" ) {
             return -1;
         } else if( this->getQuery() != "" && uri.getQuery() != "" ) {
-            ret = apr_strnatcmp( this->getQuery().c_str(), uri.getQuery().c_str() );
+            ret = StringUtils::compare(this->getQuery().c_str(), uri.getQuery().c_str());
             if( ret != 0 ) {
                 return ret > 0 ? 1 : -1;
             }
@@ -362,7 +361,7 @@ int URI::compareTo( const URI& uri ) const {
     } else if( this->getFragment() == "" && uri.getFragment() != "" ) {
         return -1;
     } else if( this->getFragment() != "" && uri.getFragment() != "" ) {
-        ret = apr_strnatcmp( this->getFragment().c_str(), uri.getFragment().c_str() );
+        ret = StringUtils::compare(this->getFragment().c_str(), uri.getFragment().c_str());
         if( ret != 0 ) {
             return ret > 0 ? 1 : -1;
         }
@@ -394,7 +393,7 @@ bool URI::equals( const URI& uri ) const {
 
     } else if( uri.uri.getScheme() != "" && this->uri.getScheme() != "" ) {
 
-        if( apr_strnatcasecmp( uri.uri.getScheme().c_str(), this->uri.getScheme().c_str() ) != 0 ) {
+        if( StringUtils::compareIgnoreCase(uri.uri.getScheme().c_str(), this->uri.getScheme().c_str() ) != 0) {
             return false;
         }
     }
@@ -442,7 +441,7 @@ bool URI::equals( const URI& uri ) const {
 
             } else { // uri.host != "" && host != "", so server-based
 
-                if( apr_strnatcasecmp( uri.uri.getHost().c_str(), this->uri.getHost().c_str() ) != 0 ) {
+                if( StringUtils::compareIgnoreCase(uri.uri.getHost().c_str(), this->uri.getHost().c_str() ) != 0) {
                     return false;
                 }
 
@@ -544,7 +543,7 @@ std::string URI::decode( const std::string& src ) const {
 bool URI::equalsHexCaseInsensitive( const std::string& first, const std::string& second ) const {
 
     if( first.find( '%' ) != second.find( '%' ) ) {
-        return apr_strnatcmp( first.c_str(), second.c_str() ) == 0;
+        return StringUtils::compare(first.c_str(), second.c_str()) == 0;
     }
 
     std::size_t index = 0;
@@ -560,8 +559,8 @@ bool URI::equalsHexCaseInsensitive( const std::string& first, const std::string&
             return false;
         }
 
-        match = apr_strnatcasecmp( first.substr( index + 1, 3 ).c_str(),
-                                   second.substr( index + 1, 3 ).c_str() ) == 0;
+        match = StringUtils::compareIgnoreCase(first.substr(index + 1, 3).c_str(),
+                                               second.substr(index + 1, 3).c_str()) == 0;
 
         if( !match ) {
             return false;
@@ -592,7 +591,7 @@ std::string URI::convertHexToLowerCase( const std::string& s ) const {
         string temp = s.substr( index + 1, 3 );
 
         for( size_t i = 0; i < temp.length(); ++i ) {
-            result.append( 1, (char)apr_tolower( temp.at(i) ) );
+            result.append(1, Character::toLowerCase(temp.at(i)));
         }
 
         index += 3;

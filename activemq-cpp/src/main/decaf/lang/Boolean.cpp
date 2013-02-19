@@ -18,10 +18,12 @@
 #include "Boolean.h"
 #include <sstream>
 #include <apr.h>
-#include <apr_strings.h>
+
+#include <decaf/internal/util/StringUtils.h>
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::internal::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 const Boolean Boolean::_FALSE(false);
@@ -95,7 +97,7 @@ Boolean Boolean::valueOf(bool value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Boolean::parseBoolean(const std::string& value) {
-    return apr_strnatcasecmp(value.c_str(), "true") == 0;
+    return StringUtils::compareIgnoreCase(value.c_str(), "true") == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

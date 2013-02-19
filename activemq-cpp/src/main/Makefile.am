@@ -360,6 +360,7 @@ cc_sources = \
     decaf/internal/util/HexStringParser.cpp \
     decaf/internal/util/Resource.cpp \
     decaf/internal/util/ResourceLifecycleManager.cpp \
+    decaf/internal/util/StringUtils.cpp \
     decaf/internal/util/TimerTaskHeap.cpp \
     decaf/internal/util/concurrent/ExecutorsSupport.cpp \
     decaf/internal/util/concurrent/SynchronizableImpl.cpp \
@@ -963,6 +964,7 @@ h_sources = \
     decaf/internal/util/HexStringParser.h \
     decaf/internal/util/Resource.h \
     decaf/internal/util/ResourceLifecycleManager.h \
+    decaf/internal/util/StringUtils.h \
     decaf/internal/util/TimerTaskHeap.h \
     decaf/internal/util/concurrent/Atomics.h \
     decaf/internal/util/concurrent/ExecutorsSupport.h \

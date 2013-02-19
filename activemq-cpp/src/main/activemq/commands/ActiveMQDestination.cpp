@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include <activemq/commands/ActiveMQDestination.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/util/URISupport.h>
 #include <activemq/util/CMSExceptionSupport.h>
 #include <activemq/util/AdvisorySupport.h>
@@ -27,12 +26,13 @@
 
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/util/StlSet.h>
-
-#include <apr_strings.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/internal/util/StringUtils.h>
 
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::commands;
+using namespace decaf::internal::util;
 using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
@@ -268,7 +268,7 @@ int ActiveMQDestination::compareTo(const ActiveMQDestination& value) const {
         return 0;
     }
 
-    int valueComp = apr_strnatcmp(this->getPhysicalName().c_str(), value.getPhysicalName().c_str());
+    int valueComp = StringUtils::compare(this->getPhysicalName().c_str(), value.getPhysicalName().c_str());
     if (valueComp != 0) {
         return valueComp;
     }

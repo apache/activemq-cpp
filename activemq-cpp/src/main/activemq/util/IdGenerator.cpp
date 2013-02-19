@@ -24,9 +24,8 @@
 #include <decaf/net/ServerSocket.h>
 #include <decaf/util/concurrent/Mutex.h>
 
+#include <decaf/internal/util/StringUtils.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
-
-#include <apr_strings.h>
 
 using namespace activemq;
 using namespace activemq::util;
@@ -36,6 +35,7 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::internal::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 IdGeneratorKernel* IdGenerator::kernel = NULL;
@@ -152,7 +152,7 @@ int IdGenerator::compare(const std::string& id1, const std::string& id2) {
 
     if (!seed1.empty() && !seed2.empty()) {
 
-        result = apr_strnatcmp(seed1.c_str(), seed2.c_str());
+        result = StringUtils::compare(seed1.c_str(), seed2.c_str());
 
         if (result == 0) {
             long long count1 = IdGenerator::getSequenceFromId(id1);

@@ -16,10 +16,10 @@
  */
 
 #include "UUID.h"
-#include <apr_strings.h>
 #include <stdio.h>
 #include <apr_md5.h>
 #include <apr_uuid.h>
+#include <decaf/internal/util/StringUtils.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -27,6 +27,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::internal::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,7 +175,7 @@ UUID::~UUID() {
 
 ////////////////////////////////////////////////////////////////////////////////
 int UUID::compareTo(const UUID& value) const {
-    return apr_strnatcmp(this->toString().c_str(), value.toString().c_str());
+    return StringUtils::compare(this->toString().c_str(), value.toString().c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

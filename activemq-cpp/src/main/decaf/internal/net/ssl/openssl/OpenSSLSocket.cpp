@@ -24,14 +24,13 @@
     #include <openssl/bio.h>
 #endif
 
-#include <apr_strings.h>
-
 #include <decaf/net/SocketImpl.h>
 #include <decaf/io/IOException.h>
 #include <decaf/net/SocketException.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/internal/util/StringUtils.h>
 #include <decaf/internal/net/SocketFileDescriptor.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLParameters.h>
 #include <decaf/internal/net/ssl/openssl/OpenSSLSocketException.h>
@@ -47,6 +46,7 @@ using namespace decaf::net;
 using namespace decaf::net::ssl;
 using namespace decaf::util::concurrent;
 using namespace decaf::internal;
+using namespace decaf::internal::util;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::ssl;
 using namespace decaf::internal::net::ssl::openssl;
@@ -666,7 +666,7 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
         X509_EXTENSION* extension = X509_get_ext( cert, ix );
         const char* extensionName = OBJ_nid2sn( OBJ_obj2nid( X509_EXTENSION_get_object( extension ) ) );
 
-        if( apr_strnatcmp( "subjectAltName", extensionName ) == 0 ) {
+        if( StringUtils::compare( "subjectAltName", extensionName ) == 0 ) {
 
             X509V3_EXT_METHOD* method = (X509V3_EXT_METHOD*)X509V3_EXT_get( extension );
             if( method == NULL ) {
@@ -683,8 +683,8 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
 
             for( int iy = 0; iy < sk_CONF_VALUE_num( confValue ); iy++ ) {
                 value = sk_CONF_VALUE_value( confValue, iy );
-                if( ( apr_strnatcmp( value->name, "DNS" ) == 0 ) &&
-                      apr_strnatcmp( value->value, serverName.c_str() ) == 0 ) {
+                if( ( StringUtils::compare( value->name, "DNS" ) == 0 ) &&
+                      StringUtils::compare( value->value, serverName.c_str() ) == 0 ) {
 
                     // Found it.
                     return;
@@ -698,7 +698,7 @@ void OpenSSLSocket::verifyServerCert( const std::string& serverName ) {
 
     if( subject != NULL && X509_NAME_get_text_by_NID( subject, NID_commonName, buffer, 256 ) > 0 ) {
         buffer[255] = 0;
-        if( apr_strnatcmp( buffer, serverName.c_str() ) == 0 ) {
+        if( StringUtils::compare( buffer, serverName.c_str() ) == 0 ) {
             return;
         }
     }
