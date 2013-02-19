@@ -105,3 +105,17 @@ noinst_PROGRAMS += cmstemplate_stress
 cmstemplate_stress_SOURCES = $(cmstemplate_stress_sources)
 cmstemplate_stress_LDADD= $(AMQ_TEST_LIBS)
 cmstemplate_stress_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## CMS Template Stress Test Example
+stress_stress_sources = stress-test/TestSenderAndReceiver.cpp \
+                        stress-test/Sender.cpp \
+                        stress-test/Receiver.cpp \
+                        stress-test/MessagingTask.cpp \
+                        stress-test/ConnectionFactoryMgr.cpp \
+                        stress-test/CmsStress.cpp \
+                        stress-test/BrokerMonitor.cpp \
+                        stress-test/CmsMessageCreator.cpp
+noinst_PROGRAMS += stress_test
+stress_test_SOURCES = $(stress_stress_sources)
+stress_test_LDADD= $(AMQ_TEST_LIBS)
+stress_test_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
