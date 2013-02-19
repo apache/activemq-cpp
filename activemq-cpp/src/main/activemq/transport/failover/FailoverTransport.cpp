@@ -65,7 +65,7 @@ namespace failover {
         FailoverTransportImpl& operator= (const FailoverTransportImpl&);
 
         static const int DEFAULT_INITIAL_RECONNECT_DELAY;
-        static const int INFINITE;
+        static const int INFINITE_WAIT;
 
     public:
 
@@ -121,14 +121,14 @@ namespace failover {
             closed(false),
             connected(false),
             started(false),
-            timeout(INFINITE),
+            timeout(INFINITE_WAIT),
             initialReconnectDelay(DEFAULT_INITIAL_RECONNECT_DELAY),
             maxReconnectDelay(1000*30),
             backOffMultiplier(2),
             useExponentialBackOff(true),
             initialized(false),
-            maxReconnectAttempts(INFINITE),
-            startupMaxReconnectAttempts(INFINITE),
+            maxReconnectAttempts(INFINITE_WAIT),
+            startupMaxReconnectAttempts(INFINITE_WAIT),
             connectFailures(0),
             reconnectDelay(DEFAULT_INITIAL_RECONNECT_DELAY),
             trackMessages(false),
@@ -204,7 +204,7 @@ namespace failover {
 
         int calculateReconnectAttemptLimit() const {
             int maxReconnectValue = maxReconnectAttempts;
-            if (firstConnection && startupMaxReconnectAttempts != INFINITE) {
+            if (firstConnection && startupMaxReconnectAttempts != INFINITE_WAIT) {
                 maxReconnectValue = startupMaxReconnectAttempts;
             }
             return maxReconnectValue;
@@ -273,7 +273,7 @@ namespace failover {
     };
 
     const int FailoverTransportImpl::DEFAULT_INITIAL_RECONNECT_DELAY = 10;
-    const int FailoverTransportImpl::INFINITE = -1;
+    const int FailoverTransportImpl::INFINITE_WAIT = -1;
 
 }}}
 
