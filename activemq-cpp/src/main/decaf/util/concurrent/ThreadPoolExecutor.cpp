@@ -245,17 +245,25 @@ namespace concurrent{
             virtual void run() {
                 kernel->mainLock.lock();
 
-                if (!kernel->isTerminated()) {
-                    try {
-                        Pointer< Iterator<Worker*> > iter( kernel->deadWorkers.iterator() );
-                        while(iter->hasNext()) {
-                            delete iter->next();
-                            iter->remove();
-                        }
-                    } catch(...) {}
+                LinkedList<Worker*> toDeleteList;
+
+                try {
+                    if (!kernel->isTerminated()) {
+                        toDeleteList.copy(kernel->deadWorkers);
+                        kernel->deadWorkers.clear();
+                    }
+                } catch(...) {
                 }
 
                 kernel->mainLock.unlock();
+
+                try {
+                    Pointer< Iterator<Worker*> > iter(toDeleteList.iterator());
+                    while(iter->hasNext()) {
+                        delete iter->next();
+                        iter->remove();
+                    }
+                } catch(...) {}
             }
         };
 
