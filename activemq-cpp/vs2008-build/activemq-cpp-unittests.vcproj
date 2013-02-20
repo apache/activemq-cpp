@@ -1751,6 +1751,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="mock"
+				>
+				<File
+					RelativePath="..\src\test\activemq\mock\MockBrokerService.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\mock\MockBrokerService.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="decaf"
