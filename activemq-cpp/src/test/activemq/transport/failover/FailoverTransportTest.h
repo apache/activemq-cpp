@@ -53,6 +53,7 @@ namespace failover {
         CPPUNIT_TEST( testTransportHandlesConnectionControl );
         CPPUNIT_TEST( testPriorityBackupConfig );
         CPPUNIT_TEST( testUriOptionsApplied );
+        CPPUNIT_TEST( testConnectedToMockBroker );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -73,6 +74,7 @@ namespace failover {
         void testTransportHandlesConnectionControl();
         void testPriorityBackupConfig();
         void testUriOptionsApplied();
+        void testConnectedToMockBroker();
 
     private:
 

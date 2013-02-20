@@ -23,11 +23,13 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ActiveMQMessage.h>
 #include <activemq/commands/ConnectionControl.h>
+#include <activemq/mock/MockBrokerService.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/UUID.h>
 
 using namespace activemq;
+using namespace activemq::mock;
 using namespace activemq::commands;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
@@ -667,4 +669,44 @@ void FailoverTransportTest::testUriOptionsApplied() {
     CPPUNIT_ASSERT( priorityUris.size() == 2 );
 
     transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testConnectedToMockBroker() {
+
+    MockBrokerService broker1(61616);
+    MockBrokerService broker2(61618);
+
+    broker1.start();
+    broker1.waitUntilStarted();
+
+    std::string uri = "failover://(tcp://localhost:61616,"
+                                  "tcp://localhost:61618)?randomize=false";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == false );
+
+    transport->start();
+
+    int count = 0;
+    while (!failover->isConnected() && count++ < 20) {
+        Thread::sleep( 200 );
+    }
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+    CPPUNIT_ASSERT( failover->isConnectedToPriority() == true );
+
+    transport->close();
+
+    broker1.stop();
+    broker1.waitUntilStopped();
 }

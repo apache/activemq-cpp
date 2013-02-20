@@ -40,6 +40,7 @@ cc_sources = \
     activemq/core/FifoMessageDispatchChannelTest.cpp \
     activemq/core/SimplePriorityMessageDispatchChannelTest.cpp \
     activemq/exceptions/ActiveMQExceptionTest.cpp \
+    activemq/mock/MockBrokerService.cpp \
     activemq/state/ConnectionStateTest.cpp \
     activemq/state/ConnectionStateTrackerTest.cpp \
     activemq/state/ConsumerStateTest.cpp \
@@ -282,6 +283,7 @@ h_sources = \
     activemq/core/FifoMessageDispatchChannelTest.h \
     activemq/core/SimplePriorityMessageDispatchChannelTest.h \
     activemq/exceptions/ActiveMQExceptionTest.h \
+    activemq/mock/MockBrokerService.h \
     activemq/state/ConnectionStateTest.h \
     activemq/state/ConnectionStateTrackerTest.h \
     activemq/state/ConsumerStateTest.h \
