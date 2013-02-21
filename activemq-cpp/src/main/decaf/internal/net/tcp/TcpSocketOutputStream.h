@@ -34,7 +34,7 @@ namespace tcp {
      *
      * @since 1.0
      */
-    class DECAF_API TcpSocketOutputStream : public decaf::io::OutputStream {
+    class DECAF_API TcpSocketOutputStream: public decaf::io::OutputStream {
     private:
 
         TcpSocket* socket;
@@ -42,8 +42,8 @@ namespace tcp {
 
     private:
 
-        TcpSocketOutputStream( const TcpSocketOutputStream& );
-        TcpSocketOutputStream& operator= ( const TcpSocketOutputStream& );
+        TcpSocketOutputStream(const TcpSocketOutputStream&);
+        TcpSocketOutputStream& operator=(const TcpSocketOutputStream&);
 
     public:
 
@@ -53,7 +53,7 @@ namespace tcp {
          * @param socket
          *      The socket to use to write out the data.
          */
-        TcpSocketOutputStream( TcpSocket* socket );
+        TcpSocketOutputStream(TcpSocket* socket);
 
         virtual ~TcpSocketOutputStream();
 
@@ -61,9 +61,9 @@ namespace tcp {
 
     protected:
 
-        virtual void doWriteByte( unsigned char c );
+        virtual void doWriteByte(unsigned char c);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     };
 

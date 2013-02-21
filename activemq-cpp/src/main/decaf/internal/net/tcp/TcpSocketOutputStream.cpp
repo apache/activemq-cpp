@@ -35,12 +35,11 @@ using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocketOutputStream::TcpSocketOutputStream( TcpSocket* socket ) :
-    OutputStream(), socket( socket ), closed( false ) {
+TcpSocketOutputStream::TcpSocketOutputStream(TcpSocket* socket) :
+    OutputStream(), socket(socket), closed(false) {
 
-    if( socket == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "TcpSocket instance passed was NULL." );
+    if (socket == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "TcpSocket instance passed was NULL.");
     }
 }
 
@@ -51,55 +50,53 @@ TcpSocketOutputStream::~TcpSocketOutputStream() {
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocketOutputStream::close() {
 
-    if( this->closed ) {
+    if (this->closed) {
         return;
     }
 
-    try{
+    try {
         this->closed = true;
         this->socket->close();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketOutputStream::doWriteByte( unsigned char c ) {
+void TcpSocketOutputStream::doWriteByte(unsigned char c) {
 
-    try{
+    try {
 
         // Treat the single byte case the same as an array.
-        this->doWriteArrayBounded( &c, 1, 0, 1 );
+        this->doWriteArrayBounded(&c, 1, 0, 1);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocketOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length ) {
+void TcpSocketOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( length == 0 ) {
+        if (length == 0) {
             return;
         }
 
-        if( buffer == NULL ) {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "TcpSocketOutputStream::write - passed buffer is null" );
+        if (buffer == NULL) {
+            throw NullPointerException(__FILE__, __LINE__,
+                "TcpSocketOutputStream::write - passed buffer is null");
         }
 
-        if( closed ) {
-            throw IOException(
-                __FILE__, __LINE__,
-                "TcpSocketOutputStream::write - This Stream has been closed." );
+        if (closed) {
+            throw IOException(__FILE__, __LINE__,
+                "TcpSocketOutputStream::write - This Stream has been closed.");
         }
 
-        this->socket->write( buffer, size, offset, length );
+        this->socket->write(buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }

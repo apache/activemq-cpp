@@ -38,7 +38,7 @@ namespace tcp {
      *
      * @since 1.0
      */
-    class DECAF_API TcpSocketInputStream : public decaf::io::InputStream {
+    class DECAF_API TcpSocketInputStream: public decaf::io::InputStream {
     private:
 
         TcpSocket* socket;
@@ -47,8 +47,8 @@ namespace tcp {
 
     private:
 
-        TcpSocketInputStream( const TcpSocketInputStream& );
-        TcpSocketInputStream& operator= ( const TcpSocketInputStream& );
+        TcpSocketInputStream(const TcpSocketInputStream&);
+        TcpSocketInputStream& operator=(const TcpSocketInputStream&);
 
     public:
 
@@ -58,7 +58,7 @@ namespace tcp {
          * @param socket
          *      The parent SocketImpl for this stream.
          */
-        TcpSocketInputStream( TcpSocket* socket );
+        TcpSocketInputStream(TcpSocket* socket);
 
         virtual ~TcpSocketInputStream();
 
@@ -80,13 +80,13 @@ namespace tcp {
          *
          * {@inheritDoc}
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
     protected:
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     };
 

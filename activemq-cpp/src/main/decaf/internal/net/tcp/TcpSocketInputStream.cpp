@@ -33,12 +33,11 @@ using namespace decaf::lang::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocketInputStream::TcpSocketInputStream( TcpSocket* socket ) :
-    InputStream(), socket( socket ), closed( false ) {
+TcpSocketInputStream::TcpSocketInputStream(TcpSocket* socket) :
+    InputStream(), socket(socket), closed(false) {
 
-    if( socket == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "TcpSocket instance passed was NULL." );
+    if (socket == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "TcpSocket instance passed was NULL.");
     }
 }
 
@@ -49,24 +48,23 @@ TcpSocketInputStream::~TcpSocketInputStream() {
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocketInputStream::close() {
 
-    if( this->closed ) {
+    if (this->closed) {
         return;
     }
 
-    try{
+    try {
         this->closed = true;
         this->socket->close();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int TcpSocketInputStream::available() const {
 
-    if( this->closed ){
-        throw IOException(
-            __FILE__, __LINE__, "The stream is closed" );
+    if (this->closed) {
+        throw IOException(__FILE__, __LINE__, "The stream is closed");
     }
 
     return this->socket->available();
@@ -75,58 +73,55 @@ int TcpSocketInputStream::available() const {
 ////////////////////////////////////////////////////////////////////////////////
 int TcpSocketInputStream::doReadByte() {
 
-    if( this->closed ){
-        throw IOException(
-            __FILE__, __LINE__, "The stream is closed" );
+    if (this->closed) {
+        throw IOException(__FILE__, __LINE__, "The stream is closed");
     }
 
-    try{
+    try {
 
         unsigned char buffer[1];
-        int result = this->socket->read( buffer, 1, 0, 1 );
+        int result = this->socket->read(buffer, 1, 0, 1);
         return result == -1 ? result : buffer[0];
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocketInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int TcpSocketInputStream::doReadArrayBounded(unsigned char* buffer, int size, int offset, int length) {
 
-    if( closed ){
-        throw IOException(
-            __FILE__, __LINE__, "The stream is closed" );
+    if (closed) {
+        throw IOException(__FILE__, __LINE__, "The stream is closed");
     }
 
-    if( buffer == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "Buffer passed was NULL." );
+    if (buffer == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Buffer passed was NULL.");
     }
 
-    try{
-        return this->socket->read( buffer, size, offset, length );
+    try {
+        return this->socket->read(buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long TcpSocketInputStream::skip( long long num ) {
+long long TcpSocketInputStream::skip(long long num) {
 
-    try{
+    try {
 
-        if( num == 0 ) {
+        if (num == 0) {
             return 0;
         }
 
-        return InputStream::skip( num );
+        return InputStream::skip(num);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( UnsupportedOperationException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(UnsupportedOperationException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }

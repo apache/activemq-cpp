@@ -23,9 +23,6 @@
 #include <decaf/io/OutputStream.h>
 #include <decaf/util/Config.h>
 #include <decaf/internal/AprPool.h>
-
-#include <apr_network_io.h>
-
 #include <decaf/io/IOException.h>
 #include <decaf/net/SocketTimeoutException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -36,93 +33,22 @@ namespace internal {
 namespace net {
 namespace tcp {
 
-    // Forward declarations
     class TcpSocketInputStream;
     class TcpSocketOutputStream;
+    class TcpSocketImpl;
 
     /**
      * Platform-independent implementation of the socket interface.
      */
-    class DECAF_API TcpSocket : public decaf::net::SocketImpl {
+    class DECAF_API TcpSocket: public decaf::net::SocketImpl {
     private:
 
-        /**
-         * Define the SocketHandle type.
-         */
-        typedef apr_socket_t* SocketHandle;
-
-        /**
-         * Define the SocketAddress type
-         */
-        typedef apr_sockaddr_t* SocketAddress;
+        TcpSocketImpl* impl;
 
     private:
 
-        TcpSocket( const TcpSocket& );
-        TcpSocket& operator= ( const TcpSocket& );
-
-    private:
-
-        /**
-         * APR Socket Pool to allocate from
-         */
-        decaf::internal::AprPool apr_pool;
-
-        /**
-         * The handle for this socket.
-         */
-        SocketHandle socketHandle;
-
-        /**
-         * Address of the locally bound portion of the Socket.
-         */
-        SocketAddress localAddress;
-
-        /**
-         * Address of the remoute connection portion of the Socket.
-         */
-        SocketAddress remoteAddress;
-
-        /**
-         * The input stream for reading this socket.
-         */
-        TcpSocketInputStream* inputStream;
-
-        /**
-         * The output stream for writing to this socket.
-         */
-        TcpSocketOutputStream* outputStream;
-
-        /**
-         * Was input already shutdown on this Socket.
-         */
-        bool inputShutdown;
-
-        /**
-         * Was output already shutdown on this Socket.
-         */
-        bool outputShutdown;
-
-        /**
-         * Was the Socket closed.
-         */
-        volatile bool closed;
-
-        /**
-         * Current Traffic class setting.
-         */
-        int trafficClass;
-
-        /**
-         * value of soTimeout used to handle timeout on accept calls.
-         */
-        int soTimeout;
-
-        /**
-         * value of soLinger, used to return a meaningful answer since APR
-         * only returns the on / off state.
-         */
-        mutable int soLinger;
+        TcpSocket(const TcpSocket&);
+        TcpSocket& operator=(const TcpSocket&);
 
     public:
 
@@ -139,26 +65,14 @@ namespace tcp {
         virtual ~TcpSocket();
 
         /**
-         * Gets the handle for the socket.
-         * @return SocketHabler for this Socket, can be NULL
-         */
-        SocketHandle getSocketHandle () {
-            return socketHandle;
-        }
-
-        /**
          * @returns true if the socketHandle is not in a disconnected state.
          */
-        bool isConnected() const {
-            return socketHandle != NULL;
-        }
+        bool isConnected() const;
 
         /**
          * @returns true if the close method has been called on this Socket.
          */
-        bool isClosed() const {
-            return this->closed;
-        }
+        bool isClosed() const;
 
         /**
          * {@inheritDoc}
@@ -173,22 +87,22 @@ namespace tcp {
         /**
          * {@inheritDoc}
          */
-        virtual void accept( SocketImpl* socket );
+        virtual void accept(SocketImpl* socket);
 
         /**
          * {@inheritDoc}
          */
-        virtual void bind( const std::string& ipaddress, int port );
+        virtual void bind(const std::string& ipaddress, int port);
 
         /**
          * {@inheritDoc}
          */
-        virtual void connect( const std::string& hostname, int port, int timeout );
+        virtual void connect(const std::string& hostname, int port, int timeout);
 
         /**
          * {@inheritDoc}
          */
-        virtual void listen( int backlog );
+        virtual void listen(int backlog);
 
         /**
          * {@inheritDoc}
@@ -223,12 +137,12 @@ namespace tcp {
         /**
          * {@inheritDoc}
          */
-        virtual int getOption( int option ) const;
+        virtual int getOption(int option) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual void setOption( int option, int value );
+        virtual void setOption(int option, int value);
 
     public:
 
@@ -250,7 +164,7 @@ namespace tcp {
          * @throw NullPointerException if buffer is Null.
          * @throw IndexOutOfBoundsException if offset + length is greater than buffer size.
          */
-        int read( unsigned char* buffer, int size, int offset, int length );
+        int read(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Writes the specified data in the passed in buffer to the Socket.
@@ -268,11 +182,11 @@ namespace tcp {
          * @throw NullPointerException if buffer is Null.
          * @throw IndexOutOfBoundsException if offset + length is greater than buffer size.
          */
-        void write( const unsigned char* buffer, int size, int offset, int length );
+        void write(const unsigned char* buffer, int size, int offset, int length);
 
     protected:
 
-        void checkResult( apr_status_t value ) const;
+        void checkResult(apr_status_t value) const;
 
     };
 
