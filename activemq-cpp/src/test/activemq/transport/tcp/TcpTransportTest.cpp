@@ -152,12 +152,17 @@ void TcpTransportTest::setUp() {
 ////////////////////////////////////////////////////////////////////////////////
 void TcpTransportTest::tearDown() {
 
-    if (server == NULL) {
-        return;
-    }
+    try {
+        if (server == NULL) {
+            return;
+        }
 
-    server->stop();
-    server->waitUntilStopped();
+        server->stop();
+        server->waitUntilStopped();
+        delete server;
+    } catch (...) {
+        delete server;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
