@@ -648,9 +648,9 @@ void ActiveMQConnection::close() {
                 this->stop();
             } catch (cms::CMSException& error) {
                 if (!hasException) {
-//                    ex = Exception(new CMSException(error)); // TODO
-                    ex = Exception();
-                    ex.setMark(__FILE__, __LINE__);
+                    // TODO need more work on throwning specific CMSExceptions.
+                    // ex = Exception(new CMSException(error));
+                    ex = Exception(__FILE__, __LINE__, error.getMessage().c_str());
                     hasException = true;
                 }
             }
@@ -714,9 +714,9 @@ void ActiveMQConnection::close() {
             }
         } catch (cms::CMSException& error) {
             if (!hasException) {
-//                ex = Exception(new CMSException(error));  TODO
-                ex = Exception();
-                ex.setMark(__FILE__, __LINE__);
+                // TODO need more work on throwning specific CMSExceptions.
+                // ex = Exception(new CMSException(error));
+                ex = Exception(__FILE__, __LINE__, error.getMessage().c_str());
                 hasException = true;
             }
         }
