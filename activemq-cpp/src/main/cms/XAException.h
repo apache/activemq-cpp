@@ -29,7 +29,7 @@ namespace cms {
      *
      * @since 2.3
      */
-    class CMS_API XAException : CMSException {
+    class CMS_API XAException : public CMSException {
     private:
 
         int errorCode;
