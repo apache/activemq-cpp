@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * This exception must be thrown when a provider rejects a user name/password submitted
@@ -45,6 +45,8 @@ namespace cms{
                              const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~CMSSecurityException() throw();
+
+        virtual CMSSecurityException* clone();
 
     };
 

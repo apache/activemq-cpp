@@ -45,6 +45,8 @@ namespace cms {
 
         virtual ~TransactionRolledBackException() throw();
 
+        virtual TransactionRolledBackException* clone();
+
     };
 
 }

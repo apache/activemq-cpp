@@ -20,6 +20,7 @@
 #include <vector>
 #include <sstream>
 #include <memory>
+#include <utility>
 #include <algorithm>
 
 using namespace std;
@@ -77,6 +78,11 @@ CMSException::CMSException(const std::string& message, const std::exception* cau
 ////////////////////////////////////////////////////////////////////////////////
 CMSException::~CMSException() throw() {
     delete this->data;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+CMSException* CMSException::clone() {
+    return new CMSException(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

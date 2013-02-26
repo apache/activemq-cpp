@@ -47,3 +47,8 @@ TransactionRolledBackException::TransactionRolledBackException(const std::string
 ////////////////////////////////////////////////////////////////////////////////
 TransactionRolledBackException::~TransactionRolledBackException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+TransactionRolledBackException* TransactionRolledBackException::clone() {
+    return new TransactionRolledBackException(*this);
+}

@@ -45,3 +45,8 @@ MessageFormatException::MessageFormatException(const std::string& message, const
 ////////////////////////////////////////////////////////////////////////////////
 MessageFormatException::~MessageFormatException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+MessageFormatException* MessageFormatException::clone() {
+    return new MessageFormatException(*this);
+}

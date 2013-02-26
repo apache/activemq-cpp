@@ -47,3 +47,8 @@ ResourceAllocationException::ResourceAllocationException(const std::string& mess
 ////////////////////////////////////////////////////////////////////////////////
 ResourceAllocationException::~ResourceAllocationException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+ResourceAllocationException* ResourceAllocationException::clone() {
+    return new ResourceAllocationException(*this);
+}

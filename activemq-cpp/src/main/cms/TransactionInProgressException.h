@@ -46,6 +46,7 @@ namespace cms {
 
         virtual ~TransactionInProgressException() throw();
 
+        virtual TransactionInProgressException* clone();
 
     };
 

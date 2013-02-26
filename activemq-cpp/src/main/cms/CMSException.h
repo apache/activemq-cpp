@@ -26,7 +26,7 @@
 
 #include <cms/Config.h>
 
-namespace cms{
+namespace cms {
 
     class CMSExceptionData;
 
@@ -42,8 +42,8 @@ namespace cms{
      * Since the contained cause exception is of type std::exception and the
      * C++ exception class has no clone or copy method defined the contained
      * exception can only be owned by one instance of an CMSException.  To that
-     * end the class hands off the exception to each successive copy so care must
-     * be taken when handling CMSException instances.
+     * end the class hands off the exception to each successive copy or clone
+     * so care must be taken when handling CMSException instances.
      *
      * @since 1.0
      */
@@ -126,6 +126,16 @@ namespace cms{
          * @return const char pointer to error message
          */
         virtual const char* what() const throw();
+
+        /**
+         * Creates a cloned version of this CMSException instance.
+         *
+         * This method passes on ownership of the contained cause exception pointer to
+         * the clone.  This method is mainly useful to the CMS provider.
+         *
+         * @returns new pointer that is a clone of this Exception, caller owns.
+         */
+        virtual CMSException* clone();
 
     private:
 

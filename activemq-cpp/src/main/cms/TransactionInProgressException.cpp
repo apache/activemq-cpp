@@ -47,3 +47,8 @@ TransactionInProgressException::TransactionInProgressException(const std::string
 ////////////////////////////////////////////////////////////////////////////////
 TransactionInProgressException::~TransactionInProgressException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+TransactionInProgressException* TransactionInProgressException::clone() {
+    return new TransactionInProgressException(*this);
+}

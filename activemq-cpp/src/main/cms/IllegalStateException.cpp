@@ -45,3 +45,8 @@ IllegalStateException::IllegalStateException(const std::string& message, const s
 ////////////////////////////////////////////////////////////////////////////////
 IllegalStateException::~IllegalStateException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+IllegalStateException* IllegalStateException::clone() {
+    return new IllegalStateException(*this);
+}

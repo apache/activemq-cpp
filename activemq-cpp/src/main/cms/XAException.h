@@ -189,6 +189,8 @@ namespace cms {
 
         virtual ~XAException() throw();
 
+        virtual XAException* clone();
+
     public:
 
         /**

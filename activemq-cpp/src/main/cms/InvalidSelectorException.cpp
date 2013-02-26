@@ -45,3 +45,8 @@ InvalidSelectorException::InvalidSelectorException(const std::string& message, c
 ////////////////////////////////////////////////////////////////////////////////
 InvalidSelectorException::~InvalidSelectorException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+InvalidSelectorException* InvalidSelectorException::clone() {
+    return new InvalidSelectorException(*this);
+}

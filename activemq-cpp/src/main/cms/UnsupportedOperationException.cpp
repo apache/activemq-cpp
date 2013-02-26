@@ -47,3 +47,8 @@ UnsupportedOperationException::UnsupportedOperationException(const std::string& 
 ////////////////////////////////////////////////////////////////////////////////
 UnsupportedOperationException::~UnsupportedOperationException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+UnsupportedOperationException* UnsupportedOperationException::clone() {
+    return new UnsupportedOperationException(*this);
+}

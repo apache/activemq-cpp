@@ -45,3 +45,8 @@ MessageNotWriteableException::MessageNotWriteableException(const std::string& me
 ////////////////////////////////////////////////////////////////////////////////
 MessageNotWriteableException::~MessageNotWriteableException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+MessageNotWriteableException* MessageNotWriteableException::clone() {
+    return new MessageNotWriteableException(*this);
+}

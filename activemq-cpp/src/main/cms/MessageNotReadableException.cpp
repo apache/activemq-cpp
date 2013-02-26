@@ -44,3 +44,8 @@ MessageNotReadableException::MessageNotReadableException(const std::string& mess
 ////////////////////////////////////////////////////////////////////////////////
 MessageNotReadableException::~MessageNotReadableException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+MessageNotReadableException* MessageNotReadableException::clone() {
+    return new MessageNotReadableException(*this);
+}

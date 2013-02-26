@@ -45,3 +45,8 @@ MessageEOFException::MessageEOFException(const std::string& message, const std::
 ////////////////////////////////////////////////////////////////////////////////
 MessageEOFException::~MessageEOFException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+MessageEOFException* MessageEOFException::clone() {
+    return new MessageEOFException(*this);
+}

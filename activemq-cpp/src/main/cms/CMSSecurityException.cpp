@@ -45,3 +45,8 @@ CMSSecurityException::CMSSecurityException(const std::string& message, const std
 ////////////////////////////////////////////////////////////////////////////////
 CMSSecurityException::~CMSSecurityException() throw() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+CMSSecurityException* CMSSecurityException::clone() {
+    return new CMSSecurityException(*this);
+}

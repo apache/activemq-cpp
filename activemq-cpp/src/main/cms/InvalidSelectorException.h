@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * This exception must be thrown when a CMS client attempts to give a provider a
@@ -44,6 +44,8 @@ namespace cms{
                                  const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~InvalidSelectorException() throw();
+
+        virtual InvalidSelectorException* clone();
 
     };
 

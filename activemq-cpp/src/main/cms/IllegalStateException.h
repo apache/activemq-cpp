@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * This exception is thrown when a method is invoked at an illegal or inappropriate
@@ -46,6 +46,8 @@ namespace cms{
                               const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~IllegalStateException() throw();
+
+        virtual IllegalStateException* clone();
 
     };
 

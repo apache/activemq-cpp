@@ -45,6 +45,8 @@ namespace cms {
 
         virtual ~UnsupportedOperationException() throw();
 
+        virtual UnsupportedOperationException* clone();
+
     };
 
 }

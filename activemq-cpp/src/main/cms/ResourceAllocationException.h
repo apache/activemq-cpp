@@ -46,6 +46,7 @@ namespace cms {
 
         virtual ~ResourceAllocationException() throw();
 
+        virtual ResourceAllocationException* clone();
 
     };
 

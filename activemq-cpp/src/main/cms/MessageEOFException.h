@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * This exception must be thrown when an unexpected end of stream has been
@@ -44,6 +44,8 @@ namespace cms{
                             const std::vector<std::pair<std::string, int> >& stackTrace);
 
         virtual ~MessageEOFException() throw();
+
+        virtual MessageEOFException* clone();
 
     };
 
