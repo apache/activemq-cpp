@@ -42,7 +42,20 @@ ActiveMQException::ActiveMQException(const Exception& ex) : decaf::lang::Excepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException(const char* file, const int lineNumber, const char* msg, ...) : decaf::lang::Exception() {
+ActiveMQException::ActiveMQException(const char* file, const int lineNumber, const char* msg, ...) :
+    decaf::lang::Exception() {
+
+    va_list vargs;
+    va_start(vargs, msg);
+    buildMessage(msg, vargs);
+
+    // Set the first mark for this exception.
+    Exception::setMark(file, lineNumber);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQException::ActiveMQException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...) :
+    decaf::lang::Exception(cause) {
 
     va_list vargs;
     va_start(vargs, msg);

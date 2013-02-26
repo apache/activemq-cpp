@@ -20,6 +20,7 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/StringTokenizer.h>
 #include <string>
+#include <utility>
 
 #include <cms/CMSException.h>
 #include <cms/CMSSecurityException.h>
@@ -80,57 +81,68 @@ Pointer<commands::Command> BrokerError::visit(activemq::state::CommandVisitor* v
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Exception BrokerError::createExceptionObject() {
+ActiveMQException BrokerError::createExceptionObject() {
 
-    StringTokenizer tokenizer(this->exceptionClass);
-
-
+    StringTokenizer tokenizer(this->exceptionClass, ".");
     std::string exceptionClass = this->exceptionClass;
 
     while (tokenizer.hasMoreTokens()) {
         exceptionClass = tokenizer.nextToken();
     }
 
+    std::vector<std::pair<std::string, int> > cmsStackTrace;
+
+    std::vector< Pointer<StackTraceElement> >::const_iterator stackIter = this->stackTraceElements.begin();
+    for (; stackIter != stackTraceElements.end(); ++stackIter) {
+        Pointer<StackTraceElement> element = *stackIter;
+        if (element == NULL) {
+            continue;
+        }
+
+        std::string name = element->ClassName + "." + element->MethodName + "(" +
+                           element->FileName + ")";
+
+        cmsStackTrace.push_back(std::make_pair(name, element->LineNumber));
+    }
+
     cms::CMSException* cause = NULL;
 
     if (exceptionClass == "JMSException") {
-        cause = new cms::CMSException(this->message);
+        cause = new cms::CMSException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "JMSSecurityException") {
-        cause = new cms::CMSSecurityException(this->message);
+        cause = new cms::CMSSecurityException(this->message, NULL, cmsStackTrace);
+    } else if (exceptionClass == "SecurityException") {
+        cause = new cms::CMSSecurityException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "MessageEOFException") {
-        cause = new cms::MessageEOFException(this->message);
+        cause = new cms::MessageEOFException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "MessageFormatException") {
-        cause = new cms::MessageFormatException(this->message);
+        cause = new cms::MessageFormatException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "MessageNotReadableException") {
-        cause = new cms::MessageNotReadableException(this->message);
+        cause = new cms::MessageNotReadableException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "MessageNotWriteableException") {
-        cause = new cms::MessageNotWriteableException(this->message);
+        cause = new cms::MessageNotWriteableException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "InvalidClientIdException") {
-        cause = new cms::InvalidClientIdException(this->message);
+        cause = new cms::InvalidClientIdException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "InvalidDestinationException") {
-        cause = new cms::InvalidDestinationException(this->message);
+        cause = new cms::InvalidDestinationException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "InvalidSelectorException") {
-        cause = new cms::InvalidSelectorException(this->message);
+        cause = new cms::InvalidSelectorException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "IllegalStateException") {
-        cause = new cms::IllegalStateException(this->message);
+        cause = new cms::IllegalStateException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "ResourceAllocationException") {
-        cause = new cms::ResourceAllocationException(this->message);
+        cause = new cms::ResourceAllocationException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "TransactionInProgressException") {
-        cause = new cms::TransactionInProgressException(this->message);
+        cause = new cms::TransactionInProgressException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "TransactionRolledBackException") {
-        cause = new cms::TransactionRolledBackException(this->message);
+        cause = new cms::TransactionRolledBackException(this->message, NULL, cmsStackTrace);
     } else if (exceptionClass == "UnsupportedOperationException") {
-        cause = new cms::UnsupportedOperationException(this->message);
+        cause = new cms::UnsupportedOperationException(this->message, NULL, cmsStackTrace);
     } else {
-        if (exCause != NULL) {
-            cause = new cms::CMSException(this->message);
-        } else {
-            cause = new cms::CMSException(this->exCause->getMessage());
-        }
+        cause = new cms::CMSException(this->message, NULL, cmsStackTrace);
     }
 
-    // Wrap in a Decaf exception to carry the pointer until it can be
+    // Wrap in a activemq exception wrapper to carry the pointer until it can be
     // thrown in a context that will convey the correct type to the client.
-    Exception theCause(__FILE__, __LINE__, cause, this->getMessage().c_str());
-    return theCause;
+    ActiveMQException wrapper(__FILE__, __LINE__, cause, this->getMessage().c_str());
+    return wrapper;
 }

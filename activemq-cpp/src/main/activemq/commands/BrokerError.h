@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
-#include <decaf/lang/Exception.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Pointer.h>
 
 #include <string>
@@ -180,14 +180,14 @@ namespace commands {
         }
 
         /**
-         * Creates and returns a Decaf Exception object that contains the error data from the Broker.
+         * Creates and returns a ActiveMQException object that contains the error data from the Broker.
          *
          * The returned exception will if possible contain a cms::CMSException pointer that represents
          * the actual JMS exception that was forwarded from the broker.
          *
-         * @return a new instance of a Decaf Exception
+         * @return a new instance of an ActiveMQException
          */
-        decaf::lang::Exception createExceptionObject();
+        exceptions::ActiveMQException createExceptionObject();
 
     };
 

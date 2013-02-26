@@ -1249,18 +1249,11 @@ Pointer<Response> ActiveMQConnection::syncRequest(Pointer<Command> command, unsi
         commands::ExceptionResponse* exceptionResponse = dynamic_cast<ExceptionResponse*>(response.get());
 
         if (exceptionResponse != NULL) {
-
-            Exception ex = exceptionResponse->getException()->createExceptionObject();
-            if (ex.getCause() != NULL) {
-                throw *(ex.getCause());
-            }
-
-            throw BrokerException(__FILE__, __LINE__, exceptionResponse->getException()->getMessage().c_str());
+            throw exceptionResponse->getException()->createExceptionObject();
         }
 
         return response;
     }
-    AMQ_CATCH_RETHROW(cms::CMSException)
     AMQ_CATCH_RETHROW(ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(IOException, ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException)
@@ -1283,7 +1276,6 @@ void ActiveMQConnection::asyncRequest(Pointer<Command> command, cms::AsyncCallba
         Pointer<ResponseCallback> callback(new AsyncResponseCallback(this->config, onComplete));
         this->config->transport->asyncRequest(command, callback);
     }
-    AMQ_CATCH_RETHROW(cms::CMSException)
     AMQ_CATCH_RETHROW(ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(IOException, ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::exceptions::UnsupportedOperationException, ActiveMQException)
