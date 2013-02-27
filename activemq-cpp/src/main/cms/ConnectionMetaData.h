@@ -104,6 +104,16 @@ namespace cms{
         virtual int getProviderMinorVersion() const = 0;
 
         /**
+         * Gets the CMS provider patch version number.
+         *
+         * @returns the CMS provider patch version number
+         *
+         * @throw CMSException
+         *        If the CMS Provider fails to retrieve the metadata due to some internal error.
+         */
+        virtual int getProviderPatchVersion() const = 0;
+
+        /**
          * Gets an Vector of the CMSX property names.
          *
          * @returns an Vector of CMSX property names

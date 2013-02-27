@@ -58,6 +58,8 @@ namespace core {
 
         virtual int getProviderMinorVersion() const;
 
+        virtual int getProviderPatchVersion() const;
+
         virtual std::vector<std::string> getCMSXPropertyNames() const;
 
     };

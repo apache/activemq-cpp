@@ -1,4 +1,32 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.6.0                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-449] - activemq::library::ActiveMQCPP::shutdownLibrary(); causing runtime exception
+    [AMQCPP-450] - Win32 Thread Handle Leak
+    [AMQCPP-451] - The number of CMS threads increases when we restart the message broker repeatedly
+    [AMQCPP-454] - Found pure function call error in CMS
+    [AMQCPP-455] - Found an access violation in CMS when creating a new connection
+    [AMQCPP-456] - Add ability to set updateURIsSupported for failover transport
+    [AMQCPP-459] - Found an access violation in NodePool::ReturNode(Node* node)
+    [AMQCPP-460] - Access Violation
+    [AMQCPP-461] - Create Thread objects that aren't started can leak their suspended thread on destroy.
+    [AMQCPP-464] - Deadlock during normal task termination
+    [AMQCPP-465] - Periodic access violation originating from Openwire::unmarshal
+    [AMQCPP-466] - Segmentation Fault in Temporary Queue consumer (incorrect Exception construction)
+
+Improvement
+
+    [AMQCPP-457] - Refactor Transports layer for more control over started / stopped state during initialization
+    [AMQCPP-467] - Improve the CMSException types thrown from errors sent back from the broker.
+
+New Feature
+
+    [AMQCPP-463] - Add support for priority backups to the FailoverTransport
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.5.0                               ==
 =========================================================================
 
