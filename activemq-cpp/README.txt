@@ -20,7 +20,6 @@ autoconf    >= 2.61
 automake    >= 1.10
 libtool     >= 1.5.24
 APR         >= 1.3*
-APR-Util    >= 1.3* or higher
 CPPUnit     >= 1.10.2* ( 1.12.1 is recommended )
 OpenSSL     >= 0.9.8m* ( 1.0.0 or higher is recommended, this is an optional dependency)
 
@@ -55,14 +54,13 @@ The included Visual Studio projects are configured with the assumption
 that you will configure Visual Studio with the locations of the Platform
 SDK and the CPPUnit and APR libraries and headers.
 
-1.2 APR and APR Util
+1.2 APR
 -------------------------------------------------------------------------
 
-The build requires the APR library and the APR-Util.  These libraries can
-be obtained from the APR site at: http://apr.apache.org/  See the
-documentation there on how to build these libraries for your platform.  On
-many Unix system the libraries can be installed using the systems package
-installer.
+The build requires the APR library.  This library can be obtained from the APR
+site at: http://apr.apache.org/  See the documentation there on how to build
+this libraries for your platform.  On many Unix system the library can be
+installed using the systems package installer.
 
 The Library has been tested using version v1.3 and higher of the APR libs,
 the older 0.9 version will definitely not work with this library.
@@ -73,12 +71,12 @@ the source download at Apache.
 
     -----------------------------------------------------------------------
     |MacOS X Note:                                                        |
-    | If you have installed APR and APR-Util via MacPorts                 |
+    | If you have installed APR via MacPorts                              |
     | (http://www.macports.org/) and you are building ActiveMQ-CPP from   |
-    | source, you will need to specify the location of the APR libraries  |
+    | source, you will need to specify the location of the APR library    |
     | to the configure script. This is easy to do and only requires one   |
     | extra option for compilation. An example of this is shown below     |
-    | using the standard location for these libraries as installed by     |
+    | using the standard location for this library as installed by        |
     | MacPorts:                                                           |
     |                                                                     |
     | $ ./configure \                                                     |

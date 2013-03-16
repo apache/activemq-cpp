@@ -28,20 +28,13 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
 [
   AC_MSG_NOTICE([Apache Portable Runtime (APR) library configuration])
   APR_FIND_APR([], [], 1, [1])
-  APR_FIND_APU([], [], 1, [1])
 
   if test $apr_found = "no"; then
     AC_MSG_WARN([APR not found])
     DECAF_DOWNLOAD_APR
   fi
 
-  if test $apu_found = "no"; then
-    AC_MSG_WARN([APR Utils not found])
-    DECAF_DOWNLOAD_APU
-  fi
-
   APR_VER_REGEXES=["1\.[3-9]\.[0-9] 1\.[3-9]\.1[0-9] "]
-  APU_VER_REGEXES=["1\.[3-9]\.[0-9] 1\.[3-9]\.1[0-9] "]
 
   dnl check APR version number against regex
 
@@ -65,28 +58,6 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
     AC_MSG_ERROR([invalid apr version found, check the README for supported versions.])
   fi
 
-  dnl check APU version number against regex
-
-  AC_MSG_CHECKING([APU version])
-  apu_version="`$apu_config --version`"
-  if test $? -ne 0; then
-    AC_MSG_ERROR([apu-config --version failed])
-  fi
-  AC_MSG_RESULT([$apu_version])
-
-  APU_WANTED_REGEX_MATCH=0
-  for apu_wanted_regex in $APU_VER_REGEXES; do
-    if test `expr $apr_version : $apu_wanted_regex` -ne 0; then
-      APU_WANTED_REGEX_MATCH=1
-      break
-    fi
-  done
-
-  if test $APU_WANTED_REGEX_MATCH -eq 0; then
-    echo "wanted regexes are $APU_VER_REGEXES"
-    AC_MSG_ERROR([invalid apr-util version found, check the README for supported versions.])
-  fi
-
   dnl Get build information from APR
 
   APR_CPPFLAGS="`$apr_config --cppflags`"
@@ -98,41 +69,24 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --includes failed])
   fi
-  APU_INCLUDES="`$apu_config --includes`"
-  if test $? -ne 0; then
-    AC_MSG_ERROR([apu-config --includes failed])
-  fi
 
   APR_LDFLAGS="`$apr_config --ldflags`"
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --ldflags failed])
-  fi
-  APU_LDFLAGS="`$apu_config --ldflags`"
-  if test $? -ne 0; then
-    AC_MSG_ERROR([apu-config --ldflags failed])
   fi
 
   APR_LIBS="`$apr_config --link-libtool --libs`"
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --link-libtool --libs failed])
   fi
-  APU_LIBS="`$apu_config --link-libtool --libs`"
-  if test $? -ne 0; then
-    AC_MSG_ERROR([apu-config --link-libtool --libs failed])
-  fi
 
   APR_PKGCONFIG="`echo $apr_config | sed 's,\(.*/\)\?apr\(-\?.*\)-config$,apr\2,'`"
-  APU_PKGCONFIG="`echo $apu_config | sed 's,\(.*/\)\?apu\(-\?.*\)-config$,apr-util\2,'`"
 
   AC_SUBST([APR_LIBS])
   AC_SUBST([APR_LDFLAGS])
   AC_SUBST([APR_CPPFLAGS])
   AC_SUBST([APR_INCLUDES])
   AC_SUBST([APR_PKGCONFIG])
-  AC_SUBST([APU_LIBS])
-  AC_SUBST([APU_LDFLAGS])
-  AC_SUBST([APU_INCLUDES])
-  AC_SUBST([APU_PKGCONFIG])
 
 ])
 
@@ -145,15 +99,4 @@ AC_DEFUN([DECAF_DOWNLOAD_APR],
   echo "--with-apr option to 'configure'"
 
   AC_MSG_ERROR([no suitable APR found])
-])
-
-dnl DECAF_DOWNLOAD_APU()
-dnl no apr-utils found, print out a message telling the user what to do
-AC_DEFUN([DECAF_DOWNLOAD_APU],
-[
-  echo "The Apache Portable Runtime (APR) Utils library cannot be found."
-  echo "Please install APR Utils on this system and supply the appropriate"
-  echo "--with-apr option to 'configure'"
-
-  AC_MSG_ERROR([no suitable APR Utils found])
 ])
