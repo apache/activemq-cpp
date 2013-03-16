@@ -18,10 +18,11 @@
 #ifndef _DECAF_SECURITY_INVALIDKEYEXCEPTION_H_
 #define _DECAF_SECURITY_INVALIDKEYEXCEPTION_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/security/KeyException.h>
 
-namespace decaf{
-namespace security{
+namespace decaf {
+namespace security {
 
     /*
      * This is the exception for invalid Keys (invalid encoding, wrong length,
@@ -33,29 +34,23 @@ namespace security{
         /**
          * Default Constructor
          */
-        InvalidKeyException() throw() {};
+        InvalidKeyException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        InvalidKeyException(const Exception& ex) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        InvalidKeyException(const Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        InvalidKeyException(const InvalidKeyException& ex) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        InvalidKeyException(const InvalidKeyException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -67,28 +62,20 @@ namespace security{
          * @param msg The message to report
          * @param ... list of primitives that are formatted into the message
          */
-        InvalidKeyException( const char* file, const int lineNumber,
-                             const std::exception* cause,
-                             const char* msg, ... ) throw() : Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        InvalidKeyException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
-         * @param cause Pointer to the exception that caused this one to
-         * be thrown, the object is cloned caller retains ownership.
+         *
+         * @param cause
+         *      Pointer to the exception that caused this one to
+         *      be thrown, the object is cloned caller retains ownership.
          */
-        InvalidKeyException( const std::exception* cause ) throw() : Exception( cause ) {}
+        InvalidKeyException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
+         * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          *
          * @param file
@@ -100,18 +87,7 @@ namespace security{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        InvalidKeyException( const char* file,
-                             const int lineNumber,
-                             const char* msg, ...) throw()
-        : Exception()
-        {
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
-
-            // Set the first mark for this exception.
-            setMark(file, lineNumber);
-        }
+        InvalidKeyException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -120,13 +96,13 @@ namespace security{
          *
          * @return A deep copy of this exception.
          */
-        virtual InvalidKeyException* clone() const{
+        virtual InvalidKeyException* clone() const {
             return new InvalidKeyException(*this);
         }
 
-        virtual ~InvalidKeyException() throw() {}
+        virtual ~InvalidKeyException() throw();
 
-   };
+    };
 
 }}
 

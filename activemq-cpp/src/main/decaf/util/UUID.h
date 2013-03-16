@@ -101,7 +101,7 @@ namespace util {
          *
          * @return type 3 UUID
          */
-        static UUID nameUUIDFromBytes(const char* name, std::size_t size);
+        static UUID nameUUIDFromBytes(const char* name, int size);
 
         /**
          * Creates a UUID from the string standard representation as described
@@ -128,6 +128,24 @@ namespace util {
          */
         UUID(long long mostSigBits, long long leastSigBits);
 
+        /**
+         * Create a copy of the source UUID
+         *
+         * @param source
+         *      The UUID whose value initializes this UUID
+         */
+        UUID(const UUID& source);
+
+        /**
+         * Copy the source UUID and return a reference to this UUID for chaining.
+         *
+         * @param source
+         *      The UUID whose value replaces the current values in this UUID
+         *
+         * @return a reference to this UUID
+         */
+        UUID& operator= (const UUID& source);
+
         virtual ~UUID();
 
         /**
@@ -147,6 +165,13 @@ namespace util {
         virtual bool equals(const UUID& value) const;
 
         /**
+         * Returns a Hash Code value for this UUID.
+         *
+         * @returns a Hash Code for this UUID
+         */
+        int hashCode() const;
+
+        /**
          * Compares equality between this object and the one passed.
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
@@ -162,21 +187,38 @@ namespace util {
         virtual bool operator<(const UUID& value) const;
 
         /**
-         * Returns a String object representing this UUID.  UUID's are formatted
-         * as: 00112233-4455-6677-8899-AABBCCDDEEFF whose length is 36.
+         * Returns a String object representing this UUID.
+         *
+         * The UUID string representation is as described by this BNF :
+         *
+         *    UUID                   = <time_low> "-" <time_mid> "-"
+         *                             <time_high_and_version> "-"
+         *                             <variant_and_sequence> "-"
+         *                             <node>
+         *    time_low               = 4*<hexOctet>
+         *    time_mid               = 2*<hexOctet>
+         *    time_high_and_version  = 2*<hexOctet>
+         *    variant_and_sequence   = 2*<hexOctet>
+         *    node                   = 6*<hexOctet>
+         *    hexOctet               = <hexDigit><hexDigit>
+         *    hexDigit               =
+         *        "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+         *      | "a" | "b" | "c" | "d" | "e" | "f"
+         *      | "A" | "B" | "C" | "D" | "E" | "F"
+         *
          * @returns formatted string for this UUID
          */
-        virtual std::string toString() const;
+        std::string toString() const;
 
         /**
          * @returns the most significant 64 bits of this UUID's 128 bit value.
          */
-        virtual long long getLeastSignificantBits() const;
+        long long getLeastSignificantBits() const;
 
         /**
          * @returns the most significant 64 bits of this UUID's 128 bit value.
          */
-        virtual long long getMostSignificantBits() const;
+        long long getMostSignificantBits() const;
 
         /**
          * The node value associated with this UUID.
@@ -193,7 +235,7 @@ namespace util {
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
-        virtual long long node();
+        long long node();
 
         /**
          * The timestamp value associated with this UUID.
@@ -205,10 +247,12 @@ namespace util {
          * The timestamp value is only meaningful in a time-based UUID, which has
          * version type 1. If this UUID is not a time-based UUID then this method
          * throws UnsupportedOperationException.
+         *
          * @returns the timestamp associated with a V1 UUID
+         *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
-        virtual long long timestamp();
+        long long timestamp();
 
         /**
          * The clock sequence value associated with this UUID.
@@ -220,10 +264,12 @@ namespace util {
          * The clockSequence value is only meaningful in a time-based UUID, which
          * has version type 1. If this UUID is not a time-based UUID then this
          * method throws UnsupportedOperationException.
+         *
          * @returns the clockSequeunce associated with a V1 UUID
+         *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
-        virtual int clockSequence();
+        int clockSequence();
 
         /**
          * The variant number associated with this UUID. The variant number describes
@@ -238,7 +284,7 @@ namespace util {
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
-        virtual int variant();
+        int variant();
 
         /**
          * The version number associated with this UUID. The version number describes
@@ -253,7 +299,7 @@ namespace util {
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
-        virtual int version();
+        int version();
 
     };
 

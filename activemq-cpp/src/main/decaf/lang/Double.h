@@ -37,7 +37,7 @@ namespace lang{
     public:
 
         /** The size in bits of the primitive int type */
-        static const int SIZE = 64;
+        static const int SIZE;
 
         /** The maximum value that the primitive type can hold */
         static const double MAX_VALUE;

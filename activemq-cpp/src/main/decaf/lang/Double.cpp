@@ -27,6 +27,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int Double::SIZE = 64;
 const double Double::MAX_VALUE = 1.7976931348623157e+308;
 const double Double::MIN_VALUE = 5e-324;
 const double Double::NaN = std::numeric_limits<double>::quiet_NaN();

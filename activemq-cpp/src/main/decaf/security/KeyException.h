@@ -21,70 +21,62 @@
 #include <decaf/util/Config.h>
 #include <decaf/security/GeneralSecurityException.h>
 
-namespace decaf{
-namespace security{
+namespace decaf {
+namespace security {
 
     /*
      * A basic key exception
      */
-    class DECAF_API KeyException : public GeneralSecurityException {
+    class DECAF_API KeyException: public GeneralSecurityException {
     public:
 
         /**
          * Default Constructor
          */
-        KeyException() throw() {};
+        KeyException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        KeyException( const decaf::lang::Exception& ex ) throw()
-        : GeneralSecurityException()
-        {
-            *(Exception*)this = ex;
-        }
+        KeyException(const decaf::lang::Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        KeyException( const KeyException& ex ) throw()
-        : GeneralSecurityException()
-        {
-            *(Exception*)this = ex;
-        }
+        KeyException(const KeyException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
-         * optional list of arguments to parse into the message
-         * @param file The file name where exception occurs
-         * @param lineNumber The line number where the exception occurred.
-         * @param cause The exception that was the cause for this one to be thrown.
-         * @param msg The message to report
-         * @param ... list of primitives that are formatted into the message
+         * optional list of arguments to parse into the message.
+         *
+         * @param file
+         *      The file name where exception occurs
+         * @param lineNumber
+         *      The line number where the exception occurred.
+         * @param cause
+         *      The exception that was the cause for this one to be thrown.
+         * @param msg
+         *      The message to report
+         * @param ...
+         *      list of primitives that are formatted into the message
          */
-        KeyException( const char* file, const int lineNumber,
-                      const std::exception* cause,
-                      const char* msg, ... ) throw() : GeneralSecurityException( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        KeyException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
-         * @param cause Pointer to the exception that caused this one to
-         * be thrown, the object is cloned caller retains ownership.
+         *
+         * @param cause
+         *      Pointer to the exception that caused this one to be
+         *      thrown, the object is cloned caller retains ownership.
          */
-        KeyException( const std::exception* cause ) throw() : GeneralSecurityException( cause ) {}
+        KeyException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -100,16 +92,7 @@ namespace security{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        KeyException( const char* file, const int lineNumber, const char* msg, ...) throw()
-        : GeneralSecurityException()
-        {
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        KeyException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -118,13 +101,13 @@ namespace security{
          *
          * @return A deep copy of this exception.
          */
-        virtual KeyException* clone() const{
+        virtual KeyException* clone() const {
             return new KeyException(*this);
         }
 
-        virtual ~KeyException() throw() {}
+        virtual ~KeyException() throw();
 
-   };
+    };
 
 }}
 

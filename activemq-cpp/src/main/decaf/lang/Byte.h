@@ -37,13 +37,13 @@ namespace lang{
     public:
 
         /** The minimum value that a unsigned char can take on. */
-        static const unsigned char MIN_VALUE = 0x7F;
+        static const unsigned char MIN_VALUE;
 
         /** The maximum value that a unsigned char can take on. */
-        static const unsigned char MAX_VALUE = 0x80;
+        static const unsigned char MAX_VALUE;
 
-        /** The size of the primitive charactor in bits. */
-        static const int SIZE = 8;
+        /** The size of the primitive character in bits. */
+        static const int SIZE;
 
     public:
 

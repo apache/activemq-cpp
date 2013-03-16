@@ -382,6 +382,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::zip::InflaterInputStreamTest );
 
 #include <decaf/security/SecureRandomTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::security::SecureRandomTest );
+#include <decaf/security/MessageDigestTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::security::MessageDigestTest );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////// Marshaler Tests

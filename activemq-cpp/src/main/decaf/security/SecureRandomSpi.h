@@ -20,6 +20,8 @@
 
 #include <decaf/util/Config.h>
 
+#include <decaf/security/SecuritySpi.h>
+
 namespace decaf {
 namespace security {
 
@@ -29,7 +31,7 @@ namespace security {
      *
      * @since 1.0
      */
-    class DECAF_API SecureRandomSpi {
+    class DECAF_API SecureRandomSpi : public SecuritySpi {
     public:
 
         SecureRandomSpi();

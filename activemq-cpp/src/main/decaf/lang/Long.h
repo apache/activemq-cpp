@@ -37,20 +37,20 @@ namespace lang{
     public:
 
         /** The size in bits of the primitive long long type */
-        static const int SIZE = 64;
+        static const int SIZE;
 
         /** The maximum value that the primitive type can hold */
-        static const long long MAX_VALUE = (long long)0x7FFFFFFFFFFFFFFFLL;
+        static const long long MAX_VALUE;
 
         /** The minimum value that the primitive type can hold */
-        static const long long MIN_VALUE = (long long)0x8000000000000000LL;
+        static const long long MIN_VALUE;
 
     public:
 
         /**
          * @param value - the primitive long long to wrap
          */
-        Long( long long value );
+        Long(long long value);
 
         /**
          * Constructs a new Long and attempts to convert the given string to an long long
@@ -62,9 +62,10 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not a a valid 64bit long.
          */
-        Long( const std::string& value );
+        Long(const std::string& value);
 
-        virtual ~Long() {}
+        virtual ~Long() {
+        }
 
         /**
          * Compares this Long instance with another.
@@ -74,13 +75,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Long& l ) const;
+        virtual int compareTo(const Long& l) const;
 
         /**
          * @param l - the Long object to compare against.
          * @returns true if the two Integer Objects have the same value.
          */
-        bool equals( const Long& l ) const {
+        bool equals(const Long& l) const {
             return this->value == l.value;
         }
 
@@ -89,7 +90,7 @@ namespace lang{
          * @param l - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Long& l ) const {
+        virtual bool operator==(const Long& l) const {
             return this->value == l.value;
         }
 
@@ -99,7 +100,7 @@ namespace lang{
          * @param l - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Long& l ) const {
+        virtual bool operator<(const Long& l) const {
             return this->value < l.value;
         }
 
@@ -111,13 +112,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const long long& l ) const;
+        virtual int compareTo(const long long& l) const;
 
         /**
          * @param l - the Long object to compare against.
          * @returns true if the two Integer Objects have the same value.
          */
-        bool equals( const long long& l ) const {
+        bool equals(const long long& l) const {
             return this->value == l;
         }
 
@@ -126,7 +127,7 @@ namespace lang{
          * @param l - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const long long& l ) const {
+        virtual bool operator==(const long long& l) const {
             return this->value == l;
         }
 
@@ -136,7 +137,7 @@ namespace lang{
          * @param l - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const long long& l ) const {
+        virtual bool operator<(const long long& l) const {
             return this->value < l;
         }
 
@@ -150,7 +151,7 @@ namespace lang{
          * @return double the value of the receiver.
          */
         virtual double doubleValue() const {
-            return (double)this->value;
+            return (double) this->value;
         }
 
         /**
@@ -158,7 +159,7 @@ namespace lang{
          * @return float the value of the receiver.
          */
         virtual float floatValue() const {
-            return (float)this->value;
+            return (float) this->value;
         }
 
         /**
@@ -166,7 +167,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual unsigned char byteValue() const {
-            return (unsigned char)this->value;
+            return (unsigned char) this->value;
         }
 
         /**
@@ -174,7 +175,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual short shortValue() const {
-            return (short)this->value;
+            return (short) this->value;
         }
 
         /**
@@ -182,7 +183,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual int intValue() const {
-            return (int)this->value;
+            return (int) this->value;
         }
 
         /**
@@ -203,7 +204,7 @@ namespace lang{
          * @return the number of one-bits in the two's complement binary
          * representation of the specified long long value.
          */
-        static int bitCount( long long value );
+        static int bitCount(long long value);
 
         /**
          * Decodes a String into a Long. Accepts decimal, hexadecimal, and octal
@@ -220,7 +221,7 @@ namespace lang{
          * @returns a Long object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Long decode( const std::string& value );
+        static Long decode(const std::string& value);
 
         /**
          * Returns an long long value with at most a single one-bit, in the position
@@ -232,7 +233,7 @@ namespace lang{
          * highest-order one-bit in the specified value, or zero if the specified
          * value is itself equal to zero.
          */
-        static long long highestOneBit( long long value );
+        static long long highestOneBit(long long value);
 
         /**
          * Returns an long long value with at most a single one-bit, in the position
@@ -244,7 +245,7 @@ namespace lang{
          * lowest-order one-bit in the specified value, or zero if the specified
          * value is itself equal to zero.
          */
-        static long long lowestOneBit( long long value );
+        static long long lowestOneBit(long long value);
 
         /**
          * Returns the number of zero bits preceding the highest-order ("leftmost")
@@ -263,7 +264,7 @@ namespace lang{
          * one-bit in the two's complement binary representation of the specified
          * long long value, or 64 if the value is equal to zero.
          */
-        static int numberOfLeadingZeros( long long value );
+        static int numberOfLeadingZeros(long long value);
 
         /**
          * Returns the number of zero bits following the lowest-order ("rightmost")
@@ -275,7 +276,7 @@ namespace lang{
          * one-bit in the two's complement binary representation of the specified
          * long long value, or 64 if the value is equal to zero.
          */
-        static int numberOfTrailingZeros( long long value );
+        static int numberOfTrailingZeros(long long value);
 
         /**
          * Parses the string argument as a signed decimal long. The characters in the
@@ -290,7 +291,7 @@ namespace lang{
          * @return long long value
          * @throws NumberFormatException on invalid string value
          */
-        static long long parseLong( const std::string& value );
+        static long long parseLong(const std::string& value);
 
         /**
          * Returns a Long object holding the value extracted from the specified
@@ -304,7 +305,7 @@ namespace lang{
          * @return long long value
          * @throws NumberFormatException on invalid string value
          */
-        static long long parseLong( const std::string& value, int radix );
+        static long long parseLong(const std::string& value, int radix);
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -312,7 +313,7 @@ namespace lang{
          * @param value - the long long whose bytes we are to reverse
          * @return the reversed long long.
          */
-        static long long reverseBytes( long long value );
+        static long long reverseBytes(long long value);
 
         /**
          * Returns the value obtained by reversing the order of the bits in the
@@ -320,7 +321,7 @@ namespace lang{
          * @param value - the value whose bits are to be reversed
          * @returns the reversed bits long long.
          */
-        static long long reverse( long long value );
+        static long long reverse(long long value);
 
         /**
          * Returns the value obtained by rotating the two's complement binary
@@ -339,7 +340,7 @@ namespace lang{
          * representation of the specified value left by the specified number
          * of bits.
          */
-        static long long rotateLeft( long long value, int distance );
+        static long long rotateLeft(long long value, int distance);
 
         /**
          * Returns the value obtained by rotating the two's complement binary
@@ -358,7 +359,7 @@ namespace lang{
          * representation of the specified value right by the specified number
          * of bits.
          */
-        static long long rotateRight( long long value, int distance );
+        static long long rotateRight(long long value, int distance);
 
         /**
          * Returns the signum function of the specified value. (The return value
@@ -367,14 +368,14 @@ namespace lang{
          * @param value - the long long to be inspected
          * @return the signum function of the specified long long value.
          */
-        static int signum( long long value );
+        static int signum(long long value);
 
         /**
          * Converts the long to a String representation
          * @param value The long to convert to a std::string.
          * @return string representation
          */
-        static std::string toString( long long value );
+        static std::string toString(long long value);
 
         /*
          * Returns a string representation of the first argument in the radix
@@ -399,7 +400,7 @@ namespace lang{
          * @param radix - the radix to format the string in
          * @returns an long long formatted to the string value of the radix given.
          */
-        static std::string toString( long long value, int radix );
+        static std::string toString(long long value, int radix);
 
         /**
          * Returns a string representation of the integer argument as an unsigned
@@ -420,7 +421,7 @@ namespace lang{
          * @param value - the long long to be translated to an Octal string
          * @returns the unsigned long long value as a Octal string
          */
-        static std::string toHexString( long long value );
+        static std::string toHexString(long long value);
 
         /**
          * Returns a string representation of the long long argument as an unsigned
@@ -440,7 +441,7 @@ namespace lang{
          * @param value - the long long to be translated to an Octal string
          * @returns the unsigned long long value as a Octal string
          */
-        static std::string toOctalString( long long value );
+        static std::string toOctalString(long long value);
 
         /**
          * Returns a string representation of the long long argument as an unsigned
@@ -457,15 +458,15 @@ namespace lang{
          * @param value - the long long to be translated to a binary string
          * @returns the unsigned long long value as a binary string
          */
-        static std::string toBinaryString( long long value );
+        static std::string toBinaryString(long long value);
 
         /**
          * Returns a Long instance representing the specified int value.
          * @param value - the long long to wrap
          * @return the new Integer object wrapping value.
          */
-        static Long valueOf( long long value ) {
-            return Long( value );
+        static Long valueOf(long long value) {
+            return Long(value);
         }
 
         /**
@@ -478,7 +479,7 @@ namespace lang{
          * @return new Long Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal long long.
          */
-        static Long valueOf( const std::string& value );
+        static Long valueOf(const std::string& value);
 
         /**
          * Returns a Long object holding the value extracted from the specified
@@ -492,12 +493,11 @@ namespace lang{
          * @return new Long Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid long long.
          */
-        static Long valueOf( const std::string& value, int radix );
+        static Long valueOf(const std::string& value, int radix);
 
     private:
 
-        static long long parse( const std::string& value, int offset,
-                                int radix, bool negative );
+        static long long parse(const std::string& value, int offset, int radix, bool negative);
 
     };
 

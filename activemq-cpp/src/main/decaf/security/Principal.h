@@ -20,6 +20,8 @@
 
 #include <decaf/util/Config.h>
 
+#include <string>
+
 namespace decaf {
 namespace security {
 
@@ -30,7 +32,7 @@ namespace security {
     class DECAF_API Principal {
     public:
 
-        virtual ~Principal() {}
+        virtual ~Principal();
 
         /**
          * Compares two principals to see if they are the same.
@@ -39,7 +41,7 @@ namespace security {
          *      A principal to be tested for equality to this one.
          * @return true if the given principal is equivalent to this one.
          */
-        virtual bool equals( const Principal& another ) const = 0;
+        virtual bool equals(const Principal& another) const = 0;
 
         /**
          * Provides the name of this principal.
@@ -47,6 +49,7 @@ namespace security {
          * @return the name of this principal.
          */
         virtual std::string getName() const = 0;
+
     };
 }}
 

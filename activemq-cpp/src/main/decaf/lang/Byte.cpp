@@ -24,6 +24,11 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const unsigned char Byte::MIN_VALUE = 0x7F;
+const unsigned char Byte::MAX_VALUE = 0x80;
+const int Byte::SIZE = 8;
+
+////////////////////////////////////////////////////////////////////////////////
 Byte::Byte( unsigned char value ) : value(value) {
 }
 

@@ -38,13 +38,13 @@ namespace lang{
     public:
 
         /** Size of this objects primitive type in bits */
-        static const int SIZE = 16;
+        static const int SIZE;
 
         /** Max Value for this Object's primitive type */
-        static const short MAX_VALUE = (short)0x7FFF;
+        static const short MAX_VALUE;
 
         /** Max Value for this Object's primitive type */
-        static const short MIN_VALUE = (short)0x8000;
+        static const short MIN_VALUE;
 
     public:
 

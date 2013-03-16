@@ -534,7 +534,7 @@ namespace util {
                         __FILE__, __LINE__, "Can't clear a const collection");
             }
 
-            virtual bool remove(const MapEntry<K,V>& entry) {
+            virtual bool remove(const MapEntry<K,V>& entry DECAF_UNUSED) {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
                         __FILE__, __LINE__, "Can't remove from const collection");
             }
@@ -636,7 +636,7 @@ namespace util {
                         __FILE__, __LINE__, "Can't modify a const collection");
             }
 
-            virtual bool remove(const K& key) {
+            virtual bool remove(const K& key DECAF_UNUSED) {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
                         __FILE__, __LINE__, "Can't modify a const collection");
             }
@@ -1041,7 +1041,36 @@ namespace util {
         }
 
         virtual bool equals(const Map<K, V>& source) const {
-            return false;
+
+            if (this == &source) {
+                return true;
+            }
+
+            if (size() != source.size()) {
+                return false;
+            }
+
+            try {
+                decaf::lang::Pointer<Iterator<MapEntry<K, V> > > iter(entrySet().iterator());
+                while (iter->hasNext() ) {
+                    MapEntry<K, V> entry = iter->next();
+                    K key = entry.getKey();
+                    V mine = entry.getValue();
+
+                    if (!source.containsKey(key)) {
+                        return false;
+                    }
+
+                    if (source.get(key) != mine) {
+                        return false;
+                    }
+                }
+            } catch (decaf::lang::exceptions::NullPointerException& ignored) {
+                return false;
+            } catch (decaf::lang::exceptions::ClassCastException& ignored) {
+                return false;
+            }
+            return true;
         }
 
         virtual void copy(const Map<K, V>& source) {

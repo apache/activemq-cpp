@@ -18,9 +18,10 @@
 #ifndef _DECAF_SECURITY_KEY_H
 #define _DECAF_SECURITY_KEY_H
 
+#include <decaf/util/Config.h>
+
 #include <vector>
 #include <string>
-#include <decaf/util/Config.h>
 
 namespace decaf {
 namespace security {
@@ -61,10 +62,9 @@ namespace security {
      * getFormat method.
      */
     class DECAF_API Key {
-
     public:
 
-        virtual ~Key() {}
+        virtual ~Key();
 
         /**
          * Returns the standard algorithm name for this key. For example, "DSA"
@@ -82,7 +82,7 @@ namespace security {
          *      Receives the encoded key, or nothing if the key does not support
          *      encoding.
          */
-        virtual void getEncoded( std::vector<unsigned char>& output) const = 0;
+        virtual void getEncoded(std::vector<unsigned char>& output) const = 0;
 
         /**
          * Returns the name of the primary encoding format of this key, or
@@ -98,6 +98,7 @@ namespace security {
          * @return the primary encoding format of the key.
          */
         virtual std::string getFormat() const = 0;
+
     };
 }}
 

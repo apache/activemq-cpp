@@ -354,6 +354,15 @@ cc_sources = \
     decaf/internal/nio/IntArrayBuffer.cpp \
     decaf/internal/nio/LongArrayBuffer.cpp \
     decaf/internal/nio/ShortArrayBuffer.cpp \
+    decaf/internal/security/Engine.cpp \
+    decaf/internal/security/SecurityRuntime.cpp \
+    decaf/internal/security/ServiceRegistry.cpp \
+    decaf/internal/security/provider/DefaultMessageDigestProviderService.cpp \
+    decaf/internal/security/provider/DefaultProvider.cpp \
+    decaf/internal/security/provider/DefaultSecureRandomProviderService.cpp \
+    decaf/internal/security/provider/crypto/MD4MessageDigestSpi.cpp \
+    decaf/internal/security/provider/crypto/MD5MessageDigestSpi.cpp \
+    decaf/internal/security/provider/crypto/SHA1MessageDigestSpi.cpp \
     decaf/internal/security/unix/SecureRandomImpl.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/GenericResource.cpp \
@@ -433,6 +442,7 @@ cc_sources = \
     decaf/lang/Throwable.cpp \
     decaf/lang/Types.cpp \
     decaf/lang/exceptions/ClassCastException.cpp \
+    decaf/lang/exceptions/CloneNotSupportedException.cpp \
     decaf/lang/exceptions/IllegalArgumentException.cpp \
     decaf/lang/exceptions/IllegalMonitorStateException.cpp \
     decaf/lang/exceptions/IllegalStateException.cpp \
@@ -495,8 +505,34 @@ cc_sources = \
     decaf/nio/LongBuffer.cpp \
     decaf/nio/ReadOnlyBufferException.cpp \
     decaf/nio/ShortBuffer.cpp \
+    decaf/security/DigestException.cpp \
+    decaf/security/GeneralSecurityException.cpp \
+    decaf/security/InvalidKeyException.cpp \
+    decaf/security/Key.cpp \
+    decaf/security/KeyException.cpp \
+    decaf/security/KeyManagementException.cpp \
+    decaf/security/MessageDigest.cpp \
+    decaf/security/MessageDigestSpi.cpp \
+    decaf/security/NoSuchAlgorithmException.cpp \
+    decaf/security/NoSuchProviderException.cpp \
+    decaf/security/Principal.cpp \
+    decaf/security/Provider.cpp \
+    decaf/security/ProviderException.cpp \
+    decaf/security/ProviderService.cpp \
+    decaf/security/PublicKey.cpp \
     decaf/security/SecureRandom.cpp \
     decaf/security/SecureRandomSpi.cpp \
+    decaf/security/Security.cpp \
+    decaf/security/SecuritySpi.cpp \
+    decaf/security/SignatureException.cpp \
+    decaf/security/auth/x500/X500Principal.cpp \
+    decaf/security/cert/Certificate.cpp \
+    decaf/security/cert/CertificateEncodingException.cpp \
+    decaf/security/cert/CertificateException.cpp \
+    decaf/security/cert/CertificateExpiredException.cpp \
+    decaf/security/cert/CertificateNotYetValidException.cpp \
+    decaf/security/cert/CertificateParsingException.cpp \
+    decaf/security/cert/X509Certificate.cpp \
     decaf/util/AbstractCollection.cpp \
     decaf/util/AbstractList.cpp \
     decaf/util/AbstractMap.cpp \
@@ -957,6 +993,15 @@ h_sources = \
     decaf/internal/nio/IntArrayBuffer.h \
     decaf/internal/nio/LongArrayBuffer.h \
     decaf/internal/nio/ShortArrayBuffer.h \
+    decaf/internal/security/Engine.h \
+    decaf/internal/security/SecurityRuntime.h \
+    decaf/internal/security/ServiceRegistry.h \
+    decaf/internal/security/provider/DefaultMessageDigestProviderService.h \
+    decaf/internal/security/provider/DefaultProvider.h \
+    decaf/internal/security/provider/DefaultSecureRandomProviderService.h \
+    decaf/internal/security/provider/crypto/MD4MessageDigestSpi.h \
+    decaf/internal/security/provider/crypto/MD5MessageDigestSpi.h \
+    decaf/internal/security/provider/crypto/SHA1MessageDigestSpi.h \
     decaf/internal/security/unix/SecureRandomImpl.h \
     decaf/internal/security/windows/SecureRandomImpl.h \
     decaf/internal/util/ByteArrayAdapter.h \
@@ -1043,6 +1088,7 @@ h_sources = \
     decaf/lang/Throwable.h \
     decaf/lang/Types.h \
     decaf/lang/exceptions/ClassCastException.h \
+    decaf/lang/exceptions/CloneNotSupportedException.h \
     decaf/lang/exceptions/ExceptionDefines.h \
     decaf/lang/exceptions/IllegalArgumentException.h \
     decaf/lang/exceptions/IllegalMonitorStateException.h \
@@ -1106,17 +1152,25 @@ h_sources = \
     decaf/nio/LongBuffer.h \
     decaf/nio/ReadOnlyBufferException.h \
     decaf/nio/ShortBuffer.h \
+    decaf/security/DigestException.h \
     decaf/security/GeneralSecurityException.h \
     decaf/security/InvalidKeyException.h \
     decaf/security/Key.h \
     decaf/security/KeyException.h \
     decaf/security/KeyManagementException.h \
+    decaf/security/MessageDigest.h \
+    decaf/security/MessageDigestSpi.h \
     decaf/security/NoSuchAlgorithmException.h \
     decaf/security/NoSuchProviderException.h \
     decaf/security/Principal.h \
+    decaf/security/Provider.h \
+    decaf/security/ProviderException.h \
+    decaf/security/ProviderService.h \
     decaf/security/PublicKey.h \
     decaf/security/SecureRandom.h \
     decaf/security/SecureRandomSpi.h \
+    decaf/security/Security.h \
+    decaf/security/SecuritySpi.h \
     decaf/security/SignatureException.h \
     decaf/security/auth/x500/X500Principal.h \
     decaf/security/cert/Certificate.h \

@@ -32,19 +32,19 @@ namespace lang{
                               public Comparable<int> {
     private:
 
-        // The primitve Integer value.
+        // The primitive Integer value.
         int value;
 
     public:
 
         /** The size in bits of the primitive int type */
-        static const int SIZE = 32;
+        static const int SIZE;
 
         /** The maximum value that the primitive type can hold */
-        static const int MAX_VALUE = (int)0x7FFFFFFF;
+        static const int MAX_VALUE;
 
         /** The minimum value that the primitive type can hold */
-        static const int MIN_VALUE = (int)0x80000000;
+        static const int MIN_VALUE;
 
     public:
 
@@ -52,7 +52,7 @@ namespace lang{
          * @param value
          *      The primitive value to wrap in an <code>Integer</code> instance.
          */
-        Integer( int value );
+        Integer(int value);
 
         /**
          * Constructs a new Integer and attempts to convert the given string to an int
@@ -64,9 +64,10 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not a a valid integer.
          */
-        Integer( const std::string& value );
+        Integer(const std::string& value);
 
-        virtual ~Integer() {}
+        virtual ~Integer() {
+        }
 
         /**
          * Compares this Integer instance with another.
@@ -76,13 +77,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Integer& i ) const;
+        virtual int compareTo(const Integer& i) const;
 
         /**
          * @param i - the Integer object to compare against.
          * @returns true if the two Integer Objects have the same value.
          */
-        bool equals( const Integer& i ) const {
+        bool equals(const Integer& i) const {
             return this->value == i.value;
         }
 
@@ -91,7 +92,7 @@ namespace lang{
          * @param i - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Integer& i ) const {
+        virtual bool operator==(const Integer& i) const {
             return this->value == i.value;
         }
 
@@ -101,7 +102,7 @@ namespace lang{
          * @param i - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Integer& i ) const {
+        virtual bool operator<(const Integer& i) const {
             return this->value < i.value;
         }
 
@@ -113,13 +114,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const int& i ) const;
+        virtual int compareTo(const int& i) const;
 
         /**
          * @param i - the Integer object to compare against.
          * @returns true if the two Integer Objects have the same value.
          */
-        bool equals( const int& i ) const {
+        bool equals(const int& i) const {
             return this->value == i;
         }
 
@@ -128,7 +129,7 @@ namespace lang{
          * @param i - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const int& i ) const {
+        virtual bool operator==(const int& i) const {
             return this->value == i;
         }
 
@@ -138,7 +139,7 @@ namespace lang{
          * @param i - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const int& i ) const {
+        virtual bool operator<(const int& i) const {
             return this->value < i;
         }
 
@@ -152,7 +153,7 @@ namespace lang{
          * @return double the value of the receiver.
          */
         virtual double doubleValue() const {
-            return (double)this->value;
+            return (double) this->value;
         }
 
         /**
@@ -160,7 +161,7 @@ namespace lang{
          * @return float the value of the receiver.
          */
         virtual float floatValue() const {
-            return (float)this->value;
+            return (float) this->value;
         }
 
         /**
@@ -168,7 +169,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual unsigned char byteValue() const {
-            return (unsigned char)this->value;
+            return (unsigned char) this->value;
         }
 
         /**
@@ -176,7 +177,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual short shortValue() const {
-            return (short)this->value;
+            return (short) this->value;
         }
 
         /**
@@ -192,10 +193,11 @@ namespace lang{
          * @return long the value of the receiver.
          */
         virtual long long longValue() const {
-            return (long long)this->value;
+            return (long long) this->value;
         }
 
-    public:  // Statics
+    public:
+        // Statics
 
         /**
          * Decodes a String into a Integer. Accepts decimal, hexadecimal, and octal
@@ -212,7 +214,7 @@ namespace lang{
          * @returns a Integer object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Integer decode( const std::string& value );
+        static Integer decode(const std::string& value);
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -220,7 +222,7 @@ namespace lang{
          * @param value - the int whose bytes we are to reverse
          * @return the reversed int.
          */
-        static int reverseBytes( int value );
+        static int reverseBytes(int value);
 
         /**
          * Returns the value obtained by reversing the order of the bits in the
@@ -228,7 +230,7 @@ namespace lang{
          * @param value - the value whose bits are to be reversed
          * @returns the reversed bits int.
          */
-        static int reverse( int value );
+        static int reverse(int value);
 
         /**
          * Parses the string argument as a signed int in the radix specified by
@@ -253,7 +255,7 @@ namespace lang{
          * @return the int represented by the string argument in the specified radix.
          * @throws NumberFormatException - If String does not contain a parsable int.
          */
-        static int parseInt( const std::string& s, int radix );
+        static int parseInt(const std::string& s, int radix);
 
         /**
          * Parses the string argument as a signed decimal int. The characters
@@ -266,15 +268,15 @@ namespace lang{
          * @returns the converted int value
          * @throws NumberFormatException if the string is not a int.
          */
-        static int parseInt( const std::string& s );
+        static int parseInt(const std::string& s);
 
         /**
          * Returns a Integer instance representing the specified int value.
          * @param value - the int to wrap
          * @return the new Integer object wrapping value.
          */
-        static Integer valueOf( int value ) {
-            return Integer( value );
+        static Integer valueOf(int value) {
+            return Integer(value);
         }
 
         /**
@@ -287,7 +289,7 @@ namespace lang{
          * @return new Integer Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal int.
          */
-        static Integer valueOf( const std::string& value );
+        static Integer valueOf(const std::string& value);
 
         /**
          * Returns a Integer object holding the value extracted from the specified
@@ -301,7 +303,7 @@ namespace lang{
          * @return new Integer Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid int.
          */
-        static Integer valueOf( const std::string& value, int radix );
+        static Integer valueOf(const std::string& value, int radix);
 
         /**
          * Returns the number of one-bits in the two's complement binary
@@ -311,7 +313,7 @@ namespace lang{
          * @return the number of one-bits in the two's complement binary
          *         representation of the specified int value.
          */
-        static int bitCount( int value );
+        static int bitCount(int value);
 
         /**
          * Converts the int to a String representation
@@ -319,7 +321,7 @@ namespace lang{
          *      The int to convert to a <code>std::string</code> instance.
          * @return string representation
          */
-        static std::string toString( int value );
+        static std::string toString(int value);
 
         /**
          * Returns a string representation of the first argument in the radix
@@ -344,7 +346,7 @@ namespace lang{
          * @param radix - the radix to format the string in
          * @returns an int formatted to the string value of the radix given.
          */
-        static std::string toString( int value, int radix );
+        static std::string toString(int value, int radix);
 
         /**
          * Returns a string representation of the integer argument as an unsigned
@@ -365,7 +367,7 @@ namespace lang{
          * @param value - the int to be translated to an Octal string
          * @returns the unsigned int value as a Octal string
          */
-        static std::string toHexString( int value );
+        static std::string toHexString(int value);
 
         /**
          * Returns a string representation of the integer argument as an unsigned
@@ -385,7 +387,7 @@ namespace lang{
          * @param value - the int to be translated to an Octal string
          * @returns the unsigned int value as a Octal string
          */
-        static std::string toOctalString( int value );
+        static std::string toOctalString(int value);
 
         /**
          * Returns a string representation of the integer argument as an unsigned
@@ -404,7 +406,7 @@ namespace lang{
          * @param value - the int to be translated to a binary string
          * @returns the unsigned int value as a binary string
          */
-        static std::string toBinaryString( int value );
+        static std::string toBinaryString(int value);
 
         /**
          * Returns an int value with at most a single one-bit, in the position of
@@ -416,7 +418,7 @@ namespace lang{
          * highest-order one-bit in the specified value, or zero if the specified
          * value is itself equal to zero.
          */
-        static int highestOneBit( int value );
+        static int highestOneBit(int value);
 
         /**
          * Returns an int value with at most a single one-bit, in the position of
@@ -428,7 +430,7 @@ namespace lang{
          * lowest-order one-bit in the specified value, or zero if the specified
          * value is itself equal to zero.
          */
-        static int lowestOneBit( int value );
+        static int lowestOneBit(int value);
 
         /**
          * Returns the number of zero bits preceding the highest-order ("leftmost")
@@ -447,7 +449,7 @@ namespace lang{
          * one-bit in the two's complement binary representation of the specified
          * int value, or 32 if the value is equal to zero.
          */
-        static int numberOfLeadingZeros( int value );
+        static int numberOfLeadingZeros(int value);
 
         /**
          * Returns the number of zero bits following the lowest-order ("rightmost")
@@ -459,7 +461,7 @@ namespace lang{
          * one-bit in the two's complement binary representation of the specified
          * int value, or 32 if the value is equal to zero.
          */
-        static int numberOfTrailingZeros( int value );
+        static int numberOfTrailingZeros(int value);
 
         /**
          * Returns the value obtained by rotating the two's complement binary
@@ -478,7 +480,7 @@ namespace lang{
          * representation of the specified int value left by the specified number
          * of bits.
          */
-        static int rotateLeft( int value, int distance );
+        static int rotateLeft(int value, int distance);
 
         /**
          * Returns the value obtained by rotating the two's complement binary
@@ -497,7 +499,7 @@ namespace lang{
          * representation of the specified int value right by the specified number
          * of bits.
          */
-        static int rotateRight( int value, int distance );
+        static int rotateRight(int value, int distance);
 
         /**
          * Returns the signum function of the specified int value. (The return value
@@ -506,12 +508,11 @@ namespace lang{
          * @param value - the int to be inspected
          * @return the signum function of the specified int value.
          */
-        static int signum( int value );
+        static int signum(int value);
 
     private:
 
-        static int parse( const std::string& value, int offset,
-                          int radix, bool negative );
+        static int parse(const std::string& value, int offset, int radix, bool negative);
 
     };
 

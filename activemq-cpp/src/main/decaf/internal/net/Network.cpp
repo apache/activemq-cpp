@@ -39,15 +39,15 @@ using namespace decaf::util::concurrent;
 Network* Network::networkRuntime = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace internal{
-namespace net{
+namespace decaf {
+namespace internal {
+namespace net {
 
     class NetworkData {
     private:
 
-        NetworkData( const NetworkData& );
-        NetworkData& operator=( const NetworkData& );
+        NetworkData(const NetworkData&);
+        NetworkData& operator=(const NetworkData&);
 
     public:
 
@@ -55,49 +55,48 @@ namespace net{
         Mutex lock;
         LinkedList<Runnable*> shutdownTasks;
 
-        NetworkData() : resources(), lock(), shutdownTasks() {
-        }
+        NetworkData() : resources(), lock(), shutdownTasks() {}
 
         ~NetworkData() {
-            try{
-                std::auto_ptr< Iterator<Runnable*> > iter( shutdownTasks.iterator() );
-                while( iter->hasNext() ) {
+            try {
+                std::auto_ptr<Iterator<Runnable*> > iter(shutdownTasks.iterator());
+                while (iter->hasNext()) {
                     Runnable* task = iter->next();
-                    try{
+                    try {
                         task->run();
                         delete task;
-                    } catch(...) {}
+                    } catch (...) {
+                    }
                 }
-            } catch(...) {}
+            } catch (...) {
+            }
         }
     };
 
 }}}
 
 ////////////////////////////////////////////////////////////////////////////////
-Network::Network() : data( new NetworkData() ) {
+Network::Network() : data(new NetworkData()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network() {
-    try{
+    try {
         delete this->data;
     }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
-}
+    DECAF_CATCH_NOTHROW( Exception)
+    DECAF_CATCHALL_NOTHROW()}
 
 ////////////////////////////////////////////////////////////////////////////////
-void Network::addNetworkResource( Resource* value ) {
-    this->data->resources.addResource( value );
+void Network::addNetworkResource(Resource* value) {
+    this->data->resources.addResource(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Network* Network::getNetworkRuntime() {
 
-    if( Network::networkRuntime == NULL ) {
-        throw IllegalStateException(
-            __FILE__, __LINE__, "Network Runtime is not Initialized." );
+    if (Network::networkRuntime == NULL) {
+        throw IllegalStateException(__FILE__, __LINE__, "Network Runtime is not Initialized.");
     }
 
     return Network::networkRuntime;
@@ -105,8 +104,7 @@ Network* Network::getNetworkRuntime() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Mutex* Network::getRuntimeLock() {
-
-    return &( this->data->lock );
+    return &(this->data->lock);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,23 +113,20 @@ void Network::initializeNetworking() {
 #ifndef WIN32
     // Remove the SIGPIPE so that the application isn't aborted if a connected
     // socket breaks during a read or write.
-    apr_signal_block( SIGPIPE );
+    apr_signal_block(SIGPIPE);
 #endif
 
-    // Create the Network Runtime
     Network::networkRuntime = new Network();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Network::shutdownNetworking() {
-
-    // Destory the Network Runtime.
     delete Network::networkRuntime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Network::addShutdownTask( decaf::lang::Runnable* task ) {
-    if( task != NULL ) {
-        this->data->shutdownTasks.add( task );
+void Network::addShutdownTask(decaf::lang::Runnable* task) {
+    if (task != NULL) {
+        this->data->shutdownTasks.add(task);
     }
 }

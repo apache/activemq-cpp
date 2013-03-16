@@ -45,8 +45,8 @@ namespace net {
 
     private:
 
-        Network( const Network& );
-        Network& operator= ( const Network& );
+        Network(const Network&);
+        Network& operator=(const Network&);
 
     protected:
 
@@ -78,13 +78,12 @@ namespace net {
          *
          * @throw NullPointerException if the Resource value passed is null.
          */
-        void addNetworkResource( decaf::internal::util::Resource* value );
+        void addNetworkResource(decaf::internal::util::Resource* value);
 
         template<typename T>
-        void addAsResource( T* value ) {
-
-            util::GenericResource<T>* resource = new util::GenericResource<T>( value );
-            this->addNetworkResource( resource );
+        void addAsResource(T* value) {
+            util::GenericResource<T>* resource = new util::GenericResource<T>(value);
+            this->addNetworkResource(resource);
         }
 
         /**
@@ -94,7 +93,7 @@ namespace net {
          * to the NetworkRuntime to guarantee the timing of resource cleanup.
          *
          * The cleanup tasks are run at a critical time in the Shutdown process and should
-         * be as simple as possible and make every attempt to no throw any exceptions.  If an
+         * be as simple as possible and make every attempt to not throw any exceptions.  If an
          * exception is thrown it is ignored and processing of the next task is started.
          *
          * The tasks should not assume that any Network resources are still available and
@@ -103,7 +102,7 @@ namespace net {
          * @param task
          *      Pointer to a Runnable object that will now be owned by the Network Runtime.
          */
-        void addShutdownTask( decaf::lang::Runnable* task );
+        void addShutdownTask(decaf::lang::Runnable* task);
 
     public:   // Static methods
 

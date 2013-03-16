@@ -33,6 +33,8 @@ namespace decaf {
 namespace security {
 namespace cert {
 
+    class PublicKey;
+
     /**
      * Base interface for all identity certificates.
      */

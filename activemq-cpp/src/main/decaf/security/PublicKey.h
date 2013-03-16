@@ -18,8 +18,9 @@
 #ifndef _DECAF_SECURITY_PUBLICKEY_H_
 #define _DECAF_SECURITY_PUBLICKEY_H_
 
-#include <decaf/security/Key.h>
 #include <decaf/util/Config.h>
+
+#include <decaf/security/Key.h>
 
 namespace decaf {
 namespace security {
@@ -29,10 +30,9 @@ namespace security {
      * serves to group (and provide type safety for) all public key interfaces.
      */
     class DECAF_API PublicKey : public Key {
-
     public:
 
-        virtual ~PublicKey() {}
+        virtual ~PublicKey();
     };
 
 }}

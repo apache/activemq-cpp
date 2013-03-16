@@ -192,6 +192,7 @@ cc_sources = \
     decaf/net/URLEncoderTest.cpp \
     decaf/net/ssl/SSLSocketFactoryTest.cpp \
     decaf/nio/BufferTest.cpp \
+    decaf/security/MessageDigestTest.cpp \
     decaf/security/SecureRandomTest.cpp \
     decaf/util/AbstractCollectionTest.cpp \
     decaf/util/AbstractListTest.cpp \
@@ -435,6 +436,7 @@ h_sources = \
     decaf/net/URLEncoderTest.h \
     decaf/net/ssl/SSLSocketFactoryTest.h \
     decaf/nio/BufferTest.h \
+    decaf/security/MessageDigestTest.h \
     decaf/security/SecureRandomTest.h \
     decaf/util/AbstractCollectionTest.h \
     decaf/util/AbstractListTest.h \

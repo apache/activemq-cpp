@@ -21,8 +21,8 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/Exception.h>
 
-namespace decaf{
-namespace security{
+namespace decaf {
+namespace security {
 
     /*
      * The GeneralSecurityException class is a generic security exception class
@@ -35,58 +35,49 @@ namespace security{
         /**
          * Default Constructor
          */
-        GeneralSecurityException() throw() {};
+        GeneralSecurityException();
 
         /**
-         * Conversion Constructor from some other Exception
+         * Conversion Constructor from some other Exception.
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        GeneralSecurityException( const decaf::lang::Exception& ex ) throw()
-        : decaf::lang::Exception()
-        {
-            *(decaf::lang::Exception*)this = ex;
-        }
+        GeneralSecurityException(const decaf::lang::Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        GeneralSecurityException(const GeneralSecurityException& ex) throw()
-        : decaf::lang::Exception()
-        {
-            *(decaf::lang::Exception*)this = ex;
-        }
+        GeneralSecurityException(const GeneralSecurityException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
-         * optional list of arguments to parse into the message
-         * @param file The file name where exception occurs
-         * @param lineNumber The line number where the exception occurred.
-         * @param cause The exception that was the cause for this one to be thrown.
-         * @param msg The message to report
-         * @param ... list of primitives that are formatted into the message
+         * optional list of arguments to parse into the message.
+         *
+         * @param file
+         *      The file name where exception occurs
+         * @param lineNumber
+         *      The line number where the exception occurred.
+         * @param cause
+         *      The exception that was the cause for this one to be thrown.
+         * @param msg
+         *      The message to report
+         * @param ...
+         *      list of primitives that are formatted into the message
          */
-        GeneralSecurityException( const char* file, const int lineNumber,
-                                  const std::exception* cause,
-                                  const char* msg, ... ) throw() : decaf::lang::Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        GeneralSecurityException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ... );
 
         /**
          * Constructor
-         * @param cause Pointer to the exception that caused this one to
-         * be thrown, the object is cloned caller retains ownership.
+         * @param cause
+         *      Pointer to the exception that caused this one to
+         *      be thrown, the object is cloned caller retains ownership.
          */
-        GeneralSecurityException( const std::exception* cause ) throw() : decaf::lang::Exception( cause ) {}
+        GeneralSecurityException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -102,18 +93,7 @@ namespace security{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        GeneralSecurityException( const char* file,
-                                  const int lineNumber,
-                                  const char* msg, ...) throw()
-        : decaf::lang::Exception()
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        GeneralSecurityException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -122,11 +102,11 @@ namespace security{
          *
          * @return A deep copy of this exception.
          */
-        virtual GeneralSecurityException* clone() const{
-            return new GeneralSecurityException( *this );
+        virtual GeneralSecurityException* clone() const {
+            return new GeneralSecurityException(*this);
         }
 
-        virtual ~GeneralSecurityException() throw() {}
+        virtual ~GeneralSecurityException() throw();
 
    };
 

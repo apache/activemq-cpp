@@ -24,11 +24,13 @@
 #include <decaf/lang/System.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/internal/net/Network.h>
+#include <decaf/internal/security/SecurityRuntime.h>
 #include <decaf/internal/util/concurrent/Threading.h>
 
 using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
+using namespace decaf::internal::security;
 using namespace decaf::internal::util::concurrent;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
@@ -71,18 +73,13 @@ void Runtime::initializeRuntime(int argc, char **argv) {
     apr_pool_create_ex(&aprPool, NULL, NULL, NULL);
 
     Runtime::getRuntime();
-
-    // Initialize any Platform specific Threading primitives
     Threading::initialize();
 
-    // Create the global Lock object now that Threading is started.
     globalLock = new Mutex;
 
-    // Initialize the System Class to make things like Properties available.
     System::initSystem(argc, argv);
-
-    // Initialize the Networking layer.
     Network::initializeNetworking();
+    SecurityRuntime::initializeSecurity();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,12 +90,12 @@ void Runtime::initializeRuntime() {
 ////////////////////////////////////////////////////////////////////////////////
 void Runtime::shutdownRuntime() {
 
+    SecurityRuntime::shutdownSecurity();
+
     // Shutdown the networking layer before Threading, many network routines need
     // to be thread safe and require Threading primitives.
     Network::shutdownNetworking();
 
-    // Shutdown the System class so that the Properties and other resources are
-    // cleaned up.
     System::shutdownSystem();
 
     // This must go away before Threading is shutdown.

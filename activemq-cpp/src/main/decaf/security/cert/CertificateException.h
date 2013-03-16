@@ -21,43 +21,63 @@
 #include <decaf/util/Config.h>
 #include <decaf/security/GeneralSecurityException.h>
 
-namespace decaf{
-namespace security{
-namespace cert{
+namespace decaf {
+namespace security {
+namespace cert {
 
     /*
      * Indicates one of a variety of certificate problems.
      */
-    class DECAF_API CertificateException : public GeneralSecurityException
-    {
+    class DECAF_API CertificateException : public GeneralSecurityException {
     public:
 
         /**
          * Default Constructor
          */
-        CertificateException() throw() {};
+        CertificateException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        CertificateException(const Exception& ex) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        CertificateException(const Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        CertificateException(const CertificateException& ex) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        CertificateException(const CertificateException& ex);
+
+        /**
+         * Constructor - Initializes the file name and line number where
+         * this message occurred.  Sets the message to report, using an
+         * optional list of arguments to parse into the message.
+         *
+         * @param file
+         *      The file name where exception occurs
+         * @param lineNumber
+         *      The line number where the exception occurred.
+         * @param cause
+         *      The exception that was the cause for this one to be thrown.
+         * @param msg
+         *      The message to report
+         * @param ...
+         *      list of primitives that are formatted into the message
+         */
+        CertificateException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
+
+        /**
+         * Constructor
+         *
+         * @param cause
+         *      Pointer to the exception that caused this one to be
+         *      thrown, the object is cloned caller retains ownership.
+         */
+        CertificateException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -73,18 +93,7 @@ namespace cert{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        CertificateException( const char* file,
-                               const int lineNumber,
-                               const char* msg, ...) throw()
-        : Exception()
-        {
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
-
-            // Set the first mark for this exception.
-            setMark(file, lineNumber);
-        }
+        CertificateException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -93,13 +102,13 @@ namespace cert{
          *
          * @return A deep copy of this exception.
          */
-        virtual CertificateException* clone() const{
+        virtual CertificateException* clone() const {
             return new CertificateException(*this);
         }
 
-        virtual ~CertificateException() throw() {}
+        virtual ~CertificateException() throw();
 
-   };
+    };
 
 }}}
 

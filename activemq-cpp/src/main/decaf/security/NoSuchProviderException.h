@@ -21,76 +21,67 @@
 #include <decaf/util/Config.h>
 #include <decaf/security/GeneralSecurityException.h>
 
-namespace decaf{
-namespace security{
+namespace decaf {
+namespace security {
 
     /*
      * This exception is thrown when a particular security provider is requested
      * but is not available in the environment.
      */
-    class DECAF_API NoSuchProviderException : public GeneralSecurityException
-    {
+    class DECAF_API NoSuchProviderException : public GeneralSecurityException {
     public:
 
         /**
          * Default Constructor
          */
-        NoSuchProviderException() throw() {};
+        NoSuchProviderException();
 
         /**
          * Conversion Constructor from some other Exception
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        NoSuchProviderException(const Exception& ex) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        NoSuchProviderException(const Exception& ex);
 
         /**
          * Copy Constructor
+         *
          * @param ex
          *      An exception that should become this type of Exception
          */
-        NoSuchProviderException(const NoSuchProviderException& ex) throw()
-        : Exception()
-        {
-            *(Exception*)this = ex;
-        }
+        NoSuchProviderException(const NoSuchProviderException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
          * this message occurred.  Sets the message to report, using an
-         * optional list of arguments to parse into the message
-         * @param file The file name where exception occurs
-         * @param lineNumber The line number where the exception occurred.
-         * @param cause The exception that was the cause for this one to be thrown.
-         * @param msg The message to report
-         * @param ... list of primitives that are formatted into the message
+         * optional list of arguments to parse into the message.
+         *
+         * @param file
+         *      The file name where exception occurs
+         * @param lineNumber
+         *      The line number where the exception occurred.
+         * @param cause
+         *      The exception that was the cause for this one to be thrown.
+         * @param msg
+         *      The message to report
+         * @param ...
+         *      list of primitives that are formatted into the message
          */
-        NoSuchProviderException( const char* file, const int lineNumber,
-                                 const std::exception* cause,
-                                 const char* msg, ... ) throw() : Exception( cause )
-        {
-            va_list vargs;
-            va_start( vargs, msg );
-            buildMessage( msg, vargs );
-
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+        NoSuchProviderException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
-         * @param cause Pointer to the exception that caused this one to
-         * be thrown, the object is cloned caller retains ownership.
+         *
+         * @param cause
+         *      Pointer to the exception that caused this one to
+         *      be thrown, the object is cloned caller retains ownership.
          */
-        NoSuchProviderException( const std::exception* cause ) throw() : Exception( cause ) {}
+        NoSuchProviderException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
+         * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          *
          * @param file
@@ -102,18 +93,7 @@ namespace security{
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        NoSuchProviderException( const char* file,
-                               const int lineNumber,
-                               const char* msg, ...) throw()
-        : Exception()
-        {
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
-
-            // Set the first mark for this exception.
-            setMark(file, lineNumber);
-        }
+        NoSuchProviderException(const char* file, const int lineNumber, const char* msg, ...);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -122,13 +102,13 @@ namespace security{
          *
          * @return A deep copy of this exception.
          */
-        virtual NoSuchProviderException* clone() const{
+        virtual NoSuchProviderException* clone() const {
             return new NoSuchProviderException(*this);
         }
 
-        virtual ~NoSuchProviderException() throw() {}
+        virtual ~NoSuchProviderException() throw ();
 
-   };
+    };
 
 }}
 
