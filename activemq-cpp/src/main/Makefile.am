@@ -550,6 +550,7 @@ cc_sources = \
     decaf/util/Deque.cpp \
     decaf/util/HashCode.cpp \
     decaf/util/HashMap.cpp \
+    decaf/util/HashSet.cpp \
     decaf/util/Iterator.cpp \
     decaf/util/LRUCache.cpp \
     decaf/util/LinkedList.cpp \
@@ -1198,6 +1199,7 @@ h_sources = \
     decaf/util/Deque.h \
     decaf/util/HashCode.h \
     decaf/util/HashMap.h \
+    decaf/util/HashSet.h \
     decaf/util/Iterator.h \
     decaf/util/LRUCache.h \
     decaf/util/LinkedList.h \

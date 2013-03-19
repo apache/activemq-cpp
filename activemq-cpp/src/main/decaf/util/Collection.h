@@ -26,8 +26,8 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /**
      * The root interface in the collection hierarchy. A collection represents
@@ -81,7 +81,7 @@ namespace util{
          * @throws IllegalStateException if the elements cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual void copy( const Collection<E>& collection ) = 0;
+        virtual void copy(const Collection<E>& collection) = 0;
 
         /**
          * Returns true if this collection changed as a result of the call.
@@ -119,7 +119,7 @@ namespace util{
          * @throws IllegalStateException if the element cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual bool add( const E& value ) = 0;
+        virtual bool add(const E& value) = 0;
 
         /**
          * Adds all of the elements in the specified collection to this
@@ -142,7 +142,7 @@ namespace util{
          * @throws IllegalStateException if an element cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual bool addAll( const Collection<E>& collection ) = 0;
+        virtual bool addAll(const Collection<E>& collection) = 0;
 
         /**
          * Removes all of the elements from this collection (optional operation).
@@ -166,7 +166,7 @@ namespace util{
          * @throws NullPointerException if the Collection contains pointers and the
          *         Collection does not allow for NULL elements (optional check).
          */
-        virtual bool contains( const E& value ) const = 0;
+        virtual bool contains(const E& value) const = 0;
 
         /**
          * Returns true if this collection contains all of the elements in
@@ -178,7 +178,7 @@ namespace util{
          * @throws NullPointerException if the Collection contains pointers and the
          *         Collection does not allow for NULL elements (optional check).
          */
-        virtual bool containsAll( const Collection<E>& collection ) const = 0;
+        virtual bool containsAll(const Collection<E>& collection) const = 0;
 
         /**
          * Compares the passed collection to this one, if they contain the
@@ -187,7 +187,7 @@ namespace util{
          *
          * @returns true if the Collections contain the same elements.
          */
-        virtual bool equals( const Collection<E>& value ) const = 0;
+        virtual bool equals(const Collection<E>& value) const = 0;
 
         /**
          * @returns true if this collection contains no elements.
@@ -211,7 +211,7 @@ namespace util{
          * @throws NullPointerException if the Collection is a container of pointers
          *         and does not allow NULL values.
          */
-        virtual bool remove( const E& value ) = 0;
+        virtual bool remove(const E& value) = 0;
 
         /**
          * Removes all this collection's elements that are also contained in
@@ -228,7 +228,7 @@ namespace util{
          * @throws NullPointerException if the Collection is a container of pointers
          *         and does not allow NULL values.
          */
-        virtual bool removeAll( const Collection<E>& collection ) = 0;
+        virtual bool removeAll(const Collection<E>& collection) = 0;
 
         /**
          * Retains only the elements in this collection that are contained in the
@@ -245,7 +245,7 @@ namespace util{
          * @throws NullPointerException if the Collection is a container of pointers
          *         and does not allow NULL values.
          */
-        virtual bool retainAll( const Collection<E>& collection ) = 0;
+        virtual bool retainAll(const Collection<E>& collection) = 0;
 
         /**
          * Returns the number of elements in this collection. If this collection

@@ -326,6 +326,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::ReentrantReadWr
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashCodeTest );
 #include <decaf/util/HashMapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashMapTest );
+#include <decaf/util/HashSetTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashSetTest );
 #include <decaf/util/AbstractCollectionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractCollectionTest );
 #include <decaf/util/AbstractListTest.h>
@@ -385,9 +387,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::security::SecureRandomTest );
 #include <decaf/security/MessageDigestTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::security::MessageDigestTest );
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////// Marshaler Tests
-//////
+//////////////////////////////////////////////////////////////////////////////////////////
+// Marshaler Tests
+//
 #include <activemq/wireformat/openwire/marshal/generated/ActiveMQBlobMessageMarshallerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::generated::ActiveMQBlobMessageMarshallerTest );
 #include <activemq/wireformat/openwire/marshal/generated/ActiveMQBytesMessageMarshallerTest.h>

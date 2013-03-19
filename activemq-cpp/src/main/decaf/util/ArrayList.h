@@ -46,50 +46,49 @@ namespace util {
 
     public:
 
-        ArrayList() : AbstractList<E>(), elements( NULL ), capacity( 0 ), head( 0 ), curSize( 0 ) {
-            this->ensureCapacity( 10 );
+        ArrayList() : AbstractList<E>(), elements(NULL), capacity(0), head(0), curSize(0) {
+            this->ensureCapacity(10);
         }
 
-        ArrayList( const Collection<E>& collection ) : AbstractList<E>(), elements( NULL ),
-                                                       capacity( 0 ), head( 0 ), curSize( 0 ) {
+        ArrayList(const Collection<E>& collection) :
+            AbstractList<E>(), elements(NULL), capacity(0), head(0), curSize(0) {
 
-            this->capacity = collection.size() + ( collection.size() / 10 );
+            this->capacity = collection.size() + (collection.size() / 10);
             this->elements = new E[this->capacity];
 
-            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-            while( iter->hasNext() ) {
+            std::auto_ptr<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
                 this->elements[this->head++] = iter->next();
                 this->curSize++;
             }
         }
 
-        ArrayList( const ArrayList<E>& arrayList ) : AbstractList<E>(), elements( NULL ),
-                                                     capacity( 0 ), head( 0 ), curSize( 0 ) {
+        ArrayList(const ArrayList<E>& arrayList) :
+            AbstractList<E>(), elements(NULL), capacity(0), head(0), curSize(0) {
 
-            this->capacity = arrayList.size() + ( arrayList.size() / 10 );
+            this->capacity = arrayList.size() + (arrayList.size() / 10);
             this->elements = new E[this->capacity];
 
-            std::auto_ptr< Iterator<E> > iter( arrayList.iterator() );
-            while( iter->hasNext() ) {
+            std::auto_ptr<Iterator<E> > iter(arrayList.iterator());
+            while (iter->hasNext()) {
                 this->elements[this->head++] = iter->next();
                 this->curSize++;
             }
         }
 
-        ArrayList( int initialCapacity ) : AbstractList<E>(), elements( NULL ),
-                                           capacity( initialCapacity ), head( 0 ), curSize( 0 ) {
+        ArrayList(int initialCapacity) :
+            AbstractList<E>(), elements(NULL), capacity(initialCapacity), head(0), curSize(0) {
 
-            if( initialCapacity < 0 ) {
-                throw decaf::lang::exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__, "Initial Capacity argument cannot be negative." );
+            if (initialCapacity < 0) {
+                throw decaf::lang::exceptions::IllegalArgumentException(__FILE__, __LINE__, "Initial Capacity argument cannot be negative.");
             }
 
             this->elements = new E[this->capacity];
         }
 
         virtual ~ArrayList() {
-            try{
-                delete [] elements;
+            try {
+                delete[] elements;
             }
             DECAF_CATCHALL_NOTHROW()
         }
@@ -182,8 +181,8 @@ namespace util {
 
             if( index < 0 || index >= this->curSize ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__,
-                    "List::get - Index greater than size() or negative" );
+                        __FILE__, __LINE__,
+                        "List::get - Index greater than size() or negative" );
             }
 
             E oldValue = this->elements[index];
@@ -196,8 +195,8 @@ namespace util {
 
             if( index < 0 || index >= this->curSize ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__,
-                    "List::get - Index greater than size() or negative" );
+                        __FILE__, __LINE__,
+                        "List::get - Index greater than size() or negative" );
             }
 
             return this->elements[index];
@@ -216,8 +215,8 @@ namespace util {
 
             if( index < 0 || index > this->curSize ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__,
-                    "Index was negative or greater than size()" );
+                        __FILE__, __LINE__,
+                        "Index was negative or greater than size()" );
             }
 
             if( index == 0 ) {
@@ -257,8 +256,8 @@ namespace util {
 
             if( index < 0 || index > this->curSize ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__,
-                    "List::addAll - Index greater than size()" );
+                        __FILE__, __LINE__,
+                        "List::addAll - Index greater than size()" );
             }
 
             int csize = collection.size();
@@ -300,8 +299,8 @@ namespace util {
 
             if( index < 0 || index >= this->curSize ) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                    __FILE__, __LINE__,
-                    "List::removeAt - Index greater than size() or negative" );
+                        __FILE__, __LINE__,
+                        "List::removeAt - Index greater than size() or negative" );
             }
 
             E old = this->elements[index];
@@ -335,7 +334,7 @@ namespace util {
 
         virtual int lastIndexOf( const E& value ) const {
 
-            for( int i = this->curSize - 1; i >= 0 ; --i ) {
+            for( int i = this->curSize - 1; i >= 0; --i ) {
                 if( this->elements[i] == value ) {
                     return i;
                 }

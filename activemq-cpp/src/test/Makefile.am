@@ -204,6 +204,7 @@ cc_sources = \
     decaf/util/Endian.cpp \
     decaf/util/HashCodeTest.cpp \
     decaf/util/HashMapTest.cpp \
+    decaf/util/HashSetTest.cpp \
     decaf/util/LRUCacheTest.cpp \
     decaf/util/LinkedListTest.cpp \
     decaf/util/ListTest.cpp \
@@ -448,6 +449,7 @@ h_sources = \
     decaf/util/Endian.h \
     decaf/util/HashCodeTest.h \
     decaf/util/HashMapTest.h \
+    decaf/util/HashSetTest.h \
     decaf/util/LRUCacheTest.h \
     decaf/util/LinkedListTest.h \
     decaf/util/ListTest.h \
