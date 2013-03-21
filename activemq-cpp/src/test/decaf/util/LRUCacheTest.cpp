@@ -41,7 +41,7 @@ void LRUCacheTest::testConstructor() {
 
     LRUCache<int, int> underTest(1000);
 
-    for (int count; count < 5000; count++) {
+    for (int count = 0; count < 5000; count++) {
         if (!underTest.containsKey(count)) {
             underTest.put(count, count);
         }
