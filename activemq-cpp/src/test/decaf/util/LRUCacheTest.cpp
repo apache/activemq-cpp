@@ -18,12 +18,15 @@
 #include "LRUCacheTest.h"
 
 #include <decaf/util/LRUCache.h>
+#include <decaf/lang/System.h>
 
 #include <string>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 LRUCacheTest::LRUCacheTest() {
@@ -36,5 +39,52 @@ LRUCacheTest::~LRUCacheTest() {
 ////////////////////////////////////////////////////////////////////////////////
 void LRUCacheTest::testConstructor() {
 
-    //LRUCache<string, string> lruCache;
+    LRUCache<int, int> underTest(1000);
+
+    for (int count; count < 5000; count++) {
+        if (!underTest.containsKey(count)) {
+            underTest.put(count, count);
+        }
+    }
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("size is still in order", 1000, underTest.size());
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void LRUCacheTest::testExceptions() {
+
+    try {
+        LRUCache<int, int> underTest(-1);
+        CPPUNIT_FAIL("Should have thrown an IllegalArgumentException");
+    } catch(IllegalArgumentException& ex) {}
+
+    LRUCache<int, int> underTest(1000);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an IllegalArgumentException",
+        underTest.setMaxCacheSize(-1),
+        IllegalArgumentException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LRUCacheTest::testChangeMaxCacheSize() {
+
+    LRUCache<int, int> underTest(1000);
+
+    for (int count = 0; count < 5000; count++) {
+        if (!underTest.containsKey(count)) {
+            underTest.put(count, count);
+        }
+    }
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("size is still in order", 1000, underTest.size());
+    underTest.setMaxCacheSize(2000);
+
+    for (int count = 0; count < 5000; count++) {
+        if (!underTest.containsKey(count)) {
+            underTest.put(count, count);
+        }
+    }
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("size is still in order", 2000, underTest.size());
+}
+

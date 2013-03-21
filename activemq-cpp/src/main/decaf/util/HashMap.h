@@ -93,7 +93,7 @@ namespace util {
      */
     template<typename K, typename V, typename HASHCODE = HashCode<K> >
     class HashMap : public AbstractMap<K, V> {
-    private:
+    protected:
 
         class HashMapEntry : public MapEntry<K, V> {
         private:
@@ -452,7 +452,7 @@ namespace util {
             }
         };
 
-    private:
+    protected:
 
         // Special Set implementation that is backed by this HashMap
         class HashMapEntrySet : public AbstractSet< MapEntry<K, V> > {
@@ -557,7 +557,7 @@ namespace util {
             }
         };
 
-    private:
+        protected:
 
         class HashMapKeySet : public AbstractSet<K> {
         private:
@@ -651,7 +651,7 @@ namespace util {
             }
         };
 
-    private:
+    protected:
 
         class HashMapValueCollection : public AbstractCollection<V> {
         private:
@@ -731,7 +731,7 @@ namespace util {
             }
         };
 
-    private:
+    protected:
 
         /**
          * The Hash Code generator for this map's keys.
@@ -1089,7 +1089,7 @@ namespace util {
 
     protected:
 
-        HashMapEntry* getEntry(const K& key) const {
+        virtual HashMapEntry* getEntry(const K& key) const {
             HashMapEntry* result = NULL;
 
             int hash = hashFunc(key);
@@ -1099,7 +1099,12 @@ namespace util {
             return result;
         }
 
-        bool putImpl(const K& key, const V& value, V& oldValue) {
+        virtual bool putImpl(const K& key, const V& value) {
+            V oldValue;
+            return putImpl(key, value, oldValue);
+        }
+
+        virtual bool putImpl(const K& key, const V& value, V& oldValue) {
             bool replaced = true;
             HashMapEntry* entry = NULL;
 
@@ -1124,29 +1129,21 @@ namespace util {
             return replaced;
         }
 
-        bool putImpl(const K& key, const V& value) {
-
-            bool replaced = true;
-            HashMapEntry* entry = NULL;
-
-            int hash = hashFunc(key);
-            int index = hash & (elementData.length() - 1);
-
-            entry = findKeyEntry(key, index, hash);
-
-            if (entry == NULL) {
-                modCount++;
-                entry = createHashedEntry(key, index, hash);
-                if (++elementCount > threshold) {
-                    rehash();
-                }
-                replaced = false;
-            }
-
-            entry->setValue(value);
-
-            return replaced;
+        virtual HashMapEntry* createEntry(const K& key, int index, const V& value) {
+            HashMapEntry* entry = new HashMapEntry(key, value);
+            entry->next = elementData[index];
+            elementData[index] = entry;
+            return entry;
         }
+
+        virtual HashMapEntry* createHashedEntry(const K& key, int index, int hash) {
+            HashMapEntry* entry = new HashMapEntry(key, V(), hash);
+            entry->next = elementData[index];
+            elementData[index] = entry;
+            return entry;
+        }
+
+    protected:
 
         void putAllImpl(const Map<K, V>& map) {
             int capacity = elementCount + map.size();
@@ -1190,20 +1187,6 @@ namespace util {
 
         void rehash() {
             rehash(elementData.length());
-        }
-
-        HashMapEntry* createEntry(const K& key, int index, const V& value) {
-            HashMapEntry* entry = new HashMapEntry(key, value);
-            entry->next = elementData[index];
-            elementData[index] = entry;
-            return entry;
-        }
-
-        HashMapEntry* createHashedEntry(const K& key, int index, int hash) {
-            HashMapEntry* entry = new HashMapEntry(key, V(), hash);
-            entry->next = elementData[index];
-            elementData[index] = entry;
-            return entry;
         }
 
         // Removes the given entry from the map and deletes it

@@ -206,6 +206,8 @@ cc_sources = \
     decaf/util/HashMapTest.cpp \
     decaf/util/HashSetTest.cpp \
     decaf/util/LRUCacheTest.cpp \
+    decaf/util/LinkedHashMapTest.cpp \
+    decaf/util/LinkedHashSetTest.cpp \
     decaf/util/LinkedListTest.cpp \
     decaf/util/ListTest.cpp \
     decaf/util/PriorityQueueTest.cpp \
@@ -451,6 +453,8 @@ h_sources = \
     decaf/util/HashMapTest.h \
     decaf/util/HashSetTest.h \
     decaf/util/LRUCacheTest.h \
+    decaf/util/LinkedHashMapTest.h \
+    decaf/util/LinkedHashSetTest.h \
     decaf/util/LinkedListTest.h \
     decaf/util/ListTest.h \
     decaf/util/PriorityQueueTest.h \

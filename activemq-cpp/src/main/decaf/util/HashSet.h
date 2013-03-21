@@ -131,6 +131,19 @@ namespace util {
             DECAF_CATCHALL_NOTHROW()
         }
 
+    protected:
+
+        /**
+         * Protected constructor for use by subclasses that wish to use an alternate type
+         * of backing Map.
+         *
+         * @param backingMap
+         *      The instance of the Map type used to back this HashSet.
+         */
+        HashSet(HashMap<E, Set<E>*, HASHCODE>* backingMap) :
+            AbstractSet<E>(), backingMap(backingMap) {
+        }
+
     public:
 
         HashSet<E>& operator= (const Collection<E>& collection) {

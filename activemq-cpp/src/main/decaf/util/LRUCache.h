@@ -20,7 +20,7 @@
 
 #include <decaf/util/Config.h>
 
-#include <decaf/util/AbstractMap.h>
+#include <decaf/util/LinkedHashMap.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace decaf {
@@ -29,17 +29,69 @@ namespace util {
     /**
      * A Basic Least Recently Used (LRU) Cache Map.
      *
+     * This LRUCache implements the LinkedHashMap class so all the standard Map
+     * operations are provided.  When the sive of this LRUCache map exceeds the
+     * specified maxCacheSize value then by default the oldest entry is evicted
+     * from the Cache.
+     *
+     * Subclasses can override the LinkedHashMap::onEviction method to perform
+     * custom cache eviction processing.
+     *
      * @since 1.0
      */
-    template<typename K, typename V, typename COMPARATOR = std::less<K> >
-    class LRUCache : decaf::util::AbstractMap<K, V> {
+    template<typename K, typename V, typename HASHCODE = HashCode<K> >
+    class LRUCache : public LinkedHashMap<K, V, HASHCODE> {
     protected:
 
         int maxCacheSize;
 
     public:
 
-        LRUCache() : maxCacheSize(1024) {}
+
+        /**
+         * Default constructor for an LRU Cache The default capacity is 10000
+         */
+        LRUCache() : LinkedHashMap<K, V, HASHCODE>(0, 0.75f, true), maxCacheSize(10000) {}
+
+        /**
+         * Constructs a LRUCache with a maximum capacity
+         *
+         * @param maximumCacheSize
+         *      The maximum number of cached entries before eviction begins.
+         */
+        LRUCache(int maximumCacheSize) :
+            LinkedHashMap<K, V, HASHCODE>(0, 0.75f, true), maxCacheSize(maximumCacheSize) {
+
+            if (maximumCacheSize <= 0) {
+                throw decaf::lang::exceptions::IllegalArgumentException(
+                        __FILE__, __LINE__, "Cache size must be greater than zero.");
+            }
+        }
+
+        /**
+         * Constructs an empty LRUCache instance with the specified initial capacity,
+         * maximumCacheSize, load factor and ordering mode.
+         *
+         * @param initialCapacity
+         *      The initial capacity of the LRUCache.
+         * @param maximumCacheSize
+         *      The maximum number of cached entries before eviction begins.
+         * @param loadFactor the load factor.
+         *      The initial load factor for this LRUCache.
+         * @param accessOrder
+         *      The ordering mode - true for access-order, false for insertion-order.
+         *
+         * @throws IllegalArgumentException if the initial capacity is negative or
+         *                 the load factor is non-positive.
+         */
+        LRUCache(int initialCapacity, int maximumCacheSize, float loadFactor, bool accessOrder) :
+            LinkedHashMap<K, V, HASHCODE>(initialCapacity, loadFactor, accessOrder), maxCacheSize(maximumCacheSize) {
+
+            if (maximumCacheSize <= 0) {
+                throw decaf::lang::exceptions::IllegalArgumentException(
+                        __FILE__, __LINE__, "Cache size must be greater than zero.");
+            }
+        }
 
         virtual ~LRUCache() {}
 
@@ -71,7 +123,10 @@ namespace util {
 
     protected:
 
-        virtual bool removeEldestEntry(const typename Map<K,V>::Entry & entry) {
+        virtual bool removeEldestEntry(const MapEntry<K, V>& eldest) {
+            if (this->size() > maxCacheSize) {
+                return true;
+            }
             return false;
         }
 

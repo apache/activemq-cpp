@@ -15,34 +15,4 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_UTIL_LRUCACHETEST_H_
-#define _DECAF_UTIL_LRUCACHETEST_H_
-
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
-namespace decaf {
-namespace util {
-
-    class LRUCacheTest : public CppUnit::TestFixture {
-
-        CPPUNIT_TEST_SUITE( LRUCacheTest );
-        CPPUNIT_TEST( testConstructor );
-        CPPUNIT_TEST( testExceptions );
-        CPPUNIT_TEST( testChangeMaxCacheSize );
-        CPPUNIT_TEST_SUITE_END();
-
-    public:
-
-        LRUCacheTest();
-        virtual ~LRUCacheTest();
-
-        void testConstructor();
-        void testExceptions();
-        void testChangeMaxCacheSize();
-
-    };
-
-}}
-
-#endif /*_DECAF_UTIL_LRUCACHETEST_H_*/
+#include "LinkedHashSet.h"

@@ -553,6 +553,8 @@ cc_sources = \
     decaf/util/HashSet.cpp \
     decaf/util/Iterator.cpp \
     decaf/util/LRUCache.cpp \
+    decaf/util/LinkedHashMap.cpp \
+    decaf/util/LinkedHashSet.cpp \
     decaf/util/LinkedList.cpp \
     decaf/util/List.cpp \
     decaf/util/ListIterator.cpp \
@@ -1202,6 +1204,8 @@ h_sources = \
     decaf/util/HashSet.h \
     decaf/util/Iterator.h \
     decaf/util/LRUCache.h \
+    decaf/util/LinkedHashMap.h \
+    decaf/util/LinkedHashSet.h \
     decaf/util/LinkedList.h \
     decaf/util/List.h \
     decaf/util/ListIterator.h \
