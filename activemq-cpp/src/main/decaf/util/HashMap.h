@@ -910,6 +910,16 @@ namespace util {
 
     public:
 
+        bool operator==(const Map<K, V>& other) const {
+            return this->equals(other);
+        }
+
+        bool operator!=(const Map<K, V>& other) const {
+            return !this->equals(other);
+        }
+
+    public:
+
         virtual void clear() {
             if (elementCount > 0) {
                 elementCount = 0;

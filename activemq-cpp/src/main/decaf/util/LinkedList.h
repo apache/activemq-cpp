@@ -130,6 +130,14 @@ namespace util {
             return *this;
         }
 
+        bool operator==(const LinkedList<E>& other) const {
+            return this->equals(other);
+        }
+
+        bool operator!=(const LinkedList<E>& other) const {
+            return !this->equals(other);
+        }
+
     public:
 
         virtual E get(int index) const {

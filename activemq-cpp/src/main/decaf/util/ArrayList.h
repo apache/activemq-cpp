@@ -107,6 +107,14 @@ namespace util {
             return *this;
         }
 
+        bool operator==(const ArrayList<E>& other) const {
+            return this->equals(other);
+        }
+
+        bool operator!=(const ArrayList<E>& other) const {
+            return !this->equals(other);
+        }
+
     public:
 
         /**

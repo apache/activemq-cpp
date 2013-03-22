@@ -93,6 +93,26 @@ namespace util {
 
         virtual ~BitSet();
 
+        /**
+         * Boolean comparison operator ==
+         *
+         * @param other
+         *      The other BitSet to compare to this one.
+         */
+        bool operator==(const BitSet& other) const {
+            return this->equals(other);
+        }
+
+        /**
+         * Boolean comparison operator !=
+         *
+         * @param other
+         *      The other BitSet to compare to this one.
+         */
+        bool operator!=(const BitSet& other) const {
+            return !this->equals(other);
+        }
+
     public:
 
         /**
