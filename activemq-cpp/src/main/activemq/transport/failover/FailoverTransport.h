@@ -212,6 +212,10 @@ namespace failover {
 
         void setMaxCacheSize(int value);
 
+        int getMaxPullCacheSize() const;
+
+        void setMaxPullCacheSize(int value);
+
         bool isReconnectSupported() const;
 
         void setReconnectSupported(bool value);

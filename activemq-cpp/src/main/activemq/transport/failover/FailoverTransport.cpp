@@ -86,6 +86,7 @@ namespace failover {
         bool trackMessages;
         bool trackTransactionProducers;
         int maxCacheSize;
+        int maxPullCacheSize;
         bool connectionInterruptProcessingComplete;
         bool firstConnection;
         bool updateURIsSupported;
@@ -134,6 +135,7 @@ namespace failover {
             trackMessages(false),
             trackTransactionProducers(true),
             maxCacheSize(128*1024),
+            maxPullCacheSize(10),
             connectionInterruptProcessingComplete(false),
             firstConnection(true),
             updateURIsSupported(true),
@@ -560,7 +562,8 @@ void FailoverTransport::start() {
             }
             this->impl->taskRunner->start();
 
-            stateTracker.setMaxCacheSize(this->getMaxCacheSize());
+            stateTracker.setMaxMessageCacheSize(this->getMaxCacheSize());
+            stateTracker.setMaxMessagePullCacheSize(this->getMaxPullCacheSize());
             stateTracker.setTrackMessages(this->isTrackMessages());
             stateTracker.setTrackTransactionProducers(this->isTrackTransactionProducers());
 
@@ -1253,6 +1256,16 @@ int FailoverTransport::getMaxCacheSize() const {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::setMaxCacheSize(int value) {
     this->impl->maxCacheSize = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int FailoverTransport::getMaxPullCacheSize() const {
+    return this->impl->maxPullCacheSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::setMaxPullCacheSize(int value) {
+    this->impl->maxPullCacheSize = value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

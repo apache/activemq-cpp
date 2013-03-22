@@ -102,6 +102,8 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(const decaf::net:
             Boolean::parseBoolean(topLvlProperties.getProperty("trackMessages", "false")));
         transport->setMaxCacheSize(
             Integer::parseInt(topLvlProperties.getProperty("maxCacheSize", "131072")));
+        transport->setMaxPullCacheSize(
+            Integer::parseInt(topLvlProperties.getProperty("maxPullCacheSize", "10")));
         transport->setUpdateURIsSupported(
             Boolean::parseBoolean(topLvlProperties.getProperty("updateURIsSupported", "true")));
         transport->setPriorityBackup(

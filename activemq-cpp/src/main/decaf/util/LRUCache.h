@@ -123,7 +123,7 @@ namespace util {
 
     protected:
 
-        virtual bool removeEldestEntry(const MapEntry<K, V>& eldest) {
+        virtual bool removeEldestEntry(const MapEntry<K, V>& eldest DECAF_UNUSED) {
             if (this->size() > maxCacheSize) {
                 return true;
             }

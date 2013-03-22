@@ -678,7 +678,7 @@ namespace util {
          *
          * @return true if the eldest member should be removed.
          */
-        virtual bool removeEldestEntry(const MapEntry<K, V>& eldest) {
+        virtual bool removeEldestEntry(const MapEntry<K, V>& eldest DECAF_UNUSED) {
             return false;
         }
 
@@ -691,7 +691,7 @@ namespace util {
          * @param eldest
          *      The MapEntry value that is about to be removed from the Map.
          */
-        virtual void onEviction(const MapEntry<K, V>& eldest) {}
+        virtual void onEviction(const MapEntry<K, V>& eldest DECAF_UNUSED) {}
 
     public:
 

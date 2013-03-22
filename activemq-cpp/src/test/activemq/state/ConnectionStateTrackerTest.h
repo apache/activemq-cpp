@@ -28,6 +28,8 @@ namespace state {
 
         CPPUNIT_TEST_SUITE( ConnectionStateTrackerTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testMessageCache );
+        CPPUNIT_TEST( testMessagePullCache );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,6 +38,9 @@ namespace state {
         virtual ~ConnectionStateTrackerTest() {}
 
         void test();
+        void testMessageCache();
+        void testMessagePullCache();
+
     };
 
 }}
