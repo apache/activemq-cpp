@@ -32,8 +32,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -67,15 +67,15 @@ namespace commands{
 
         MessageId();
 
-        MessageId( const MessageId& other );
+        MessageId(const MessageId& other);
 
-        MessageId( const std::string& messageKey );
+        MessageId(const std::string& messageKey);
 
-        MessageId( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId );
+        MessageId(const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId);
 
-        MessageId( const Pointer<ProducerId>& producerId, long long producerSequenceId );
+        MessageId(const Pointer<ProducerId>& producerId, long long producerSequenceId);
 
-        MessageId( const std::string& producerId, long long producerSequenceId );
+        MessageId(const std::string& producerId, long long producerSequenceId);
 
         virtual ~MessageId();
 
@@ -83,15 +83,15 @@ namespace commands{
 
         virtual MessageId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
-        void setValue( const std::string& key );
+        void setValue(const std::string& key);
 
-        void setTextView( const std::string& key );
+        void setTextView(const std::string& key);
 
         virtual const Pointer<ProducerId>& getProducerId() const;
         virtual Pointer<ProducerId>& getProducerId();
@@ -103,15 +103,17 @@ namespace commands{
         virtual long long getBrokerSequenceId() const;
         virtual void setBrokerSequenceId( long long brokerSequenceId );
 
-        virtual int compareTo( const MessageId& value ) const;
+        virtual int compareTo(const MessageId& value) const;
 
-        virtual bool equals( const MessageId& value ) const;
+        virtual bool equals(const MessageId& value) const;
 
-        virtual bool operator==( const MessageId& value ) const;
+        virtual bool operator==(const MessageId& value) const;
 
-        virtual bool operator<( const MessageId& value ) const;
+        virtual bool operator<(const MessageId& value) const;
 
-        MessageId& operator= ( const MessageId& other );
+        MessageId& operator= (const MessageId& other);
+
+        int getHashCode() const;
 
     };
 

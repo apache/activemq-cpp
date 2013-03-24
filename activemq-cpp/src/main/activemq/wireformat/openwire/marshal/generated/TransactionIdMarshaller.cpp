@@ -41,66 +41,66 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void TransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void TransactionIdMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseDataStreamMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int TransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int TransactionIdMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
-        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = BaseDataStreamMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void TransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void TransactionIdMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void TransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void TransactionIdMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseDataStreamMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void TransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void TransactionIdMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
-        BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+        BaseDataStreamMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

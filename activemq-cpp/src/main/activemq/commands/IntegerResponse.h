@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -54,8 +54,8 @@ namespace commands{
 
     private:
 
-        IntegerResponse( const IntegerResponse& );
-        IntegerResponse& operator= ( const IntegerResponse& );
+        IntegerResponse(const IntegerResponse&);
+        IntegerResponse& operator= (const IntegerResponse&);
 
     public:
 
@@ -67,11 +67,11 @@ namespace commands{
 
         virtual IntegerResponse* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual int getResult() const;
         virtual void setResult( int result );

@@ -51,108 +51,108 @@ unsigned char WireFormatInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void WireFormatInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void WireFormatInfoMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseDataStreamMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         WireFormatInfo* info =
-            dynamic_cast<WireFormatInfo*>( dataStructure );
-        info->beforeUnmarshal( wireFormat );
+            dynamic_cast<WireFormatInfo*>(dataStructure);
+        info->beforeUnmarshal(wireFormat);
 
-        info->setMagic( tightUnmarshalConstByteArray( dataIn, bs, 8 ) );
-        info->setVersion( dataIn->readInt() );
-        info->setMarshalledProperties( tightUnmarshalByteArray( dataIn, bs ) );
+        info->setMagic(tightUnmarshalConstByteArray(dataIn, bs, 8));
+        info->setVersion(dataIn->readInt());
+        info->setMarshalledProperties(tightUnmarshalByteArray(dataIn, bs));
 
         info->afterUnmarshal( wireFormat );
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int WireFormatInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int WireFormatInfoMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         WireFormatInfo* info =
-            dynamic_cast<WireFormatInfo*>( dataStructure );
+            dynamic_cast<WireFormatInfo*>(dataStructure);
 
-        info->beforeMarshal( wireFormat );
-        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        bs->writeBoolean( info->getMarshalledProperties().size() != 0 );
+        info->beforeMarshal(wireFormat);
+        int rc = BaseDataStreamMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        bs->writeBoolean(info->getMarshalledProperties().size() != 0);
         rc += info->getMarshalledProperties().size() == 0 ? 0 : (int)info->getMarshalledProperties().size() + 4;
 
         return rc + 12;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void WireFormatInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void WireFormatInfoMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         WireFormatInfo* info =
-            dynamic_cast<WireFormatInfo*>( dataStructure );
-        dataOut->write( (const unsigned char*)(&info->getMagic()[0]), 8, 0, 8 );
-        dataOut->writeInt( info->getVersion() );
-        if( bs->readBoolean() ) {
-            dataOut->writeInt( (int)info->getMarshalledProperties().size() );
-            dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size(), 0, (int)info->getMarshalledProperties().size() );
+            dynamic_cast<WireFormatInfo*>(dataStructure);
+        dataOut->write((const unsigned char*)(&info->getMagic()[0]), 8, 0, 8);
+        dataOut->writeInt(info->getVersion());
+        if (bs->readBoolean()) {
+            dataOut->writeInt((int)info->getMarshalledProperties().size() );
+            dataOut->write((const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size(), 0, (int)info->getMarshalledProperties().size());
         }
-        info->afterMarshal( wireFormat );
+        info->afterMarshal(wireFormat);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void WireFormatInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void WireFormatInfoMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseDataStreamMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         WireFormatInfo* info =
-            dynamic_cast<WireFormatInfo*>( dataStructure );
-        info->beforeUnmarshal( wireFormat );
-        info->setMagic( looseUnmarshalConstByteArray( dataIn, 8 ) );
-        info->setVersion( dataIn->readInt() );
-        info->setMarshalledProperties( looseUnmarshalByteArray( dataIn ) );
-        info->afterUnmarshal( wireFormat );
+            dynamic_cast<WireFormatInfo*>(dataStructure);
+        info->beforeUnmarshal(wireFormat);
+        info->setMagic(looseUnmarshalConstByteArray(dataIn, 8));
+        info->setVersion(dataIn->readInt());
+        info->setMarshalledProperties(looseUnmarshalByteArray(dataIn));
+        info->afterUnmarshal(wireFormat);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void WireFormatInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void WireFormatInfoMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         WireFormatInfo* info =
-            dynamic_cast<WireFormatInfo*>( dataStructure );
-        info->beforeMarshal( wireFormat );
-        BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        dataOut->write( (const unsigned char*)(&info->getMagic()[0]), 8, 0, 8 );
-        dataOut->writeInt( info->getVersion() );
+            dynamic_cast<WireFormatInfo*>(dataStructure);
+        info->beforeMarshal(wireFormat);
+        BaseDataStreamMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        dataOut->write((const unsigned char*)(&info->getMagic()[0]), 8, 0, 8);
+        dataOut->writeInt(info->getVersion());
         dataOut->write( info->getMarshalledProperties().size() != 0 );
         if( info->getMarshalledProperties().size() != 0 ) {
             dataOut->writeInt( (int)info->getMarshalledProperties().size() );
-            dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size(), 0, (int)info->getMarshalledProperties().size() );
+            dataOut->write((const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size(), 0, (int)info->getMarshalledProperties().size());
         }
-        info->afterMarshal( wireFormat );
+        info->afterMarshal(wireFormat);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

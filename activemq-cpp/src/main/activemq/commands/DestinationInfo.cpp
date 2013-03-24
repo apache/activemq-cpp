@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DestinationInfo::DestinationInfo() 
-    : BaseCommand(), connectionId(NULL), destination(NULL), operationType(0), timeout(0), brokerPath() {
+DestinationInfo::DestinationInfo() :
+    BaseCommand(), connectionId(NULL), destination(NULL), operationType(0), timeout(0), brokerPath() {
 
 }
 
@@ -49,38 +49,38 @@ DestinationInfo::~DestinationInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 DestinationInfo* DestinationInfo::cloneDataStructure() const {
-    std::auto_ptr<DestinationInfo> destinationInfo( new DestinationInfo() );
+    std::auto_ptr<DestinationInfo> destinationInfo(new DestinationInfo());
 
     // Copy the data from the base class or classes
-    destinationInfo->copyDataStructure( this );
+    destinationInfo->copyDataStructure(this);
 
     return destinationInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::copyDataStructure( const DataStructure* src ) {
+void DestinationInfo::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const DestinationInfo* srcPtr = dynamic_cast<const DestinationInfo*>( src );
+    const DestinationInfo* srcPtr = dynamic_cast<const DestinationInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "DestinationInfo::copyDataStructure - src is NULL or invalid" );
+            "DestinationInfo::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setConnectionId( srcPtr->getConnectionId() );
-    this->setDestination( srcPtr->getDestination() );
-    this->setOperationType( srcPtr->getOperationType() );
-    this->setTimeout( srcPtr->getTimeout() );
-    this->setBrokerPath( srcPtr->getBrokerPath() );
+    this->setConnectionId(srcPtr->getConnectionId());
+    this->setDestination(srcPtr->getDestination());
+    this->setOperationType(srcPtr->getOperationType());
+    this->setTimeout(srcPtr->getTimeout());
+    this->setBrokerPath(srcPtr->getBrokerPath());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,14 +98,14 @@ std::string DestinationInfo::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "ConnectionId = ";
-    if( this->getConnectionId() != NULL ) {
+    if (this->getConnectionId() != NULL) {
         stream << this->getConnectionId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
@@ -116,10 +116,10 @@ std::string DestinationInfo::toString() const {
     stream << "Timeout = " << this->getTimeout();
     stream << ", ";
     stream << "BrokerPath = ";
-    if( this->getBrokerPath().size() > 0 ) {
+    if (this->getBrokerPath().size() > 0) {
         stream << "[";
-        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+        for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
+            if (this->getBrokerPath()[ibrokerPath] != NULL) {
                 stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
             } else {
                 stream << "NULL" << ", ";
@@ -135,48 +135,48 @@ std::string DestinationInfo::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DestinationInfo::equals( const DataStructure* value ) const {
+bool DestinationInfo::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const DestinationInfo* valuePtr = dynamic_cast<const DestinationInfo*>( value );
+    const DestinationInfo* valuePtr = dynamic_cast<const DestinationInfo*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
+    if (this->getConnectionId() != NULL) {
+        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
             return false;
         }
-    } else if( valuePtr->getConnectionId() != NULL ) {
+    } else if (valuePtr->getConnectionId() != NULL) {
         return false;
     }
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getOperationType() != valuePtr->getOperationType() ) {
+    if (this->getOperationType() != valuePtr->getOperationType()) {
         return false;
     }
-    if( this->getTimeout() != valuePtr->getTimeout() ) {
+    if (this->getTimeout() != valuePtr->getTimeout()) {
         return false;
     }
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get() ) ) {
+    for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
+        if (this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
-        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+        } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {
             return false;
         }
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -193,7 +193,7 @@ decaf::lang::Pointer<ConnectionId>& DestinationInfo::getConnectionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
+void DestinationInfo::setConnectionId(const decaf::lang::Pointer<ConnectionId>& connectionId) {
     this->connectionId = connectionId;
 }
 
@@ -208,7 +208,7 @@ decaf::lang::Pointer<ActiveMQDestination>& DestinationInfo::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void DestinationInfo::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -218,7 +218,7 @@ unsigned char DestinationInfo::getOperationType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setOperationType( unsigned char operationType ) {
+void DestinationInfo::setOperationType(unsigned char operationType) {
     this->operationType = operationType;
 }
 
@@ -228,7 +228,7 @@ long long DestinationInfo::getTimeout() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setTimeout( long long timeout ) {
+void DestinationInfo::setTimeout(long long timeout) {
     this->timeout = timeout;
 }
 
@@ -243,12 +243,11 @@ std::vector< decaf::lang::Pointer<BrokerId> >& DestinationInfo::getBrokerPath() 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath ) {
+void DestinationInfo::setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath) {
     this->brokerPath = brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processDestinationInfo( this );
+decaf::lang::Pointer<commands::Command> DestinationInfo::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processDestinationInfo(this);
 }

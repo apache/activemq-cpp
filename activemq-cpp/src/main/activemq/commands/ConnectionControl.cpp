@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionControl::ConnectionControl() 
-    : BaseCommand(), close(false), exit(false), faultTolerant(false), resume(false), suspend(false), connectedBrokers(""), reconnectTo(""), 
+ConnectionControl::ConnectionControl() :
+    BaseCommand(), close(false), exit(false), faultTolerant(false), resume(false), suspend(false), connectedBrokers(""), reconnectTo(""), 
       rebalanceConnection(false), token() {
 
 }
@@ -50,42 +50,42 @@ ConnectionControl::~ConnectionControl() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionControl* ConnectionControl::cloneDataStructure() const {
-    std::auto_ptr<ConnectionControl> connectionControl( new ConnectionControl() );
+    std::auto_ptr<ConnectionControl> connectionControl(new ConnectionControl());
 
     // Copy the data from the base class or classes
-    connectionControl->copyDataStructure( this );
+    connectionControl->copyDataStructure(this);
 
     return connectionControl.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::copyDataStructure( const DataStructure* src ) {
+void ConnectionControl::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>( src );
+    const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "ConnectionControl::copyDataStructure - src is NULL or invalid" );
+            "ConnectionControl::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setClose( srcPtr->isClose() );
-    this->setExit( srcPtr->isExit() );
-    this->setFaultTolerant( srcPtr->isFaultTolerant() );
-    this->setResume( srcPtr->isResume() );
-    this->setSuspend( srcPtr->isSuspend() );
-    this->setConnectedBrokers( srcPtr->getConnectedBrokers() );
-    this->setReconnectTo( srcPtr->getReconnectTo() );
-    this->setRebalanceConnection( srcPtr->isRebalanceConnection() );
-    this->setToken( srcPtr->getToken() );
+    this->setClose(srcPtr->isClose());
+    this->setExit(srcPtr->isExit());
+    this->setFaultTolerant(srcPtr->isFaultTolerant());
+    this->setResume(srcPtr->isResume());
+    this->setSuspend(srcPtr->isSuspend());
+    this->setConnectedBrokers(srcPtr->getConnectedBrokers());
+    this->setReconnectTo(srcPtr->getReconnectTo());
+    this->setRebalanceConnection(srcPtr->isRebalanceConnection());
+    this->setToken(srcPtr->getToken());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,9 +119,9 @@ std::string ConnectionControl::toString() const {
     stream << "RebalanceConnection = " << this->isRebalanceConnection();
     stream << ", ";
     stream << "Token = ";
-    if( this->getToken().size() > 0 ) {
+    if (this->getToken().size() > 0) {
         stream << "[";
-        for( size_t itoken = 0; itoken < this->getToken().size(); ++itoken ) {
+        for (size_t itoken = 0; itoken < this->getToken().size(); ++itoken) {
             stream << this->getToken()[itoken] << ",";
         }
         stream << "]";
@@ -134,48 +134,48 @@ std::string ConnectionControl::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::equals( const DataStructure* value ) const {
+bool ConnectionControl::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const ConnectionControl* valuePtr = dynamic_cast<const ConnectionControl*>( value );
+    const ConnectionControl* valuePtr = dynamic_cast<const ConnectionControl*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->isClose() != valuePtr->isClose() ) {
+    if (this->isClose() != valuePtr->isClose()) {
         return false;
     }
-    if( this->isExit() != valuePtr->isExit() ) {
+    if (this->isExit() != valuePtr->isExit()) {
         return false;
     }
-    if( this->isFaultTolerant() != valuePtr->isFaultTolerant() ) {
+    if (this->isFaultTolerant() != valuePtr->isFaultTolerant()) {
         return false;
     }
-    if( this->isResume() != valuePtr->isResume() ) {
+    if (this->isResume() != valuePtr->isResume()) {
         return false;
     }
-    if( this->isSuspend() != valuePtr->isSuspend() ) {
+    if (this->isSuspend() != valuePtr->isSuspend()) {
         return false;
     }
-    if( this->getConnectedBrokers() != valuePtr->getConnectedBrokers() ) {
+    if (this->getConnectedBrokers() != valuePtr->getConnectedBrokers()) {
         return false;
     }
-    if( this->getReconnectTo() != valuePtr->getReconnectTo() ) {
+    if (this->getReconnectTo() != valuePtr->getReconnectTo()) {
         return false;
     }
-    if( this->isRebalanceConnection() != valuePtr->isRebalanceConnection() ) {
+    if (this->isRebalanceConnection() != valuePtr->isRebalanceConnection()) {
         return false;
     }
-    for( size_t itoken = 0; itoken < this->getToken().size(); ++itoken ) {
-        if( this->getToken()[itoken] != valuePtr->getToken()[itoken] ) {
+    for (size_t itoken = 0; itoken < this->getToken().size(); ++itoken) {
+        if (this->getToken()[itoken] != valuePtr->getToken()[itoken]) {
             return false;
         }
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -187,7 +187,7 @@ bool ConnectionControl::isClose() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setClose( bool close ) {
+void ConnectionControl::setClose(bool close) {
     this->close = close;
 }
 
@@ -197,7 +197,7 @@ bool ConnectionControl::isExit() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setExit( bool exit ) {
+void ConnectionControl::setExit(bool exit) {
     this->exit = exit;
 }
 
@@ -207,7 +207,7 @@ bool ConnectionControl::isFaultTolerant() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setFaultTolerant( bool faultTolerant ) {
+void ConnectionControl::setFaultTolerant(bool faultTolerant) {
     this->faultTolerant = faultTolerant;
 }
 
@@ -217,7 +217,7 @@ bool ConnectionControl::isResume() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setResume( bool resume ) {
+void ConnectionControl::setResume(bool resume) {
     this->resume = resume;
 }
 
@@ -227,7 +227,7 @@ bool ConnectionControl::isSuspend() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setSuspend( bool suspend ) {
+void ConnectionControl::setSuspend(bool suspend) {
     this->suspend = suspend;
 }
 
@@ -242,7 +242,7 @@ std::string& ConnectionControl::getConnectedBrokers() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setConnectedBrokers( const std::string& connectedBrokers ) {
+void ConnectionControl::setConnectedBrokers(const std::string& connectedBrokers) {
     this->connectedBrokers = connectedBrokers;
 }
 
@@ -257,7 +257,7 @@ std::string& ConnectionControl::getReconnectTo() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setReconnectTo( const std::string& reconnectTo ) {
+void ConnectionControl::setReconnectTo(const std::string& reconnectTo) {
     this->reconnectTo = reconnectTo;
 }
 
@@ -267,7 +267,7 @@ bool ConnectionControl::isRebalanceConnection() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setRebalanceConnection( bool rebalanceConnection ) {
+void ConnectionControl::setRebalanceConnection(bool rebalanceConnection) {
     this->rebalanceConnection = rebalanceConnection;
 }
 
@@ -282,12 +282,11 @@ std::vector<unsigned char>& ConnectionControl::getToken() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::setToken( const std::vector<unsigned char>& token ) {
+void ConnectionControl::setToken(const std::vector<unsigned char>& token) {
     this->token = token;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processConnectionControl( this );
+decaf::lang::Pointer<commands::Command> ConnectionControl::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processConnectionControl(this);
 }

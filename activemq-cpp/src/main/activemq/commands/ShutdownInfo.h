@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -53,8 +53,8 @@ namespace commands{
 
     private:
 
-        ShutdownInfo( const ShutdownInfo& );
-        ShutdownInfo& operator= ( const ShutdownInfo& );
+        ShutdownInfo(const ShutdownInfo&);
+        ShutdownInfo& operator= (const ShutdownInfo&);
 
     public:
 
@@ -66,11 +66,11 @@ namespace commands{
 
         virtual ShutdownInfo* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         /**
          * @return an answer of true to the isShutdownInfo() query.
@@ -79,7 +79,7 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

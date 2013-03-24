@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -61,8 +61,8 @@ namespace commands{
 
     private:
 
-        SessionInfo( const SessionInfo& );
-        SessionInfo& operator= ( const SessionInfo& );
+        SessionInfo(const SessionInfo&);
+        SessionInfo& operator= (const SessionInfo&);
 
     public:
 
@@ -74,17 +74,17 @@ namespace commands{
 
         virtual SessionInfo* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         unsigned int getAckMode() const {
             return this->ackMode;
         }
 
-        void setAckMode( unsigned int mode ) {
+        void setAckMode(unsigned int mode) {
             this->ackMode = mode;
         }
 
@@ -94,7 +94,7 @@ namespace commands{
         virtual Pointer<SessionId>& getSessionId();
         virtual void setSessionId( const Pointer<SessionId>& sessionId );
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

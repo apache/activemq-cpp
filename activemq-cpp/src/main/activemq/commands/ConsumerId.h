@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -66,9 +66,9 @@ namespace commands{
 
         ConsumerId();
 
-        ConsumerId( const ConsumerId& other );
+        ConsumerId(const ConsumerId& other);
 
-        ConsumerId( const SessionId& sessionId, long long consumerIdd );
+        ConsumerId(const SessionId& sessionId, long long consumerIdd);
 
         virtual ~ConsumerId();
 
@@ -76,11 +76,11 @@ namespace commands{
 
         virtual ConsumerId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         const Pointer<SessionId>& getParentId() const;
 
@@ -94,15 +94,17 @@ namespace commands{
         virtual long long getValue() const;
         virtual void setValue( long long value );
 
-        virtual int compareTo( const ConsumerId& value ) const;
+        virtual int compareTo(const ConsumerId& value) const;
 
-        virtual bool equals( const ConsumerId& value ) const;
+        virtual bool equals(const ConsumerId& value) const;
 
-        virtual bool operator==( const ConsumerId& value ) const;
+        virtual bool operator==(const ConsumerId& value) const;
 
-        virtual bool operator<( const ConsumerId& value ) const;
+        virtual bool operator<(const ConsumerId& value) const;
 
-        ConsumerId& operator= ( const ConsumerId& other );
+        ConsumerId& operator= (const ConsumerId& other);
+
+        int getHashCode() const;
 
     };
 

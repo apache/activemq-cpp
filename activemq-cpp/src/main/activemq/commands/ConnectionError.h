@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -57,8 +57,8 @@ namespace commands{
 
     private:
 
-        ConnectionError( const ConnectionError& );
-        ConnectionError& operator= ( const ConnectionError& );
+        ConnectionError(const ConnectionError&);
+        ConnectionError& operator= (const ConnectionError&);
 
     public:
 
@@ -70,11 +70,11 @@ namespace commands{
 
         virtual ConnectionError* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const Pointer<BrokerError>& getException() const;
         virtual Pointer<BrokerError>& getException();
@@ -91,7 +91,7 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

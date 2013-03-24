@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-IntegerResponse::IntegerResponse() 
-    : Response(), result(0) {
+IntegerResponse::IntegerResponse() :
+    Response(), result(0) {
 
 }
 
@@ -49,34 +49,34 @@ IntegerResponse::~IntegerResponse() {
 
 ////////////////////////////////////////////////////////////////////////////////
 IntegerResponse* IntegerResponse::cloneDataStructure() const {
-    std::auto_ptr<IntegerResponse> integerResponse( new IntegerResponse() );
+    std::auto_ptr<IntegerResponse> integerResponse(new IntegerResponse());
 
     // Copy the data from the base class or classes
-    integerResponse->copyDataStructure( this );
+    integerResponse->copyDataStructure(this);
 
     return integerResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IntegerResponse::copyDataStructure( const DataStructure* src ) {
+void IntegerResponse::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const IntegerResponse* srcPtr = dynamic_cast<const IntegerResponse*>( src );
+    const IntegerResponse* srcPtr = dynamic_cast<const IntegerResponse*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "IntegerResponse::copyDataStructure - src is NULL or invalid" );
+            "IntegerResponse::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    Response::copyDataStructure( src );
+    Response::copyDataStructure(src);
 
-    this->setResult( srcPtr->getResult() );
+    this->setResult(srcPtr->getResult());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,22 +97,22 @@ std::string IntegerResponse::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool IntegerResponse::equals( const DataStructure* value ) const {
+bool IntegerResponse::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const IntegerResponse* valuePtr = dynamic_cast<const IntegerResponse*>( value );
+    const IntegerResponse* valuePtr = dynamic_cast<const IntegerResponse*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getResult() != valuePtr->getResult() ) {
+    if (this->getResult() != valuePtr->getResult()) {
         return false;
     }
-    if( !Response::equals( value ) ) {
+    if (!Response::equals(value)) {
         return false;
     }
     return true;
@@ -124,7 +124,7 @@ int IntegerResponse::getResult() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IntegerResponse::setResult( int result ) {
+void IntegerResponse::setResult(int result) {
     this->result = result;
 }
 

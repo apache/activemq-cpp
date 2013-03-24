@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -59,7 +59,7 @@ namespace commands{
 
         BrokerId();
 
-        BrokerId( const BrokerId& other );
+        BrokerId(const BrokerId& other);
 
         virtual ~BrokerId();
 
@@ -67,25 +67,27 @@ namespace commands{
 
         virtual BrokerId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const std::string& getValue() const;
         virtual std::string& getValue();
         virtual void setValue( const std::string& value );
 
-        virtual int compareTo( const BrokerId& value ) const;
+        virtual int compareTo(const BrokerId& value) const;
 
-        virtual bool equals( const BrokerId& value ) const;
+        virtual bool equals(const BrokerId& value) const;
 
-        virtual bool operator==( const BrokerId& value ) const;
+        virtual bool operator==(const BrokerId& value) const;
 
-        virtual bool operator<( const BrokerId& value ) const;
+        virtual bool operator<(const BrokerId& value) const;
 
-        BrokerId& operator= ( const BrokerId& other );
+        BrokerId& operator= (const BrokerId& other);
+
+        int getHashCode() const;
 
     };
 

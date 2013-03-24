@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-LastPartialCommand::LastPartialCommand() 
-    : PartialCommand() {
+LastPartialCommand::LastPartialCommand() :
+    PartialCommand() {
 
 }
 
@@ -49,32 +49,32 @@ LastPartialCommand::~LastPartialCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 LastPartialCommand* LastPartialCommand::cloneDataStructure() const {
-    std::auto_ptr<LastPartialCommand> lastPartialCommand( new LastPartialCommand() );
+    std::auto_ptr<LastPartialCommand> lastPartialCommand(new LastPartialCommand());
 
     // Copy the data from the base class or classes
-    lastPartialCommand->copyDataStructure( this );
+    lastPartialCommand->copyDataStructure(this);
 
     return lastPartialCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LastPartialCommand::copyDataStructure( const DataStructure* src ) {
+void LastPartialCommand::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const LastPartialCommand* srcPtr = dynamic_cast<const LastPartialCommand*>( src );
+    const LastPartialCommand* srcPtr = dynamic_cast<const LastPartialCommand*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "LastPartialCommand::copyDataStructure - src is NULL or invalid" );
+            "LastPartialCommand::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    PartialCommand::copyDataStructure( src );
+    PartialCommand::copyDataStructure(src);
 
 }
 
@@ -95,19 +95,19 @@ std::string LastPartialCommand::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool LastPartialCommand::equals( const DataStructure* value ) const {
+bool LastPartialCommand::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const LastPartialCommand* valuePtr = dynamic_cast<const LastPartialCommand*>( value );
+    const LastPartialCommand* valuePtr = dynamic_cast<const LastPartialCommand*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( !PartialCommand::equals( value ) ) {
+    if (!PartialCommand::equals(value)) {
         return false;
     }
     return true;

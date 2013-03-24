@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Response::Response() 
-    : BaseCommand(), correlationId(0) {
+Response::Response() :
+    BaseCommand(), correlationId(0) {
 
 }
 
@@ -49,34 +49,34 @@ Response::~Response() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* Response::cloneDataStructure() const {
-    std::auto_ptr<Response> response( new Response() );
+    std::auto_ptr<Response> response(new Response());
 
     // Copy the data from the base class or classes
-    response->copyDataStructure( this );
+    response->copyDataStructure(this);
 
     return response.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Response::copyDataStructure( const DataStructure* src ) {
+void Response::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const Response* srcPtr = dynamic_cast<const Response*>( src );
+    const Response* srcPtr = dynamic_cast<const Response*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "Response::copyDataStructure - src is NULL or invalid" );
+            "Response::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setCorrelationId( srcPtr->getCorrelationId() );
+    this->setCorrelationId(srcPtr->getCorrelationId());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,22 +100,22 @@ std::string Response::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Response::equals( const DataStructure* value ) const {
+bool Response::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const Response* valuePtr = dynamic_cast<const Response*>( value );
+    const Response* valuePtr = dynamic_cast<const Response*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getCorrelationId() != valuePtr->getCorrelationId() ) {
+    if (this->getCorrelationId() != valuePtr->getCorrelationId()) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -127,12 +127,11 @@ int Response::getCorrelationId() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Response::setCorrelationId( int correlationId ) {
+void Response::setCorrelationId(int correlationId) {
     this->correlationId = correlationId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Response::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processResponse( this );
+decaf::lang::Pointer<commands::Command> Response::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processResponse(this);
 }

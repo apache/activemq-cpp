@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     class ProducerId;
     class ConsumerId;
@@ -68,13 +68,13 @@ namespace commands{
 
         SessionId();
 
-        SessionId( const SessionId& other );
+        SessionId(const SessionId& other);
 
-        SessionId( const ConnectionId* connectionId, long long sessionId );
+        SessionId(const ConnectionId* connectionId, long long sessionId);
 
-        SessionId( const ProducerId* producerId );
+        SessionId(const ProducerId* producerId);
 
-        SessionId( const ConsumerId* consumerId );
+        SessionId(const ConsumerId* consumerId);
 
         virtual ~SessionId();
 
@@ -82,11 +82,11 @@ namespace commands{
 
         virtual SessionId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         const Pointer<ConnectionId>& getParentId() const;
 
@@ -97,15 +97,17 @@ namespace commands{
         virtual long long getValue() const;
         virtual void setValue( long long value );
 
-        virtual int compareTo( const SessionId& value ) const;
+        virtual int compareTo(const SessionId& value) const;
 
-        virtual bool equals( const SessionId& value ) const;
+        virtual bool equals(const SessionId& value) const;
 
-        virtual bool operator==( const SessionId& value ) const;
+        virtual bool operator==(const SessionId& value) const;
 
-        virtual bool operator<( const SessionId& value ) const;
+        virtual bool operator<(const SessionId& value) const;
 
-        SessionId& operator= ( const SessionId& other );
+        SessionId& operator= (const SessionId& other);
+
+        int getHashCode() const;
 
     };
 

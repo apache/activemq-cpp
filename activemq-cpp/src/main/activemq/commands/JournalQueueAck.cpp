@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalQueueAck::JournalQueueAck() 
-    : BaseDataStructure(), destination(NULL), messageAck(NULL) {
+JournalQueueAck::JournalQueueAck() :
+    BaseDataStructure(), destination(NULL), messageAck(NULL) {
 
 }
 
@@ -49,35 +49,35 @@ JournalQueueAck::~JournalQueueAck() {
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalQueueAck* JournalQueueAck::cloneDataStructure() const {
-    std::auto_ptr<JournalQueueAck> journalQueueAck( new JournalQueueAck() );
+    std::auto_ptr<JournalQueueAck> journalQueueAck(new JournalQueueAck());
 
     // Copy the data from the base class or classes
-    journalQueueAck->copyDataStructure( this );
+    journalQueueAck->copyDataStructure(this);
 
     return journalQueueAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalQueueAck::copyDataStructure( const DataStructure* src ) {
+void JournalQueueAck::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const JournalQueueAck* srcPtr = dynamic_cast<const JournalQueueAck*>( src );
+    const JournalQueueAck* srcPtr = dynamic_cast<const JournalQueueAck*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "JournalQueueAck::copyDataStructure - src is NULL or invalid" );
+            "JournalQueueAck::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseDataStructure::copyDataStructure( src );
+    BaseDataStructure::copyDataStructure(src);
 
-    this->setDestination( srcPtr->getDestination() );
-    this->setMessageAck( srcPtr->getMessageAck() );
+    this->setDestination(srcPtr->getDestination());
+    this->setMessageAck(srcPtr->getMessageAck());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,14 +92,14 @@ std::string JournalQueueAck::toString() const {
 
     stream << "JournalQueueAck { ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "MessageAck = ";
-    if( this->getMessageAck() != NULL ) {
+    if (this->getMessageAck() != NULL) {
         stream << this->getMessageAck()->toString();
     } else {
         stream << "NULL";
@@ -110,33 +110,33 @@ std::string JournalQueueAck::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JournalQueueAck::equals( const DataStructure* value ) const {
+bool JournalQueueAck::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const JournalQueueAck* valuePtr = dynamic_cast<const JournalQueueAck*>( value );
+    const JournalQueueAck* valuePtr = dynamic_cast<const JournalQueueAck*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getMessageAck() != NULL ) {
-        if( !this->getMessageAck()->equals( valuePtr->getMessageAck().get() ) ) {
+    if (this->getMessageAck() != NULL) {
+        if (!this->getMessageAck()->equals( valuePtr->getMessageAck().get())) {
             return false;
         }
-    } else if( valuePtr->getMessageAck() != NULL ) {
+    } else if (valuePtr->getMessageAck() != NULL) {
         return false;
     }
-    if( !BaseDataStructure::equals( value ) ) {
+    if (!BaseDataStructure::equals(value)) {
         return false;
     }
     return true;
@@ -153,7 +153,7 @@ decaf::lang::Pointer<ActiveMQDestination>& JournalQueueAck::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalQueueAck::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void JournalQueueAck::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -168,7 +168,7 @@ decaf::lang::Pointer<MessageAck>& JournalQueueAck::getMessageAck() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalQueueAck::setMessageAck( const decaf::lang::Pointer<MessageAck>& messageAck ) {
+void JournalQueueAck::setMessageAck(const decaf::lang::Pointer<MessageAck>& messageAck) {
     this->messageAck = messageAck;
 }
 

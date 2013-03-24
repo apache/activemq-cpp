@@ -51,107 +51,107 @@ unsigned char XATransactionIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void XATransactionIdMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        TransactionIdMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         XATransactionId* info =
-            dynamic_cast<XATransactionId*>( dataStructure );
-        info->setFormatId( dataIn->readInt() );
-        info->setGlobalTransactionId( tightUnmarshalByteArray( dataIn, bs ) );
-        info->setBranchQualifier( tightUnmarshalByteArray( dataIn, bs ) );
+            dynamic_cast<XATransactionId*>(dataStructure);
+        info->setFormatId(dataIn->readInt());
+        info->setGlobalTransactionId(tightUnmarshalByteArray(dataIn, bs));
+        info->setBranchQualifier(tightUnmarshalByteArray(dataIn, bs));
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int XATransactionIdMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         XATransactionId* info =
-            dynamic_cast<XATransactionId*>( dataStructure );
+            dynamic_cast<XATransactionId*>(dataStructure);
 
-        int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        bs->writeBoolean( info->getGlobalTransactionId().size() != 0 );
+        int rc = TransactionIdMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        bs->writeBoolean(info->getGlobalTransactionId().size() != 0);
         rc += info->getGlobalTransactionId().size() == 0 ? 0 : (int)info->getGlobalTransactionId().size() + 4;
-        bs->writeBoolean( info->getBranchQualifier().size() != 0 );
+        bs->writeBoolean(info->getBranchQualifier().size() != 0);
         rc += info->getBranchQualifier().size() == 0 ? 0 : (int)info->getBranchQualifier().size() + 4;
 
         return rc + 4;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void XATransactionIdMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        TransactionIdMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        TransactionIdMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         XATransactionId* info =
-            dynamic_cast<XATransactionId*>( dataStructure );
-        dataOut->writeInt( info->getFormatId() );
-        if( bs->readBoolean() ) {
-            dataOut->writeInt( (int)info->getGlobalTransactionId().size() );
-            dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size(), 0, (int)info->getGlobalTransactionId().size() );
+            dynamic_cast<XATransactionId*>(dataStructure);
+        dataOut->writeInt(info->getFormatId());
+        if (bs->readBoolean()) {
+            dataOut->writeInt((int)info->getGlobalTransactionId().size() );
+            dataOut->write((const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size(), 0, (int)info->getGlobalTransactionId().size());
         }
-        if( bs->readBoolean() ) {
-            dataOut->writeInt( (int)info->getBranchQualifier().size() );
-            dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size(), 0, (int)info->getBranchQualifier().size() );
+        if (bs->readBoolean()) {
+            dataOut->writeInt((int)info->getBranchQualifier().size() );
+            dataOut->write((const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size(), 0, (int)info->getBranchQualifier().size());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void XATransactionIdMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        TransactionIdMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         XATransactionId* info =
-            dynamic_cast<XATransactionId*>( dataStructure );
-        info->setFormatId( dataIn->readInt() );
-        info->setGlobalTransactionId( looseUnmarshalByteArray( dataIn ) );
-        info->setBranchQualifier( looseUnmarshalByteArray( dataIn ) );
+            dynamic_cast<XATransactionId*>(dataStructure);
+        info->setFormatId(dataIn->readInt());
+        info->setGlobalTransactionId(looseUnmarshalByteArray(dataIn));
+        info->setBranchQualifier(looseUnmarshalByteArray(dataIn));
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void XATransactionIdMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         XATransactionId* info =
-            dynamic_cast<XATransactionId*>( dataStructure );
-        TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        dataOut->writeInt( info->getFormatId() );
+            dynamic_cast<XATransactionId*>(dataStructure);
+        TransactionIdMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        dataOut->writeInt(info->getFormatId());
         dataOut->write( info->getGlobalTransactionId().size() != 0 );
         if( info->getGlobalTransactionId().size() != 0 ) {
             dataOut->writeInt( (int)info->getGlobalTransactionId().size() );
-            dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size(), 0, (int)info->getGlobalTransactionId().size() );
+            dataOut->write((const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size(), 0, (int)info->getGlobalTransactionId().size());
         }
         dataOut->write( info->getBranchQualifier().size() != 0 );
         if( info->getBranchQualifier().size() != 0 ) {
             dataOut->writeInt( (int)info->getBranchQualifier().size() );
-            dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size(), 0, (int)info->getBranchQualifier().size() );
+            dataOut->write((const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size(), 0, (int)info->getBranchQualifier().size());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     class SessionId;
     class ProducerId;
@@ -63,13 +63,13 @@ namespace commands{
 
         ConnectionId();
 
-        ConnectionId( const ConnectionId& other );
+        ConnectionId(const ConnectionId& other);
 
-        ConnectionId( const SessionId* sessionId );
+        ConnectionId(const SessionId* sessionId);
 
-        ConnectionId( const ProducerId* producerId );
+        ConnectionId(const ProducerId* producerId);
 
-        ConnectionId( const ConsumerId* consumerId );
+        ConnectionId(const ConsumerId* consumerId);
 
         virtual ~ConnectionId();
 
@@ -77,25 +77,27 @@ namespace commands{
 
         virtual ConnectionId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const std::string& getValue() const;
         virtual std::string& getValue();
         virtual void setValue( const std::string& value );
 
-        virtual int compareTo( const ConnectionId& value ) const;
+        virtual int compareTo(const ConnectionId& value) const;
 
-        virtual bool equals( const ConnectionId& value ) const;
+        virtual bool equals(const ConnectionId& value) const;
 
-        virtual bool operator==( const ConnectionId& value ) const;
+        virtual bool operator==(const ConnectionId& value) const;
 
-        virtual bool operator<( const ConnectionId& value ) const;
+        virtual bool operator<(const ConnectionId& value) const;
 
-        ConnectionId& operator= ( const ConnectionId& other );
+        ConnectionId& operator= (const ConnectionId& other);
+
+        int getHashCode() const;
 
     };
 

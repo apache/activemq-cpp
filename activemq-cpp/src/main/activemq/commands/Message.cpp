@@ -43,8 +43,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-Message::Message() 
-    : BaseCommand(), producerId(NULL), destination(NULL), transactionId(NULL), originalDestination(NULL), messageId(NULL), originalTransactionId(NULL), 
+Message::Message() :
+    BaseCommand(), producerId(NULL), destination(NULL), transactionId(NULL), originalDestination(NULL), messageId(NULL), originalTransactionId(NULL), 
       groupID(""), groupSequence(0), correlationId(""), persistent(false), expiration(0), priority(0), replyTo(NULL), timestamp(0), 
       type(""), content(), marshalledProperties(), dataStructure(NULL), targetConsumerId(NULL), compressed(false), redeliveryCounter(0), 
       brokerPath(), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(), brokerInTime(0), brokerOutTime(0), ackHandler(NULL), properties(), readOnlyProperties(false), readOnlyBody(false), connection(NULL) {
@@ -57,67 +57,67 @@ Message::~Message() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Message* Message::cloneDataStructure() const {
-    std::auto_ptr<Message> message( new Message() );
+    std::auto_ptr<Message> message(new Message());
 
     // Copy the data from the base class or classes
-    message->copyDataStructure( this );
+    message->copyDataStructure(this);
 
     return message.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::copyDataStructure( const DataStructure* src ) {
+void Message::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const Message* srcPtr = dynamic_cast<const Message*>( src );
+    const Message* srcPtr = dynamic_cast<const Message*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "Message::copyDataStructure - src is NULL or invalid" );
+            "Message::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setProducerId( srcPtr->getProducerId() );
-    this->setDestination( srcPtr->getDestination() );
-    this->setTransactionId( srcPtr->getTransactionId() );
-    this->setOriginalDestination( srcPtr->getOriginalDestination() );
-    this->setMessageId( srcPtr->getMessageId() );
-    this->setOriginalTransactionId( srcPtr->getOriginalTransactionId() );
-    this->setGroupID( srcPtr->getGroupID() );
-    this->setGroupSequence( srcPtr->getGroupSequence() );
-    this->setCorrelationId( srcPtr->getCorrelationId() );
-    this->setPersistent( srcPtr->isPersistent() );
-    this->setExpiration( srcPtr->getExpiration() );
-    this->setPriority( srcPtr->getPriority() );
-    this->setReplyTo( srcPtr->getReplyTo() );
-    this->setTimestamp( srcPtr->getTimestamp() );
-    this->setType( srcPtr->getType() );
-    this->setContent( srcPtr->getContent() );
-    this->setMarshalledProperties( srcPtr->getMarshalledProperties() );
-    this->setDataStructure( srcPtr->getDataStructure() );
-    this->setTargetConsumerId( srcPtr->getTargetConsumerId() );
-    this->setCompressed( srcPtr->isCompressed() );
-    this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
-    this->setBrokerPath( srcPtr->getBrokerPath() );
-    this->setArrival( srcPtr->getArrival() );
-    this->setUserID( srcPtr->getUserID() );
-    this->setRecievedByDFBridge( srcPtr->isRecievedByDFBridge() );
-    this->setDroppable( srcPtr->isDroppable() );
-    this->setCluster( srcPtr->getCluster() );
-    this->setBrokerInTime( srcPtr->getBrokerInTime() );
-    this->setBrokerOutTime( srcPtr->getBrokerOutTime() );
-    this->properties.copy( srcPtr->properties );
-    this->setAckHandler( srcPtr->getAckHandler() );
-    this->setReadOnlyBody( srcPtr->isReadOnlyBody() );
-    this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );
-    this->setConnection( srcPtr->getConnection() );
+    this->setProducerId(srcPtr->getProducerId());
+    this->setDestination(srcPtr->getDestination());
+    this->setTransactionId(srcPtr->getTransactionId());
+    this->setOriginalDestination(srcPtr->getOriginalDestination());
+    this->setMessageId(srcPtr->getMessageId());
+    this->setOriginalTransactionId(srcPtr->getOriginalTransactionId());
+    this->setGroupID(srcPtr->getGroupID());
+    this->setGroupSequence(srcPtr->getGroupSequence());
+    this->setCorrelationId(srcPtr->getCorrelationId());
+    this->setPersistent(srcPtr->isPersistent());
+    this->setExpiration(srcPtr->getExpiration());
+    this->setPriority(srcPtr->getPriority());
+    this->setReplyTo(srcPtr->getReplyTo());
+    this->setTimestamp(srcPtr->getTimestamp());
+    this->setType(srcPtr->getType());
+    this->setContent(srcPtr->getContent());
+    this->setMarshalledProperties(srcPtr->getMarshalledProperties());
+    this->setDataStructure(srcPtr->getDataStructure());
+    this->setTargetConsumerId(srcPtr->getTargetConsumerId());
+    this->setCompressed(srcPtr->isCompressed());
+    this->setRedeliveryCounter(srcPtr->getRedeliveryCounter());
+    this->setBrokerPath(srcPtr->getBrokerPath());
+    this->setArrival(srcPtr->getArrival());
+    this->setUserID(srcPtr->getUserID());
+    this->setRecievedByDFBridge(srcPtr->isRecievedByDFBridge());
+    this->setDroppable(srcPtr->isDroppable());
+    this->setCluster(srcPtr->getCluster());
+    this->setBrokerInTime(srcPtr->getBrokerInTime());
+    this->setBrokerOutTime(srcPtr->getBrokerOutTime());
+    this->properties.copy(srcPtr->properties);
+    this->setAckHandler(srcPtr->getAckHandler());
+    this->setReadOnlyBody(srcPtr->isReadOnlyBody());
+    this->setReadOnlyProperties(srcPtr->isReadOnlyProperties());
+    this->setConnection(srcPtr->getConnection());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,42 +135,42 @@ std::string Message::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "ProducerId = ";
-    if( this->getProducerId() != NULL ) {
+    if (this->getProducerId() != NULL) {
         stream << this->getProducerId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "TransactionId = ";
-    if( this->getTransactionId() != NULL ) {
+    if (this->getTransactionId() != NULL) {
         stream << this->getTransactionId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "OriginalDestination = ";
-    if( this->getOriginalDestination() != NULL ) {
+    if (this->getOriginalDestination() != NULL) {
         stream << this->getOriginalDestination()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "MessageId = ";
-    if( this->getMessageId() != NULL ) {
+    if (this->getMessageId() != NULL) {
         stream << this->getMessageId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "OriginalTransactionId = ";
-    if( this->getOriginalTransactionId() != NULL ) {
+    if (this->getOriginalTransactionId() != NULL) {
         stream << this->getOriginalTransactionId()->toString();
     } else {
         stream << "NULL";
@@ -189,7 +189,7 @@ std::string Message::toString() const {
     stream << "Priority = " << (int)this->getPriority();
     stream << ", ";
     stream << "ReplyTo = ";
-    if( this->getReplyTo() != NULL ) {
+    if (this->getReplyTo() != NULL) {
         stream << this->getReplyTo()->toString();
     } else {
         stream << "NULL";
@@ -200,28 +200,28 @@ std::string Message::toString() const {
     stream << "Type = " << this->getType();
     stream << ", ";
     stream << "Content = ";
-    if( this->getContent().size() > 0 ) {
+    if (this->getContent().size() > 0) {
         stream << "[size=" << this->getContent().size() << "]";
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "MarshalledProperties = ";
-    if( this->getMarshalledProperties().size() > 0 ) {
+    if (this->getMarshalledProperties().size() > 0) {
         stream << "[size=" << this->getMarshalledProperties().size() << "]";
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "DataStructure = ";
-    if( this->getDataStructure() != NULL ) {
+    if (this->getDataStructure() != NULL) {
         stream << this->getDataStructure()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "TargetConsumerId = ";
-    if( this->getTargetConsumerId() != NULL ) {
+    if (this->getTargetConsumerId() != NULL) {
         stream << this->getTargetConsumerId()->toString();
     } else {
         stream << "NULL";
@@ -232,10 +232,10 @@ std::string Message::toString() const {
     stream << "RedeliveryCounter = " << this->getRedeliveryCounter();
     stream << ", ";
     stream << "BrokerPath = ";
-    if( this->getBrokerPath().size() > 0 ) {
+    if (this->getBrokerPath().size() > 0) {
         stream << "[";
-        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+        for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
+            if (this->getBrokerPath()[ibrokerPath] != NULL) {
                 stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
             } else {
                 stream << "NULL" << ", ";
@@ -255,10 +255,10 @@ std::string Message::toString() const {
     stream << "Droppable = " << this->isDroppable();
     stream << ", ";
     stream << "Cluster = ";
-    if( this->getCluster().size() > 0 ) {
+    if (this->getCluster().size() > 0) {
         stream << "[";
-        for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
-            if( this->getCluster()[icluster] != NULL ) {
+        for (size_t icluster = 0; icluster < this->getCluster().size(); ++icluster) {
+            if (this->getCluster()[icluster] != NULL) {
                 stream << this->getCluster()[icluster]->toString() << ", ";
             } else {
                 stream << "NULL" << ", ";
@@ -278,174 +278,174 @@ std::string Message::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Message::equals( const DataStructure* value ) const {
+bool Message::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const Message* valuePtr = dynamic_cast<const Message*>( value );
+    const Message* valuePtr = dynamic_cast<const Message*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getProducerId() != NULL ) {
-        if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
+    if (this->getProducerId() != NULL) {
+        if (!this->getProducerId()->equals( valuePtr->getProducerId().get())) {
             return false;
         }
-    } else if( valuePtr->getProducerId() != NULL ) {
+    } else if (valuePtr->getProducerId() != NULL) {
         return false;
     }
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
+    if (this->getTransactionId() != NULL) {
+        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
             return false;
         }
-    } else if( valuePtr->getTransactionId() != NULL ) {
+    } else if (valuePtr->getTransactionId() != NULL) {
         return false;
     }
-    if( this->getOriginalDestination() != NULL ) {
-        if( !this->getOriginalDestination()->equals( valuePtr->getOriginalDestination().get() ) ) {
+    if (this->getOriginalDestination() != NULL) {
+        if (!this->getOriginalDestination()->equals( valuePtr->getOriginalDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getOriginalDestination() != NULL ) {
+    } else if (valuePtr->getOriginalDestination() != NULL) {
         return false;
     }
-    if( this->getMessageId() != NULL ) {
-        if( !this->getMessageId()->equals( valuePtr->getMessageId().get() ) ) {
+    if (this->getMessageId() != NULL) {
+        if (!this->getMessageId()->equals( valuePtr->getMessageId().get())) {
             return false;
         }
-    } else if( valuePtr->getMessageId() != NULL ) {
+    } else if (valuePtr->getMessageId() != NULL) {
         return false;
     }
-    if( this->getOriginalTransactionId() != NULL ) {
-        if( !this->getOriginalTransactionId()->equals( valuePtr->getOriginalTransactionId().get() ) ) {
+    if (this->getOriginalTransactionId() != NULL) {
+        if (!this->getOriginalTransactionId()->equals( valuePtr->getOriginalTransactionId().get())) {
             return false;
         }
-    } else if( valuePtr->getOriginalTransactionId() != NULL ) {
+    } else if (valuePtr->getOriginalTransactionId() != NULL) {
         return false;
     }
-    if( this->getGroupID() != valuePtr->getGroupID() ) {
+    if (this->getGroupID() != valuePtr->getGroupID()) {
         return false;
     }
-    if( this->getGroupSequence() != valuePtr->getGroupSequence() ) {
+    if (this->getGroupSequence() != valuePtr->getGroupSequence()) {
         return false;
     }
-    if( this->getCorrelationId() != valuePtr->getCorrelationId() ) {
+    if (this->getCorrelationId() != valuePtr->getCorrelationId()) {
         return false;
     }
-    if( this->isPersistent() != valuePtr->isPersistent() ) {
+    if (this->isPersistent() != valuePtr->isPersistent()) {
         return false;
     }
-    if( this->getExpiration() != valuePtr->getExpiration() ) {
+    if (this->getExpiration() != valuePtr->getExpiration()) {
         return false;
     }
-    if( this->getPriority() != valuePtr->getPriority() ) {
+    if (this->getPriority() != valuePtr->getPriority()) {
         return false;
     }
-    if( this->getReplyTo() != NULL ) {
-        if( !this->getReplyTo()->equals( valuePtr->getReplyTo().get() ) ) {
+    if (this->getReplyTo() != NULL) {
+        if (!this->getReplyTo()->equals( valuePtr->getReplyTo().get())) {
             return false;
         }
-    } else if( valuePtr->getReplyTo() != NULL ) {
+    } else if (valuePtr->getReplyTo() != NULL) {
         return false;
     }
-    if( this->getTimestamp() != valuePtr->getTimestamp() ) {
+    if (this->getTimestamp() != valuePtr->getTimestamp()) {
         return false;
     }
-    if( this->getType() != valuePtr->getType() ) {
+    if (this->getType() != valuePtr->getType()) {
         return false;
     }
-    for( size_t icontent = 0; icontent < this->getContent().size(); ++icontent ) {
-        if( this->getContent()[icontent] != valuePtr->getContent()[icontent] ) {
-            return false;
-        }
-    }
-    for( size_t imarshalledProperties = 0; imarshalledProperties < this->getMarshalledProperties().size(); ++imarshalledProperties ) {
-        if( this->getMarshalledProperties()[imarshalledProperties] != valuePtr->getMarshalledProperties()[imarshalledProperties] ) {
+    for (size_t icontent = 0; icontent < this->getContent().size(); ++icontent) {
+        if (this->getContent()[icontent] != valuePtr->getContent()[icontent]) {
             return false;
         }
     }
-    if( this->getDataStructure() != NULL ) {
-        if( !this->getDataStructure()->equals( valuePtr->getDataStructure().get() ) ) {
+    for (size_t imarshalledProperties = 0; imarshalledProperties < this->getMarshalledProperties().size(); ++imarshalledProperties) {
+        if (this->getMarshalledProperties()[imarshalledProperties] != valuePtr->getMarshalledProperties()[imarshalledProperties]) {
             return false;
         }
-    } else if( valuePtr->getDataStructure() != NULL ) {
-        return false;
     }
-    if( this->getTargetConsumerId() != NULL ) {
-        if( !this->getTargetConsumerId()->equals( valuePtr->getTargetConsumerId().get() ) ) {
+    if (this->getDataStructure() != NULL) {
+        if (!this->getDataStructure()->equals( valuePtr->getDataStructure().get())) {
             return false;
         }
-    } else if( valuePtr->getTargetConsumerId() != NULL ) {
+    } else if (valuePtr->getDataStructure() != NULL) {
         return false;
     }
-    if( this->isCompressed() != valuePtr->isCompressed() ) {
+    if (this->getTargetConsumerId() != NULL) {
+        if (!this->getTargetConsumerId()->equals( valuePtr->getTargetConsumerId().get())) {
+            return false;
+        }
+    } else if (valuePtr->getTargetConsumerId() != NULL) {
         return false;
     }
-    if( this->getRedeliveryCounter() != valuePtr->getRedeliveryCounter() ) {
+    if (this->isCompressed() != valuePtr->isCompressed()) {
         return false;
     }
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get() ) ) {
+    if (this->getRedeliveryCounter() != valuePtr->getRedeliveryCounter()) {
+        return false;
+    }
+    for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
+        if (this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
-        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+        } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {
             return false;
         }
     }
-    if( this->getArrival() != valuePtr->getArrival() ) {
+    if (this->getArrival() != valuePtr->getArrival()) {
         return false;
     }
-    if( this->getUserID() != valuePtr->getUserID() ) {
+    if (this->getUserID() != valuePtr->getUserID()) {
         return false;
     }
-    if( this->isRecievedByDFBridge() != valuePtr->isRecievedByDFBridge() ) {
+    if (this->isRecievedByDFBridge() != valuePtr->isRecievedByDFBridge()) {
         return false;
     }
-    if( this->isDroppable() != valuePtr->isDroppable() ) {
+    if (this->isDroppable() != valuePtr->isDroppable()) {
         return false;
     }
-    for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
-        if( this->getCluster()[icluster] != NULL ) {
-            if( !this->getCluster()[icluster]->equals( valuePtr->getCluster()[icluster].get() ) ) {
+    for (size_t icluster = 0; icluster < this->getCluster().size(); ++icluster) {
+        if (this->getCluster()[icluster] != NULL ) {
+            if (!this->getCluster()[icluster]->equals( valuePtr->getCluster()[icluster].get())) {
                 return false;
             }
-        } else if( valuePtr->getCluster()[icluster] != NULL ) {
+        } else if (valuePtr->getCluster()[icluster] != NULL) {
             return false;
         }
     }
-    if( this->getBrokerInTime() != valuePtr->getBrokerInTime() ) {
+    if (this->getBrokerInTime() != valuePtr->getBrokerInTime()) {
         return false;
     }
-    if( this->getBrokerOutTime() != valuePtr->getBrokerOutTime() ) {
+    if (this->getBrokerOutTime() != valuePtr->getBrokerOutTime()) {
         return false;
     }
-    if( ackHandler != valuePtr->getAckHandler() ){
-        return false;
-    }
-
-    if( !properties.equals( valuePtr->properties ) ) {
+    if (ackHandler != valuePtr->getAckHandler()){
         return false;
     }
 
-    if( readOnlyBody != valuePtr->isReadOnlyBody() ){
+    if (!properties.equals(valuePtr->properties)) {
         return false;
     }
 
-    if( readOnlyProperties != valuePtr->isReadOnlyProperties() ){
+    if (readOnlyBody != valuePtr->isReadOnlyBody()){
         return false;
     }
 
-    if( !BaseCommand::equals( value ) ) {
+    if (readOnlyProperties != valuePtr->isReadOnlyProperties()){
+        return false;
+    }
+
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -462,7 +462,7 @@ decaf::lang::Pointer<ProducerId>& Message::getProducerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setProducerId( const decaf::lang::Pointer<ProducerId>& producerId ) {
+void Message::setProducerId(const decaf::lang::Pointer<ProducerId>& producerId) {
     this->producerId = producerId;
 }
 
@@ -477,7 +477,7 @@ decaf::lang::Pointer<ActiveMQDestination>& Message::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void Message::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -492,7 +492,7 @@ decaf::lang::Pointer<TransactionId>& Message::getTransactionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
+void Message::setTransactionId(const decaf::lang::Pointer<TransactionId>& transactionId) {
     this->transactionId = transactionId;
 }
 
@@ -507,7 +507,7 @@ decaf::lang::Pointer<ActiveMQDestination>& Message::getOriginalDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setOriginalDestination( const decaf::lang::Pointer<ActiveMQDestination>& originalDestination ) {
+void Message::setOriginalDestination(const decaf::lang::Pointer<ActiveMQDestination>& originalDestination) {
     this->originalDestination = originalDestination;
 }
 
@@ -522,7 +522,7 @@ decaf::lang::Pointer<MessageId>& Message::getMessageId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setMessageId( const decaf::lang::Pointer<MessageId>& messageId ) {
+void Message::setMessageId(const decaf::lang::Pointer<MessageId>& messageId) {
     this->messageId = messageId;
 }
 
@@ -537,7 +537,7 @@ decaf::lang::Pointer<TransactionId>& Message::getOriginalTransactionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setOriginalTransactionId( const decaf::lang::Pointer<TransactionId>& originalTransactionId ) {
+void Message::setOriginalTransactionId(const decaf::lang::Pointer<TransactionId>& originalTransactionId) {
     this->originalTransactionId = originalTransactionId;
 }
 
@@ -552,7 +552,7 @@ std::string& Message::getGroupID() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setGroupID( const std::string& groupID ) {
+void Message::setGroupID(const std::string& groupID) {
     this->groupID = groupID;
 }
 
@@ -562,7 +562,7 @@ int Message::getGroupSequence() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setGroupSequence( int groupSequence ) {
+void Message::setGroupSequence(int groupSequence) {
     this->groupSequence = groupSequence;
 }
 
@@ -577,7 +577,7 @@ std::string& Message::getCorrelationId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setCorrelationId( const std::string& correlationId ) {
+void Message::setCorrelationId(const std::string& correlationId) {
     this->correlationId = correlationId;
 }
 
@@ -587,7 +587,7 @@ bool Message::isPersistent() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setPersistent( bool persistent ) {
+void Message::setPersistent(bool persistent) {
     this->persistent = persistent;
 }
 
@@ -597,7 +597,7 @@ long long Message::getExpiration() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setExpiration( long long expiration ) {
+void Message::setExpiration(long long expiration) {
     this->expiration = expiration;
 }
 
@@ -607,7 +607,7 @@ unsigned char Message::getPriority() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setPriority( unsigned char priority ) {
+void Message::setPriority(unsigned char priority) {
     this->priority = priority;
 }
 
@@ -622,7 +622,7 @@ decaf::lang::Pointer<ActiveMQDestination>& Message::getReplyTo() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setReplyTo( const decaf::lang::Pointer<ActiveMQDestination>& replyTo ) {
+void Message::setReplyTo(const decaf::lang::Pointer<ActiveMQDestination>& replyTo) {
     this->replyTo = replyTo;
 }
 
@@ -632,7 +632,7 @@ long long Message::getTimestamp() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setTimestamp( long long timestamp ) {
+void Message::setTimestamp(long long timestamp) {
     this->timestamp = timestamp;
 }
 
@@ -647,7 +647,7 @@ std::string& Message::getType() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setType( const std::string& type ) {
+void Message::setType(const std::string& type) {
     this->type = type;
 }
 
@@ -662,7 +662,7 @@ std::vector<unsigned char>& Message::getContent() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setContent( const std::vector<unsigned char>& content ) {
+void Message::setContent(const std::vector<unsigned char>& content) {
     this->content = content;
 }
 
@@ -677,7 +677,7 @@ std::vector<unsigned char>& Message::getMarshalledProperties() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setMarshalledProperties( const std::vector<unsigned char>& marshalledProperties ) {
+void Message::setMarshalledProperties(const std::vector<unsigned char>& marshalledProperties) {
     this->marshalledProperties = marshalledProperties;
 }
 
@@ -692,7 +692,7 @@ decaf::lang::Pointer<DataStructure>& Message::getDataStructure() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setDataStructure( const decaf::lang::Pointer<DataStructure>& dataStructure ) {
+void Message::setDataStructure(const decaf::lang::Pointer<DataStructure>& dataStructure) {
     this->dataStructure = dataStructure;
 }
 
@@ -707,7 +707,7 @@ decaf::lang::Pointer<ConsumerId>& Message::getTargetConsumerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setTargetConsumerId( const decaf::lang::Pointer<ConsumerId>& targetConsumerId ) {
+void Message::setTargetConsumerId(const decaf::lang::Pointer<ConsumerId>& targetConsumerId) {
     this->targetConsumerId = targetConsumerId;
 }
 
@@ -717,7 +717,7 @@ bool Message::isCompressed() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setCompressed( bool compressed ) {
+void Message::setCompressed(bool compressed) {
     this->compressed = compressed;
 }
 
@@ -727,7 +727,7 @@ int Message::getRedeliveryCounter() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setRedeliveryCounter( int redeliveryCounter ) {
+void Message::setRedeliveryCounter(int redeliveryCounter) {
     this->redeliveryCounter = redeliveryCounter;
 }
 
@@ -742,7 +742,7 @@ std::vector< decaf::lang::Pointer<BrokerId> >& Message::getBrokerPath() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath ) {
+void Message::setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath) {
     this->brokerPath = brokerPath;
 }
 
@@ -752,7 +752,7 @@ long long Message::getArrival() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setArrival( long long arrival ) {
+void Message::setArrival(long long arrival) {
     this->arrival = arrival;
 }
 
@@ -767,7 +767,7 @@ std::string& Message::getUserID() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setUserID( const std::string& userID ) {
+void Message::setUserID(const std::string& userID) {
     this->userID = userID;
 }
 
@@ -777,7 +777,7 @@ bool Message::isRecievedByDFBridge() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setRecievedByDFBridge( bool recievedByDFBridge ) {
+void Message::setRecievedByDFBridge(bool recievedByDFBridge) {
     this->recievedByDFBridge = recievedByDFBridge;
 }
 
@@ -787,7 +787,7 @@ bool Message::isDroppable() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setDroppable( bool droppable ) {
+void Message::setDroppable(bool droppable) {
     this->droppable = droppable;
 }
 
@@ -802,7 +802,7 @@ std::vector< decaf::lang::Pointer<BrokerId> >& Message::getCluster() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setCluster( const std::vector< decaf::lang::Pointer<BrokerId> >& cluster ) {
+void Message::setCluster(const std::vector< decaf::lang::Pointer<BrokerId> >& cluster) {
     this->cluster = cluster;
 }
 
@@ -812,7 +812,7 @@ long long Message::getBrokerInTime() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setBrokerInTime( long long brokerInTime ) {
+void Message::setBrokerInTime(long long brokerInTime) {
     this->brokerInTime = brokerInTime;
 }
 
@@ -822,21 +822,20 @@ long long Message::getBrokerOutTime() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setBrokerOutTime( long long brokerOutTime ) {
+void Message::setBrokerOutTime(long long brokerOutTime) {
     this->brokerOutTime = brokerOutTime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processMessage( this );
+decaf::lang::Pointer<commands::Command> Message::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processMessage(this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Message::isExpired() const {
     long long expireTime = this->getExpiration();
     long long currentTime = decaf::lang::System::currentTimeMillis();
-    if( expireTime > 0 && currentTime > expireTime ) {
+    if (expireTime > 0 && currentTime > expireTime) {
         return true;
     }
     return false;
@@ -854,31 +853,29 @@ unsigned int Message::getSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {
+void Message::beforeMarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED) {
 
-    try{
-
+    try {
         marshalledProperties.clear();
-        if( !properties.isEmpty() ) {
+        if (!properties.isEmpty()) {
             wireformat::openwire::marshal::PrimitiveTypesMarshaller::marshal(
                 &properties, marshalledProperties );
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::Exception, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {
+void Message::afterUnmarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED) {
 
-    try{
-
+    try {
         wireformat::openwire::marshal::PrimitiveTypesMarshaller::unmarshal(
-            &properties, marshalledProperties );
+            &properties, marshalledProperties);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::Exception, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -57,8 +57,8 @@ namespace commands{
 
     private:
 
-        JournalTransaction( const JournalTransaction& );
-        JournalTransaction& operator= ( const JournalTransaction& );
+        JournalTransaction(const JournalTransaction&);
+        JournalTransaction& operator= (const JournalTransaction&);
 
     public:
 
@@ -70,11 +70,11 @@ namespace commands{
 
         virtual JournalTransaction* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const Pointer<TransactionId>& getTransactionId() const;
         virtual Pointer<TransactionId>& getTransactionId();

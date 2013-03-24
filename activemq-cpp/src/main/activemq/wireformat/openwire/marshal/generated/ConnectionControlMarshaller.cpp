@@ -51,87 +51,87 @@ unsigned char ConnectionControlMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ConnectionControlMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseCommandMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         ConnectionControl* info =
-            dynamic_cast<ConnectionControl*>( dataStructure );
+            dynamic_cast<ConnectionControl*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        info->setClose( bs->readBoolean() );
-        info->setExit( bs->readBoolean() );
-        info->setFaultTolerant( bs->readBoolean() );
-        info->setResume( bs->readBoolean() );
-        info->setSuspend( bs->readBoolean() );
-        if( wireVersion >= 6 ) {
-            info->setConnectedBrokers( tightUnmarshalString( dataIn, bs ) );
+        info->setClose(bs->readBoolean());
+        info->setExit(bs->readBoolean());
+        info->setFaultTolerant(bs->readBoolean());
+        info->setResume(bs->readBoolean());
+        info->setSuspend(bs->readBoolean());
+        if (wireVersion >= 6) {
+            info->setConnectedBrokers(tightUnmarshalString(dataIn, bs));
         }
-        if( wireVersion >= 6 ) {
-            info->setReconnectTo( tightUnmarshalString( dataIn, bs ) );
+        if (wireVersion >= 6) {
+            info->setReconnectTo(tightUnmarshalString(dataIn, bs));
         }
-        if( wireVersion >= 6 ) {
-            info->setRebalanceConnection( bs->readBoolean() );
+        if (wireVersion >= 6) {
+            info->setRebalanceConnection(bs->readBoolean());
         }
-        if( wireVersion >= 8 ) {
-            info->setToken( tightUnmarshalByteArray( dataIn, bs ) );
+        if (wireVersion >= 8) {
+            info->setToken(tightUnmarshalByteArray(dataIn, bs));
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConnectionControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int ConnectionControlMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         ConnectionControl* info =
-            dynamic_cast<ConnectionControl*>( dataStructure );
+            dynamic_cast<ConnectionControl*>(dataStructure);
 
-        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = BaseCommandMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
 
         int wireVersion = wireFormat->getVersion();
 
-        bs->writeBoolean( info->isClose() );
-        bs->writeBoolean( info->isExit() );
-        bs->writeBoolean( info->isFaultTolerant() );
-        bs->writeBoolean( info->isResume() );
-        bs->writeBoolean( info->isSuspend() );
-        if( wireVersion >= 6 ) {
-            rc += tightMarshalString1( info->getConnectedBrokers(), bs );
+        bs->writeBoolean(info->isClose());
+        bs->writeBoolean(info->isExit());
+        bs->writeBoolean(info->isFaultTolerant());
+        bs->writeBoolean(info->isResume());
+        bs->writeBoolean(info->isSuspend());
+        if (wireVersion >= 6) {
+            rc += tightMarshalString1(info->getConnectedBrokers(), bs);
         }
-        if( wireVersion >= 6 ) {
-            rc += tightMarshalString1( info->getReconnectTo(), bs );
+        if (wireVersion >= 6) {
+            rc += tightMarshalString1(info->getReconnectTo(), bs);
         }
-        if( wireVersion >= 6 ) {
-            bs->writeBoolean( info->isRebalanceConnection() );
+        if (wireVersion >= 6) {
+            bs->writeBoolean(info->isRebalanceConnection());
         }
-        if( wireVersion >= 8 ) {
-            bs->writeBoolean( info->getToken().size() != 0 );
+        if (wireVersion >= 8) {
+            bs->writeBoolean(info->getToken().size() != 0);
             rc += info->getToken().size() == 0 ? 0 : (int)info->getToken().size() + 4;
         }
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void ConnectionControlMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         ConnectionControl* info =
-            dynamic_cast<ConnectionControl*>( dataStructure );
+            dynamic_cast<ConnectionControl*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
@@ -140,96 +140,96 @@ void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
         bs->readBoolean();
         bs->readBoolean();
         bs->readBoolean();
-        if( wireVersion >= 6 ) {
-            tightMarshalString2( info->getConnectedBrokers(), dataOut, bs );
+        if (wireVersion >= 6) {
+            tightMarshalString2(info->getConnectedBrokers(), dataOut, bs);
         }
-        if( wireVersion >= 6 ) {
-            tightMarshalString2( info->getReconnectTo(), dataOut, bs );
+        if (wireVersion >= 6) {
+            tightMarshalString2(info->getReconnectTo(), dataOut, bs);
         }
-        if( wireVersion >= 6 ) {
+        if (wireVersion >= 6) {
             bs->readBoolean();
         }
-        if( wireVersion >= 8 ) {
-            if( bs->readBoolean() ) {
-                dataOut->writeInt( (int)info->getToken().size() );
-                dataOut->write( (const unsigned char*)(&info->getToken()[0]), (int)info->getToken().size(), 0, (int)info->getToken().size() );
+        if (wireVersion >= 8) {
+            if (bs->readBoolean()) {
+                dataOut->writeInt((int)info->getToken().size() );
+                dataOut->write((const unsigned char*)(&info->getToken()[0]), (int)info->getToken().size(), 0, (int)info->getToken().size());
             }
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void ConnectionControlMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseCommandMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         ConnectionControl* info =
-            dynamic_cast<ConnectionControl*>( dataStructure );
+            dynamic_cast<ConnectionControl*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        info->setClose( dataIn->readBoolean() );
-        info->setExit( dataIn->readBoolean() );
-        info->setFaultTolerant( dataIn->readBoolean() );
-        info->setResume( dataIn->readBoolean() );
-        info->setSuspend( dataIn->readBoolean() );
-        if( wireVersion >= 6 ) {
-            info->setConnectedBrokers( looseUnmarshalString( dataIn ) );
+        info->setClose(dataIn->readBoolean());
+        info->setExit(dataIn->readBoolean());
+        info->setFaultTolerant(dataIn->readBoolean());
+        info->setResume(dataIn->readBoolean());
+        info->setSuspend(dataIn->readBoolean());
+        if (wireVersion >= 6) {
+            info->setConnectedBrokers(looseUnmarshalString(dataIn));
         }
-        if( wireVersion >= 6 ) {
-            info->setReconnectTo( looseUnmarshalString( dataIn ) );
+        if (wireVersion >= 6) {
+            info->setReconnectTo(looseUnmarshalString(dataIn));
         }
-        if( wireVersion >= 6 ) {
-            info->setRebalanceConnection( dataIn->readBoolean() );
+        if (wireVersion >= 6) {
+            info->setRebalanceConnection(dataIn->readBoolean());
         }
-        if( wireVersion >= 8 ) {
-            info->setToken( looseUnmarshalByteArray( dataIn ) );
+        if (wireVersion >= 8) {
+            info->setToken(looseUnmarshalByteArray(dataIn));
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void ConnectionControlMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         ConnectionControl* info =
-            dynamic_cast<ConnectionControl*>( dataStructure );
-        BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+            dynamic_cast<ConnectionControl*>(dataStructure);
+        BaseCommandMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
 
         int wireVersion = wireFormat->getVersion();
 
-        dataOut->writeBoolean( info->isClose() );
-        dataOut->writeBoolean( info->isExit() );
-        dataOut->writeBoolean( info->isFaultTolerant() );
-        dataOut->writeBoolean( info->isResume() );
-        dataOut->writeBoolean( info->isSuspend() );
-        if( wireVersion >= 6 ) {
-            looseMarshalString( info->getConnectedBrokers(), dataOut );
+        dataOut->writeBoolean(info->isClose());
+        dataOut->writeBoolean(info->isExit());
+        dataOut->writeBoolean(info->isFaultTolerant());
+        dataOut->writeBoolean(info->isResume());
+        dataOut->writeBoolean(info->isSuspend());
+        if (wireVersion >= 6) {
+            looseMarshalString(info->getConnectedBrokers(), dataOut);
         }
-        if( wireVersion >= 6 ) {
-            looseMarshalString( info->getReconnectTo(), dataOut );
+        if (wireVersion >= 6) {
+            looseMarshalString(info->getReconnectTo(), dataOut);
         }
-        if( wireVersion >= 6 ) {
-            dataOut->writeBoolean( info->isRebalanceConnection() );
+        if (wireVersion >= 6) {
+            dataOut->writeBoolean(info->isRebalanceConnection());
         }
-        if( wireVersion >= 8 ) {
+        if (wireVersion >= 8) {
             dataOut->write( info->getToken().size() != 0 );
             if( info->getToken().size() != 0 ) {
                 dataOut->writeInt( (int)info->getToken().size() );
-                dataOut->write( (const unsigned char*)(&info->getToken()[0]), (int)info->getToken().size(), 0, (int)info->getToken().size() );
+                dataOut->write((const unsigned char*)(&info->getToken()[0]), (int)info->getToken().size(), 0, (int)info->getToken().size());
             }
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -56,8 +56,8 @@ namespace commands{
 
     private:
 
-        NetworkBridgeFilter( const NetworkBridgeFilter& );
-        NetworkBridgeFilter& operator= ( const NetworkBridgeFilter& );
+        NetworkBridgeFilter(const NetworkBridgeFilter&);
+        NetworkBridgeFilter& operator= (const NetworkBridgeFilter&);
 
     public:
 
@@ -69,11 +69,11 @@ namespace commands{
 
         virtual NetworkBridgeFilter* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual int getNetworkTTL() const;
         virtual void setNetworkTTL( int networkTTL );

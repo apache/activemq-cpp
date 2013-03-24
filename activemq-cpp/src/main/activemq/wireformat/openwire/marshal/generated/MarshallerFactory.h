@@ -24,11 +24,11 @@
 
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 
-namespace activemq{
-namespace wireformat{
-namespace openwire{
-namespace marshal{
-namespace generated{
+namespace activemq {
+namespace wireformat {
+namespace openwire {
+namespace marshal {
+namespace generated {
 
     /**
      * Used to create marshallers for a specific version of the wire
@@ -43,7 +43,7 @@ namespace generated{
 
         virtual ~MarshallerFactory() {};
 
-        virtual void configure( OpenWireFormat* format );
+        virtual void configure(OpenWireFormat* format);
 
     };
 

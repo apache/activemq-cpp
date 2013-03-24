@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -56,8 +56,8 @@ namespace commands{
 
     private:
 
-        RemoveInfo( const RemoveInfo& );
-        RemoveInfo& operator= ( const RemoveInfo& );
+        RemoveInfo(const RemoveInfo&);
+        RemoveInfo& operator= (const RemoveInfo&);
 
     public:
 
@@ -69,11 +69,11 @@ namespace commands{
 
         virtual RemoveInfo* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const Pointer<DataStructure>& getObjectId() const;
         virtual Pointer<DataStructure>& getObjectId();
@@ -89,7 +89,7 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

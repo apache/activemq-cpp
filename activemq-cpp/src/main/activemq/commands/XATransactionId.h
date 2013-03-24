@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -62,7 +62,7 @@ namespace commands{
 
         XATransactionId();
 
-        XATransactionId( const XATransactionId& other );
+        XATransactionId(const XATransactionId& other);
 
         XATransactionId( const cms::Xid* xid );
 
@@ -72,11 +72,11 @@ namespace commands{
 
         virtual XATransactionId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual bool isXATransactionId() const {
             return true;
@@ -86,11 +86,11 @@ namespace commands{
 
         virtual Xid* clone() const;
 
-        virtual bool equals( const Xid* other ) const;
+        virtual bool equals(const Xid* other) const;
 
-        virtual int getBranchQualifier( unsigned char* buffer, int size ) const;
+        virtual int getBranchQualifier(unsigned char* buffer, int size) const;
 
-        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const;
+        virtual int getGlobalTransactionId(unsigned char* buffer, int size) const;
 
         virtual int getFormatId() const;
         virtual void setFormatId( int formatId );
@@ -103,15 +103,17 @@ namespace commands{
         virtual std::vector<unsigned char>& getBranchQualifier();
         virtual void setBranchQualifier( const std::vector<unsigned char>& branchQualifier );
 
-        virtual int compareTo( const XATransactionId& value ) const;
+        virtual int compareTo(const XATransactionId& value) const;
 
-        virtual bool equals( const XATransactionId& value ) const;
+        virtual bool equals(const XATransactionId& value) const;
 
-        virtual bool operator==( const XATransactionId& value ) const;
+        virtual bool operator==(const XATransactionId& value) const;
 
-        virtual bool operator<( const XATransactionId& value ) const;
+        virtual bool operator<(const XATransactionId& value) const;
 
-        XATransactionId& operator= ( const XATransactionId& other );
+        XATransactionId& operator= (const XATransactionId& other);
+
+        int getHashCode() const;
 
     };
 

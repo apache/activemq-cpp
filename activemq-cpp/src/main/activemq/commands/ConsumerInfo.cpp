@@ -38,10 +38,10 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo::ConsumerInfo()
-    : BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false),
-      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(),
-      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath(), currentPrefetchSize(0) {
+ConsumerInfo::ConsumerInfo() :
+    BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false), 
+      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(), 
+      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath() {
 
 }
 
@@ -51,51 +51,51 @@ ConsumerInfo::~ConsumerInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerInfo* ConsumerInfo::cloneDataStructure() const {
-    std::auto_ptr<ConsumerInfo> consumerInfo( new ConsumerInfo() );
+    std::auto_ptr<ConsumerInfo> consumerInfo(new ConsumerInfo());
 
     // Copy the data from the base class or classes
-    consumerInfo->copyDataStructure( this );
+    consumerInfo->copyDataStructure(this);
 
     return consumerInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
+void ConsumerInfo::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const ConsumerInfo* srcPtr = dynamic_cast<const ConsumerInfo*>( src );
+    const ConsumerInfo* srcPtr = dynamic_cast<const ConsumerInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "ConsumerInfo::copyDataStructure - src is NULL or invalid" );
+            "ConsumerInfo::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setConsumerId( srcPtr->getConsumerId() );
-    this->setBrowser( srcPtr->isBrowser() );
-    this->setDestination( srcPtr->getDestination() );
-    this->setPrefetchSize( srcPtr->getPrefetchSize() );
-    this->setMaximumPendingMessageLimit( srcPtr->getMaximumPendingMessageLimit() );
-    this->setDispatchAsync( srcPtr->isDispatchAsync() );
-    this->setSelector( srcPtr->getSelector() );
-    this->setSubscriptionName( srcPtr->getSubscriptionName() );
-    this->setNoLocal( srcPtr->isNoLocal() );
-    this->setExclusive( srcPtr->isExclusive() );
-    this->setRetroactive( srcPtr->isRetroactive() );
-    this->setPriority( srcPtr->getPriority() );
-    this->setBrokerPath( srcPtr->getBrokerPath() );
-    this->setAdditionalPredicate( srcPtr->getAdditionalPredicate() );
-    this->setNetworkSubscription( srcPtr->isNetworkSubscription() );
-    this->setOptimizedAcknowledge( srcPtr->isOptimizedAcknowledge() );
-    this->setNoRangeAcks( srcPtr->isNoRangeAcks() );
-    this->setNetworkConsumerPath( srcPtr->getNetworkConsumerPath() );
+    this->setConsumerId(srcPtr->getConsumerId());
+    this->setBrowser(srcPtr->isBrowser());
+    this->setDestination(srcPtr->getDestination());
+    this->setPrefetchSize(srcPtr->getPrefetchSize());
+    this->setMaximumPendingMessageLimit(srcPtr->getMaximumPendingMessageLimit());
+    this->setDispatchAsync(srcPtr->isDispatchAsync());
+    this->setSelector(srcPtr->getSelector());
+    this->setSubscriptionName(srcPtr->getSubscriptionName());
+    this->setNoLocal(srcPtr->isNoLocal());
+    this->setExclusive(srcPtr->isExclusive());
+    this->setRetroactive(srcPtr->isRetroactive());
+    this->setPriority(srcPtr->getPriority());
+    this->setBrokerPath(srcPtr->getBrokerPath());
+    this->setAdditionalPredicate(srcPtr->getAdditionalPredicate());
+    this->setNetworkSubscription(srcPtr->isNetworkSubscription());
+    this->setOptimizedAcknowledge(srcPtr->isOptimizedAcknowledge());
+    this->setNoRangeAcks(srcPtr->isNoRangeAcks());
+    this->setNetworkConsumerPath(srcPtr->getNetworkConsumerPath());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ std::string ConsumerInfo::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "ConsumerId = ";
-    if( this->getConsumerId() != NULL ) {
+    if (this->getConsumerId() != NULL) {
         stream << this->getConsumerId()->toString();
     } else {
         stream << "NULL";
@@ -122,7 +122,7 @@ std::string ConsumerInfo::toString() const {
     stream << "Browser = " << this->isBrowser();
     stream << ", ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
@@ -147,10 +147,10 @@ std::string ConsumerInfo::toString() const {
     stream << "Priority = " << (int)this->getPriority();
     stream << ", ";
     stream << "BrokerPath = ";
-    if( this->getBrokerPath().size() > 0 ) {
+    if (this->getBrokerPath().size() > 0) {
         stream << "[";
-        for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-            if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+        for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
+            if (this->getBrokerPath()[ibrokerPath] != NULL) {
                 stream << this->getBrokerPath()[ibrokerPath]->toString() << ", ";
             } else {
                 stream << "NULL" << ", ";
@@ -162,7 +162,7 @@ std::string ConsumerInfo::toString() const {
     }
     stream << ", ";
     stream << "AdditionalPredicate = ";
-    if( this->getAdditionalPredicate() != NULL ) {
+    if (this->getAdditionalPredicate() != NULL) {
         stream << this->getAdditionalPredicate()->toString();
     } else {
         stream << "NULL";
@@ -175,10 +175,10 @@ std::string ConsumerInfo::toString() const {
     stream << "NoRangeAcks = " << this->isNoRangeAcks();
     stream << ", ";
     stream << "NetworkConsumerPath = ";
-    if( this->getNetworkConsumerPath().size() > 0 ) {
+    if (this->getNetworkConsumerPath().size() > 0) {
         stream << "[";
-        for( size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath ) {
-            if( this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+        for (size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath) {
+            if (this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL) {
                 stream << this->getNetworkConsumerPath()[inetworkConsumerPath]->toString() << ", ";
             } else {
                 stream << "NULL" << ", ";
@@ -194,97 +194,97 @@ std::string ConsumerInfo::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::equals( const DataStructure* value ) const {
+bool ConsumerInfo::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const ConsumerInfo* valuePtr = dynamic_cast<const ConsumerInfo*>( value );
+    const ConsumerInfo* valuePtr = dynamic_cast<const ConsumerInfo*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getConsumerId() != NULL ) {
-        if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
+    if (this->getConsumerId() != NULL) {
+        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
             return false;
         }
-    } else if( valuePtr->getConsumerId() != NULL ) {
+    } else if (valuePtr->getConsumerId() != NULL) {
         return false;
     }
-    if( this->isBrowser() != valuePtr->isBrowser() ) {
+    if (this->isBrowser() != valuePtr->isBrowser()) {
         return false;
     }
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getPrefetchSize() != valuePtr->getPrefetchSize() ) {
+    if (this->getPrefetchSize() != valuePtr->getPrefetchSize()) {
         return false;
     }
-    if( this->getMaximumPendingMessageLimit() != valuePtr->getMaximumPendingMessageLimit() ) {
+    if (this->getMaximumPendingMessageLimit() != valuePtr->getMaximumPendingMessageLimit()) {
         return false;
     }
-    if( this->isDispatchAsync() != valuePtr->isDispatchAsync() ) {
+    if (this->isDispatchAsync() != valuePtr->isDispatchAsync()) {
         return false;
     }
-    if( this->getSelector() != valuePtr->getSelector() ) {
+    if (this->getSelector() != valuePtr->getSelector()) {
         return false;
     }
-    if( this->getSubscriptionName() != valuePtr->getSubscriptionName() ) {
+    if (this->getSubscriptionName() != valuePtr->getSubscriptionName()) {
         return false;
     }
-    if( this->isNoLocal() != valuePtr->isNoLocal() ) {
+    if (this->isNoLocal() != valuePtr->isNoLocal()) {
         return false;
     }
-    if( this->isExclusive() != valuePtr->isExclusive() ) {
+    if (this->isExclusive() != valuePtr->isExclusive()) {
         return false;
     }
-    if( this->isRetroactive() != valuePtr->isRetroactive() ) {
+    if (this->isRetroactive() != valuePtr->isRetroactive()) {
         return false;
     }
-    if( this->getPriority() != valuePtr->getPriority() ) {
+    if (this->getPriority() != valuePtr->getPriority()) {
         return false;
     }
-    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
-        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get() ) ) {
+    for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
+        if (this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
-        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+        } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {
             return false;
         }
     }
-    if( this->getAdditionalPredicate() != NULL ) {
-        if( !this->getAdditionalPredicate()->equals( valuePtr->getAdditionalPredicate().get() ) ) {
+    if (this->getAdditionalPredicate() != NULL) {
+        if (!this->getAdditionalPredicate()->equals( valuePtr->getAdditionalPredicate().get())) {
             return false;
         }
-    } else if( valuePtr->getAdditionalPredicate() != NULL ) {
+    } else if (valuePtr->getAdditionalPredicate() != NULL) {
         return false;
     }
-    if( this->isNetworkSubscription() != valuePtr->isNetworkSubscription() ) {
+    if (this->isNetworkSubscription() != valuePtr->isNetworkSubscription()) {
         return false;
     }
-    if( this->isOptimizedAcknowledge() != valuePtr->isOptimizedAcknowledge() ) {
+    if (this->isOptimizedAcknowledge() != valuePtr->isOptimizedAcknowledge()) {
         return false;
     }
-    if( this->isNoRangeAcks() != valuePtr->isNoRangeAcks() ) {
+    if (this->isNoRangeAcks() != valuePtr->isNoRangeAcks()) {
         return false;
     }
-    for( size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath ) {
-        if( this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
-            if( !this->getNetworkConsumerPath()[inetworkConsumerPath]->equals( valuePtr->getNetworkConsumerPath()[inetworkConsumerPath].get() ) ) {
+    for (size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath) {
+        if (this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+            if (!this->getNetworkConsumerPath()[inetworkConsumerPath]->equals( valuePtr->getNetworkConsumerPath()[inetworkConsumerPath].get())) {
                 return false;
             }
-        } else if( valuePtr->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
+        } else if (valuePtr->getNetworkConsumerPath()[inetworkConsumerPath] != NULL) {
             return false;
         }
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -301,7 +301,7 @@ decaf::lang::Pointer<ConsumerId>& ConsumerInfo::getConsumerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId ) {
+void ConsumerInfo::setConsumerId(const decaf::lang::Pointer<ConsumerId>& consumerId) {
     this->consumerId = consumerId;
 }
 
@@ -311,7 +311,7 @@ bool ConsumerInfo::isBrowser() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setBrowser( bool browser ) {
+void ConsumerInfo::setBrowser(bool browser) {
     this->browser = browser;
 }
 
@@ -326,7 +326,7 @@ decaf::lang::Pointer<ActiveMQDestination>& ConsumerInfo::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void ConsumerInfo::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -336,7 +336,7 @@ int ConsumerInfo::getPrefetchSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setPrefetchSize( int prefetchSize ) {
+void ConsumerInfo::setPrefetchSize(int prefetchSize) {
     this->prefetchSize = prefetchSize;
 }
 
@@ -346,7 +346,7 @@ int ConsumerInfo::getMaximumPendingMessageLimit() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setMaximumPendingMessageLimit( int maximumPendingMessageLimit ) {
+void ConsumerInfo::setMaximumPendingMessageLimit(int maximumPendingMessageLimit) {
     this->maximumPendingMessageLimit = maximumPendingMessageLimit;
 }
 
@@ -356,7 +356,7 @@ bool ConsumerInfo::isDispatchAsync() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setDispatchAsync( bool dispatchAsync ) {
+void ConsumerInfo::setDispatchAsync(bool dispatchAsync) {
     this->dispatchAsync = dispatchAsync;
 }
 
@@ -371,7 +371,7 @@ std::string& ConsumerInfo::getSelector() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setSelector( const std::string& selector ) {
+void ConsumerInfo::setSelector(const std::string& selector) {
     this->selector = selector;
 }
 
@@ -386,7 +386,7 @@ std::string& ConsumerInfo::getSubscriptionName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setSubscriptionName( const std::string& subscriptionName ) {
+void ConsumerInfo::setSubscriptionName(const std::string& subscriptionName) {
     this->subscriptionName = subscriptionName;
 }
 
@@ -396,7 +396,7 @@ bool ConsumerInfo::isNoLocal() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setNoLocal( bool noLocal ) {
+void ConsumerInfo::setNoLocal(bool noLocal) {
     this->noLocal = noLocal;
 }
 
@@ -406,7 +406,7 @@ bool ConsumerInfo::isExclusive() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setExclusive( bool exclusive ) {
+void ConsumerInfo::setExclusive(bool exclusive) {
     this->exclusive = exclusive;
 }
 
@@ -416,7 +416,7 @@ bool ConsumerInfo::isRetroactive() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setRetroactive( bool retroactive ) {
+void ConsumerInfo::setRetroactive(bool retroactive) {
     this->retroactive = retroactive;
 }
 
@@ -426,7 +426,7 @@ unsigned char ConsumerInfo::getPriority() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setPriority( unsigned char priority ) {
+void ConsumerInfo::setPriority(unsigned char priority) {
     this->priority = priority;
 }
 
@@ -441,7 +441,7 @@ std::vector< decaf::lang::Pointer<BrokerId> >& ConsumerInfo::getBrokerPath() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath ) {
+void ConsumerInfo::setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath) {
     this->brokerPath = brokerPath;
 }
 
@@ -456,7 +456,7 @@ decaf::lang::Pointer<BooleanExpression>& ConsumerInfo::getAdditionalPredicate() 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setAdditionalPredicate( const decaf::lang::Pointer<BooleanExpression>& additionalPredicate ) {
+void ConsumerInfo::setAdditionalPredicate(const decaf::lang::Pointer<BooleanExpression>& additionalPredicate) {
     this->additionalPredicate = additionalPredicate;
 }
 
@@ -466,7 +466,7 @@ bool ConsumerInfo::isNetworkSubscription() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setNetworkSubscription( bool networkSubscription ) {
+void ConsumerInfo::setNetworkSubscription(bool networkSubscription) {
     this->networkSubscription = networkSubscription;
 }
 
@@ -476,7 +476,7 @@ bool ConsumerInfo::isOptimizedAcknowledge() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setOptimizedAcknowledge( bool optimizedAcknowledge ) {
+void ConsumerInfo::setOptimizedAcknowledge(bool optimizedAcknowledge) {
     this->optimizedAcknowledge = optimizedAcknowledge;
 }
 
@@ -486,7 +486,7 @@ bool ConsumerInfo::isNoRangeAcks() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setNoRangeAcks( bool noRangeAcks ) {
+void ConsumerInfo::setNoRangeAcks(bool noRangeAcks) {
     this->noRangeAcks = noRangeAcks;
 }
 
@@ -501,20 +501,19 @@ std::vector< decaf::lang::Pointer<ConsumerId> >& ConsumerInfo::getNetworkConsume
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setNetworkConsumerPath( const std::vector< decaf::lang::Pointer<ConsumerId> >& networkConsumerPath ) {
+void ConsumerInfo::setNetworkConsumerPath(const std::vector< decaf::lang::Pointer<ConsumerId> >& networkConsumerPath) {
     this->networkConsumerPath = networkConsumerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processConsumerInfo( this );
+decaf::lang::Pointer<commands::Command> ConsumerInfo::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processConsumerInfo(this);
 }
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<RemoveInfo> ConsumerInfo::createRemoveCommand() const {
-    Pointer<RemoveInfo> info( new RemoveInfo() );
-    info->setResponseRequired( this->isResponseRequired() );
-    info->setObjectId( this->getConsumerId() );
+    Pointer<RemoveInfo> info(new RemoveInfo());
+    info->setResponseRequired(this->isResponseRequired());
+    info->setObjectId(this->getConsumerId());
     return info;
 }
 

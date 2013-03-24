@@ -18,9 +18,10 @@
 #include <activemq/commands/XATransactionId.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
-#include <apr_strings.h>
 #include <cms/XAException.h>
+#include <decaf/internal/util/StringUtils.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/util/HashCode.h>
 
 using namespace std;
 using namespace activemq;
@@ -28,6 +29,7 @@ using namespace activemq::exceptions;
 using namespace activemq::commands;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+using namespace decaf::internal::util;
 
 /*
  *
@@ -40,44 +42,44 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId() 
-    : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
+XATransactionId::XATransactionId() :
+    TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId( const XATransactionId& other )
-    : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
+XATransactionId::XATransactionId(const XATransactionId& other) :
+    TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
 
-    this->copyDataStructure( &other );
+    this->copyDataStructure(&other);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId::XATransactionId( const cms::Xid* xid )
-    : TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
+XATransactionId::XATransactionId(const cms::Xid* xid) :
+    TransactionId(), cms::Xid(), formatId(0), globalTransactionId(), branchQualifier() {
 
-    if( xid == NULL ) {
+    if (xid == NULL) {
         return;
     }
 
     this->formatId = xid->getFormatId();
-    this->branchQualifier.resize( cms::Xid::MAXBQUALSIZE );
-    this->globalTransactionId.resize( cms::Xid::MAXGTRIDSIZE );
+    this->branchQualifier.resize(cms::Xid::MAXBQUALSIZE);
+    this->globalTransactionId.resize(cms::Xid::MAXGTRIDSIZE);
 
-    int result = xid->getBranchQualifier( &this->branchQualifier[0], cms::Xid::MAXBQUALSIZE );
+    int result = xid->getBranchQualifier(&this->branchQualifier[0], cms::Xid::MAXBQUALSIZE);
 
-    if( result == -1 ) {
-        throw cms::XAException("Invalid Xid Branch Qualifier is larger than MAXBQUALSIZE" );
+    if (result == -1) {
+        throw cms::XAException("Invalid Xid Branch Qualifier is larger than MAXBQUALSIZE");
     } else {
         this->branchQualifier.resize( result );
     }
 
-    result = xid->getGlobalTransactionId( &this->globalTransactionId[0], cms::Xid::MAXGTRIDSIZE );
+    result = xid->getGlobalTransactionId(&this->globalTransactionId[0], cms::Xid::MAXGTRIDSIZE);
 
-    if( result == -1 ) {
-        throw cms::XAException("Invalid Xid Global Transaction Id is larger than MAXGTRIDSIZE" );
+    if (result == -1) {
+        throw cms::XAException("Invalid Xid Global Transaction Id is larger than MAXGTRIDSIZE");
     } else {
-        this->globalTransactionId.resize( result );
+        this->globalTransactionId.resize(result);
     }
 }
 
@@ -87,36 +89,36 @@ XATransactionId::~XATransactionId() {
 
 ////////////////////////////////////////////////////////////////////////////////
 XATransactionId* XATransactionId::cloneDataStructure() const {
-    std::auto_ptr<XATransactionId> xATransactionId( new XATransactionId() );
+    std::auto_ptr<XATransactionId> xATransactionId(new XATransactionId());
 
     // Copy the data from the base class or classes
-    xATransactionId->copyDataStructure( this );
+    xATransactionId->copyDataStructure(this);
 
     return xATransactionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::copyDataStructure( const DataStructure* src ) {
+void XATransactionId::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const XATransactionId* srcPtr = dynamic_cast<const XATransactionId*>( src );
+    const XATransactionId* srcPtr = dynamic_cast<const XATransactionId*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "XATransactionId::copyDataStructure - src is NULL or invalid" );
+            "XATransactionId::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    TransactionId::copyDataStructure( src );
+    TransactionId::copyDataStructure(src);
 
-    this->setFormatId( srcPtr->getFormatId() );
-    this->setGlobalTransactionId( srcPtr->getGlobalTransactionId() );
-    this->setBranchQualifier( srcPtr->getBranchQualifier() );
+    this->setFormatId(srcPtr->getFormatId());
+    this->setGlobalTransactionId(srcPtr->getGlobalTransactionId());
+    this->setBranchQualifier(srcPtr->getBranchQualifier());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,9 +135,9 @@ std::string XATransactionId::toString() const {
     stream << "FormatId = " << this->getFormatId();
     stream << ", ";
     stream << "GlobalTransactionId = ";
-    if( this->getGlobalTransactionId().size() > 0 ) {
+    if (this->getGlobalTransactionId().size() > 0) {
         stream << "[";
-        for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
+        for (size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId) {
             stream << this->getGlobalTransactionId()[iglobalTransactionId] << ",";
         }
         stream << "]";
@@ -144,9 +146,9 @@ std::string XATransactionId::toString() const {
     }
     stream << ", ";
     stream << "BranchQualifier = ";
-    if( this->getBranchQualifier().size() > 0 ) {
+    if (this->getBranchQualifier().size() > 0) {
         stream << "[";
-        for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
+        for (size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier) {
             stream << this->getBranchQualifier()[ibranchQualifier] << ",";
         }
         stream << "]";
@@ -159,32 +161,32 @@ std::string XATransactionId::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool XATransactionId::equals( const DataStructure* value ) const {
+bool XATransactionId::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const XATransactionId* valuePtr = dynamic_cast<const XATransactionId*>( value );
+    const XATransactionId* valuePtr = dynamic_cast<const XATransactionId*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getFormatId() != valuePtr->getFormatId() ) {
+    if (this->getFormatId() != valuePtr->getFormatId()) {
         return false;
     }
-    for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
-        if( this->getGlobalTransactionId()[iglobalTransactionId] != valuePtr->getGlobalTransactionId()[iglobalTransactionId] ) {
+    for (size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId) {
+        if (this->getGlobalTransactionId()[iglobalTransactionId] != valuePtr->getGlobalTransactionId()[iglobalTransactionId]) {
             return false;
         }
     }
-    for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
-        if( this->getBranchQualifier()[ibranchQualifier] != valuePtr->getBranchQualifier()[ibranchQualifier] ) {
+    for (size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier) {
+        if (this->getBranchQualifier()[ibranchQualifier] != valuePtr->getBranchQualifier()[ibranchQualifier]) {
             return false;
         }
     }
-    if( !TransactionId::equals( value ) ) {
+    if (!TransactionId::equals(value)) {
         return false;
     }
     return true;
@@ -196,7 +198,7 @@ int XATransactionId::getFormatId() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::setFormatId( int formatId ) {
+void XATransactionId::setFormatId(int formatId) {
     this->formatId = formatId;
 }
 
@@ -211,7 +213,7 @@ std::vector<unsigned char>& XATransactionId::getGlobalTransactionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::setGlobalTransactionId( const std::vector<unsigned char>& globalTransactionId ) {
+void XATransactionId::setGlobalTransactionId(const std::vector<unsigned char>& globalTransactionId) {
     this->globalTransactionId = globalTransactionId;
 }
 
@@ -226,32 +228,32 @@ std::vector<unsigned char>& XATransactionId::getBranchQualifier() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::setBranchQualifier( const std::vector<unsigned char>& branchQualifier ) {
+void XATransactionId::setBranchQualifier(const std::vector<unsigned char>& branchQualifier) {
     this->branchQualifier = branchQualifier;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int XATransactionId::compareTo( const XATransactionId& value ) const {
+int XATransactionId::compareTo(const XATransactionId& value) const {
 
-    if( this == &value ) {
+    if (this == &value) {
         return 0;
     }
 
-    if( this->formatId > value.formatId ) {
+    if (this->formatId > value.formatId) {
         return 1;
-    } else if( this->formatId < value.formatId ) {
+    } else if(this->formatId < value.formatId) {
         return -1;
     }
 
-    if( this->globalTransactionId > value.globalTransactionId ) {
+    if (this->globalTransactionId > value.globalTransactionId) {
         return 1;
-    } else if( this->globalTransactionId < value.globalTransactionId ) {
+    } else if(this->globalTransactionId < value.globalTransactionId) {
         return -1;
     }
 
-    if( this->branchQualifier > value.branchQualifier ) {
+    if (this->branchQualifier > value.branchQualifier) {
         return 1;
-    } else if( this->branchQualifier < value.branchQualifier ) {
+    } else if(this->branchQualifier < value.branchQualifier) {
         return -1;
     }
 
@@ -259,24 +261,29 @@ int XATransactionId::compareTo( const XATransactionId& value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool XATransactionId::equals( const XATransactionId& value ) const {
-    return this->equals( (const DataStructure*)&value );
+bool XATransactionId::equals(const XATransactionId& value) const {
+    return this->equals((const DataStructure*)&value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool XATransactionId::operator==( const XATransactionId& value ) const {
-    return this->compareTo( value ) == 0;
+bool XATransactionId::operator==(const XATransactionId& value) const {
+    return this->compareTo(value) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool XATransactionId::operator<( const XATransactionId& value ) const {
-    return this->compareTo( value ) < 0;
+bool XATransactionId::operator<(const XATransactionId& value) const {
+    return this->compareTo(value) < 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId& XATransactionId::operator= ( const XATransactionId& other ) {
-    this->copyDataStructure( &other );
+XATransactionId& XATransactionId::operator= (const XATransactionId& other) {
+    this->copyDataStructure(&other);
     return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int XATransactionId::getHashCode() const {
+    return decaf::util::HashCode<std::string>()(this->toString());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,33 +299,33 @@ cms::Xid* XATransactionId::clone() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool XATransactionId::equals( const cms::Xid* other ) const {
+bool XATransactionId::equals(const cms::Xid* other) const {
 
-    if( (void*)this == other ) {
+    if ((void*)this == other) {
         return true;
     }
 
-    if( other == NULL ) {
+    if (other == NULL) {
         return false;
     }
 
-    if( this->formatId != other->getFormatId() ) {
+    if (this->formatId != other->getFormatId()) {
         return false;
     }
 
-    std::vector<unsigned char> otherBQual( Xid::MAXBQUALSIZE );
+    std::vector<unsigned char> otherBQual(Xid::MAXBQUALSIZE);
 
-    other->getBranchQualifier( &otherBQual[0], Xid::MAXBQUALSIZE );
+    other->getBranchQualifier(&otherBQual[0], Xid::MAXBQUALSIZE);
 
-    if( this->branchQualifier != otherBQual ) {
+    if (this->branchQualifier != otherBQual) {
         return false;
     }
 
-    std::vector<unsigned char> otherGTXID( Xid::MAXBQUALSIZE );
+    std::vector<unsigned char> otherGTXID( Xid::MAXBQUALSIZE);
 
-    other->getGlobalTransactionId( &otherGTXID[0], Xid::MAXGTRIDSIZE );
+    other->getGlobalTransactionId( &otherGTXID[0], Xid::MAXGTRIDSIZE);
 
-    if( this->globalTransactionId != otherGTXID ) {
+    if (this->globalTransactionId != otherGTXID) {
         return false;
     }
 

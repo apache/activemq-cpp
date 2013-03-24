@@ -51,93 +51,93 @@ unsigned char JournalTransactionMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void JournalTransactionMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseDataStreamMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         JournalTransaction* info =
-            dynamic_cast<JournalTransaction*>( dataStructure );
-        info->setTransactionId( Pointer<TransactionId>( dynamic_cast< TransactionId* >(
-            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
-        info->setType( dataIn->readByte() );
-        info->setWasPrepared( bs->readBoolean() );
+            dynamic_cast<JournalTransaction*>(dataStructure);
+        info->setTransactionId(Pointer<TransactionId>(dynamic_cast<TransactionId* >(
+            tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
+        info->setType(dataIn->readByte());
+        info->setWasPrepared(bs->readBoolean());
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int JournalTransactionMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int JournalTransactionMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         JournalTransaction* info =
-            dynamic_cast<JournalTransaction*>( dataStructure );
+            dynamic_cast<JournalTransaction*>(dataStructure);
 
-        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalNestedObject1( wireFormat, info->getTransactionId().get(), bs );
-        bs->writeBoolean( info->getWasPrepared() );
+        int rc = BaseDataStreamMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        rc += tightMarshalNestedObject1(wireFormat, info->getTransactionId().get(), bs);
+        bs->writeBoolean(info->getWasPrepared());
 
         return rc + 1;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void JournalTransactionMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         JournalTransaction* info =
-            dynamic_cast<JournalTransaction*>( dataStructure );
-        tightMarshalNestedObject2( wireFormat, info->getTransactionId().get(), dataOut, bs );
-        dataOut->write( info->getType() );
+            dynamic_cast<JournalTransaction*>(dataStructure);
+        tightMarshalNestedObject2(wireFormat, info->getTransactionId().get(), dataOut, bs);
+        dataOut->write(info->getType());
         bs->readBoolean();
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void JournalTransactionMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseDataStreamMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         JournalTransaction* info =
-            dynamic_cast<JournalTransaction*>( dataStructure );
-        info->setTransactionId( Pointer<TransactionId>( dynamic_cast< TransactionId* >( 
-            looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
-        info->setType( dataIn->readByte() );
-        info->setWasPrepared( dataIn->readBoolean() );
+            dynamic_cast<JournalTransaction*>(dataStructure);
+        info->setTransactionId(Pointer<TransactionId>(dynamic_cast<TransactionId*>(
+            looseUnmarshalNestedObject(wireFormat, dataIn))));
+        info->setType(dataIn->readByte());
+        info->setWasPrepared(dataIn->readBoolean());
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void JournalTransactionMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         JournalTransaction* info =
-            dynamic_cast<JournalTransaction*>( dataStructure );
-        BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        looseMarshalNestedObject( wireFormat, info->getTransactionId().get(), dataOut );
-        dataOut->write( info->getType() );
-        dataOut->writeBoolean( info->getWasPrepared() );
+            dynamic_cast<JournalTransaction*>(dataStructure);
+        BaseDataStreamMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        looseMarshalNestedObject(wireFormat, info->getTransactionId().get(), dataOut);
+        dataOut->write(info->getType());
+        dataOut->writeBoolean(info->getWasPrepared());
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

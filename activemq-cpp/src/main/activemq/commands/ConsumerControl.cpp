@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerControl::ConsumerControl() 
-    : BaseCommand(), destination(NULL), close(false), consumerId(NULL), prefetch(0), flush(false), start(false), stop(false) {
+ConsumerControl::ConsumerControl() :
+    BaseCommand(), destination(NULL), close(false), consumerId(NULL), prefetch(0), flush(false), start(false), stop(false) {
 
 }
 
@@ -49,40 +49,40 @@ ConsumerControl::~ConsumerControl() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerControl* ConsumerControl::cloneDataStructure() const {
-    std::auto_ptr<ConsumerControl> consumerControl( new ConsumerControl() );
+    std::auto_ptr<ConsumerControl> consumerControl(new ConsumerControl());
 
     // Copy the data from the base class or classes
-    consumerControl->copyDataStructure( this );
+    consumerControl->copyDataStructure(this);
 
     return consumerControl.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::copyDataStructure( const DataStructure* src ) {
+void ConsumerControl::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const ConsumerControl* srcPtr = dynamic_cast<const ConsumerControl*>( src );
+    const ConsumerControl* srcPtr = dynamic_cast<const ConsumerControl*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "ConsumerControl::copyDataStructure - src is NULL or invalid" );
+            "ConsumerControl::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setDestination( srcPtr->getDestination() );
-    this->setClose( srcPtr->isClose() );
-    this->setConsumerId( srcPtr->getConsumerId() );
-    this->setPrefetch( srcPtr->getPrefetch() );
-    this->setFlush( srcPtr->isFlush() );
-    this->setStart( srcPtr->isStart() );
-    this->setStop( srcPtr->isStop() );
+    this->setDestination(srcPtr->getDestination());
+    this->setClose(srcPtr->isClose());
+    this->setConsumerId(srcPtr->getConsumerId());
+    this->setPrefetch(srcPtr->getPrefetch());
+    this->setFlush(srcPtr->isFlush());
+    this->setStart(srcPtr->isStart());
+    this->setStop(srcPtr->isStop());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ std::string ConsumerControl::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
@@ -109,7 +109,7 @@ std::string ConsumerControl::toString() const {
     stream << "Close = " << this->isClose();
     stream << ", ";
     stream << "ConsumerId = ";
-    if( this->getConsumerId() != NULL ) {
+    if (this->getConsumerId() != NULL) {
         stream << this->getConsumerId()->toString();
     } else {
         stream << "NULL";
@@ -128,48 +128,48 @@ std::string ConsumerControl::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerControl::equals( const DataStructure* value ) const {
+bool ConsumerControl::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const ConsumerControl* valuePtr = dynamic_cast<const ConsumerControl*>( value );
+    const ConsumerControl* valuePtr = dynamic_cast<const ConsumerControl*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->isClose() != valuePtr->isClose() ) {
+    if (this->isClose() != valuePtr->isClose()) {
         return false;
     }
-    if( this->getConsumerId() != NULL ) {
-        if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
+    if (this->getConsumerId() != NULL) {
+        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
             return false;
         }
-    } else if( valuePtr->getConsumerId() != NULL ) {
+    } else if (valuePtr->getConsumerId() != NULL) {
         return false;
     }
-    if( this->getPrefetch() != valuePtr->getPrefetch() ) {
+    if (this->getPrefetch() != valuePtr->getPrefetch()) {
         return false;
     }
-    if( this->isFlush() != valuePtr->isFlush() ) {
+    if (this->isFlush() != valuePtr->isFlush()) {
         return false;
     }
-    if( this->isStart() != valuePtr->isStart() ) {
+    if (this->isStart() != valuePtr->isStart()) {
         return false;
     }
-    if( this->isStop() != valuePtr->isStop() ) {
+    if (this->isStop() != valuePtr->isStop()) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -186,7 +186,7 @@ decaf::lang::Pointer<ActiveMQDestination>& ConsumerControl::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void ConsumerControl::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -196,7 +196,7 @@ bool ConsumerControl::isClose() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setClose( bool close ) {
+void ConsumerControl::setClose(bool close) {
     this->close = close;
 }
 
@@ -211,7 +211,7 @@ decaf::lang::Pointer<ConsumerId>& ConsumerControl::getConsumerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId ) {
+void ConsumerControl::setConsumerId(const decaf::lang::Pointer<ConsumerId>& consumerId) {
     this->consumerId = consumerId;
 }
 
@@ -221,7 +221,7 @@ int ConsumerControl::getPrefetch() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setPrefetch( int prefetch ) {
+void ConsumerControl::setPrefetch(int prefetch) {
     this->prefetch = prefetch;
 }
 
@@ -231,7 +231,7 @@ bool ConsumerControl::isFlush() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setFlush( bool flush ) {
+void ConsumerControl::setFlush(bool flush) {
     this->flush = flush;
 }
 
@@ -241,7 +241,7 @@ bool ConsumerControl::isStart() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setStart( bool start ) {
+void ConsumerControl::setStart(bool start) {
     this->start = start;
 }
 
@@ -251,12 +251,11 @@ bool ConsumerControl::isStop() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setStop( bool stop ) {
+void ConsumerControl::setStop(bool stop) {
     this->stop = stop;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processConsumerControl( this );
+decaf::lang::Pointer<commands::Command> ConsumerControl::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processConsumerControl(this);
 }

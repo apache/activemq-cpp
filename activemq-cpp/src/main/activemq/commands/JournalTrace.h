@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -54,8 +54,8 @@ namespace commands{
 
     private:
 
-        JournalTrace( const JournalTrace& );
-        JournalTrace& operator= ( const JournalTrace& );
+        JournalTrace(const JournalTrace&);
+        JournalTrace& operator= (const JournalTrace&);
 
     public:
 
@@ -67,11 +67,11 @@ namespace commands{
 
         virtual JournalTrace* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const std::string& getMessage() const;
         virtual std::string& getMessage();

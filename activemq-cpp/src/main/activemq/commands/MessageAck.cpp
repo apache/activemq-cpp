@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageAck::MessageAck() 
-    : BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
+MessageAck::MessageAck() :
+    BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
       messageCount(0), poisonCause(NULL) {
 
 }
@@ -50,41 +50,41 @@ MessageAck::~MessageAck() {
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageAck* MessageAck::cloneDataStructure() const {
-    std::auto_ptr<MessageAck> messageAck( new MessageAck() );
+    std::auto_ptr<MessageAck> messageAck(new MessageAck());
 
     // Copy the data from the base class or classes
-    messageAck->copyDataStructure( this );
+    messageAck->copyDataStructure(this);
 
     return messageAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::copyDataStructure( const DataStructure* src ) {
+void MessageAck::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const MessageAck* srcPtr = dynamic_cast<const MessageAck*>( src );
+    const MessageAck* srcPtr = dynamic_cast<const MessageAck*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "MessageAck::copyDataStructure - src is NULL or invalid" );
+            "MessageAck::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setDestination( srcPtr->getDestination() );
-    this->setTransactionId( srcPtr->getTransactionId() );
-    this->setConsumerId( srcPtr->getConsumerId() );
-    this->setAckType( srcPtr->getAckType() );
-    this->setFirstMessageId( srcPtr->getFirstMessageId() );
-    this->setLastMessageId( srcPtr->getLastMessageId() );
-    this->setMessageCount( srcPtr->getMessageCount() );
-    this->setPoisonCause( srcPtr->getPoisonCause() );
+    this->setDestination(srcPtr->getDestination());
+    this->setTransactionId(srcPtr->getTransactionId());
+    this->setConsumerId(srcPtr->getConsumerId());
+    this->setAckType(srcPtr->getAckType());
+    this->setFirstMessageId(srcPtr->getFirstMessageId());
+    this->setLastMessageId(srcPtr->getLastMessageId());
+    this->setMessageCount(srcPtr->getMessageCount());
+    this->setPoisonCause(srcPtr->getPoisonCause());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,21 +102,21 @@ std::string MessageAck::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "TransactionId = ";
-    if( this->getTransactionId() != NULL ) {
+    if (this->getTransactionId() != NULL) {
         stream << this->getTransactionId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "ConsumerId = ";
-    if( this->getConsumerId() != NULL ) {
+    if (this->getConsumerId() != NULL) {
         stream << this->getConsumerId()->toString();
     } else {
         stream << "NULL";
@@ -125,14 +125,14 @@ std::string MessageAck::toString() const {
     stream << "AckType = " << (int)this->getAckType();
     stream << ", ";
     stream << "FirstMessageId = ";
-    if( this->getFirstMessageId() != NULL ) {
+    if (this->getFirstMessageId() != NULL) {
         stream << this->getFirstMessageId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "LastMessageId = ";
-    if( this->getLastMessageId() != NULL ) {
+    if (this->getLastMessageId() != NULL) {
         stream << this->getLastMessageId()->toString();
     } else {
         stream << "NULL";
@@ -141,7 +141,7 @@ std::string MessageAck::toString() const {
     stream << "MessageCount = " << this->getMessageCount();
     stream << ", ";
     stream << "PoisonCause = ";
-    if( this->getPoisonCause() != NULL ) {
+    if (this->getPoisonCause() != NULL) {
         stream << this->getPoisonCause()->toString();
     } else {
         stream << "NULL";
@@ -152,67 +152,67 @@ std::string MessageAck::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool MessageAck::equals( const DataStructure* value ) const {
+bool MessageAck::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const MessageAck* valuePtr = dynamic_cast<const MessageAck*>( value );
+    const MessageAck* valuePtr = dynamic_cast<const MessageAck*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
+    if (this->getTransactionId() != NULL) {
+        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
             return false;
         }
-    } else if( valuePtr->getTransactionId() != NULL ) {
+    } else if (valuePtr->getTransactionId() != NULL) {
         return false;
     }
-    if( this->getConsumerId() != NULL ) {
-        if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
+    if (this->getConsumerId() != NULL) {
+        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
             return false;
         }
-    } else if( valuePtr->getConsumerId() != NULL ) {
+    } else if (valuePtr->getConsumerId() != NULL) {
         return false;
     }
-    if( this->getAckType() != valuePtr->getAckType() ) {
+    if (this->getAckType() != valuePtr->getAckType()) {
         return false;
     }
-    if( this->getFirstMessageId() != NULL ) {
-        if( !this->getFirstMessageId()->equals( valuePtr->getFirstMessageId().get() ) ) {
+    if (this->getFirstMessageId() != NULL) {
+        if (!this->getFirstMessageId()->equals( valuePtr->getFirstMessageId().get())) {
             return false;
         }
-    } else if( valuePtr->getFirstMessageId() != NULL ) {
+    } else if (valuePtr->getFirstMessageId() != NULL) {
         return false;
     }
-    if( this->getLastMessageId() != NULL ) {
-        if( !this->getLastMessageId()->equals( valuePtr->getLastMessageId().get() ) ) {
+    if (this->getLastMessageId() != NULL) {
+        if (!this->getLastMessageId()->equals( valuePtr->getLastMessageId().get())) {
             return false;
         }
-    } else if( valuePtr->getLastMessageId() != NULL ) {
+    } else if (valuePtr->getLastMessageId() != NULL) {
         return false;
     }
-    if( this->getMessageCount() != valuePtr->getMessageCount() ) {
+    if (this->getMessageCount() != valuePtr->getMessageCount()) {
         return false;
     }
-    if( this->getPoisonCause() != NULL ) {
-        if( !this->getPoisonCause()->equals( valuePtr->getPoisonCause().get() ) ) {
+    if (this->getPoisonCause() != NULL) {
+        if (!this->getPoisonCause()->equals( valuePtr->getPoisonCause().get())) {
             return false;
         }
-    } else if( valuePtr->getPoisonCause() != NULL ) {
+    } else if (valuePtr->getPoisonCause() != NULL) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -229,7 +229,7 @@ decaf::lang::Pointer<ActiveMQDestination>& MessageAck::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void MessageAck::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -244,7 +244,7 @@ decaf::lang::Pointer<TransactionId>& MessageAck::getTransactionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
+void MessageAck::setTransactionId(const decaf::lang::Pointer<TransactionId>& transactionId) {
     this->transactionId = transactionId;
 }
 
@@ -259,7 +259,7 @@ decaf::lang::Pointer<ConsumerId>& MessageAck::getConsumerId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId ) {
+void MessageAck::setConsumerId(const decaf::lang::Pointer<ConsumerId>& consumerId) {
     this->consumerId = consumerId;
 }
 
@@ -269,7 +269,7 @@ unsigned char MessageAck::getAckType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setAckType( unsigned char ackType ) {
+void MessageAck::setAckType(unsigned char ackType) {
     this->ackType = ackType;
 }
 
@@ -284,7 +284,7 @@ decaf::lang::Pointer<MessageId>& MessageAck::getFirstMessageId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setFirstMessageId( const decaf::lang::Pointer<MessageId>& firstMessageId ) {
+void MessageAck::setFirstMessageId(const decaf::lang::Pointer<MessageId>& firstMessageId) {
     this->firstMessageId = firstMessageId;
 }
 
@@ -299,7 +299,7 @@ decaf::lang::Pointer<MessageId>& MessageAck::getLastMessageId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setLastMessageId( const decaf::lang::Pointer<MessageId>& lastMessageId ) {
+void MessageAck::setLastMessageId(const decaf::lang::Pointer<MessageId>& lastMessageId) {
     this->lastMessageId = lastMessageId;
 }
 
@@ -309,7 +309,7 @@ int MessageAck::getMessageCount() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setMessageCount( int messageCount ) {
+void MessageAck::setMessageCount(int messageCount) {
     this->messageCount = messageCount;
 }
 
@@ -324,12 +324,11 @@ decaf::lang::Pointer<BrokerError>& MessageAck::getPoisonCause() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setPoisonCause( const decaf::lang::Pointer<BrokerError>& poisonCause ) {
+void MessageAck::setPoisonCause(const decaf::lang::Pointer<BrokerError>& poisonCause) {
     this->poisonCause = poisonCause;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processMessageAck( this );
+decaf::lang::Pointer<commands::Command> MessageAck::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processMessageAck(this);
 }

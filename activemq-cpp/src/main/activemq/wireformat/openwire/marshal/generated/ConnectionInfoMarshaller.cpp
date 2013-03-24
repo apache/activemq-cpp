@@ -51,209 +51,209 @@ unsigned char ConnectionInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ConnectionInfoMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseCommandMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         ConnectionInfo* info =
-            dynamic_cast<ConnectionInfo*>( dataStructure );
+            dynamic_cast<ConnectionInfo*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        info->setConnectionId( Pointer<ConnectionId>( dynamic_cast< ConnectionId* >(
-            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
-        info->setClientId( tightUnmarshalString( dataIn, bs ) );
-        info->setPassword( tightUnmarshalString( dataIn, bs ) );
-        info->setUserName( tightUnmarshalString( dataIn, bs ) );
+        info->setConnectionId(Pointer<ConnectionId>(dynamic_cast<ConnectionId* >(
+            tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
+        info->setClientId(tightUnmarshalString(dataIn, bs));
+        info->setPassword(tightUnmarshalString(dataIn, bs));
+        info->setUserName(tightUnmarshalString(dataIn, bs));
 
-        if( bs->readBoolean() ) {
+        if (bs->readBoolean()) {
             short size = dataIn->readShort();
-            info->getBrokerPath().reserve( size );
-            for( int i = 0; i < size; i++ ) {
-                info->getBrokerPath().push_back( Pointer<BrokerId>( dynamic_cast< BrokerId* >(
-                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
+            info->getBrokerPath().reserve(size);
+            for (int i = 0; i < size; i++) {
+                info->getBrokerPath().push_back(Pointer<BrokerId>(dynamic_cast<BrokerId*>(
+                    tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
             }
         } else {
             info->getBrokerPath().clear();
         }
-        info->setBrokerMasterConnector( bs->readBoolean() );
-        info->setManageable( bs->readBoolean() );
-        if( wireVersion >= 2 ) {
-            info->setClientMaster( bs->readBoolean() );
+        info->setBrokerMasterConnector(bs->readBoolean());
+        info->setManageable(bs->readBoolean());
+        if (wireVersion >= 2) {
+            info->setClientMaster(bs->readBoolean());
         }
-        if( wireVersion >= 6 ) {
-            info->setFaultTolerant( bs->readBoolean() );
+        if (wireVersion >= 6) {
+            info->setFaultTolerant(bs->readBoolean());
         }
-        if( wireVersion >= 6 ) {
-            info->setFailoverReconnect( bs->readBoolean() );
+        if (wireVersion >= 6) {
+            info->setFailoverReconnect(bs->readBoolean());
         }
-        if( wireVersion >= 8 ) {
-            info->setClientIp( tightUnmarshalString( dataIn, bs ) );
+        if (wireVersion >= 8) {
+            info->setClientIp(tightUnmarshalString(dataIn, bs));
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int ConnectionInfoMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         ConnectionInfo* info =
-            dynamic_cast<ConnectionInfo*>( dataStructure );
+            dynamic_cast<ConnectionInfo*>(dataStructure);
 
-        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = BaseCommandMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
 
         int wireVersion = wireFormat->getVersion();
 
-        rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId().get(), bs );
-        rc += tightMarshalString1( info->getClientId(), bs );
-        rc += tightMarshalString1( info->getPassword(), bs );
-        rc += tightMarshalString1( info->getUserName(), bs );
-        rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
-        bs->writeBoolean( info->isBrokerMasterConnector() );
-        bs->writeBoolean( info->isManageable() );
-        if( wireVersion >= 2 ) {
-            bs->writeBoolean( info->isClientMaster() );
+        rc += tightMarshalCachedObject1(wireFormat, info->getConnectionId().get(), bs);
+        rc += tightMarshalString1(info->getClientId(), bs);
+        rc += tightMarshalString1(info->getPassword(), bs);
+        rc += tightMarshalString1(info->getUserName(), bs);
+        rc += tightMarshalObjectArray1(wireFormat, info->getBrokerPath(), bs);
+        bs->writeBoolean(info->isBrokerMasterConnector());
+        bs->writeBoolean(info->isManageable());
+        if (wireVersion >= 2) {
+            bs->writeBoolean(info->isClientMaster());
         }
-        if( wireVersion >= 6 ) {
-            bs->writeBoolean( info->isFaultTolerant() );
+        if (wireVersion >= 6) {
+            bs->writeBoolean(info->isFaultTolerant());
         }
-        if( wireVersion >= 6 ) {
-            bs->writeBoolean( info->isFailoverReconnect() );
+        if (wireVersion >= 6) {
+            bs->writeBoolean(info->isFailoverReconnect());
         }
-        if( wireVersion >= 8 ) {
-            rc += tightMarshalString1( info->getClientIp(), bs );
+        if (wireVersion >= 8) {
+            rc += tightMarshalString1(info->getClientIp(), bs);
         }
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void ConnectionInfoMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         ConnectionInfo* info =
-            dynamic_cast<ConnectionInfo*>( dataStructure );
+            dynamic_cast<ConnectionInfo*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        tightMarshalCachedObject2( wireFormat, info->getConnectionId().get(), dataOut, bs );
-        tightMarshalString2( info->getClientId(), dataOut, bs );
-        tightMarshalString2( info->getPassword(), dataOut, bs );
-        tightMarshalString2( info->getUserName(), dataOut, bs );
-        tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
+        tightMarshalCachedObject2(wireFormat, info->getConnectionId().get(), dataOut, bs);
+        tightMarshalString2(info->getClientId(), dataOut, bs);
+        tightMarshalString2(info->getPassword(), dataOut, bs);
+        tightMarshalString2(info->getUserName(), dataOut, bs);
+        tightMarshalObjectArray2(wireFormat, info->getBrokerPath(), dataOut, bs);
         bs->readBoolean();
         bs->readBoolean();
-        if( wireVersion >= 2 ) {
+        if (wireVersion >= 2) {
             bs->readBoolean();
         }
-        if( wireVersion >= 6 ) {
+        if (wireVersion >= 6) {
             bs->readBoolean();
         }
-        if( wireVersion >= 6 ) {
+        if (wireVersion >= 6) {
             bs->readBoolean();
         }
-        if( wireVersion >= 8 ) {
-            tightMarshalString2( info->getClientIp(), dataOut, bs );
+        if (wireVersion >= 8) {
+            tightMarshalString2(info->getClientIp(), dataOut, bs);
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void ConnectionInfoMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseCommandMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         ConnectionInfo* info =
-            dynamic_cast<ConnectionInfo*>( dataStructure );
+            dynamic_cast<ConnectionInfo*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        info->setConnectionId( Pointer<ConnectionId>( dynamic_cast< ConnectionId* >( 
-            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
-        info->setClientId( looseUnmarshalString( dataIn ) );
-        info->setPassword( looseUnmarshalString( dataIn ) );
-        info->setUserName( looseUnmarshalString( dataIn ) );
+        info->setConnectionId(Pointer<ConnectionId>(dynamic_cast<ConnectionId*>(
+            looseUnmarshalCachedObject(wireFormat, dataIn))));
+        info->setClientId(looseUnmarshalString(dataIn));
+        info->setPassword(looseUnmarshalString(dataIn));
+        info->setUserName(looseUnmarshalString(dataIn));
 
-        if( dataIn->readBoolean() ) {
+        if (dataIn->readBoolean()) {
             short size = dataIn->readShort();
-            info->getBrokerPath().reserve( size );
-            for( int i = 0; i < size; i++ ) {
-                info->getBrokerPath().push_back( Pointer<BrokerId>( dynamic_cast<BrokerId* >(
-                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
+            info->getBrokerPath().reserve(size);
+            for (int i = 0; i < size; i++) {
+                info->getBrokerPath().push_back( Pointer<BrokerId>(dynamic_cast<BrokerId*>(
+                    looseUnmarshalNestedObject(wireFormat, dataIn))));
             }
         } else {
             info->getBrokerPath().clear();
         }
-        info->setBrokerMasterConnector( dataIn->readBoolean() );
-        info->setManageable( dataIn->readBoolean() );
-        if( wireVersion >= 2 ) {
-            info->setClientMaster( dataIn->readBoolean() );
+        info->setBrokerMasterConnector(dataIn->readBoolean());
+        info->setManageable(dataIn->readBoolean());
+        if (wireVersion >= 2) {
+            info->setClientMaster(dataIn->readBoolean());
         }
-        if( wireVersion >= 6 ) {
-            info->setFaultTolerant( dataIn->readBoolean() );
+        if (wireVersion >= 6) {
+            info->setFaultTolerant(dataIn->readBoolean());
         }
-        if( wireVersion >= 6 ) {
-            info->setFailoverReconnect( dataIn->readBoolean() );
+        if (wireVersion >= 6) {
+            info->setFailoverReconnect(dataIn->readBoolean());
         }
-        if( wireVersion >= 8 ) {
-            info->setClientIp( looseUnmarshalString( dataIn ) );
+        if (wireVersion >= 8) {
+            info->setClientIp(looseUnmarshalString(dataIn));
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void ConnectionInfoMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         ConnectionInfo* info =
-            dynamic_cast<ConnectionInfo*>( dataStructure );
-        BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+            dynamic_cast<ConnectionInfo*>(dataStructure);
+        BaseCommandMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
 
         int wireVersion = wireFormat->getVersion();
 
-        looseMarshalCachedObject( wireFormat, info->getConnectionId().get(), dataOut );
-        looseMarshalString( info->getClientId(), dataOut );
-        looseMarshalString( info->getPassword(), dataOut );
-        looseMarshalString( info->getUserName(), dataOut );
-        looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
-        dataOut->writeBoolean( info->isBrokerMasterConnector() );
-        dataOut->writeBoolean( info->isManageable() );
-        if( wireVersion >= 2 ) {
-            dataOut->writeBoolean( info->isClientMaster() );
+        looseMarshalCachedObject(wireFormat, info->getConnectionId().get(), dataOut);
+        looseMarshalString(info->getClientId(), dataOut);
+        looseMarshalString(info->getPassword(), dataOut);
+        looseMarshalString(info->getUserName(), dataOut);
+        looseMarshalObjectArray(wireFormat, info->getBrokerPath(), dataOut);
+        dataOut->writeBoolean(info->isBrokerMasterConnector());
+        dataOut->writeBoolean(info->isManageable());
+        if (wireVersion >= 2) {
+            dataOut->writeBoolean(info->isClientMaster());
         }
-        if( wireVersion >= 6 ) {
-            dataOut->writeBoolean( info->isFaultTolerant() );
+        if (wireVersion >= 6) {
+            dataOut->writeBoolean(info->isFaultTolerant());
         }
-        if( wireVersion >= 6 ) {
-            dataOut->writeBoolean( info->isFailoverReconnect() );
+        if (wireVersion >= 6) {
+            dataOut->writeBoolean(info->isFailoverReconnect());
         }
-        if( wireVersion >= 8 ) {
-            looseMarshalString( info->getClientIp(), dataOut );
+        if (wireVersion >= 8) {
+            looseMarshalString(info->getClientIp(), dataOut);
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

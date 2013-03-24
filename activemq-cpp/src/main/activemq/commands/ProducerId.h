@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -66,11 +66,11 @@ namespace commands{
 
         ProducerId();
 
-        ProducerId( const ProducerId& other );
+        ProducerId(const ProducerId& other);
 
-        ProducerId( const SessionId& sessionId, long long consumerId );
+        ProducerId(const SessionId& sessionId, long long consumerId);
 
-        ProducerId( std::string producerId );
+        ProducerId(std::string producerId);
 
         virtual ~ProducerId();
 
@@ -78,15 +78,15 @@ namespace commands{
 
         virtual ProducerId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         const Pointer<SessionId>& getParentId() const;
 
-        void setProducerSessionKey( std::string sessionKey );
+        void setProducerSessionKey(std::string sessionKey);
 
         virtual const std::string& getConnectionId() const;
         virtual std::string& getConnectionId();
@@ -98,15 +98,17 @@ namespace commands{
         virtual long long getSessionId() const;
         virtual void setSessionId( long long sessionId );
 
-        virtual int compareTo( const ProducerId& value ) const;
+        virtual int compareTo(const ProducerId& value) const;
 
-        virtual bool equals( const ProducerId& value ) const;
+        virtual bool equals(const ProducerId& value) const;
 
-        virtual bool operator==( const ProducerId& value ) const;
+        virtual bool operator==(const ProducerId& value) const;
 
-        virtual bool operator<( const ProducerId& value ) const;
+        virtual bool operator<(const ProducerId& value) const;
 
-        ProducerId& operator= ( const ProducerId& other );
+        ProducerId& operator= (const ProducerId& other);
+
+        int getHashCode() const;
 
     };
 

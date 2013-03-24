@@ -51,88 +51,88 @@ unsigned char NetworkBridgeFilterMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void NetworkBridgeFilterMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseDataStreamMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         NetworkBridgeFilter* info =
-            dynamic_cast<NetworkBridgeFilter*>( dataStructure );
-        info->setNetworkTTL( dataIn->readInt() );
-        info->setNetworkBrokerId( Pointer<BrokerId>( dynamic_cast< BrokerId* >(
-            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
+            dynamic_cast<NetworkBridgeFilter*>(dataStructure);
+        info->setNetworkTTL(dataIn->readInt());
+        info->setNetworkBrokerId(Pointer<BrokerId>(dynamic_cast<BrokerId* >(
+            tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int NetworkBridgeFilterMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int NetworkBridgeFilterMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         NetworkBridgeFilter* info =
-            dynamic_cast<NetworkBridgeFilter*>( dataStructure );
+            dynamic_cast<NetworkBridgeFilter*>(dataStructure);
 
-        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalCachedObject1( wireFormat, info->getNetworkBrokerId().get(), bs );
+        int rc = BaseDataStreamMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        rc += tightMarshalCachedObject1(wireFormat, info->getNetworkBrokerId().get(), bs);
 
         return rc + 4;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void NetworkBridgeFilterMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         NetworkBridgeFilter* info =
-            dynamic_cast<NetworkBridgeFilter*>( dataStructure );
-        dataOut->writeInt( info->getNetworkTTL() );
-        tightMarshalCachedObject2( wireFormat, info->getNetworkBrokerId().get(), dataOut, bs );
+            dynamic_cast<NetworkBridgeFilter*>(dataStructure);
+        dataOut->writeInt(info->getNetworkTTL());
+        tightMarshalCachedObject2(wireFormat, info->getNetworkBrokerId().get(), dataOut, bs);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void NetworkBridgeFilterMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseDataStreamMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         NetworkBridgeFilter* info =
-            dynamic_cast<NetworkBridgeFilter*>( dataStructure );
-        info->setNetworkTTL( dataIn->readInt() );
-        info->setNetworkBrokerId( Pointer<BrokerId>( dynamic_cast< BrokerId* >( 
-            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
+            dynamic_cast<NetworkBridgeFilter*>(dataStructure);
+        info->setNetworkTTL(dataIn->readInt());
+        info->setNetworkBrokerId(Pointer<BrokerId>(dynamic_cast<BrokerId*>(
+            looseUnmarshalCachedObject(wireFormat, dataIn))));
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void NetworkBridgeFilterMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         NetworkBridgeFilter* info =
-            dynamic_cast<NetworkBridgeFilter*>( dataStructure );
-        BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        dataOut->writeInt( info->getNetworkTTL() );
-        looseMarshalCachedObject( wireFormat, info->getNetworkBrokerId().get(), dataOut );
+            dynamic_cast<NetworkBridgeFilter*>(dataStructure);
+        BaseDataStreamMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        dataOut->writeInt(info->getNetworkTTL());
+        looseMarshalCachedObject(wireFormat, info->getNetworkBrokerId().get(), dataOut);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

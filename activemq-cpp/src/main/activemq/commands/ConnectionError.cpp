@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionError::ConnectionError() 
-    : BaseCommand(), exception(NULL), connectionId(NULL) {
+ConnectionError::ConnectionError() :
+    BaseCommand(), exception(NULL), connectionId(NULL) {
 
 }
 
@@ -49,35 +49,35 @@ ConnectionError::~ConnectionError() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError* ConnectionError::cloneDataStructure() const {
-    std::auto_ptr<ConnectionError> connectionError( new ConnectionError() );
+    std::auto_ptr<ConnectionError> connectionError(new ConnectionError());
 
     // Copy the data from the base class or classes
-    connectionError->copyDataStructure( this );
+    connectionError->copyDataStructure(this);
 
     return connectionError.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionError::copyDataStructure( const DataStructure* src ) {
+void ConnectionError::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const ConnectionError* srcPtr = dynamic_cast<const ConnectionError*>( src );
+    const ConnectionError* srcPtr = dynamic_cast<const ConnectionError*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "ConnectionError::copyDataStructure - src is NULL or invalid" );
+            "ConnectionError::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setException( srcPtr->getException() );
-    this->setConnectionId( srcPtr->getConnectionId() );
+    this->setException(srcPtr->getException());
+    this->setConnectionId(srcPtr->getConnectionId());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,14 +95,14 @@ std::string ConnectionError::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "Exception = ";
-    if( this->getException() != NULL ) {
+    if (this->getException() != NULL) {
         stream << this->getException()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "ConnectionId = ";
-    if( this->getConnectionId() != NULL ) {
+    if (this->getConnectionId() != NULL) {
         stream << this->getConnectionId()->toString();
     } else {
         stream << "NULL";
@@ -113,33 +113,33 @@ std::string ConnectionError::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionError::equals( const DataStructure* value ) const {
+bool ConnectionError::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const ConnectionError* valuePtr = dynamic_cast<const ConnectionError*>( value );
+    const ConnectionError* valuePtr = dynamic_cast<const ConnectionError*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getException() != NULL ) {
-        if( !this->getException()->equals( valuePtr->getException().get() ) ) {
+    if (this->getException() != NULL) {
+        if (!this->getException()->equals( valuePtr->getException().get())) {
             return false;
         }
-    } else if( valuePtr->getException() != NULL ) {
+    } else if (valuePtr->getException() != NULL) {
         return false;
     }
-    if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
+    if (this->getConnectionId() != NULL) {
+        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
             return false;
         }
-    } else if( valuePtr->getConnectionId() != NULL ) {
+    } else if (valuePtr->getConnectionId() != NULL) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -156,7 +156,7 @@ decaf::lang::Pointer<BrokerError>& ConnectionError::getException() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionError::setException( const decaf::lang::Pointer<BrokerError>& exception ) {
+void ConnectionError::setException(const decaf::lang::Pointer<BrokerError>& exception) {
     this->exception = exception;
 }
 
@@ -171,12 +171,11 @@ decaf::lang::Pointer<ConnectionId>& ConnectionError::getConnectionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionError::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
+void ConnectionError::setConnectionId(const decaf::lang::Pointer<ConnectionId>& connectionId) {
     this->connectionId = connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionError::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processConnectionError( this );
+decaf::lang::Pointer<commands::Command> ConnectionError::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processConnectionError(this);
 }

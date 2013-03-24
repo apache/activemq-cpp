@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTopicAck::JournalTopicAck() 
-    : BaseDataStructure(), destination(NULL), messageId(NULL), messageSequenceId(0), subscritionName(""), clientId(""), transactionId(NULL) {
+JournalTopicAck::JournalTopicAck() :
+    BaseDataStructure(), destination(NULL), messageId(NULL), messageSequenceId(0), subscritionName(""), clientId(""), transactionId(NULL) {
 
 }
 
@@ -49,39 +49,39 @@ JournalTopicAck::~JournalTopicAck() {
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTopicAck* JournalTopicAck::cloneDataStructure() const {
-    std::auto_ptr<JournalTopicAck> journalTopicAck( new JournalTopicAck() );
+    std::auto_ptr<JournalTopicAck> journalTopicAck(new JournalTopicAck());
 
     // Copy the data from the base class or classes
-    journalTopicAck->copyDataStructure( this );
+    journalTopicAck->copyDataStructure(this);
 
     return journalTopicAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::copyDataStructure( const DataStructure* src ) {
+void JournalTopicAck::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const JournalTopicAck* srcPtr = dynamic_cast<const JournalTopicAck*>( src );
+    const JournalTopicAck* srcPtr = dynamic_cast<const JournalTopicAck*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "JournalTopicAck::copyDataStructure - src is NULL or invalid" );
+            "JournalTopicAck::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseDataStructure::copyDataStructure( src );
+    BaseDataStructure::copyDataStructure(src);
 
-    this->setDestination( srcPtr->getDestination() );
-    this->setMessageId( srcPtr->getMessageId() );
-    this->setMessageSequenceId( srcPtr->getMessageSequenceId() );
-    this->setSubscritionName( srcPtr->getSubscritionName() );
-    this->setClientId( srcPtr->getClientId() );
-    this->setTransactionId( srcPtr->getTransactionId() );
+    this->setDestination(srcPtr->getDestination());
+    this->setMessageId(srcPtr->getMessageId());
+    this->setMessageSequenceId(srcPtr->getMessageSequenceId());
+    this->setSubscritionName(srcPtr->getSubscritionName());
+    this->setClientId(srcPtr->getClientId());
+    this->setTransactionId(srcPtr->getTransactionId());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,14 +96,14 @@ std::string JournalTopicAck::toString() const {
 
     stream << "JournalTopicAck { ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "MessageId = ";
-    if( this->getMessageId() != NULL ) {
+    if (this->getMessageId() != NULL) {
         stream << this->getMessageId()->toString();
     } else {
         stream << "NULL";
@@ -116,7 +116,7 @@ std::string JournalTopicAck::toString() const {
     stream << "ClientId = " << this->getClientId();
     stream << ", ";
     stream << "TransactionId = ";
-    if( this->getTransactionId() != NULL ) {
+    if (this->getTransactionId() != NULL) {
         stream << this->getTransactionId()->toString();
     } else {
         stream << "NULL";
@@ -127,49 +127,49 @@ std::string JournalTopicAck::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JournalTopicAck::equals( const DataStructure* value ) const {
+bool JournalTopicAck::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const JournalTopicAck* valuePtr = dynamic_cast<const JournalTopicAck*>( value );
+    const JournalTopicAck* valuePtr = dynamic_cast<const JournalTopicAck*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getMessageId() != NULL ) {
-        if( !this->getMessageId()->equals( valuePtr->getMessageId().get() ) ) {
+    if (this->getMessageId() != NULL) {
+        if (!this->getMessageId()->equals( valuePtr->getMessageId().get())) {
             return false;
         }
-    } else if( valuePtr->getMessageId() != NULL ) {
+    } else if (valuePtr->getMessageId() != NULL) {
         return false;
     }
-    if( this->getMessageSequenceId() != valuePtr->getMessageSequenceId() ) {
+    if (this->getMessageSequenceId() != valuePtr->getMessageSequenceId()) {
         return false;
     }
-    if( this->getSubscritionName() != valuePtr->getSubscritionName() ) {
+    if (this->getSubscritionName() != valuePtr->getSubscritionName()) {
         return false;
     }
-    if( this->getClientId() != valuePtr->getClientId() ) {
+    if (this->getClientId() != valuePtr->getClientId()) {
         return false;
     }
-    if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
+    if (this->getTransactionId() != NULL) {
+        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
             return false;
         }
-    } else if( valuePtr->getTransactionId() != NULL ) {
+    } else if (valuePtr->getTransactionId() != NULL) {
         return false;
     }
-    if( !BaseDataStructure::equals( value ) ) {
+    if (!BaseDataStructure::equals(value)) {
         return false;
     }
     return true;
@@ -186,7 +186,7 @@ decaf::lang::Pointer<ActiveMQDestination>& JournalTopicAck::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void JournalTopicAck::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -201,7 +201,7 @@ decaf::lang::Pointer<MessageId>& JournalTopicAck::getMessageId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setMessageId( const decaf::lang::Pointer<MessageId>& messageId ) {
+void JournalTopicAck::setMessageId(const decaf::lang::Pointer<MessageId>& messageId) {
     this->messageId = messageId;
 }
 
@@ -211,7 +211,7 @@ long long JournalTopicAck::getMessageSequenceId() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setMessageSequenceId( long long messageSequenceId ) {
+void JournalTopicAck::setMessageSequenceId(long long messageSequenceId) {
     this->messageSequenceId = messageSequenceId;
 }
 
@@ -226,7 +226,7 @@ std::string& JournalTopicAck::getSubscritionName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setSubscritionName( const std::string& subscritionName ) {
+void JournalTopicAck::setSubscritionName(const std::string& subscritionName) {
     this->subscritionName = subscritionName;
 }
 
@@ -241,7 +241,7 @@ std::string& JournalTopicAck::getClientId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setClientId( const std::string& clientId ) {
+void JournalTopicAck::setClientId(const std::string& clientId) {
     this->clientId = clientId;
 }
 
@@ -256,7 +256,7 @@ decaf::lang::Pointer<TransactionId>& JournalTopicAck::getTransactionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
+void JournalTopicAck::setTransactionId(const decaf::lang::Pointer<TransactionId>& transactionId) {
     this->transactionId = transactionId;
 }
 

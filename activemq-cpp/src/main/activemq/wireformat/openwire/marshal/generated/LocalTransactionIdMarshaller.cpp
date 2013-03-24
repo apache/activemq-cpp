@@ -51,89 +51,89 @@ unsigned char LocalTransactionIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void LocalTransactionIdMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        TransactionIdMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         LocalTransactionId* info =
-            dynamic_cast<LocalTransactionId*>( dataStructure );
-        info->setValue( tightUnmarshalLong( wireFormat, dataIn, bs ) );
-        info->setConnectionId( Pointer<ConnectionId>( dynamic_cast< ConnectionId* >(
-            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
+            dynamic_cast<LocalTransactionId*>(dataStructure);
+        info->setValue(tightUnmarshalLong(wireFormat, dataIn, bs));
+        info->setConnectionId(Pointer<ConnectionId>(dynamic_cast<ConnectionId* >(
+            tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int LocalTransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int LocalTransactionIdMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         LocalTransactionId* info =
-            dynamic_cast<LocalTransactionId*>( dataStructure );
+            dynamic_cast<LocalTransactionId*>(dataStructure);
 
-        int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalLong1( wireFormat, info->getValue(), bs );
-        rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId().get(), bs );
+        int rc = TransactionIdMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        rc += tightMarshalLong1(wireFormat, info->getValue(), bs);
+        rc += tightMarshalCachedObject1(wireFormat, info->getConnectionId().get(), bs);
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void LocalTransactionIdMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        TransactionIdMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        TransactionIdMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         LocalTransactionId* info =
-            dynamic_cast<LocalTransactionId*>( dataStructure );
-        tightMarshalLong2( wireFormat, info->getValue(), dataOut, bs );
-        tightMarshalCachedObject2( wireFormat, info->getConnectionId().get(), dataOut, bs );
+            dynamic_cast<LocalTransactionId*>(dataStructure);
+        tightMarshalLong2(wireFormat, info->getValue(), dataOut, bs);
+        tightMarshalCachedObject2(wireFormat, info->getConnectionId().get(), dataOut, bs);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void LocalTransactionIdMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        TransactionIdMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         LocalTransactionId* info =
-            dynamic_cast<LocalTransactionId*>( dataStructure );
-        info->setValue( looseUnmarshalLong( wireFormat, dataIn ) );
-        info->setConnectionId( Pointer<ConnectionId>( dynamic_cast< ConnectionId* >( 
-            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
+            dynamic_cast<LocalTransactionId*>(dataStructure);
+        info->setValue(looseUnmarshalLong(wireFormat, dataIn));
+        info->setConnectionId(Pointer<ConnectionId>(dynamic_cast<ConnectionId*>(
+            looseUnmarshalCachedObject(wireFormat, dataIn))));
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void LocalTransactionIdMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         LocalTransactionId* info =
-            dynamic_cast<LocalTransactionId*>( dataStructure );
-        TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        looseMarshalLong( wireFormat, info->getValue(), dataOut );
-        looseMarshalCachedObject( wireFormat, info->getConnectionId().get(), dataOut );
+            dynamic_cast<LocalTransactionId*>(dataStructure);
+        TransactionIdMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        looseMarshalLong(wireFormat, info->getValue(), dataOut);
+        looseMarshalCachedObject(wireFormat, info->getConnectionId().get(), dataOut);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

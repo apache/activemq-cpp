@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-ControlCommand::ControlCommand() 
-    : BaseCommand(), command("") {
+ControlCommand::ControlCommand() :
+    BaseCommand(), command("") {
 
 }
 
@@ -49,34 +49,34 @@ ControlCommand::~ControlCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ControlCommand* ControlCommand::cloneDataStructure() const {
-    std::auto_ptr<ControlCommand> controlCommand( new ControlCommand() );
+    std::auto_ptr<ControlCommand> controlCommand(new ControlCommand());
 
     // Copy the data from the base class or classes
-    controlCommand->copyDataStructure( this );
+    controlCommand->copyDataStructure(this);
 
     return controlCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ControlCommand::copyDataStructure( const DataStructure* src ) {
+void ControlCommand::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const ControlCommand* srcPtr = dynamic_cast<const ControlCommand*>( src );
+    const ControlCommand* srcPtr = dynamic_cast<const ControlCommand*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "ControlCommand::copyDataStructure - src is NULL or invalid" );
+            "ControlCommand::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setCommand( srcPtr->getCommand() );
+    this->setCommand(srcPtr->getCommand());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,22 +100,22 @@ std::string ControlCommand::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ControlCommand::equals( const DataStructure* value ) const {
+bool ControlCommand::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const ControlCommand* valuePtr = dynamic_cast<const ControlCommand*>( value );
+    const ControlCommand* valuePtr = dynamic_cast<const ControlCommand*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getCommand() != valuePtr->getCommand() ) {
+    if (this->getCommand() != valuePtr->getCommand()) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -132,12 +132,11 @@ std::string& ControlCommand::getCommand() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ControlCommand::setCommand( const std::string& command ) {
+void ControlCommand::setCommand(const std::string& command) {
     this->command = command;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ControlCommand::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processControlCommand( this );
+decaf::lang::Pointer<commands::Command> ControlCommand::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processControlCommand(this);
 }

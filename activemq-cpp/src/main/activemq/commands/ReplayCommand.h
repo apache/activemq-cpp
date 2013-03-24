@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -55,8 +55,8 @@ namespace commands{
 
     private:
 
-        ReplayCommand( const ReplayCommand& );
-        ReplayCommand& operator= ( const ReplayCommand& );
+        ReplayCommand(const ReplayCommand&);
+        ReplayCommand& operator= (const ReplayCommand&);
 
     public:
 
@@ -68,11 +68,11 @@ namespace commands{
 
         virtual ReplayCommand* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual int getFirstNakNumber() const;
         virtual void setFirstNakNumber( int firstNakNumber );
@@ -87,7 +87,7 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

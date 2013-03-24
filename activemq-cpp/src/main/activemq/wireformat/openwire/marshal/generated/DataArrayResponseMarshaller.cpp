@@ -51,102 +51,102 @@ unsigned char DataArrayResponseMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void DataArrayResponseMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        ResponseMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         DataArrayResponse* info =
-            dynamic_cast<DataArrayResponse*>( dataStructure );
+            dynamic_cast<DataArrayResponse*>(dataStructure);
 
-        if( bs->readBoolean() ) {
+        if (bs->readBoolean()) {
             short size = dataIn->readShort();
-            info->getData().reserve( size );
-            for( int i = 0; i < size; i++ ) {
-                info->getData().push_back( Pointer<DataStructure>( dynamic_cast< DataStructure* >(
-                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
+            info->getData().reserve(size);
+            for (int i = 0; i < size; i++) {
+                info->getData().push_back(Pointer<DataStructure>(dynamic_cast<DataStructure*>(
+                    tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
             }
         } else {
             info->getData().clear();
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int DataArrayResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int DataArrayResponseMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         DataArrayResponse* info =
-            dynamic_cast<DataArrayResponse*>( dataStructure );
+            dynamic_cast<DataArrayResponse*>(dataStructure);
 
-        int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalObjectArray1( wireFormat, info->getData(), bs );
+        int rc = ResponseMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        rc += tightMarshalObjectArray1(wireFormat, info->getData(), bs);
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void DataArrayResponseMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        ResponseMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         DataArrayResponse* info =
-            dynamic_cast<DataArrayResponse*>( dataStructure );
-        tightMarshalObjectArray2( wireFormat, info->getData(), dataOut, bs );
+            dynamic_cast<DataArrayResponse*>(dataStructure);
+        tightMarshalObjectArray2(wireFormat, info->getData(), dataOut, bs);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void DataArrayResponseMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ResponseMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         DataArrayResponse* info =
-            dynamic_cast<DataArrayResponse*>( dataStructure );
+            dynamic_cast<DataArrayResponse*>(dataStructure);
 
-        if( dataIn->readBoolean() ) {
+        if (dataIn->readBoolean()) {
             short size = dataIn->readShort();
-            info->getData().reserve( size );
-            for( int i = 0; i < size; i++ ) {
-                info->getData().push_back( Pointer<DataStructure>( dynamic_cast<DataStructure* >(
-                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
+            info->getData().reserve(size);
+            for (int i = 0; i < size; i++) {
+                info->getData().push_back( Pointer<DataStructure>(dynamic_cast<DataStructure*>(
+                    looseUnmarshalNestedObject(wireFormat, dataIn))));
             }
         } else {
             info->getData().clear();
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void DataArrayResponseMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         DataArrayResponse* info =
-            dynamic_cast<DataArrayResponse*>( dataStructure );
-        ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        looseMarshalObjectArray( wireFormat, info->getData(), dataOut );
+            dynamic_cast<DataArrayResponse*>(dataStructure);
+        ResponseMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        looseMarshalObjectArray(wireFormat, info->getData(), dataOut);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

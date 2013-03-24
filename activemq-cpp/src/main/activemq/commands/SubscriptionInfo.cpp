@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-SubscriptionInfo::SubscriptionInfo() 
-    : BaseDataStructure(), clientId(""), destination(NULL), selector(""), subcriptionName(""), subscribedDestination(NULL) {
+SubscriptionInfo::SubscriptionInfo() :
+    BaseDataStructure(), clientId(""), destination(NULL), selector(""), subcriptionName(""), subscribedDestination(NULL) {
 
 }
 
@@ -49,38 +49,38 @@ SubscriptionInfo::~SubscriptionInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 SubscriptionInfo* SubscriptionInfo::cloneDataStructure() const {
-    std::auto_ptr<SubscriptionInfo> subscriptionInfo( new SubscriptionInfo() );
+    std::auto_ptr<SubscriptionInfo> subscriptionInfo(new SubscriptionInfo());
 
     // Copy the data from the base class or classes
-    subscriptionInfo->copyDataStructure( this );
+    subscriptionInfo->copyDataStructure(this);
 
     return subscriptionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::copyDataStructure( const DataStructure* src ) {
+void SubscriptionInfo::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const SubscriptionInfo* srcPtr = dynamic_cast<const SubscriptionInfo*>( src );
+    const SubscriptionInfo* srcPtr = dynamic_cast<const SubscriptionInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "SubscriptionInfo::copyDataStructure - src is NULL or invalid" );
+            "SubscriptionInfo::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseDataStructure::copyDataStructure( src );
+    BaseDataStructure::copyDataStructure(src);
 
-    this->setClientId( srcPtr->getClientId() );
-    this->setDestination( srcPtr->getDestination() );
-    this->setSelector( srcPtr->getSelector() );
-    this->setSubcriptionName( srcPtr->getSubcriptionName() );
-    this->setSubscribedDestination( srcPtr->getSubscribedDestination() );
+    this->setClientId(srcPtr->getClientId());
+    this->setDestination(srcPtr->getDestination());
+    this->setSelector(srcPtr->getSelector());
+    this->setSubcriptionName(srcPtr->getSubcriptionName());
+    this->setSubscribedDestination(srcPtr->getSubscribedDestination());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ std::string SubscriptionInfo::toString() const {
     stream << "ClientId = " << this->getClientId();
     stream << ", ";
     stream << "Destination = ";
-    if( this->getDestination() != NULL ) {
+    if (this->getDestination() != NULL) {
         stream << this->getDestination()->toString();
     } else {
         stream << "NULL";
@@ -108,7 +108,7 @@ std::string SubscriptionInfo::toString() const {
     stream << "SubcriptionName = " << this->getSubcriptionName();
     stream << ", ";
     stream << "SubscribedDestination = ";
-    if( this->getSubscribedDestination() != NULL ) {
+    if (this->getSubscribedDestination() != NULL) {
         stream << this->getSubscribedDestination()->toString();
     } else {
         stream << "NULL";
@@ -119,42 +119,42 @@ std::string SubscriptionInfo::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool SubscriptionInfo::equals( const DataStructure* value ) const {
+bool SubscriptionInfo::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const SubscriptionInfo* valuePtr = dynamic_cast<const SubscriptionInfo*>( value );
+    const SubscriptionInfo* valuePtr = dynamic_cast<const SubscriptionInfo*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getClientId() != valuePtr->getClientId() ) {
+    if (this->getClientId() != valuePtr->getClientId()) {
         return false;
     }
-    if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
+    if (this->getDestination() != NULL) {
+        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getDestination() != NULL ) {
+    } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
-    if( this->getSelector() != valuePtr->getSelector() ) {
+    if (this->getSelector() != valuePtr->getSelector()) {
         return false;
     }
-    if( this->getSubcriptionName() != valuePtr->getSubcriptionName() ) {
+    if (this->getSubcriptionName() != valuePtr->getSubcriptionName()) {
         return false;
     }
-    if( this->getSubscribedDestination() != NULL ) {
-        if( !this->getSubscribedDestination()->equals( valuePtr->getSubscribedDestination().get() ) ) {
+    if (this->getSubscribedDestination() != NULL) {
+        if (!this->getSubscribedDestination()->equals( valuePtr->getSubscribedDestination().get())) {
             return false;
         }
-    } else if( valuePtr->getSubscribedDestination() != NULL ) {
+    } else if (valuePtr->getSubscribedDestination() != NULL) {
         return false;
     }
-    if( !BaseDataStructure::equals( value ) ) {
+    if (!BaseDataStructure::equals(value)) {
         return false;
     }
     return true;
@@ -171,7 +171,7 @@ std::string& SubscriptionInfo::getClientId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::setClientId( const std::string& clientId ) {
+void SubscriptionInfo::setClientId(const std::string& clientId) {
     this->clientId = clientId;
 }
 
@@ -186,7 +186,7 @@ decaf::lang::Pointer<ActiveMQDestination>& SubscriptionInfo::getDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
+void SubscriptionInfo::setDestination(const decaf::lang::Pointer<ActiveMQDestination>& destination) {
     this->destination = destination;
 }
 
@@ -201,7 +201,7 @@ std::string& SubscriptionInfo::getSelector() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::setSelector( const std::string& selector ) {
+void SubscriptionInfo::setSelector(const std::string& selector) {
     this->selector = selector;
 }
 
@@ -216,7 +216,7 @@ std::string& SubscriptionInfo::getSubcriptionName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::setSubcriptionName( const std::string& subcriptionName ) {
+void SubscriptionInfo::setSubcriptionName(const std::string& subcriptionName) {
     this->subcriptionName = subcriptionName;
 }
 
@@ -231,7 +231,7 @@ decaf::lang::Pointer<ActiveMQDestination>& SubscriptionInfo::getSubscribedDestin
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::setSubscribedDestination( const decaf::lang::Pointer<ActiveMQDestination>& subscribedDestination ) {
+void SubscriptionInfo::setSubscribedDestination(const decaf::lang::Pointer<ActiveMQDestination>& subscribedDestination) {
     this->subscribedDestination = subscribedDestination;
 }
 

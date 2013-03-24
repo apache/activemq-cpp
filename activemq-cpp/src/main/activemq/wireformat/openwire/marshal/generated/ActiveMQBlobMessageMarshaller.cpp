@@ -51,137 +51,137 @@ unsigned char ActiveMQBlobMessageMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQBlobMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ActiveMQBlobMessageMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        MessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        MessageMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
+            dynamic_cast<ActiveMQBlobMessage*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 3 ) {
-            info->setRemoteBlobUrl( tightUnmarshalString( dataIn, bs ) );
+        if (wireVersion >= 3) {
+            info->setRemoteBlobUrl(tightUnmarshalString(dataIn, bs));
         }
-        if( wireVersion >= 3 ) {
-            info->setMimeType( tightUnmarshalString( dataIn, bs ) );
+        if (wireVersion >= 3) {
+            info->setMimeType(tightUnmarshalString(dataIn, bs));
         }
-        if( wireVersion >= 3 ) {
-            info->setDeletedByBroker( bs->readBoolean() );
+        if (wireVersion >= 3) {
+            info->setDeletedByBroker(bs->readBoolean());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ActiveMQBlobMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int ActiveMQBlobMessageMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
+            dynamic_cast<ActiveMQBlobMessage*>(dataStructure);
 
-        int rc = MessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = MessageMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 3 ) {
-            rc += tightMarshalString1( info->getRemoteBlobUrl(), bs );
+        if (wireVersion >= 3) {
+            rc += tightMarshalString1(info->getRemoteBlobUrl(), bs);
         }
-        if( wireVersion >= 3 ) {
-            rc += tightMarshalString1( info->getMimeType(), bs );
+        if (wireVersion >= 3) {
+            rc += tightMarshalString1(info->getMimeType(), bs);
         }
-        if( wireVersion >= 3 ) {
-            bs->writeBoolean( info->isDeletedByBroker() );
+        if (wireVersion >= 3) {
+            bs->writeBoolean(info->isDeletedByBroker());
         }
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQBlobMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void ActiveMQBlobMessageMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        MessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        MessageMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
+            dynamic_cast<ActiveMQBlobMessage*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 3 ) {
-            tightMarshalString2( info->getRemoteBlobUrl(), dataOut, bs );
+        if (wireVersion >= 3) {
+            tightMarshalString2(info->getRemoteBlobUrl(), dataOut, bs);
         }
-        if( wireVersion >= 3 ) {
-            tightMarshalString2( info->getMimeType(), dataOut, bs );
+        if (wireVersion >= 3) {
+            tightMarshalString2(info->getMimeType(), dataOut, bs);
         }
-        if( wireVersion >= 3 ) {
+        if (wireVersion >= 3) {
             bs->readBoolean();
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQBlobMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void ActiveMQBlobMessageMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        MessageMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
+            dynamic_cast<ActiveMQBlobMessage*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 3 ) {
-            info->setRemoteBlobUrl( looseUnmarshalString( dataIn ) );
+        if (wireVersion >= 3) {
+            info->setRemoteBlobUrl(looseUnmarshalString(dataIn));
         }
-        if( wireVersion >= 3 ) {
-            info->setMimeType( looseUnmarshalString( dataIn ) );
+        if (wireVersion >= 3) {
+            info->setMimeType(looseUnmarshalString(dataIn));
         }
-        if( wireVersion >= 3 ) {
-            info->setDeletedByBroker( dataIn->readBoolean() );
+        if (wireVersion >= 3) {
+            info->setDeletedByBroker(dataIn->readBoolean());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQBlobMessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void ActiveMQBlobMessageMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         ActiveMQBlobMessage* info =
-            dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
-        MessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+            dynamic_cast<ActiveMQBlobMessage*>(dataStructure);
+        MessageMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 3 ) {
-            looseMarshalString( info->getRemoteBlobUrl(), dataOut );
+        if (wireVersion >= 3) {
+            looseMarshalString(info->getRemoteBlobUrl(), dataOut);
         }
-        if( wireVersion >= 3 ) {
-            looseMarshalString( info->getMimeType(), dataOut );
+        if (wireVersion >= 3) {
+            looseMarshalString(info->getMimeType(), dataOut);
         }
-        if( wireVersion >= 3 ) {
-            dataOut->writeBoolean( info->isDeletedByBroker() );
+        if (wireVersion >= 3) {
+            dataOut->writeBoolean(info->isDeletedByBroker());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

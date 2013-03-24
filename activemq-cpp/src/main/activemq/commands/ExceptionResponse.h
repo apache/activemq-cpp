@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -55,8 +55,8 @@ namespace commands{
 
     private:
 
-        ExceptionResponse( const ExceptionResponse& );
-        ExceptionResponse& operator= ( const ExceptionResponse& );
+        ExceptionResponse(const ExceptionResponse&);
+        ExceptionResponse& operator= (const ExceptionResponse&);
 
     public:
 
@@ -68,11 +68,11 @@ namespace commands{
 
         virtual ExceptionResponse* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const Pointer<BrokerError>& getException() const;
         virtual Pointer<BrokerError>& getException();

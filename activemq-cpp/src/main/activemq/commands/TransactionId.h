@@ -30,8 +30,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -58,7 +58,7 @@ namespace commands{
 
         TransactionId();
 
-        TransactionId( const TransactionId& other );
+        TransactionId(const TransactionId& other);
 
         virtual ~TransactionId();
 
@@ -66,11 +66,11 @@ namespace commands{
 
         virtual TransactionId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual bool isLocalTransactionId() const {
             return false;
@@ -80,15 +80,17 @@ namespace commands{
             return false;
         }
 
-        virtual int compareTo( const TransactionId& value ) const;
+        virtual int compareTo(const TransactionId& value) const;
 
-        virtual bool equals( const TransactionId& value ) const;
+        virtual bool equals(const TransactionId& value) const;
 
-        virtual bool operator==( const TransactionId& value ) const;
+        virtual bool operator==(const TransactionId& value) const;
 
-        virtual bool operator<( const TransactionId& value ) const;
+        virtual bool operator<(const TransactionId& value) const;
 
-        TransactionId& operator= ( const TransactionId& other );
+        TransactionId& operator= (const TransactionId& other);
+
+        int getHashCode() const;
 
     };
 

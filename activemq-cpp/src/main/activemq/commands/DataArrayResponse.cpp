@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DataArrayResponse::DataArrayResponse() 
-    : Response(), data() {
+DataArrayResponse::DataArrayResponse() :
+    Response(), data() {
 
 }
 
@@ -49,34 +49,34 @@ DataArrayResponse::~DataArrayResponse() {
 
 ////////////////////////////////////////////////////////////////////////////////
 DataArrayResponse* DataArrayResponse::cloneDataStructure() const {
-    std::auto_ptr<DataArrayResponse> dataArrayResponse( new DataArrayResponse() );
+    std::auto_ptr<DataArrayResponse> dataArrayResponse(new DataArrayResponse());
 
     // Copy the data from the base class or classes
-    dataArrayResponse->copyDataStructure( this );
+    dataArrayResponse->copyDataStructure(this);
 
     return dataArrayResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
+void DataArrayResponse::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const DataArrayResponse* srcPtr = dynamic_cast<const DataArrayResponse*>( src );
+    const DataArrayResponse* srcPtr = dynamic_cast<const DataArrayResponse*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "DataArrayResponse::copyDataStructure - src is NULL or invalid" );
+            "DataArrayResponse::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    Response::copyDataStructure( src );
+    Response::copyDataStructure(src);
 
-    this->setData( srcPtr->getData() );
+    this->setData(srcPtr->getData());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,10 +91,10 @@ std::string DataArrayResponse::toString() const {
 
     stream << "DataArrayResponse { ";
     stream << "Data = ";
-    if( this->getData().size() > 0 ) {
+    if (this->getData().size() > 0) {
         stream << "[";
-        for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
-            if( this->getData()[idata] != NULL ) {
+        for (size_t idata = 0; idata < this->getData().size(); ++idata) {
+            if (this->getData()[idata] != NULL) {
                 stream << this->getData()[idata]->toString() << ", ";
             } else {
                 stream << "NULL" << ", ";
@@ -110,28 +110,28 @@ std::string DataArrayResponse::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DataArrayResponse::equals( const DataStructure* value ) const {
+bool DataArrayResponse::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const DataArrayResponse* valuePtr = dynamic_cast<const DataArrayResponse*>( value );
+    const DataArrayResponse* valuePtr = dynamic_cast<const DataArrayResponse*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
-        if( this->getData()[idata] != NULL ) {
-            if( !this->getData()[idata]->equals( valuePtr->getData()[idata].get() ) ) {
+    for (size_t idata = 0; idata < this->getData().size(); ++idata) {
+        if (this->getData()[idata] != NULL ) {
+            if (!this->getData()[idata]->equals( valuePtr->getData()[idata].get())) {
                 return false;
             }
-        } else if( valuePtr->getData()[idata] != NULL ) {
+        } else if (valuePtr->getData()[idata] != NULL) {
             return false;
         }
     }
-    if( !Response::equals( value ) ) {
+    if (!Response::equals(value)) {
         return false;
     }
     return true;
@@ -148,7 +148,7 @@ std::vector< decaf::lang::Pointer<DataStructure> >& DataArrayResponse::getData()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataArrayResponse::setData( const std::vector< decaf::lang::Pointer<DataStructure> >& data ) {
+void DataArrayResponse::setData(const std::vector< decaf::lang::Pointer<DataStructure> >& data) {
     this->data = data;
 }
 

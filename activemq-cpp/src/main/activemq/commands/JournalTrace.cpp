@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTrace::JournalTrace() 
-    : BaseDataStructure(), message("") {
+JournalTrace::JournalTrace() :
+    BaseDataStructure(), message("") {
 
 }
 
@@ -49,34 +49,34 @@ JournalTrace::~JournalTrace() {
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTrace* JournalTrace::cloneDataStructure() const {
-    std::auto_ptr<JournalTrace> journalTrace( new JournalTrace() );
+    std::auto_ptr<JournalTrace> journalTrace(new JournalTrace());
 
     // Copy the data from the base class or classes
-    journalTrace->copyDataStructure( this );
+    journalTrace->copyDataStructure(this);
 
     return journalTrace.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTrace::copyDataStructure( const DataStructure* src ) {
+void JournalTrace::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const JournalTrace* srcPtr = dynamic_cast<const JournalTrace*>( src );
+    const JournalTrace* srcPtr = dynamic_cast<const JournalTrace*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "JournalTrace::copyDataStructure - src is NULL or invalid" );
+            "JournalTrace::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseDataStructure::copyDataStructure( src );
+    BaseDataStructure::copyDataStructure(src);
 
-    this->setMessage( srcPtr->getMessage() );
+    this->setMessage(srcPtr->getMessage());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,22 +97,22 @@ std::string JournalTrace::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool JournalTrace::equals( const DataStructure* value ) const {
+bool JournalTrace::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const JournalTrace* valuePtr = dynamic_cast<const JournalTrace*>( value );
+    const JournalTrace* valuePtr = dynamic_cast<const JournalTrace*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getMessage() != valuePtr->getMessage() ) {
+    if (this->getMessage() != valuePtr->getMessage()) {
         return false;
     }
-    if( !BaseDataStructure::equals( value ) ) {
+    if (!BaseDataStructure::equals(value)) {
         return false;
     }
     return true;
@@ -129,7 +129,7 @@ std::string& JournalTrace::getMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTrace::setMessage( const std::string& message ) {
+void JournalTrace::setMessage(const std::string& message) {
     this->message = message;
 }
 

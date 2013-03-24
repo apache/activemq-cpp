@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveSubscriptionInfo::RemoveSubscriptionInfo() 
-    : BaseCommand(), connectionId(NULL), subcriptionName(""), clientId("") {
+RemoveSubscriptionInfo::RemoveSubscriptionInfo() :
+    BaseCommand(), connectionId(NULL), subcriptionName(""), clientId("") {
 
 }
 
@@ -49,36 +49,36 @@ RemoveSubscriptionInfo::~RemoveSubscriptionInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo* RemoveSubscriptionInfo::cloneDataStructure() const {
-    std::auto_ptr<RemoveSubscriptionInfo> removeSubscriptionInfo( new RemoveSubscriptionInfo() );
+    std::auto_ptr<RemoveSubscriptionInfo> removeSubscriptionInfo(new RemoveSubscriptionInfo());
 
     // Copy the data from the base class or classes
-    removeSubscriptionInfo->copyDataStructure( this );
+    removeSubscriptionInfo->copyDataStructure(this);
 
     return removeSubscriptionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
+void RemoveSubscriptionInfo::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const RemoveSubscriptionInfo* srcPtr = dynamic_cast<const RemoveSubscriptionInfo*>( src );
+    const RemoveSubscriptionInfo* srcPtr = dynamic_cast<const RemoveSubscriptionInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "RemoveSubscriptionInfo::copyDataStructure - src is NULL or invalid" );
+            "RemoveSubscriptionInfo::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setConnectionId( srcPtr->getConnectionId() );
-    this->setSubcriptionName( srcPtr->getSubcriptionName() );
-    this->setClientId( srcPtr->getClientId() );
+    this->setConnectionId(srcPtr->getConnectionId());
+    this->setSubcriptionName(srcPtr->getSubcriptionName());
+    this->setClientId(srcPtr->getClientId());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ std::string RemoveSubscriptionInfo::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "ConnectionId = ";
-    if( this->getConnectionId() != NULL ) {
+    if (this->getConnectionId() != NULL) {
         stream << this->getConnectionId()->toString();
     } else {
         stream << "NULL";
@@ -111,32 +111,32 @@ std::string RemoveSubscriptionInfo::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
+bool RemoveSubscriptionInfo::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const RemoveSubscriptionInfo* valuePtr = dynamic_cast<const RemoveSubscriptionInfo*>( value );
+    const RemoveSubscriptionInfo* valuePtr = dynamic_cast<const RemoveSubscriptionInfo*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
+    if (this->getConnectionId() != NULL) {
+        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
             return false;
         }
-    } else if( valuePtr->getConnectionId() != NULL ) {
+    } else if (valuePtr->getConnectionId() != NULL) {
         return false;
     }
-    if( this->getSubcriptionName() != valuePtr->getSubcriptionName() ) {
+    if (this->getSubcriptionName() != valuePtr->getSubcriptionName()) {
         return false;
     }
-    if( this->getClientId() != valuePtr->getClientId() ) {
+    if (this->getClientId() != valuePtr->getClientId()) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -153,7 +153,7 @@ decaf::lang::Pointer<ConnectionId>& RemoveSubscriptionInfo::getConnectionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfo::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
+void RemoveSubscriptionInfo::setConnectionId(const decaf::lang::Pointer<ConnectionId>& connectionId) {
     this->connectionId = connectionId;
 }
 
@@ -168,7 +168,7 @@ std::string& RemoveSubscriptionInfo::getSubcriptionName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfo::setSubcriptionName( const std::string& subcriptionName ) {
+void RemoveSubscriptionInfo::setSubcriptionName(const std::string& subcriptionName) {
     this->subcriptionName = subcriptionName;
 }
 
@@ -183,12 +183,11 @@ std::string& RemoveSubscriptionInfo::getClientId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfo::setClientId( const std::string& clientId ) {
+void RemoveSubscriptionInfo::setClientId(const std::string& clientId) {
     this->clientId = clientId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processRemoveSubscriptionInfo( this );
+decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processRemoveSubscriptionInfo(this);
 }

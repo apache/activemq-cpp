@@ -51,125 +51,125 @@ unsigned char DestinationInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DestinationInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void DestinationInfoMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseCommandMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         DestinationInfo* info =
-            dynamic_cast<DestinationInfo*>( dataStructure );
-        info->setConnectionId( Pointer<ConnectionId>( dynamic_cast< ConnectionId* >(
-            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
-        info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >(
-            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
-        info->setOperationType( dataIn->readByte() );
-        info->setTimeout( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+            dynamic_cast<DestinationInfo*>(dataStructure);
+        info->setConnectionId(Pointer<ConnectionId>(dynamic_cast<ConnectionId* >(
+            tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
+        info->setDestination(Pointer<ActiveMQDestination>(dynamic_cast<ActiveMQDestination* >(
+            tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
+        info->setOperationType(dataIn->readByte());
+        info->setTimeout(tightUnmarshalLong(wireFormat, dataIn, bs));
 
-        if( bs->readBoolean() ) {
+        if (bs->readBoolean()) {
             short size = dataIn->readShort();
-            info->getBrokerPath().reserve( size );
-            for( int i = 0; i < size; i++ ) {
-                info->getBrokerPath().push_back( Pointer<BrokerId>( dynamic_cast< BrokerId* >(
-                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
+            info->getBrokerPath().reserve(size);
+            for (int i = 0; i < size; i++) {
+                info->getBrokerPath().push_back(Pointer<BrokerId>(dynamic_cast<BrokerId*>(
+                    tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
             }
         } else {
             info->getBrokerPath().clear();
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int DestinationInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int DestinationInfoMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         DestinationInfo* info =
-            dynamic_cast<DestinationInfo*>( dataStructure );
+            dynamic_cast<DestinationInfo*>(dataStructure);
 
-        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-        rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId().get(), bs );
-        rc += tightMarshalCachedObject1( wireFormat, info->getDestination().get(), bs );
-        rc += tightMarshalLong1( wireFormat, info->getTimeout(), bs );
-        rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
+        int rc = BaseCommandMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+        rc += tightMarshalCachedObject1(wireFormat, info->getConnectionId().get(), bs);
+        rc += tightMarshalCachedObject1(wireFormat, info->getDestination().get(), bs);
+        rc += tightMarshalLong1(wireFormat, info->getTimeout(), bs);
+        rc += tightMarshalObjectArray1(wireFormat, info->getBrokerPath(), bs);
 
         return rc + 1;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DestinationInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void DestinationInfoMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         DestinationInfo* info =
-            dynamic_cast<DestinationInfo*>( dataStructure );
-        tightMarshalCachedObject2( wireFormat, info->getConnectionId().get(), dataOut, bs );
-        tightMarshalCachedObject2( wireFormat, info->getDestination().get(), dataOut, bs );
-        dataOut->write( info->getOperationType() );
-        tightMarshalLong2( wireFormat, info->getTimeout(), dataOut, bs );
-        tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
+            dynamic_cast<DestinationInfo*>(dataStructure);
+        tightMarshalCachedObject2(wireFormat, info->getConnectionId().get(), dataOut, bs);
+        tightMarshalCachedObject2(wireFormat, info->getDestination().get(), dataOut, bs);
+        dataOut->write(info->getOperationType());
+        tightMarshalLong2(wireFormat, info->getTimeout(), dataOut, bs);
+        tightMarshalObjectArray2(wireFormat, info->getBrokerPath(), dataOut, bs);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DestinationInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void DestinationInfoMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseCommandMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         DestinationInfo* info =
-            dynamic_cast<DestinationInfo*>( dataStructure );
-        info->setConnectionId( Pointer<ConnectionId>( dynamic_cast< ConnectionId* >( 
-            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
-        info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >( 
-            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
-        info->setOperationType( dataIn->readByte() );
-        info->setTimeout( looseUnmarshalLong( wireFormat, dataIn ) );
+            dynamic_cast<DestinationInfo*>(dataStructure);
+        info->setConnectionId(Pointer<ConnectionId>(dynamic_cast<ConnectionId*>(
+            looseUnmarshalCachedObject(wireFormat, dataIn))));
+        info->setDestination(Pointer<ActiveMQDestination>(dynamic_cast<ActiveMQDestination*>(
+            looseUnmarshalCachedObject(wireFormat, dataIn))));
+        info->setOperationType(dataIn->readByte());
+        info->setTimeout(looseUnmarshalLong(wireFormat, dataIn));
 
-        if( dataIn->readBoolean() ) {
+        if (dataIn->readBoolean()) {
             short size = dataIn->readShort();
-            info->getBrokerPath().reserve( size );
-            for( int i = 0; i < size; i++ ) {
-                info->getBrokerPath().push_back( Pointer<BrokerId>( dynamic_cast<BrokerId* >(
-                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
+            info->getBrokerPath().reserve(size);
+            for (int i = 0; i < size; i++) {
+                info->getBrokerPath().push_back( Pointer<BrokerId>(dynamic_cast<BrokerId*>(
+                    looseUnmarshalNestedObject(wireFormat, dataIn))));
             }
         } else {
             info->getBrokerPath().clear();
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DestinationInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void DestinationInfoMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         DestinationInfo* info =
-            dynamic_cast<DestinationInfo*>( dataStructure );
-        BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
-        looseMarshalCachedObject( wireFormat, info->getConnectionId().get(), dataOut );
-        looseMarshalCachedObject( wireFormat, info->getDestination().get(), dataOut );
-        dataOut->write( info->getOperationType() );
-        looseMarshalLong( wireFormat, info->getTimeout(), dataOut );
-        looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
+            dynamic_cast<DestinationInfo*>(dataStructure);
+        BaseCommandMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+        looseMarshalCachedObject(wireFormat, info->getConnectionId().get(), dataOut);
+        looseMarshalCachedObject(wireFormat, info->getDestination().get(), dataOut);
+        dataOut->write(info->getOperationType());
+        looseMarshalLong(wireFormat, info->getTimeout(), dataOut);
+        looseMarshalObjectArray(wireFormat, info->getBrokerPath(), dataOut);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

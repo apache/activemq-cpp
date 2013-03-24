@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionInfo::TransactionInfo() 
-    : BaseCommand(), connectionId(NULL), transactionId(NULL), type(0) {
+TransactionInfo::TransactionInfo() :
+    BaseCommand(), connectionId(NULL), transactionId(NULL), type(0) {
 
 }
 
@@ -49,36 +49,36 @@ TransactionInfo::~TransactionInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionInfo* TransactionInfo::cloneDataStructure() const {
-    std::auto_ptr<TransactionInfo> transactionInfo( new TransactionInfo() );
+    std::auto_ptr<TransactionInfo> transactionInfo(new TransactionInfo());
 
     // Copy the data from the base class or classes
-    transactionInfo->copyDataStructure( this );
+    transactionInfo->copyDataStructure(this);
 
     return transactionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionInfo::copyDataStructure( const DataStructure* src ) {
+void TransactionInfo::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const TransactionInfo* srcPtr = dynamic_cast<const TransactionInfo*>( src );
+    const TransactionInfo* srcPtr = dynamic_cast<const TransactionInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "TransactionInfo::copyDataStructure - src is NULL or invalid" );
+            "TransactionInfo::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    this->setConnectionId( srcPtr->getConnectionId() );
-    this->setTransactionId( srcPtr->getTransactionId() );
-    this->setType( srcPtr->getType() );
+    this->setConnectionId(srcPtr->getConnectionId());
+    this->setTransactionId(srcPtr->getTransactionId());
+    this->setType(srcPtr->getType());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,14 +96,14 @@ std::string TransactionInfo::toString() const {
            << "responseRequired = " << boolalpha << this->isResponseRequired();
     stream << ", ";
     stream << "ConnectionId = ";
-    if( this->getConnectionId() != NULL ) {
+    if (this->getConnectionId() != NULL) {
         stream << this->getConnectionId()->toString();
     } else {
         stream << "NULL";
     }
     stream << ", ";
     stream << "TransactionId = ";
-    if( this->getTransactionId() != NULL ) {
+    if (this->getTransactionId() != NULL) {
         stream << this->getTransactionId()->toString();
     } else {
         stream << "NULL";
@@ -116,36 +116,36 @@ std::string TransactionInfo::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool TransactionInfo::equals( const DataStructure* value ) const {
+bool TransactionInfo::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const TransactionInfo* valuePtr = dynamic_cast<const TransactionInfo*>( value );
+    const TransactionInfo* valuePtr = dynamic_cast<const TransactionInfo*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
+    if (this->getConnectionId() != NULL) {
+        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
             return false;
         }
-    } else if( valuePtr->getConnectionId() != NULL ) {
+    } else if (valuePtr->getConnectionId() != NULL) {
         return false;
     }
-    if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
+    if (this->getTransactionId() != NULL) {
+        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
             return false;
         }
-    } else if( valuePtr->getTransactionId() != NULL ) {
+    } else if (valuePtr->getTransactionId() != NULL) {
         return false;
     }
-    if( this->getType() != valuePtr->getType() ) {
+    if (this->getType() != valuePtr->getType()) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
@@ -162,7 +162,7 @@ decaf::lang::Pointer<ConnectionId>& TransactionInfo::getConnectionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionInfo::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
+void TransactionInfo::setConnectionId(const decaf::lang::Pointer<ConnectionId>& connectionId) {
     this->connectionId = connectionId;
 }
 
@@ -177,7 +177,7 @@ decaf::lang::Pointer<TransactionId>& TransactionInfo::getTransactionId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionInfo::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
+void TransactionInfo::setTransactionId(const decaf::lang::Pointer<TransactionId>& transactionId) {
     this->transactionId = transactionId;
 }
 
@@ -187,12 +187,11 @@ unsigned char TransactionInfo::getType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionInfo::setType( unsigned char type ) {
+void TransactionInfo::setType(unsigned char type) {
     this->type = type;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> TransactionInfo::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processTransactionInfo( this );
+decaf::lang::Pointer<commands::Command> TransactionInfo::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processTransactionInfo(this);
 }

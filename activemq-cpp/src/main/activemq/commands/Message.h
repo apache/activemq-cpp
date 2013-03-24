@@ -117,8 +117,8 @@ namespace commands{
 
     private:
 
-        Message( const Message& );
-        Message& operator= ( const Message& );
+        Message(const Message&);
+        Message& operator= (const Message&);
 
     public:
 
@@ -130,11 +130,11 @@ namespace commands{
 
         virtual Message* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         /**
          * Create a Pointer based copy of this message.  Useful for chaining a clone
@@ -154,14 +154,14 @@ namespace commands{
          * wire
          * @param wireFormat - the wireformat controller
          */
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );
+        virtual void beforeMarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED);
 
         /**
          * Called after unmarshaling is started to cleanup the object being
          * unmarshaled.
          * @param wireFormat - the wireformat object to control unmarshaling
          */
-        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );
+        virtual void afterUnmarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED);
 
         /**
          * Indicates that this command is aware of Marshaling, and needs
@@ -177,7 +177,7 @@ namespace commands{
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler to call
          */
-        virtual void setAckHandler( const Pointer<core::ActiveMQAckHandler>& handler ) {
+        virtual void setAckHandler(const Pointer<core::ActiveMQAckHandler>& handler) {
             this->ackHandler = handler;
         }
 
@@ -195,7 +195,7 @@ namespace commands{
          * when the session create methods are called to create a Message..
          * @param handler ActiveMQConnection parent for this message
          */
-        void setConnection( core::ActiveMQConnection* connection ) {
+        void setConnection(core::ActiveMQConnection* connection) {
             this->connection = connection;
         }
 
@@ -251,7 +251,7 @@ namespace commands{
          * Set the Read Only State of the Message Properties.
          * @param value - true if Properties should be read only.
          */
-        void setReadOnlyProperties( bool value ) {
+        void setReadOnlyProperties(bool value) {
             this->readOnlyProperties = value;
         }
 
@@ -267,7 +267,7 @@ namespace commands{
          * Set the Read Only State of the Message Content.
          * @param value - true if Content should be read only.
          */
-        void setReadOnlyBody( bool value ) {
+        void setReadOnlyBody(bool value) {
             this->readOnlyBody = value;
         }
 
@@ -382,7 +382,7 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

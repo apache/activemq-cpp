@@ -34,8 +34,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -81,8 +81,8 @@ namespace commands{
 
     private:
 
-        ConsumerInfo( const ConsumerInfo& );
-        ConsumerInfo& operator= ( const ConsumerInfo& );
+        ConsumerInfo(const ConsumerInfo&);
+        ConsumerInfo& operator= (const ConsumerInfo&);
 
     public:
 
@@ -94,11 +94,11 @@ namespace commands{
 
         virtual ConsumerInfo* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         Pointer<RemoveInfo> createRemoveCommand() const;
 
@@ -178,7 +178,7 @@ namespace commands{
             return true;
         }
 
-        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );
+        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 
     };
 

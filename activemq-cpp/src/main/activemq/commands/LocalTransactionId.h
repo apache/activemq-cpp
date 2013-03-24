@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -61,7 +61,7 @@ namespace commands{
 
         LocalTransactionId();
 
-        LocalTransactionId( const LocalTransactionId& other );
+        LocalTransactionId(const LocalTransactionId& other);
 
         virtual ~LocalTransactionId();
 
@@ -69,11 +69,11 @@ namespace commands{
 
         virtual LocalTransactionId* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual bool isLocalTransactionId() const {
             return true;
@@ -86,15 +86,17 @@ namespace commands{
         virtual Pointer<ConnectionId>& getConnectionId();
         virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
-        virtual int compareTo( const LocalTransactionId& value ) const;
+        virtual int compareTo(const LocalTransactionId& value) const;
 
-        virtual bool equals( const LocalTransactionId& value ) const;
+        virtual bool equals(const LocalTransactionId& value) const;
 
-        virtual bool operator==( const LocalTransactionId& value ) const;
+        virtual bool operator==(const LocalTransactionId& value) const;
 
-        virtual bool operator<( const LocalTransactionId& value ) const;
+        virtual bool operator<(const LocalTransactionId& value) const;
 
-        LocalTransactionId& operator= ( const LocalTransactionId& other );
+        LocalTransactionId& operator= (const LocalTransactionId& other);
+
+        int getHashCode() const;
 
     };
 

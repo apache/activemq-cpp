@@ -51,114 +51,114 @@ unsigned char RemoveInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void RemoveInfoMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseCommandMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         RemoveInfo* info =
-            dynamic_cast<RemoveInfo*>( dataStructure );
+            dynamic_cast<RemoveInfo*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        info->setObjectId( Pointer<DataStructure>( dynamic_cast< DataStructure* >(
-            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );
-        if( wireVersion >= 5 ) {
-            info->setLastDeliveredSequenceId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+        info->setObjectId(Pointer<DataStructure>(dynamic_cast<DataStructure* >(
+            tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
+        if (wireVersion >= 5) {
+            info->setLastDeliveredSequenceId(tightUnmarshalLong(wireFormat, dataIn, bs));
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int RemoveInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int RemoveInfoMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         RemoveInfo* info =
-            dynamic_cast<RemoveInfo*>( dataStructure );
+            dynamic_cast<RemoveInfo*>(dataStructure);
 
-        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = BaseCommandMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
 
         int wireVersion = wireFormat->getVersion();
 
-        rc += tightMarshalCachedObject1( wireFormat, info->getObjectId().get(), bs );
-        if( wireVersion >= 5 ) {
-            rc += tightMarshalLong1( wireFormat, info->getLastDeliveredSequenceId(), bs );
+        rc += tightMarshalCachedObject1(wireFormat, info->getObjectId().get(), bs);
+        if (wireVersion >= 5) {
+            rc += tightMarshalLong1(wireFormat, info->getLastDeliveredSequenceId(), bs);
         }
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void RemoveInfoMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         RemoveInfo* info =
-            dynamic_cast<RemoveInfo*>( dataStructure );
+            dynamic_cast<RemoveInfo*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        tightMarshalCachedObject2( wireFormat, info->getObjectId().get(), dataOut, bs );
-        if( wireVersion >= 5 ) {
-            tightMarshalLong2( wireFormat, info->getLastDeliveredSequenceId(), dataOut, bs );
+        tightMarshalCachedObject2(wireFormat, info->getObjectId().get(), dataOut, bs);
+        if (wireVersion >= 5) {
+            tightMarshalLong2(wireFormat, info->getLastDeliveredSequenceId(), dataOut, bs);
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void RemoveInfoMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseCommandMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         RemoveInfo* info =
-            dynamic_cast<RemoveInfo*>( dataStructure );
+            dynamic_cast<RemoveInfo*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        info->setObjectId( Pointer<DataStructure>( dynamic_cast< DataStructure* >( 
-            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );
-        if( wireVersion >= 5 ) {
-            info->setLastDeliveredSequenceId( looseUnmarshalLong( wireFormat, dataIn ) );
+        info->setObjectId(Pointer<DataStructure>(dynamic_cast<DataStructure*>(
+            looseUnmarshalCachedObject(wireFormat, dataIn))));
+        if (wireVersion >= 5) {
+            info->setLastDeliveredSequenceId(looseUnmarshalLong(wireFormat, dataIn));
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void RemoveInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void RemoveInfoMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         RemoveInfo* info =
-            dynamic_cast<RemoveInfo*>( dataStructure );
-        BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+            dynamic_cast<RemoveInfo*>(dataStructure);
+        BaseCommandMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
 
         int wireVersion = wireFormat->getVersion();
 
-        looseMarshalCachedObject( wireFormat, info->getObjectId().get(), dataOut );
-        if( wireVersion >= 5 ) {
-            looseMarshalLong( wireFormat, info->getLastDeliveredSequenceId(), dataOut );
+        looseMarshalCachedObject(wireFormat, info->getObjectId().get(), dataOut);
+        if (wireVersion >= 5) {
+            looseMarshalLong(wireFormat, info->getLastDeliveredSequenceId(), dataOut);
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

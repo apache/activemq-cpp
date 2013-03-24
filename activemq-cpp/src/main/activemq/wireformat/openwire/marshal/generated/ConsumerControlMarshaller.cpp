@@ -51,170 +51,170 @@ unsigned char ConsumerControlMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ConsumerControlMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        BaseCommandMarshaller::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);
 
         ConsumerControl* info =
-            dynamic_cast<ConsumerControl*>( dataStructure );
+            dynamic_cast<ConsumerControl*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 6 ) {
-            info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >(
-                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
+        if (wireVersion >= 6) {
+            info->setDestination(Pointer<ActiveMQDestination>(dynamic_cast<ActiveMQDestination* >(
+                tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
         }
-        info->setClose( bs->readBoolean() );
-        info->setConsumerId( Pointer<ConsumerId>( dynamic_cast< ConsumerId* >(
-            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );
-        info->setPrefetch( dataIn->readInt() );
-        if( wireVersion >= 2 ) {
-            info->setFlush( bs->readBoolean() );
+        info->setClose(bs->readBoolean());
+        info->setConsumerId(Pointer<ConsumerId>(dynamic_cast<ConsumerId* >(
+            tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
+        info->setPrefetch(dataIn->readInt());
+        if (wireVersion >= 2) {
+            info->setFlush(bs->readBoolean());
         }
-        if( wireVersion >= 2 ) {
-            info->setStart( bs->readBoolean() );
+        if (wireVersion >= 2) {
+            info->setStart(bs->readBoolean());
         }
-        if( wireVersion >= 2 ) {
-            info->setStop( bs->readBoolean() );
+        if (wireVersion >= 2) {
+            info->setStop(bs->readBoolean());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {
+int ConsumerControlMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {
 
     try {
 
         ConsumerControl* info =
-            dynamic_cast<ConsumerControl*>( dataStructure );
+            dynamic_cast<ConsumerControl*>(dataStructure);
 
-        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = BaseCommandMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 6 ) {
-            rc += tightMarshalNestedObject1( wireFormat, info->getDestination().get(), bs );
+        if (wireVersion >= 6) {
+            rc += tightMarshalNestedObject1(wireFormat, info->getDestination().get(), bs);
         }
-        bs->writeBoolean( info->isClose() );
-        rc += tightMarshalNestedObject1( wireFormat, info->getConsumerId().get(), bs );
-        if( wireVersion >= 2 ) {
-            bs->writeBoolean( info->isFlush() );
+        bs->writeBoolean(info->isClose());
+        rc += tightMarshalNestedObject1(wireFormat, info->getConsumerId().get(), bs);
+        if (wireVersion >= 2) {
+            bs->writeBoolean(info->isFlush());
         }
-        if( wireVersion >= 2 ) {
-            bs->writeBoolean( info->isStart() );
+        if (wireVersion >= 2) {
+            bs->writeBoolean(info->isStart());
         }
-        if( wireVersion >= 2 ) {
-            bs->writeBoolean( info->isStop() );
+        if (wireVersion >= 2) {
+            bs->writeBoolean(info->isStop());
         }
 
         return rc + 4;
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {
+void ConsumerControlMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {
 
     try {
 
-        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2(wireFormat, dataStructure, dataOut, bs );
 
         ConsumerControl* info =
-            dynamic_cast<ConsumerControl*>( dataStructure );
+            dynamic_cast<ConsumerControl*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 6 ) {
-            tightMarshalNestedObject2( wireFormat, info->getDestination().get(), dataOut, bs );
+        if (wireVersion >= 6) {
+            tightMarshalNestedObject2(wireFormat, info->getDestination().get(), dataOut, bs);
         }
         bs->readBoolean();
-        tightMarshalNestedObject2( wireFormat, info->getConsumerId().get(), dataOut, bs );
-        dataOut->writeInt( info->getPrefetch() );
-        if( wireVersion >= 2 ) {
+        tightMarshalNestedObject2(wireFormat, info->getConsumerId().get(), dataOut, bs);
+        dataOut->writeInt(info->getPrefetch());
+        if (wireVersion >= 2) {
             bs->readBoolean();
         }
-        if( wireVersion >= 2 ) {
+        if (wireVersion >= 2) {
             bs->readBoolean();
         }
-        if( wireVersion >= 2 ) {
+        if (wireVersion >= 2) {
             bs->readBoolean();
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {
+void ConsumerControlMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {
 
     try {
 
-        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BaseCommandMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         ConsumerControl* info =
-            dynamic_cast<ConsumerControl*>( dataStructure );
+            dynamic_cast<ConsumerControl*>(dataStructure);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 6 ) {
-            info->setDestination( Pointer<ActiveMQDestination>( dynamic_cast< ActiveMQDestination* >( 
-                looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
+        if (wireVersion >= 6) {
+            info->setDestination(Pointer<ActiveMQDestination>(dynamic_cast<ActiveMQDestination*>(
+                looseUnmarshalNestedObject(wireFormat, dataIn))));
         }
-        info->setClose( dataIn->readBoolean() );
-        info->setConsumerId( Pointer<ConsumerId>( dynamic_cast< ConsumerId* >( 
-            looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );
-        info->setPrefetch( dataIn->readInt() );
-        if( wireVersion >= 2 ) {
-            info->setFlush( dataIn->readBoolean() );
+        info->setClose(dataIn->readBoolean());
+        info->setConsumerId(Pointer<ConsumerId>(dynamic_cast<ConsumerId*>(
+            looseUnmarshalNestedObject(wireFormat, dataIn))));
+        info->setPrefetch(dataIn->readInt());
+        if (wireVersion >= 2) {
+            info->setFlush(dataIn->readBoolean());
         }
-        if( wireVersion >= 2 ) {
-            info->setStart( dataIn->readBoolean() );
+        if (wireVersion >= 2) {
+            info->setStart(dataIn->readBoolean());
         }
-        if( wireVersion >= 2 ) {
-            info->setStop( dataIn->readBoolean() );
+        if (wireVersion >= 2) {
+            info->setStop(dataIn->readBoolean());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {
+void ConsumerControlMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {
 
     try {
 
         ConsumerControl* info =
-            dynamic_cast<ConsumerControl*>( dataStructure );
-        BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+            dynamic_cast<ConsumerControl*>(dataStructure);
+        BaseCommandMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
 
         int wireVersion = wireFormat->getVersion();
 
-        if( wireVersion >= 6 ) {
-            looseMarshalNestedObject( wireFormat, info->getDestination().get(), dataOut );
+        if (wireVersion >= 6) {
+            looseMarshalNestedObject(wireFormat, info->getDestination().get(), dataOut);
         }
-        dataOut->writeBoolean( info->isClose() );
-        looseMarshalNestedObject( wireFormat, info->getConsumerId().get(), dataOut );
-        dataOut->writeInt( info->getPrefetch() );
-        if( wireVersion >= 2 ) {
-            dataOut->writeBoolean( info->isFlush() );
+        dataOut->writeBoolean(info->isClose());
+        looseMarshalNestedObject(wireFormat, info->getConsumerId().get(), dataOut);
+        dataOut->writeInt(info->getPrefetch());
+        if (wireVersion >= 2) {
+            dataOut->writeBoolean(info->isFlush());
         }
-        if( wireVersion >= 2 ) {
-            dataOut->writeBoolean( info->isStart() );
+        if (wireVersion >= 2) {
+            dataOut->writeBoolean(info->isStart());
         }
-        if( wireVersion >= 2 ) {
-            dataOut->writeBoolean( info->isStop() );
+        if (wireVersion >= 2) {
+            dataOut->writeBoolean(info->isStop());
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 

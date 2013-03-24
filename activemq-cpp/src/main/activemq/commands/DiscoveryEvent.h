@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -55,8 +55,8 @@ namespace commands{
 
     private:
 
-        DiscoveryEvent( const DiscoveryEvent& );
-        DiscoveryEvent& operator= ( const DiscoveryEvent& );
+        DiscoveryEvent(const DiscoveryEvent&);
+        DiscoveryEvent& operator= (const DiscoveryEvent&);
 
     public:
 
@@ -68,11 +68,11 @@ namespace commands{
 
         virtual DiscoveryEvent* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual const std::string& getServiceName() const;
         virtual std::string& getServiceName();

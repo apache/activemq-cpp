@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-KeepAliveInfo::KeepAliveInfo() 
-    : BaseCommand() {
+KeepAliveInfo::KeepAliveInfo() :
+    BaseCommand() {
 
 }
 
@@ -49,32 +49,32 @@ KeepAliveInfo::~KeepAliveInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 KeepAliveInfo* KeepAliveInfo::cloneDataStructure() const {
-    std::auto_ptr<KeepAliveInfo> keepAliveInfo( new KeepAliveInfo() );
+    std::auto_ptr<KeepAliveInfo> keepAliveInfo(new KeepAliveInfo());
 
     // Copy the data from the base class or classes
-    keepAliveInfo->copyDataStructure( this );
+    keepAliveInfo->copyDataStructure(this);
 
     return keepAliveInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void KeepAliveInfo::copyDataStructure( const DataStructure* src ) {
+void KeepAliveInfo::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const KeepAliveInfo* srcPtr = dynamic_cast<const KeepAliveInfo*>( src );
+    const KeepAliveInfo* srcPtr = dynamic_cast<const KeepAliveInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "KeepAliveInfo::copyDataStructure - src is NULL or invalid" );
+            "KeepAliveInfo::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
 }
 
@@ -97,26 +97,25 @@ std::string KeepAliveInfo::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool KeepAliveInfo::equals( const DataStructure* value ) const {
+bool KeepAliveInfo::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const KeepAliveInfo* valuePtr = dynamic_cast<const KeepAliveInfo*>( value );
+    const KeepAliveInfo* valuePtr = dynamic_cast<const KeepAliveInfo*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
     return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) {
-
-    return visitor->processKeepAliveInfo( this );
+decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processKeepAliveInfo(this);
 }

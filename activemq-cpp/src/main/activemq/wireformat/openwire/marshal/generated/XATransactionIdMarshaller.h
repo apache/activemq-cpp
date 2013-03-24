@@ -33,11 +33,11 @@
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/wireformat/openwire/utils/BooleanStream.h>
 
-namespace activemq{
-namespace wireformat{
-namespace openwire{
-namespace marshal{
-namespace generated{
+namespace activemq {
+namespace wireformat {
+namespace openwire {
+namespace marshal {
+namespace generated {
 
     /**
      * Marshaling code for Open Wire Format for XATransactionIdMarshaller
@@ -56,27 +56,27 @@ namespace generated{
 
         virtual unsigned char getDataStructureType() const;
 
-        virtual void tightUnmarshal( OpenWireFormat* wireFormat,
-                                     commands::DataStructure* dataStructure,
-                                     decaf::io::DataInputStream* dataIn,
-                                     utils::BooleanStream* bs );
-
-        virtual int tightMarshal1( OpenWireFormat* wireFormat,
-                                   commands::DataStructure* dataStructure,
-                                   utils::BooleanStream* bs );
-
-        virtual void tightMarshal2( OpenWireFormat* wireFormat,
+        virtual void tightUnmarshal(OpenWireFormat* wireFormat,
                                     commands::DataStructure* dataStructure,
-                                    decaf::io::DataOutputStream* dataOut,
-                                    utils::BooleanStream* bs );
+                                    decaf::io::DataInputStream* dataIn,
+                                    utils::BooleanStream* bs);
 
-        virtual void looseUnmarshal( OpenWireFormat* wireFormat,
-                                     commands::DataStructure* dataStructure,
-                                     decaf::io::DataInputStream* dataIn );
+        virtual int tightMarshal1(OpenWireFormat* wireFormat,
+                                  commands::DataStructure* dataStructure,
+                                  utils::BooleanStream* bs);
 
-        virtual void looseMarshal( OpenWireFormat* wireFormat,
+        virtual void tightMarshal2(OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   decaf::io::DataOutputStream* dataOut );
+                                   decaf::io::DataOutputStream* dataOut,
+                                   utils::BooleanStream* bs);
+
+        virtual void looseUnmarshal(OpenWireFormat* wireFormat,
+                                    commands::DataStructure* dataStructure,
+                                    decaf::io::DataInputStream* dataIn);
+
+        virtual void looseMarshal(OpenWireFormat* wireFormat,
+                                  commands::DataStructure* dataStructure,
+                                  decaf::io::DataOutputStream* dataOut);
 
     };
 

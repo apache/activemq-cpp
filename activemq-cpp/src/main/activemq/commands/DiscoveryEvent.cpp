@@ -38,8 +38,8 @@ using namespace decaf::lang::exceptions;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-DiscoveryEvent::DiscoveryEvent() 
-    : BaseDataStructure(), serviceName(""), brokerName("") {
+DiscoveryEvent::DiscoveryEvent() :
+    BaseDataStructure(), serviceName(""), brokerName("") {
 
 }
 
@@ -49,35 +49,35 @@ DiscoveryEvent::~DiscoveryEvent() {
 
 ////////////////////////////////////////////////////////////////////////////////
 DiscoveryEvent* DiscoveryEvent::cloneDataStructure() const {
-    std::auto_ptr<DiscoveryEvent> discoveryEvent( new DiscoveryEvent() );
+    std::auto_ptr<DiscoveryEvent> discoveryEvent(new DiscoveryEvent());
 
     // Copy the data from the base class or classes
-    discoveryEvent->copyDataStructure( this );
+    discoveryEvent->copyDataStructure(this);
 
     return discoveryEvent.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DiscoveryEvent::copyDataStructure( const DataStructure* src ) {
+void DiscoveryEvent::copyDataStructure(const DataStructure* src) {
 
     // Protect against invalid self assignment.
-    if( this == src ) {
+    if (this == src) {
         return;
     }
 
-    const DiscoveryEvent* srcPtr = dynamic_cast<const DiscoveryEvent*>( src );
+    const DiscoveryEvent* srcPtr = dynamic_cast<const DiscoveryEvent*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
+    if (srcPtr == NULL || src == NULL) {
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
-            "DiscoveryEvent::copyDataStructure - src is NULL or invalid" );
+            "DiscoveryEvent::copyDataStructure - src is NULL or invalid");
     }
 
     // Copy the data of the base class or classes
-    BaseDataStructure::copyDataStructure( src );
+    BaseDataStructure::copyDataStructure(src);
 
-    this->setServiceName( srcPtr->getServiceName() );
-    this->setBrokerName( srcPtr->getBrokerName() );
+    this->setServiceName(srcPtr->getServiceName());
+    this->setBrokerName(srcPtr->getBrokerName());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,25 +100,25 @@ std::string DiscoveryEvent::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DiscoveryEvent::equals( const DataStructure* value ) const {
+bool DiscoveryEvent::equals(const DataStructure* value) const {
 
-    if( this == value ) {
+    if (this == value) {
         return true;
     }
 
-    const DiscoveryEvent* valuePtr = dynamic_cast<const DiscoveryEvent*>( value );
+    const DiscoveryEvent* valuePtr = dynamic_cast<const DiscoveryEvent*>(value);
 
-    if( valuePtr == NULL || value == NULL ) {
+    if (valuePtr == NULL || value == NULL) {
         return false;
     }
 
-    if( this->getServiceName() != valuePtr->getServiceName() ) {
+    if (this->getServiceName() != valuePtr->getServiceName()) {
         return false;
     }
-    if( this->getBrokerName() != valuePtr->getBrokerName() ) {
+    if (this->getBrokerName() != valuePtr->getBrokerName()) {
         return false;
     }
-    if( !BaseDataStructure::equals( value ) ) {
+    if (!BaseDataStructure::equals(value)) {
         return false;
     }
     return true;
@@ -135,7 +135,7 @@ std::string& DiscoveryEvent::getServiceName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DiscoveryEvent::setServiceName( const std::string& serviceName ) {
+void DiscoveryEvent::setServiceName(const std::string& serviceName) {
     this->serviceName = serviceName;
 }
 
@@ -150,7 +150,7 @@ std::string& DiscoveryEvent::getBrokerName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DiscoveryEvent::setBrokerName( const std::string& brokerName ) {
+void DiscoveryEvent::setBrokerName(const std::string& brokerName) {
     this->brokerName = brokerName;
 }
 
