@@ -42,24 +42,11 @@ using namespace decaf::io;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf {
-namespace util {
-
-    template<>
-    struct HashCode<MessageId> : public HashCodeUnaryBase<const MessageId&> {
-        int operator()(const MessageId& arg) const {
-            return decaf::util::HashCode<std::string>()(arg.toString());
-        }
-    };
-
-}}
-
-////////////////////////////////////////////////////////////////////////////////
 namespace activemq {
 namespace state {
 
 
-    class MessageCache : public LinkedHashMap<Pointer<MessageId>, Pointer<Command>, HashCode< Pointer<MessageId> > > {
+    class MessageCache : public LinkedHashMap<Pointer<MessageId>, Pointer<Command> > {
     protected:
 
         ConnectionStateTracker* parent;
@@ -71,7 +58,7 @@ namespace state {
     public:
 
         MessageCache(ConnectionStateTracker* parent) :
-            LinkedHashMap<Pointer<MessageId>, Pointer<Command> >(), parent(parent), currentCacheSize(0) {
+            LinkedHashMap(), parent(parent), currentCacheSize(0) {
         }
 
         virtual ~MessageCache() {}
