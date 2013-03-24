@@ -47,23 +47,37 @@ namespace util {
      * @since 1.0
      */
     template<typename T>
-    struct HashCode : HashCodeUnaryBase<T> {
+    struct HashCode : HashCodeUnaryBase<const T&> {
     public:
-
-        int operator()(T arg) const;
-    };
-
-    template<typename T>
-    struct HashCode<T*> : public HashCodeUnaryBase<T*> {
-        int operator()(T* arg)  const {
-            return reinterpret_cast<int>(arg);
+        int operator()(const T& arg) const {
+            return arg.getHashCode();
         }
     };
 
     template<typename T>
-    struct HashCode<const T&> : HashCodeUnaryBase<const T&> {
+    struct HashCode<const T> : HashCodeUnaryBase<const T&> {
         int operator()(const T& arg) const {
-            return HashCode<const T*>(&arg);
+            return arg.getHashCode();
+        }
+    };
+
+    template<typename T>
+    struct HashCode<T*> : public HashCodeUnaryBase<const T*> {
+        int operator()(const T* arg) const {
+            if (arg != NULL) {
+                return arg->getHashCode();
+            }
+            return 0;
+        }
+    };
+
+    template<typename T>
+    struct HashCode<const T*> : public HashCodeUnaryBase<const T*> {
+        int operator()(const T* arg) const {
+            if (arg != NULL) {
+                return arg->getHashCode();
+            }
+            return 0;
         }
     };
 
@@ -168,11 +182,25 @@ namespace util {
         }
     };
 
+    template<>
+    struct HashCode<const std::string> : public HashCodeUnaryBase<const std::string&> {
+        int operator()(const std::string& arg) const {
+            int h = 0;
+            if (h == 0 && arg.length() > 0) {
+                std::string::const_iterator iter = arg.begin();
+                for (; iter != arg.end(); ++iter) {
+                    h = 31 * h + (*iter);
+                }
+            }
+            return h;
+        }
+    };
+
     template<typename T>
     struct HashCode< decaf::lang::Pointer<T> > : public HashCodeUnaryBase<decaf::lang::Pointer<T> > {
         int operator()(decaf::lang::Pointer<T> arg) const {
             if (arg != NULL) {
-                return HashCode<T>()(*arg);
+                return HashCode<const T>()(*arg);
             }
             return 0;
         }
