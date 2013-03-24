@@ -31,13 +31,13 @@ public class MessageIdHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
-        out.println("        "+getClassName()+"( const std::string& messageKey );");
+        out.println("        "+getClassName()+"(const std::string& messageKey);");
         out.println("");
-        out.println("        "+getClassName()+"( const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId );");
+        out.println("        "+getClassName()+"(const Pointer<ProducerInfo>& producerInfo, long long producerSequenceId);");
         out.println("");
-        out.println("        "+getClassName()+"( const Pointer<ProducerId>& producerId, long long producerSequenceId );");
+        out.println("        "+getClassName()+"(const Pointer<ProducerId>& producerId, long long producerSequenceId);");
         out.println("");
-        out.println("        "+getClassName()+"( const std::string& producerId, long long producerSequenceId );");
+        out.println("        "+getClassName()+"(const std::string& producerId, long long producerSequenceId);");
         out.println("");
 
         super.generateAdditionalConstructors(out);
@@ -54,9 +54,9 @@ public class MessageIdHeaderGenerator extends CommandHeaderGenerator {
     }
 
     protected void generateAdditonalMembers( PrintWriter out ) {
-        out.println("        void setValue( const std::string& key );");
+        out.println("        void setValue(const std::string& key);");
         out.println("");
-        out.println("        void setTextView( const std::string& key );");
+        out.println("        void setTextView(const std::string& key);");
         out.println("");
 
         super.generateAdditonalMembers( out );

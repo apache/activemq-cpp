@@ -24,12 +24,12 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ConsumerId::ConsumerId( const SessionId& sessionId, long long consumerIdd )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("ConsumerId::ConsumerId(const SessionId& sessionId, long long consumerId) :");
+        out.println("    " + generateInitializerList() + " {");
         out.println("");
         out.println("    this->connectionId = sessionId.getConnectionId();");
         out.println("    this->sessionId = sessionId.getValue();");
-        out.println("    this->value = consumerIdd;");
+        out.println("    this->value = consumerId;");
         out.println("}");
         out.println("");
 
@@ -43,8 +43,8 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("const Pointer<SessionId>& ConsumerId::getParentId() const {");
-        out.println("    if( this->parentId == NULL ) {");
-        out.println("        this->parentId.reset( new SessionId( this ) );");
+        out.println("    if (this->parentId == NULL) {");
+        out.println("        this->parentId.reset(new SessionId(this));");
         out.println("    }");
         out.println("    return this->parentId;");
         out.println("}");

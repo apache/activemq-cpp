@@ -69,8 +69,8 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         if( !isAssignable() ) {
             out.println("    private:");
             out.println("");
-            out.println("        "+getClassName()+"( const "+getClassName()+"& );");
-            out.println("        "+getClassName()+"& operator= ( const "+getClassName()+"& );");
+            out.println("        "+getClassName()+"(const "+getClassName()+"&);");
+            out.println("        "+getClassName()+"& operator= (const "+getClassName()+"&);");
             out.println("");
         }
 
@@ -80,7 +80,7 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         out.println("");
 
         if( isAssignable() ) {
-            out.println("        "+getClassName()+"( const "+getClassName()+"& other );");
+            out.println("        "+getClassName()+"(const "+getClassName()+"& other);");
             out.println("");
         }
 
@@ -92,29 +92,34 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         out.println("");
         out.println("        virtual "+getClassName()+"* cloneDataStructure() const;");
         out.println("");
-        out.println("        virtual void copyDataStructure( const DataStructure* src );");
+        out.println("        virtual void copyDataStructure(const DataStructure* src);");
         out.println("");
         out.println("        virtual std::string toString() const;");
         out.println("");
-        out.println("        virtual bool equals( const DataStructure* value ) const;" );
+        out.println("        virtual bool equals(const DataStructure* value) const;" );
         out.println("");
 
         generateAdditonalMembers( out );
         generatePropertyAccessors( out );
 
         if( isComparable() ) {
-            out.println("        virtual int compareTo( const "+getClassName()+"& value ) const;");
+            out.println("        virtual int compareTo(const "+getClassName()+"& value) const;");
             out.println("");
-            out.println("        virtual bool equals( const "+getClassName()+"& value ) const;");
+            out.println("        virtual bool equals(const "+getClassName()+"& value) const;");
             out.println("");
-            out.println("        virtual bool operator==( const "+getClassName()+"& value ) const;");
+            out.println("        virtual bool operator==(const "+getClassName()+"& value) const;");
             out.println("");
-            out.println("        virtual bool operator<( const "+getClassName()+"& value ) const;");
+            out.println("        virtual bool operator<(const "+getClassName()+"& value) const;");
             out.println("");
         }
 
         if( isAssignable() ) {
-            out.println("        "+getClassName()+"& operator= ( const "+getClassName()+"& other );");
+            out.println("        "+getClassName()+"& operator= (const "+getClassName()+"& other);");
+            out.println("");
+        }
+
+        if( isHashable() ) {
+            out.println("        int getHashCode() const;");
             out.println("");
         }
 
@@ -129,7 +134,7 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         }
 
         if( getBaseClassName().equals( "BaseCommand" ) ) {
-            out.println("        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor );" );
+            out.println("        virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);" );
             out.println("");
         }
 
@@ -178,8 +183,8 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
     }
 
     protected void generateNamespaceWrapper( PrintWriter out ) {
-        out.println("namespace activemq{");
-        out.println("namespace commands{");
+        out.println("namespace activemq {");
+        out.println("namespace commands {");
         out.println("");
     }
 

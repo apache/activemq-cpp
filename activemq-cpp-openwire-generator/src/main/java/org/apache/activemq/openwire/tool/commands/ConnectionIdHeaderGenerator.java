@@ -28,11 +28,11 @@ public class ConnectionIdHeaderGenerator extends CommandHeaderGenerator {
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("        "+getClassName()+"( const SessionId* sessionId );");
+        out.println("        "+getClassName()+"(const SessionId* sessionId);");
         out.println("");
-        out.println("        "+getClassName()+"( const ProducerId* producerId );");
+        out.println("        "+getClassName()+"(const ProducerId* producerId);");
         out.println("");
-        out.println("        "+getClassName()+"( const ConsumerId* consumerId );");
+        out.println("        "+getClassName()+"(const ConsumerId* consumerId);");
         out.println("");
 
         super.generateAdditionalConstructors(out);

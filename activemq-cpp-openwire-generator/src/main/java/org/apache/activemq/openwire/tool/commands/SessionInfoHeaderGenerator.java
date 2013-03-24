@@ -45,7 +45,7 @@ public class SessionInfoHeaderGenerator extends CommandHeaderGenerator {
         out.println("            return this->ackMode;");
         out.println("        }");
         out.println("");
-        out.println("        void setAckMode( unsigned int mode ) {");
+        out.println("        void setAckMode(unsigned int mode) {");
         out.println("            this->ackMode = mode;");
         out.println("        }");
         out.println("");

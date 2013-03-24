@@ -23,9 +23,9 @@ public class ConsumerInfoSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("Pointer<RemoveInfo> ConsumerInfo::createRemoveCommand() const {");
-        out.println("    Pointer<RemoveInfo> info( new RemoveInfo() );");
-        out.println("    info->setResponseRequired( this->isResponseRequired() );");
-        out.println("    info->setObjectId( this->getConsumerId() );");
+        out.println("    Pointer<RemoveInfo> info(new RemoveInfo());");
+        out.println("    info->setResponseRequired(this->isResponseRequired());");
+        out.println("    info->setObjectId(this->getConsumerId());");
         out.println("    return info;");
         out.println("}");
         out.println("");

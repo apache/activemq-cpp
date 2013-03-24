@@ -47,11 +47,11 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
     protected void generateCopyDataStructureBody( PrintWriter out ) {
         super.generateCopyDataStructureBody(out);
 
-        out.println("    this->properties.copy( srcPtr->properties );");
-        out.println("    this->setAckHandler( srcPtr->getAckHandler() );");
-        out.println("    this->setReadOnlyBody( srcPtr->isReadOnlyBody() );");
-        out.println("    this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );");
-        out.println("    this->setConnection( srcPtr->getConnection() );");
+        out.println("    this->properties.copy(srcPtr->properties);");
+        out.println("    this->setAckHandler(srcPtr->getAckHandler());");
+        out.println("    this->setReadOnlyBody(srcPtr->isReadOnlyBody());");
+        out.println("    this->setReadOnlyProperties(srcPtr->isReadOnlyProperties());");
+        out.println("    this->setConnection(srcPtr->getConnection());");
     }
 
     protected void generateToStringBody( PrintWriter out ) {
@@ -61,19 +61,19 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
     protected void generateEqualsBody( PrintWriter out ) {
         super.generateEqualsBody(out);
 
-        out.println("    if( ackHandler != valuePtr->getAckHandler() ){");
+        out.println("    if (ackHandler != valuePtr->getAckHandler()){");
         out.println("        return false;");
         out.println("    }");
         out.println("");
-        out.println("    if( !properties.equals( valuePtr->properties ) ) {");
+        out.println("    if (!properties.equals(valuePtr->properties)) {");
         out.println("        return false;");
         out.println("    }");
         out.println("");
-        out.println("    if( readOnlyBody != valuePtr->isReadOnlyBody() ){");
+        out.println("    if (readOnlyBody != valuePtr->isReadOnlyBody()){");
         out.println("        return false;");
         out.println("    }");
         out.println("");
-        out.println("    if( readOnlyProperties != valuePtr->isReadOnlyProperties() ){");
+        out.println("    if (readOnlyProperties != valuePtr->isReadOnlyProperties()){");
         out.println("        return false;");
         out.println("    }");
         out.println("");
@@ -91,7 +91,7 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("bool Message::isExpired() const {");
         out.println("    long long expireTime = this->getExpiration();");
         out.println("    long long currentTime = decaf::lang::System::currentTimeMillis();");
-        out.println("    if( expireTime > 0 && currentTime > expireTime ) {");
+        out.println("    if (expireTime > 0 && currentTime > expireTime) {");
         out.println("        return true;");
         out.println("    }");
         out.println("    return false;");
@@ -109,32 +109,30 @@ public class MessageSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
+        out.println("void Message::beforeMarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED) {");
         out.println("");
-        out.println("    try{");
-        out.println("");
+        out.println("    try {");
         out.println("        marshalledProperties.clear();");
-        out.println("        if( !properties.isEmpty() ) {");
+        out.println("        if (!properties.isEmpty()) {");
         out.println("            wireformat::openwire::marshal::PrimitiveTypesMarshaller::marshal(");
         out.println("                &properties, marshalledProperties );");
         out.println("        }");
         out.println("    }");
-        out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )");
-        out.println("    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )");
-        out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )");
+        out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)");
+        out.println("    AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::Exception, decaf::io::IOException)");
+        out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)");
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {");
+        out.println("void Message::afterUnmarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED) {");
         out.println("");
-        out.println("    try{");
-        out.println("");
+        out.println("    try {");
         out.println("        wireformat::openwire::marshal::PrimitiveTypesMarshaller::unmarshal(");
-        out.println("            &properties, marshalledProperties );");
+        out.println("            &properties, marshalledProperties);");
         out.println("    }");
-        out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )");
-        out.println("    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )");
-        out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )");
+        out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)");
+        out.println("    AMQ_CATCH_EXCEPTION_CONVERT(decaf::lang::Exception, decaf::io::IOException)");
+        out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)");
         out.println("}");
         out.println("");
     }

@@ -24,9 +24,9 @@ public class ConnectionInfoSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("Pointer<RemoveInfo> ConnectionInfo::createRemoveCommand() const {");
-        out.println("    Pointer<RemoveInfo> info( new RemoveInfo() );");
-        out.println("    info->setResponseRequired( this->isResponseRequired() );");
-        out.println("    info->setObjectId( this->getConnectionId() );");
+        out.println("    Pointer<RemoveInfo> info(new RemoveInfo());");
+        out.println("    info->setResponseRequired(this->isResponseRequired());");
+        out.println("    info->setObjectId(this->getConnectionId());");
         out.println("    return info;");
         out.println("}");
         out.println("");

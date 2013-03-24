@@ -51,11 +51,11 @@ public class XATransactionIdHeaderGenerator extends CommandHeaderGenerator {
         out.println("");
         out.println("        virtual Xid* clone() const;");
         out.println("");
-        out.println("        virtual bool equals( const Xid* other ) const;");
+        out.println("        virtual bool equals(const Xid* other) const;");
         out.println("");
-        out.println("        virtual int getBranchQualifier( unsigned char* buffer, int size ) const;");
+        out.println("        virtual int getBranchQualifier(unsigned char* buffer, int size) const;");
         out.println("");
-        out.println("        virtual int getGlobalTransactionId( unsigned char* buffer, int size ) const;");
+        out.println("        virtual int getGlobalTransactionId(unsigned char* buffer, int size) const;");
         out.println("");
 
         super.generateAdditonalMembers( out );

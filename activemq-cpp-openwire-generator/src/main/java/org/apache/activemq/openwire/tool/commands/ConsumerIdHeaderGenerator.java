@@ -29,7 +29,7 @@ public class ConsumerIdHeaderGenerator extends CommandHeaderGenerator {
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("        "+getClassName()+"( const SessionId& sessionId, long long consumerIdd );");
+        out.println("        "+getClassName()+"(const SessionId& sessionId, long long consumerIdd);");
         out.println("");
 
         super.generateAdditionalConstructors(out);

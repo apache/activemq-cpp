@@ -23,9 +23,9 @@ public class ProducerInfoSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("Pointer<RemoveInfo> ProducerInfo::createRemoveCommand() const {");
-        out.println("    Pointer<RemoveInfo> info( new RemoveInfo() );");
-        out.println("    info->setResponseRequired( this->isResponseRequired() );");
-        out.println("    info->setObjectId( this->getProducerId() );");
+        out.println("    Pointer<RemoveInfo> info(new RemoveInfo());");
+        out.println("    info->setResponseRequired(this->isResponseRequired());");
+        out.println("    info->setObjectId(this->getProducerId());");
         out.println("    return info;");
         out.println("}");
         out.println("");

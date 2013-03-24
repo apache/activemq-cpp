@@ -37,6 +37,7 @@ public abstract class CommandCodeGenerator {
     private boolean comparable = false;
     private boolean assignable = false;
     private boolean genIsClass = false;
+    private boolean hashable = false;
 
     public abstract void generate( PrintWriter out );
 
@@ -74,6 +75,14 @@ public abstract class CommandCodeGenerator {
 
     public void setComparable(boolean comparable) {
         this.comparable = comparable;
+    }
+
+    public boolean isHashable() {
+        return hashable;
+    }
+
+    public void setHashable(boolean hashable) {
+        this.hashable = hashable;
     }
 
     public boolean isAssignable() {

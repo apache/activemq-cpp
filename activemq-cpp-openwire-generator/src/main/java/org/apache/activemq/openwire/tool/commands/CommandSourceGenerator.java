@@ -43,6 +43,9 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println("using namespace activemq::commands;");
         out.println("using namespace decaf::lang;");
         out.println("using namespace decaf::lang::exceptions;");
+        if( isComparable() ) {
+            out.println("using namespace decaf::internal::util;");
+        }
         out.println("");
         out.println("/*");
         out.println(" *");
@@ -55,18 +58,18 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println(" */");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println(""+getClassName()+"::"+getClassName()+"() " );
-        out.println("    : " + generateInitializerList() + " {");
+        out.println(""+getClassName()+"::"+getClassName()+"() :" );
+        out.println("    " + generateInitializerList() + " {");
         out.println("");
         generateDefaultConstructorBody(out);
         out.println("}");
         out.println("");
         if( isAssignable() ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println(""+getClassName()+"::"+getClassName()+"( const "+getClassName()+"& other )");
-            out.println("    : " + generateInitializerList() + " {");
+            out.println(""+getClassName()+"::"+getClassName()+"(const "+getClassName()+"& other) :");
+            out.println("    " + generateInitializerList() + " {");
             out.println("");
-            out.println("    this->copyDataStructure( &other );");
+            out.println("    this->copyDataStructure(&other);");
             out.println("}");
             out.println("");
         }
@@ -82,24 +85,24 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void "+getClassName()+"::copyDataStructure( const DataStructure* src ) {");
+        out.println("void "+getClassName()+"::copyDataStructure(const DataStructure* src) {");
         out.println("");
         out.println("    // Protect against invalid self assignment.");
-        out.println("    if( this == src ) {");
+        out.println("    if (this == src) {");
         out.println("        return;");
         out.println("    }");
         out.println("");
-        out.println("    const "+getClassName()+"* srcPtr = dynamic_cast<const "+getClassName()+"*>( src );");
+        out.println("    const "+getClassName()+"* srcPtr = dynamic_cast<const "+getClassName()+"*>(src);");
         out.println("");
-        out.println("    if( srcPtr == NULL || src == NULL ) {");
+        out.println("    if (srcPtr == NULL || src == NULL) {");
         out.println("        throw decaf::lang::exceptions::NullPointerException(");
         out.println("            __FILE__, __LINE__,");
-        out.println("            \""+getClassName()+"::copyDataStructure - src is NULL or invalid\" );");
+        out.println("            \""+getClassName()+"::copyDataStructure - src is NULL or invalid\");");
         out.println("    }");
         out.println("");
         if( getBaseClassName() != null ) {
             out.println("    // Copy the data of the base class or classes");
-            out.println("    "+ getBaseClassName() +"::copyDataStructure( src );");
+            out.println("    "+ getBaseClassName() +"::copyDataStructure(src);");
             out.println("");
         }
         generateCopyDataStructureBody(out);
@@ -117,21 +120,21 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("bool "+getClassName()+"::equals( const DataStructure* value ) const {");
+        out.println("bool "+getClassName()+"::equals(const DataStructure* value) const {");
         out.println("");
-        out.println("    if( this == value ) {");
+        out.println("    if (this == value) {");
         out.println("        return true;");
         out.println("    }");
         out.println("");
-        out.println("    const "+getClassName()+"* valuePtr = dynamic_cast<const "+getClassName()+"*>( value );");
+        out.println("    const "+getClassName()+"* valuePtr = dynamic_cast<const "+getClassName()+"*>(value);");
         out.println("");
-        out.println("    if( valuePtr == NULL || value == NULL ) {");
+        out.println("    if (valuePtr == NULL || value == NULL) {");
         out.println("        return false;");
         out.println("    }");
         out.println("");
         generateEqualsBody(out);
         if( getBaseClassName() != null ) {
-            out.println("    if( !"+ getBaseClassName() +"::equals( value ) ) {");
+            out.println("    if (!"+ getBaseClassName() +"::equals(value)) {");
             out.println("        return false;");
             out.println("    }");
         }
@@ -141,9 +144,9 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         generatePropertyAccessors(out);
         if( isComparable() ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("int " + getClassName() + "::compareTo( const "+getClassName()+"& value ) const {");
+            out.println("int " + getClassName() + "::compareTo(const "+getClassName()+"& value) const {");
             out.println("");
-            out.println("    if( this == &value ) {");
+            out.println("    if (this == &value) {");
             out.println("        return 0;");
             out.println("    }");
             out.println("");
@@ -152,36 +155,43 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
             out.println("}");
             out.println("");
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("bool " + getClassName() + "::equals( const "+getClassName()+"& value ) const {");
-            out.println("    return this->equals( (const DataStructure*)&value );");
+            out.println("bool " + getClassName() + "::equals(const "+getClassName()+"& value) const {");
+            out.println("    return this->equals((const DataStructure*)&value);");
             out.println("}");
             out.println("");
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("bool " + getClassName() + "::operator==( const "+getClassName()+"& value ) const {");
-            out.println("    return this->compareTo( value ) == 0;");
+            out.println("bool " + getClassName() + "::operator==(const "+getClassName()+"& value) const {");
+            out.println("    return this->compareTo(value) == 0;");
             out.println("}");
             out.println("");
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("bool " + getClassName() + "::operator<( const "+getClassName()+"& value ) const {");
-            out.println("    return this->compareTo( value ) < 0;");
+            out.println("bool " + getClassName() + "::operator<(const "+getClassName()+"& value) const {");
+            out.println("    return this->compareTo(value) < 0;");
             out.println("}");
             out.println("");
         }
 
         if( isAssignable() ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println(""+getClassName()+"& "+getClassName()+"::operator= ( const "+getClassName()+"& other ) {");
-            out.println("    this->copyDataStructure( &other );");
+            out.println(""+getClassName()+"& "+getClassName()+"::operator= (const "+getClassName()+"& other) {");
+            out.println("    this->copyDataStructure(&other);");
             out.println("    return *this;");
+            out.println("}");
+            out.println("");
+        }
+
+        if (isHashable()) {
+            out.println("////////////////////////////////////////////////////////////////////////////////");
+            out.println("int " + getClassName() + "::getHashCode() const {");
+            out.println("    return decaf::util::HashCode<std::string>()(this->toString());");
             out.println("}");
             out.println("");
         }
 
         if( getBaseClassName().equals( "BaseCommand" ) ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("decaf::lang::Pointer<commands::Command> "+getClassName()+"::visit( activemq::state::CommandVisitor* visitor ) {");
-            out.println("");
-            out.println("    return visitor->process"+getClassName()+"( this );");
+            out.println("decaf::lang::Pointer<commands::Command> "+getClassName()+"::visit(activemq::state::CommandVisitor* visitor) {");
+            out.println("    return visitor->process"+getClassName()+"(this);");
             out.println("}");
         }
 
@@ -194,8 +204,11 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         includes.add("<activemq/state/CommandVisitor.h>");
         includes.add("<activemq/exceptions/ActiveMQException.h>");
         includes.add("<decaf/lang/exceptions/NullPointerException.h>");
+        if( isHashable() ) {
+            includes.add("<decaf/util/HashCode.h>");
+        }
         if( isComparable() ) {
-            includes.add("<apr_strings.h>");
+            includes.add("<decaf/internal/util/StringUtils.h>");
         }
     }
 
@@ -223,7 +236,6 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
 
         int lastLineEnds = 0;
         for( JProperty property : getProperties() ) {
-            String type = toCppType(property.getType());
             String value = toCppDefaultValue(property.getType());
             String propertyName = property.getSimpleName();
             String parameterName = decapitalize(propertyName);
@@ -251,10 +263,10 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
     protected void generateCloneDataStructureBody( PrintWriter out ) {
         String newInstance = decapitalize( getClassName() );
 
-        out.println("    std::auto_ptr<"+getClassName()+"> "+newInstance+"( new "+getClassName()+"() );");
+        out.println("    std::auto_ptr<"+getClassName()+"> "+newInstance+"(new "+getClassName()+"());");
         out.println("");
         out.println("    // Copy the data from the base class or classes");
-        out.println("    "+newInstance+"->copyDataStructure( this );");
+        out.println("    "+newInstance+"->copyDataStructure(this);");
         out.println("");
         out.println("    return "+newInstance+".release();");
     }
@@ -263,7 +275,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         for( JProperty property : getProperties() ) {
             String getter = property.getGetter().getSimpleName();
             String setter = property.getSetter().getSimpleName();
-            out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
+            out.println("    this->"+setter+"(srcPtr->"+getter+"());");
         }
     }
 
@@ -297,7 +309,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
             if( property.getType().getSimpleName().equals("ByteSequence") ) {
 
                 out.println("    stream << \""+propertyName+" = \";");
-                out.println("    if( this->"+getter+"().size() > 0 ) {");
+                out.println("    if (this->"+getter+"().size() > 0) {");
                 out.println("        stream << \"[size=\" << this->" + getter + "().size() << \"]\";");
                 out.println("    } else {");
                 out.println("        stream << \"NULL\";");
@@ -314,10 +326,10 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
                        !property.getType().getArrayComponentType().isPrimitiveType() ) {
 
                 out.println("    stream << \""+propertyName+" = \";");
-                out.println("    if( this->"+getter+"().size() > 0 ) {");
+                out.println("    if (this->"+getter+"().size() > 0) {");
                 out.println("        stream << \"[\";");
-                out.println("        for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("            if( this->"+getter+"()[i"+parameterName+"] != NULL ) {");
+                out.println("        for (size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + ") {");
+                out.println("            if (this->"+getter+"()[i"+parameterName+"] != NULL) {");
                 out.println("                stream << this->"+getter+"()[i"+parameterName+"]->toString() << \", \";");
                 out.println("            } else {");
                 out.println("                stream << \"NULL\" << \", \";");
@@ -332,9 +344,9 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
                        property.getType().getArrayComponentType().isPrimitiveType() ) {
 
                 out.println("    stream << \""+propertyName+" = \";");
-                out.println("    if( this->"+getter+"().size() > 0 ) {");
+                out.println("    if (this->"+getter+"().size() > 0) {");
                 out.println("        stream << \"[\";");
-                out.println("        for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
+                out.println("        for (size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + ") {");
                 out.println("            stream << this->"+getter+"()[i"+parameterName+"] << \",\";");
                 out.println("        }");
                 out.println("        stream << \"]\";");
@@ -345,7 +357,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
             } else {
 
                 out.println("    stream << \""+propertyName+" = \";" );
-                out.println("    if( this->"+getter+"() != NULL ) {");
+                out.println("    if (this->"+getter+"() != NULL) {");
                 out.println("        stream << this->"+getter+"()->toString();");
                 out.println("    } else {");
                 out.println("        stream << \"NULL\";");
@@ -370,41 +382,41 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
             String getter = property.getGetter().getSimpleName();
 
             if( property.getType().getSimpleName().equals("ByteSequence") ) {
-                out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("        if( this->"+getter+"()[i" + parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"] ) {" );
+                out.println("    for (size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + ") {");
+                out.println("        if (this->"+getter+"()[i" + parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"]) {" );
                 out.println("            return false;" );
                 out.println("        }" );
                 out.println("    }" );
             } else if( property.getType().isPrimitiveType() || type.equals("std::string") ){
-                out.println("    if( this->"+getter+"() != valuePtr->"+getter+"() ) {");
+                out.println("    if (this->"+getter+"() != valuePtr->"+getter+"()) {");
                 out.println("        return false;" );
                 out.println("    }" );
             } else if( property.getType().isArrayType() &&
                        !property.getType().getArrayComponentType().isPrimitiveType() ) {
 
-                out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("        if( this->"+getter+"()[i"+parameterName+"] != NULL ) {" );
-                out.println("            if( !this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"].get() ) ) {" );
+                out.println("    for (size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + ") {");
+                out.println("        if (this->"+getter+"()[i"+parameterName+"] != NULL ) {" );
+                out.println("            if (!this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"].get())) {" );
                 out.println("                return false;");
                 out.println("            }");
-                out.println("        } else if( valuePtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
+                out.println("        } else if (valuePtr->"+getter+"()[i"+parameterName+"] != NULL) {");
                 out.println("            return false;");
                 out.println("        }");
                 out.println("    }");
             } else if( property.getType().isArrayType() &&
                        property.getType().getArrayComponentType().isPrimitiveType() ) {
 
-                out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-                out.println("        if( this->"+getter+"()[i"+parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"] ) {");
+                out.println("    for (size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + ") {");
+                out.println("        if (this->"+getter+"()[i"+parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"]) {");
                 out.println("            return false;");
                 out.println("        }");
                 out.println("    }");
             } else {
-                out.println("    if( this->"+getter+"() != NULL ) {");
-                out.println("        if( !this->"+getter+"()->equals( valuePtr->"+getter+"().get() ) ) {" );
+                out.println("    if (this->"+getter+"() != NULL) {");
+                out.println("        if (!this->"+getter+"()->equals( valuePtr->"+getter+"().get())) {" );
                 out.println("            return false;");
                 out.println("        }");
-                out.println("    } else if( valuePtr->"+getter+"() != NULL ) {");
+                out.println("    } else if (valuePtr->"+getter+"() != NULL) {");
                 out.println("        return false;");
                 out.println("    }");
             }
@@ -453,7 +465,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
                 out.println("");
             }
             out.println("////////////////////////////////////////////////////////////////////////////////");
-            out.println("void " + getClassName() + "::" + setter+"( " + constNess + type+ " " + parameterName +" ) {");
+            out.println("void " + getClassName() + "::" + setter+"(" + constNess + type+ " " + parameterName +") {");
             out.println("    this->"+parameterName+" = "+parameterName+";");
             out.println("}");
             out.println("");
@@ -472,21 +484,21 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
 
-                out.println("    int "+parameterName+"Comp = this->"+parameterName+"->compareTo( *( value."+parameterName+" ) );");
-                out.println("    if( "+parameterName+"Comp != 0 ) {");
+                out.println("    int "+parameterName+"Comp = this->"+parameterName+"->compareTo(*(value."+parameterName+"));");
+                out.println("    if ("+parameterName+"Comp != 0) {");
                 out.println("        return "+parameterName+"Comp;");
                 out.println("    }");
                 out.println("");
             } else if( property.getType().getSimpleName().equals("String") ) {
-                out.println("    int "+parameterName+"Comp = apr_strnatcasecmp( this->"+parameterName+".c_str(), value."+parameterName+".c_str() );");
-                out.println("    if( "+parameterName+"Comp != 0 ) {");
+                out.println("    int "+parameterName+"Comp = StringUtils::compareIgnoreCase(this->"+parameterName+".c_str(), value."+parameterName+".c_str());");
+                out.println("    if ("+parameterName+"Comp != 0) {");
                 out.println("        return "+parameterName+"Comp;");
                 out.println("    }");
                 out.println("");
             } else {
-                out.println("    if( this->"+parameterName+" > value."+parameterName+" ) {");
+                out.println("    if (this->"+parameterName+" > value."+parameterName+") {");
                 out.println("        return 1;");
-                out.println("    } else if( this->"+parameterName+" < value."+parameterName+" ) {");
+                out.println("    } else if(this->"+parameterName+" < value."+parameterName+") {");
                 out.println("        return -1;");
                 out.println("    }");
                 out.println("");

@@ -91,14 +91,14 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * wire");
         out.println("         * @param wireFormat - the wireformat controller");
         out.println("         */");
-        out.println("        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
+        out.println("        virtual void beforeMarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED);");
         out.println("");
         out.println("        /**");
         out.println("         * Called after unmarshaling is started to cleanup the object being");
         out.println("         * unmarshaled.");
         out.println("         * @param wireFormat - the wireformat object to control unmarshaling");
         out.println("         */");
-        out.println("        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED );");
+        out.println("        virtual void afterUnmarshal(wireformat::WireFormat* wireFormat AMQCPP_UNUSED);");
         out.println("");
         out.println("        /**");
         out.println("         * Indicates that this command is aware of Marshaling, and needs");
@@ -114,7 +114,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * when the Acknowledge method is called.");
         out.println("         * @param handler ActiveMQAckHandler to call");
         out.println("         */");
-        out.println("        virtual void setAckHandler( const Pointer<core::ActiveMQAckHandler>& handler ) {");
+        out.println("        virtual void setAckHandler(const Pointer<core::ActiveMQAckHandler>& handler) {");
         out.println("            this->ackHandler = handler;");
         out.println("        }");
         out.println("");
@@ -132,7 +132,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * when the session create methods are called to create a Message..");
         out.println("         * @param handler ActiveMQConnection parent for this message");
         out.println("         */");
-        out.println("        void setConnection( core::ActiveMQConnection* connection ) {");
+        out.println("        void setConnection(core::ActiveMQConnection* connection) {");
         out.println("            this->connection = connection;");
         out.println("        }");
         out.println("");
@@ -188,7 +188,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * Set the Read Only State of the Message Properties.");
         out.println("         * @param value - true if Properties should be read only.");
         out.println("         */");
-        out.println("        void setReadOnlyProperties( bool value ) {");
+        out.println("        void setReadOnlyProperties(bool value) {");
         out.println("            this->readOnlyProperties = value;");
         out.println("        }");
         out.println("");
@@ -204,7 +204,7 @@ public class MessageHeaderGenerator extends CommandHeaderGenerator {
         out.println("         * Set the Read Only State of the Message Content.");
         out.println("         * @param value - true if Content should be read only.");
         out.println("         */");
-        out.println("        void setReadOnlyBody( bool value ) {");
+        out.println("        void setReadOnlyBody(bool value) {");
         out.println("            this->readOnlyBody = value;");
         out.println("        }");
         out.println("");

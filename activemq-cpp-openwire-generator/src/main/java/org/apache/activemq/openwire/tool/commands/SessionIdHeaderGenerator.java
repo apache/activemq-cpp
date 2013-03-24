@@ -36,11 +36,11 @@ public class SessionIdHeaderGenerator extends CommandHeaderGenerator {
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
-        out.println("        "+getClassName()+"( const ConnectionId* connectionId, long long sessionId );");
+        out.println("        "+getClassName()+"(const ConnectionId* connectionId, long long sessionId);");
         out.println("");
-        out.println("        "+getClassName()+"( const ProducerId* producerId );");
+        out.println("        "+getClassName()+"(const ProducerId* producerId);");
         out.println("");
-        out.println("        "+getClassName()+"( const ConsumerId* consumerId );");
+        out.println("        "+getClassName()+"(const ConsumerId* consumerId);");
         out.println("");
 
         super.generateAdditionalConstructors(out);

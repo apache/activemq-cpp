@@ -24,8 +24,8 @@ public class ProducerIdSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalConstructors( PrintWriter out ) {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ProducerId::ProducerId( const SessionId& sessionId, long long consumerId )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("ProducerId::ProducerId( const SessionId& sessionId, long long consumerId ) : ");
+        out.println("    " + generateInitializerList() + " {");
         out.println("");
         out.println("    this->connectionId = sessionId.getConnectionId();");
         out.println("    this->sessionId = sessionId.getValue();");
@@ -33,18 +33,18 @@ public class ProducerIdSourceGenerator extends CommandSourceGenerator {
         out.println("}");
         out.println("");
         out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("ProducerId::ProducerId( std::string producerKey )");
-        out.println("    : " + generateInitializerList() + " {");
+        out.println("ProducerId::ProducerId(std::string producerKey) :");
+        out.println("    " + generateInitializerList() + " {");
         out.println("");
         out.println("    // Parse off the producerId");
         out.println("    std::size_t p = producerKey.rfind( ':' );");
         out.println("");
-        out.println("    if( p != std::string::npos ) {");
-        out.println("        value = Long::parseLong( producerKey.substr( p + 1, std::string::npos ) );");
-        out.println("        producerKey = producerKey.substr( 0, p );");
+        out.println("    if (p != std::string::npos) {");
+        out.println("        value = Long::parseLong(producerKey.substr(p + 1, std::string::npos));");
+        out.println("        producerKey = producerKey.substr(0, p);");
         out.println("    }");
         out.println("");
-        out.println("    setProducerSessionKey( producerKey );");
+        out.println("    setProducerSessionKey(producerKey);");
         out.println("}");
         out.println("");
 
@@ -58,8 +58,8 @@ public class ProducerIdSourceGenerator extends CommandSourceGenerator {
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("const Pointer<SessionId>& ProducerId::getParentId() const {");
-        out.println("    if( this->parentId == NULL ) {");
-        out.println("        this->parentId.reset( new SessionId( this ) );");
+        out.println("    if (this->parentId == NULL) {");
+        out.println("        this->parentId.reset(new SessionId(this));");
         out.println("    }");
         out.println("    return this->parentId;");
         out.println("}");
@@ -70,9 +70,9 @@ public class ProducerIdSourceGenerator extends CommandSourceGenerator {
         out.println("    // Parse off the value");
         out.println("    std::size_t p = sessionKey.rfind( ':' );");
         out.println("");
-        out.println("    if( p != std::string::npos ) {");
-        out.println("        this->sessionId = Long::parseLong( sessionKey.substr( p + 1, std::string::npos ) );");
-        out.println("        sessionKey = sessionKey.substr( 0, p );");
+        out.println("    if (p != std::string::npos) {");
+        out.println("        this->sessionId = Long::parseLong(sessionKey.substr(p + 1, std::string::npos));");
+        out.println("        sessionKey = sessionKey.substr(0, p);");
         out.println("    }");
         out.println("");
         out.println("    // The rest is the value");

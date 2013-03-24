@@ -36,30 +36,30 @@ public class CommandCodeGeneratorsFactory {
      * method call to override the virtual method in the base Command interface.
      */
     {
-		commandsWithShortcuts = new HashSet<String>();
-		commandsWithShortcuts.add("BrokerInfo");
-		commandsWithShortcuts.add("ControlCommand");
-		commandsWithShortcuts.add("ConnectionControl");
-		commandsWithShortcuts.add("ConnectionError");
-		commandsWithShortcuts.add("ConnectionInfo");
-		commandsWithShortcuts.add("ConsumerControl");
-		commandsWithShortcuts.add("ConsumerInfo");
-		commandsWithShortcuts.add("FlushCommand");
-		commandsWithShortcuts.add("KeepAliveInfo");
-		commandsWithShortcuts.add("Message");
-		commandsWithShortcuts.add("MessageAck");
-		commandsWithShortcuts.add("MessageDispatch");
-		commandsWithShortcuts.add("MessageDispatchNotification");
-		commandsWithShortcuts.add("MessagePull");
-		commandsWithShortcuts.add("RemoveInfo");
-		commandsWithShortcuts.add("RemoveSubscriptionInfo");
-		commandsWithShortcuts.add("ReplayCommand");
-		commandsWithShortcuts.add("Response");
-		commandsWithShortcuts.add("ProducerAck");
-		commandsWithShortcuts.add("ProducerInfo");
-		commandsWithShortcuts.add("ShutdownInfo");
-		commandsWithShortcuts.add("TransactionInfo");
-		commandsWithShortcuts.add("WireFormatInfo");
+        commandsWithShortcuts = new HashSet<String>();
+        commandsWithShortcuts.add("BrokerInfo");
+        commandsWithShortcuts.add("ControlCommand");
+        commandsWithShortcuts.add("ConnectionControl");
+        commandsWithShortcuts.add("ConnectionError");
+        commandsWithShortcuts.add("ConnectionInfo");
+        commandsWithShortcuts.add("ConsumerControl");
+        commandsWithShortcuts.add("ConsumerInfo");
+        commandsWithShortcuts.add("FlushCommand");
+        commandsWithShortcuts.add("KeepAliveInfo");
+        commandsWithShortcuts.add("Message");
+        commandsWithShortcuts.add("MessageAck");
+        commandsWithShortcuts.add("MessageDispatch");
+        commandsWithShortcuts.add("MessageDispatchNotification");
+        commandsWithShortcuts.add("MessagePull");
+        commandsWithShortcuts.add("RemoveInfo");
+        commandsWithShortcuts.add("RemoveSubscriptionInfo");
+        commandsWithShortcuts.add("ReplayCommand");
+        commandsWithShortcuts.add("Response");
+        commandsWithShortcuts.add("ProducerAck");
+        commandsWithShortcuts.add("ProducerInfo");
+        commandsWithShortcuts.add("ShutdownInfo");
+        commandsWithShortcuts.add("TransactionInfo");
+        commandsWithShortcuts.add("WireFormatInfo");
     }
 
     /**
@@ -75,13 +75,14 @@ public class CommandCodeGeneratorsFactory {
         CommandCodeGenerator generator = null;
 
         generator = this.getCodeGenerator( className, "Header" );
-        if( className.endsWith("Id") ) {
-            generator.setComparable( true );
-            generator.setAssignable( true );
+        if (className.endsWith("Id")) {
+            generator.setComparable(true);
+            generator.setAssignable(true);
+            generator.setHashable(true);
         }
 
-        if( this.commandsWithShortcuts.contains( className ) ) {
-            generator.setGenIsClass( true );
+        if (this.commandsWithShortcuts.contains(className)) {
+            generator.setGenIsClass(true);
         }
 
         return generator;
@@ -99,10 +100,11 @@ public class CommandCodeGeneratorsFactory {
 
         CommandCodeGenerator generator = null;
 
-        generator = this.getCodeGenerator( className, "Source" );
-        if( className.endsWith("Id") ) {
-            generator.setComparable( true );
-            generator.setAssignable( true );
+        generator = this.getCodeGenerator(className, "Source");
+        if (className.endsWith("Id")) {
+            generator.setComparable(true);
+            generator.setAssignable(true);
+            generator.setHashable(true);
         }
 
         return generator;
@@ -117,16 +119,19 @@ public class CommandCodeGeneratorsFactory {
      *
      * @return a new Header File code generator.
      */
-    public CommandCodeGenerator getCodeGenerator( String className, String fileType ) {
+    public CommandCodeGenerator getCodeGenerator(String className, String fileType) {
 
         Class<?> generatorClass = null;
 
         try {
-            generatorClass = Class.forName( "org.apache.activemq.openwire.tool.commands." + className + fileType + "Generator" );
-        } catch( ClassNotFoundException e ) {
+            generatorClass = Class.forName("org.apache.activemq.openwire.tool.commands." +
+                                           className + fileType + "Generator");
+        } catch (ClassNotFoundException e) {
             try {
-                generatorClass = Class.forName( "org.apache.activemq.openwire.tool.commands.Command" + fileType + "Generator" );
-            } catch(ClassNotFoundException e1) {
+                generatorClass = Class
+                        .forName("org.apache.activemq.openwire.tool.commands.Command"
+                                + fileType + "Generator");
+            } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
                 return null;
             }

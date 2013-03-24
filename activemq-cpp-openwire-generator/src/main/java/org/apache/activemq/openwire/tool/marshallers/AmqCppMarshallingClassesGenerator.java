@@ -131,7 +131,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
             if( version.asInt() > 1 ) {
                 indent = indent + "    ";
-                out.println("        if( wireVersion >= " + version.asInt() + " ) {");
+                out.println("        if (wireVersion >= " + version.asInt() + ") {");
             }
 
             if (propertyType.isArrayType() && !propertyTypeName.equals("byte[]")) {
@@ -153,45 +153,45 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         String nativeType = toCppType(property.getType());
 
         if( type.equals("boolean") ) {
-            out.println(indent + "info->" + setter + "( bs->readBoolean() );");
+            out.println(indent + "info->" + setter + "(bs->readBoolean());");
         }
         else if( type.equals("byte") ) {
-            out.println(indent + "info->" + setter + "( dataIn->readByte() );");
+            out.println(indent + "info->" + setter + "(dataIn->readByte());");
         }
         else if( type.equals("char") ) {
-            out.println(indent + "info->" + setter + "( dataIn->readChar() );");
+            out.println(indent + "info->" + setter + "(dataIn->readChar());");
         }
         else if( type.equals("short") ) {
-            out.println(indent + "info->" + setter + "( dataIn->readShort() );");
+            out.println(indent + "info->" + setter + "(dataIn->readShort());");
         }
         else if( type.equals("int") ) {
-            out.println(indent + "info->" + setter + "( dataIn->readInt() );");
+            out.println(indent + "info->" + setter + "(dataIn->readInt());");
         }
         else if( type.equals("long") ) {
-            out.println(indent + "info->" + setter + "( tightUnmarshalLong( wireFormat, dataIn, bs ) );");
+            out.println(indent + "info->" + setter + "(tightUnmarshalLong(wireFormat, dataIn, bs));");
         }
         else if( type.equals("String") ) {
-            out.println(indent + "info->" + setter + "( tightUnmarshalString( dataIn, bs ) );");
+            out.println(indent + "info->" + setter + "(tightUnmarshalString(dataIn, bs));");
         }
         else if( type.equals("byte[]") || type.equals("ByteSequence") ) {
             if( size != null ) {
-                out.println(indent + "info->" + setter + "( tightUnmarshalConstByteArray( dataIn, bs, "+ size.asInt() +" ) );");
+                out.println(indent + "info->" + setter + "(tightUnmarshalConstByteArray(dataIn, bs, "+ size.asInt() +"));");
             }
             else {
-                out.println(indent + "info->" + setter + "( tightUnmarshalByteArray( dataIn, bs ) );");
+                out.println(indent + "info->" + setter + "(tightUnmarshalByteArray(dataIn, bs));");
             }
         }
         else if( isThrowable( property.getType() ) ) {
-            out.println(indent + "info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
-            out.println(indent + "    tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) ) );");
+            out.println(indent + "info->" + setter + "(Pointer<"+nativeType+">(dynamic_cast<" + nativeType + "* >(");
+            out.println(indent + "    tightUnmarshalBrokerError(wireFormat, dataIn, bs))));");
         }
         else if( isCachedProperty(property) ) {
-            out.println(indent + "info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
-            out.println(indent + "    tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );");
+            out.println(indent + "info->" + setter + "(Pointer<"+nativeType+">(dynamic_cast<" + nativeType + "* >(");
+            out.println(indent + "    tightUnmarshalCachedObject(wireFormat, dataIn, bs))));");
         }
         else {
-            out.println(indent + "info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
-            out.println(indent + "    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );");
+            out.println(indent + "info->" + setter + "(Pointer<"+nativeType+">(dynamic_cast<" + nativeType + "* >(");
+            out.println(indent + "    tightUnmarshalNestedObject(wireFormat, dataIn, bs))));");
         }
     }
 
@@ -204,19 +204,19 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         if (size != null) {
             out.println(indent + "{");
             out.println(indent + "    " + arrayType + " value[] = new " + arrayType + "[" + size.asInt() + "];");
-            out.println(indent + "    for( int i = 0; i < " + size.asInt() + "; i++ ) {");
-            out.println(indent + "        value[i] = (" + arrayType + ") tightUnmarshalNestedObject( wireFormat, dataIn, bs );");
+            out.println(indent + "    for (int i = 0; i < " + size.asInt() + "; i++) {");
+            out.println(indent + "        value[i] = (" + arrayType + ") tightUnmarshalNestedObject(wireFormat, dataIn, bs);");
             out.println(indent + "    }");
-            out.println(indent + "    info->" + setter + "( value );");
+            out.println(indent + "    info->" + setter + "(value);");
             out.println(indent + "}");
         }
         else {
-            out.println(indent + "if( bs->readBoolean() ) {");
+            out.println(indent + "if (bs->readBoolean()) {");
             out.println(indent + "    short size = dataIn->readShort();");
-            out.println(indent + "    info->" + getter + "().reserve( size );");
-            out.println(indent + "    for( int i = 0; i < size; i++ ) {");
-            out.println(indent + "        info->" + getter + "().push_back( Pointer<"+arrayType+">( dynamic_cast< " + arrayType + "* >(");
-            out.println(indent + "            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );");
+            out.println(indent + "    info->" + getter + "().reserve(size);");
+            out.println(indent + "    for (int i = 0; i < size; i++) {");
+            out.println(indent + "        info->" + getter + "().push_back(Pointer<"+arrayType+">(dynamic_cast<" + arrayType + "*>(");
+            out.println(indent + "            tightUnmarshalNestedObject(wireFormat, dataIn, bs))));");
             out.println(indent + "    }");
             out.println(indent + "} else {");
             out.println(indent + "    info->" + getter + "().clear();");
@@ -238,11 +238,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
             if( version.asInt() > 1 ) {
                 indent = indent + "    ";
-                out.println("        if( wireVersion >= " + version.asInt() + " ) {");
+                out.println("        if (wireVersion >= " + version.asInt() + ") {");
             }
 
             if (type.equals("boolean")) {
-                out.println(indent + "bs->writeBoolean( " + getter + " );");
+                out.println(indent + "bs->writeBoolean(" + getter + ");");
             }
             else if (type.equals("byte")) {
                 baseSize += 1;
@@ -257,15 +257,15 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 baseSize += 4;
             }
             else if (type.equals("long")) {
-                out.println(indent + "rc += tightMarshalLong1( wireFormat, " + getter + ", bs );");
+                out.println(indent + "rc += tightMarshalLong1(wireFormat, " + getter + ", bs);");
             }
             else if (type.equals("String")) {
                 out.print("");
-                out.println(indent + "rc += tightMarshalString1( " + getter + ", bs );" );
+                out.println(indent + "rc += tightMarshalString1(" + getter + ", bs);" );
             }
             else if (type.equals("byte[]") || type.equals("ByteSequence")) {
                 if (size == null) {
-                    out.println(indent + "bs->writeBoolean( " + getter + ".size() != 0 );" );
+                    out.println(indent + "bs->writeBoolean(" + getter + ".size() != 0);" );
                     out.println(indent + "rc += " + getter + ".size() == 0 ? 0 : (int)" + getter + ".size() + 4;");
                 }
                 else {
@@ -274,21 +274,21 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
             else if (propertyType.isArrayType()) {
                 if (size != null) {
-                    out.println(indent + "rc += tightMarshalObjectArrayConstSize1( wireFormat, " + getter + ", bs, " + size.asInt() + " );");
+                    out.println(indent + "rc += tightMarshalObjectArrayConstSize1(wireFormat, " + getter + ", bs, " + size.asInt() + ");");
                 }
                 else {
-                    out.println(indent + "rc += tightMarshalObjectArray1( wireFormat, " + getter + ", bs );");
+                    out.println(indent + "rc += tightMarshalObjectArray1(wireFormat, " + getter + ", bs);");
                 }
             }
             else if (isThrowable(propertyType)) {
-                out.println(indent + "rc += tightMarshalBrokerError1( wireFormat, " + getter + ".get(), bs );");
+                out.println(indent + "rc += tightMarshalBrokerError1(wireFormat, " + getter + ".get(), bs);");
             }
             else {
                 if (isCachedProperty(property)) {
-                    out.println(indent + "rc += tightMarshalCachedObject1( wireFormat, " + getter + ".get(), bs );");
+                    out.println(indent + "rc += tightMarshalCachedObject1(wireFormat, " + getter + ".get(), bs);");
                 }
                 else {
-                    out.println(indent + "rc += tightMarshalNestedObject1( wireFormat, " + getter + ".get(), bs );");
+                    out.println(indent + "rc += tightMarshalNestedObject1(wireFormat, " + getter + ".get(), bs);");
                 }
             }
 
@@ -316,56 +316,56 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
             if( version.asInt() > 1 ) {
                 indent = indent + "    ";
-                out.println("        if( wireVersion >= " + version.asInt() + " ) {");
+                out.println("        if (wireVersion >= " + version.asInt() + ") {");
             }
 
             if (type.equals("boolean")) {
                 out.println(indent + "bs->readBoolean();");
             }
             else if (type.equals("byte")) {
-                out.println(indent + "dataOut->write( " + getter + " );");
+                out.println(indent + "dataOut->write(" + getter + ");");
             }
             else if (type.equals("char")) {
-                out.println(indent + "dataOut->write( " + getter + " );");
+                out.println(indent + "dataOut->write(" + getter + ");");
             }
             else if (type.equals("short")) {
-                out.println(indent + "dataOut->writeShort( " + getter + " );");
+                out.println(indent + "dataOut->writeShort(" + getter + ");");
             }
             else if (type.equals("int")) {
-                out.println(indent + "dataOut->writeInt( " + getter + " );");
+                out.println(indent + "dataOut->writeInt(" + getter + ");");
             }
             else if (type.equals("long")) {
-                out.println(indent + "tightMarshalLong2( wireFormat, " + getter + ", dataOut, bs );");
+                out.println(indent + "tightMarshalLong2(wireFormat, " + getter + ", dataOut, bs);");
             }
             else if (type.equals("String")) {
-                out.println(indent + "tightMarshalString2( " + getter + ", dataOut, bs );");
+                out.println(indent + "tightMarshalString2(" + getter + ", dataOut, bs);");
             }
             else if (type.equals("byte[]") || type.equals("ByteSequence")) {
                 if (size != null) {
-                    out.println(indent + "dataOut->write( (const unsigned char*)(&" + getter + "[0]), " + size.asInt() + ", 0, " + size.asInt() + " );");
+                    out.println(indent + "dataOut->write((const unsigned char*)(&" + getter + "[0]), " + size.asInt() + ", 0, " + size.asInt() + ");");
                 }
                 else {
-                    out.println(indent + "if( bs->readBoolean() ) {");
-                    out.println(indent + "    dataOut->writeInt( (int)" + getter + ".size() );");
-                    out.println(indent + "    dataOut->write( (const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size(), 0, (int)" + getter + ".size() );");
+                    out.println(indent + "if (bs->readBoolean()) {");
+                    out.println(indent + "    dataOut->writeInt((int)" + getter + ".size() );");
+                    out.println(indent + "    dataOut->write((const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size(), 0, (int)" + getter + ".size());");
                     out.println(indent + "}");
                 }
             }
             else if (propertyType.isArrayType()) {
                 if (size != null) {
-                    out.println(indent + "tightMarshalObjectArrayConstSize2( wireFormat, " + getter + ", dataOut, bs, " + size.asInt() + " );");
+                    out.println(indent + "tightMarshalObjectArrayConstSize2(wireFormat, " + getter + ", dataOut, bs, " + size.asInt() + ");");
                 }
                 else {
-                    out.println(indent + "tightMarshalObjectArray2( wireFormat, " + getter + ", dataOut, bs );");
+                    out.println(indent + "tightMarshalObjectArray2(wireFormat, " + getter + ", dataOut, bs);");
                 }
             } else if( isThrowable(propertyType) ) {
-                out.println(indent + "tightMarshalBrokerError2( wireFormat, " + getter + ".get(), dataOut, bs );");
+                out.println(indent + "tightMarshalBrokerError2(wireFormat, " + getter + ".get(), dataOut, bs);");
             } else {
                 if( isCachedProperty(property) ) {
-                    out.println(indent + "tightMarshalCachedObject2( wireFormat, "+getter+".get(), dataOut, bs );");
+                    out.println(indent + "tightMarshalCachedObject2(wireFormat, "+getter+".get(), dataOut, bs);");
                 }
                 else {
-                    out.println(indent + "tightMarshalNestedObject2( wireFormat, "+getter+".get(), dataOut, bs );");
+                    out.println(indent + "tightMarshalNestedObject2(wireFormat, "+getter+".get(), dataOut, bs);");
                 }
             }
 
@@ -392,7 +392,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
             if( version.asInt() > 1 ) {
                 indent = indent + "    ";
-                out.println("        if( wireVersion >= " + version.asInt() + " ) {");
+                out.println("        if (wireVersion >= " + version.asInt() + ") {");
             }
 
             if (propertyType.isArrayType() && !propertyTypeName.equals("byte[]")) {
@@ -414,45 +414,45 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         String setter = property.getSetter().getSimpleName();
 
         if (type.equals("boolean")) {
-            out.println(indent + "info->" + setter + "( dataIn->readBoolean() );");
+            out.println(indent + "info->" + setter + "(dataIn->readBoolean());");
         }
         else if (type.equals("byte")) {
-            out.println(indent + "info->" + setter + "( dataIn->readByte() );");
+            out.println(indent + "info->" + setter + "(dataIn->readByte());");
         }
         else if (type.equals("char")) {
-            out.println(indent + "info->" + setter + "( dataIn->readChar() );");
+            out.println(indent + "info->" + setter + "(dataIn->readChar());");
         }
         else if (type.equals("short")) {
-            out.println(indent + "info->" + setter + "( dataIn->readShort() );");
+            out.println(indent + "info->" + setter + "(dataIn->readShort());");
         }
         else if (type.equals("int")) {
-            out.println(indent + "info->" + setter + "( dataIn->readInt() );");
+            out.println(indent + "info->" + setter + "(dataIn->readInt());");
         }
         else if (type.equals("long")) {
-            out.println(indent + "info->" + setter + "( looseUnmarshalLong( wireFormat, dataIn ) );");
+            out.println(indent + "info->" + setter + "(looseUnmarshalLong(wireFormat, dataIn));");
         }
         else if (type.equals("String")) {
-            out.println(indent + "info->" + setter + "( looseUnmarshalString( dataIn ) );");
+            out.println(indent + "info->" + setter + "(looseUnmarshalString(dataIn));");
         }
         else if (type.equals("byte[]") || type.equals("ByteSequence")) {
             if (size != null) {
-                out.println(indent + "info->" + setter + "( looseUnmarshalConstByteArray( dataIn, " + size.asInt() + " ) );");
+                out.println(indent + "info->" + setter + "(looseUnmarshalConstByteArray(dataIn, " + size.asInt() + "));");
             }
             else {
-                out.println(indent + "info->" + setter + "( looseUnmarshalByteArray( dataIn ) );");
+                out.println(indent + "info->" + setter + "(looseUnmarshalByteArray(dataIn));");
             }
         }
         else if (isThrowable(property.getType())) {
-            out.println(indent + "info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
-            out.println(indent + "    looseUnmarshalBrokerError( wireFormat, dataIn ) ) ) );");
+            out.println(indent + "info->" + setter + "(Pointer<"+nativeType+">(dynamic_cast< " + nativeType + "*>(");
+            out.println(indent + "    looseUnmarshalBrokerError(wireFormat, dataIn))));");
         }
         else if (isCachedProperty(property)) {
-            out.println(indent + "info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >( ");
-            out.println(indent + "    looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );");
+            out.println(indent + "info->" + setter + "(Pointer<"+nativeType+">(dynamic_cast<" + nativeType + "*>(");
+            out.println(indent + "    looseUnmarshalCachedObject(wireFormat, dataIn))));");
         }
         else {
-            out.println(indent + "info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >( ");
-            out.println(indent + "    looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );");
+            out.println(indent + "info->" + setter + "(Pointer<"+nativeType+">(dynamic_cast<" + nativeType + "*>(");
+            out.println(indent + "    looseUnmarshalNestedObject(wireFormat, dataIn))));");
         }
     }
 
@@ -466,19 +466,19 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         if (size != null) {
             out.println(indent + "{");
             out.println(indent + "    " + arrayType + "[] value = new " + arrayType + "[" + size.asInt() + "];");
-            out.println(indent + "    for( int i=0; i < " + size.asInt() + "; i++ ) {");
-            out.println(indent + "        value[i] = (" + arrayType + ") looseUnmarshalNestedObject( wireFormat, dataIn );");
+            out.println(indent + "    for (int i=0; i < " + size.asInt() + "; i++) {");
+            out.println(indent + "        value[i] = (" + arrayType + ") looseUnmarshalNestedObject(wireFormat, dataIn);");
             out.println(indent + "    }");
             out.println(indent + "    info->" + setter + "( value );");
             out.println(indent + "}");
         }
         else {
-            out.println(indent + "if( dataIn->readBoolean() ) {");
+            out.println(indent + "if (dataIn->readBoolean()) {");
             out.println(indent + "    short size = dataIn->readShort();");
-            out.println(indent + "    info->" + getter + "().reserve( size );");
-            out.println(indent + "    for( int i = 0; i < size; i++ ) {");
-            out.println(indent + "        info->" + getter + "().push_back( Pointer<"+arrayType+">( dynamic_cast<" + arrayType + "* >(");
-            out.println(indent + "            looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );");
+            out.println(indent + "    info->" + getter + "().reserve(size);");
+            out.println(indent + "    for (int i = 0; i < size; i++) {");
+            out.println(indent + "        info->" + getter + "().push_back( Pointer<"+arrayType+">(dynamic_cast<" + arrayType + "*>(");
+            out.println(indent + "            looseUnmarshalNestedObject(wireFormat, dataIn))));");
             out.println(indent + "    }");
             out.println(indent + "} else {");
             out.println(indent + "    info->" + getter + "().clear();");
@@ -501,59 +501,59 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
             if( version.asInt() > 1 ) {
                 indent = indent + "    ";
-                out.println("        if( wireVersion >= " + version.asInt() + " ) {");
+                out.println("        if (wireVersion >= " + version.asInt() + ") {");
             }
 
             if( type.equals( "boolean" ) ) {
-                out.println(indent + "dataOut->writeBoolean( " + getter + " );");
+                out.println(indent + "dataOut->writeBoolean(" + getter + ");");
             }
             else if( type.equals("byte") ) {
-                out.println(indent + "dataOut->write( " + getter + " );");
+                out.println(indent + "dataOut->write(" + getter + ");");
             }
             else if( type.equals("char") ) {
-                out.println(indent + "dataOut->write( " + getter + " );");
+                out.println(indent + "dataOut->write(" + getter + ");");
             }
             else if( type.equals("short") ) {
-                out.println(indent + "dataOut->writeShort( " + getter + " );");
+                out.println(indent + "dataOut->writeShort(" + getter + ");");
             }
             else if( type.equals("int")) {
-                out.println(indent + "dataOut->writeInt( " + getter + " );");
+                out.println(indent + "dataOut->writeInt(" + getter + ");");
             }
             else if( type.equals("long") ) {
-                out.println(indent + "looseMarshalLong( wireFormat, " + getter + ", dataOut );");
+                out.println(indent + "looseMarshalLong(wireFormat, " + getter + ", dataOut);");
             }
             else if( type.equals("String") ) {
-                out.println(indent + "looseMarshalString( " + getter + ", dataOut );");
+                out.println(indent + "looseMarshalString(" + getter + ", dataOut);");
             }
             else if( type.equals("byte[]") || type.equals("ByteSequence") ) {
                 if(size != null) {
-                    out.println(indent + "dataOut->write( (const unsigned char*)(&" + getter + "[0]), " + size.asInt() + ", 0, " + size.asInt() + " );");
+                    out.println(indent + "dataOut->write((const unsigned char*)(&" + getter + "[0]), " + size.asInt() + ", 0, " + size.asInt() + ");");
                 }
                 else {
                     out.println(indent + "dataOut->write( " + getter + ".size() != 0 );");
                     out.println(indent + "if( " + getter + ".size() != 0 ) {");
                     out.println(indent + "    dataOut->writeInt( (int)" + getter + ".size() );");
-                    out.println(indent + "    dataOut->write( (const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size(), 0, (int)" + getter + ".size() );");
+                    out.println(indent + "    dataOut->write((const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size(), 0, (int)" + getter + ".size());");
                     out.println(indent + "}");
                 }
             }
             else if( propertyType.isArrayType() ) {
                 if (size != null) {
-                    out.println(indent + "looseMarshalObjectArrayConstSize( wireFormat, " + getter + ", dataOut, " + size.asInt() + " );");
+                    out.println(indent + "looseMarshalObjectArrayConstSize(wireFormat, " + getter + ", dataOut, " + size.asInt() + ");");
                 }
                 else {
-                    out.println(indent + "looseMarshalObjectArray( wireFormat, " + getter + ", dataOut );");
+                    out.println(indent + "looseMarshalObjectArray(wireFormat, " + getter + ", dataOut);");
                 }
             }
             else if( isThrowable( propertyType ) ) {
-                out.println(indent + "looseMarshalBrokerError( wireFormat, " + getter + ".get(), dataOut );");
+                out.println(indent + "looseMarshalBrokerError(wireFormat, " + getter + ".get(), dataOut);");
             }
             else {
                 if( isCachedProperty( property ) ) {
-                    out.println(indent + "looseMarshalCachedObject( wireFormat, "+getter+".get(), dataOut );");
+                    out.println(indent + "looseMarshalCachedObject(wireFormat, "+getter+".get(), dataOut);");
                 }
                 else {
-                    out.println(indent + "looseMarshalNestedObject( wireFormat, "+getter+".get(), dataOut );");
+                    out.println(indent + "looseMarshalNestedObject(wireFormat, "+getter+".get(), dataOut);");
                 }
             }
 
@@ -610,11 +610,11 @@ out.println("");
     }
 
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {");
+out.println("void "+className+"::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs) {");
 out.println("");
 out.println("    try {");
 out.println("");
-out.println("        "+baseClass+"::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );");
+out.println("        "+baseClass+"::tightUnmarshal(wireFormat, dataStructure, dataIn, bs);");
 out.println("");
 
     List<JProperty> properties = getProperties();
@@ -623,11 +623,11 @@ out.println("");
 
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("        "+properClassName+"* info =");
-out.println("            dynamic_cast<"+properClassName+"*>( dataStructure );");
+out.println("            dynamic_cast<"+properClassName+"*>(dataStructure);");
     }
 
     if( marshallerAware ) {
-out.println("        info->beforeUnmarshal( wireFormat );");
+out.println("        info->beforeUnmarshal(wireFormat);");
 out.println("");
     }
 
@@ -645,13 +645,13 @@ out.println("        info->afterUnmarshal( wireFormat );");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)" );
+out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) {");
+out.println("int "+className+"::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -659,15 +659,15 @@ out.println("");
     if( checkNeedsInfoPointerTM1() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("        "+properClassName+"* info =");
-out.println("            dynamic_cast<"+properClassName+"*>( dataStructure );");
+out.println("            dynamic_cast<"+properClassName+"*>(dataStructure);");
 out.println("");
     }
 
     if( marshallerAware ) {
-out.println("        info->beforeMarshal( wireFormat );");
+out.println("        info->beforeMarshal(wireFormat);");
     }
 
-out.println("        int rc = "+baseClass+"::tightMarshal1( wireFormat, dataStructure, bs );");
+out.println("        int rc = "+baseClass+"::tightMarshal1(wireFormat, dataStructure, bs);");
 
     if( checkNeedsWireFormatVersion() ) {
         out.println("");
@@ -680,23 +680,23 @@ out.println("        int rc = "+baseClass+"::tightMarshal1( wireFormat, dataStru
 out.println("");
 out.println("        return rc + "+baseSize+";");
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)" );
+out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) {");
+out.println("void "+className+"::tightMarshal2(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs) {");
 out.println("");
 out.println("    try {");
 out.println("");
-out.println("        "+baseClass+"::tightMarshal2( wireFormat, dataStructure, dataOut, bs );");
+out.println("        "+baseClass+"::tightMarshal2(wireFormat, dataStructure, dataOut, bs );");
 out.println("");
 
     if( checkNeedsInfoPointerTM2() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("        "+properClassName+"* info =");
-out.println("            dynamic_cast<"+properClassName+"*>( dataStructure );");
+out.println("            dynamic_cast<"+properClassName+"*>(dataStructure);");
     }
 
     if( checkNeedsWireFormatVersion() ) {
@@ -708,30 +708,30 @@ out.println("            dynamic_cast<"+properClassName+"*>( dataStructure );");
     generateTightMarshal2Body(out);
 
     if( marshallerAware ) {
-out.println("        info->afterMarshal( wireFormat );");
+out.println("        info->afterMarshal(wireFormat);");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)" );
+out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) {");
+out.println("void "+className+"::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn) {");
 out.println("");
 out.println("    try {");
 out.println("");
-out.println("        "+baseClass+"::looseUnmarshal( wireFormat, dataStructure, dataIn );");
+out.println("        "+baseClass+"::looseUnmarshal(wireFormat, dataStructure, dataIn);");
 
     if( !properties.isEmpty() || marshallerAware ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("        "+properClassName+"* info =");
-out.println("            dynamic_cast<"+properClassName+"*>( dataStructure );");
+out.println("            dynamic_cast<"+properClassName+"*>(dataStructure);");
     }
 
     if( marshallerAware ) {
-out.println("        info->beforeUnmarshal( wireFormat );");
+out.println("        info->beforeUnmarshal(wireFormat);");
     }
 
     if( checkNeedsWireFormatVersion() ) {
@@ -743,17 +743,17 @@ out.println("        info->beforeUnmarshal( wireFormat );");
     generateLooseUnmarshalBody(out);
 
     if( marshallerAware ) {
-out.println("        info->afterUnmarshal( wireFormat );");
+out.println("        info->afterUnmarshal(wireFormat);");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)" );
+out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) {");
+out.println("void "+className+"::looseMarshal(OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -761,14 +761,14 @@ out.println("");
     if( !properties.isEmpty() || marshallerAware ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("        "+properClassName+"* info =");
-out.println("            dynamic_cast<"+properClassName+"*>( dataStructure );");
+out.println("            dynamic_cast<"+properClassName+"*>(dataStructure);");
     }
 
     if( marshallerAware ) {
-out.println("        info->beforeMarshal( wireFormat );");
+out.println("        info->beforeMarshal(wireFormat);");
     }
 
-out.println("        "+baseClass+"::looseMarshal( wireFormat, dataStructure, dataOut );");
+out.println("        "+baseClass+"::looseMarshal(wireFormat, dataStructure, dataOut);");
 
     if( checkNeedsWireFormatVersion() ) {
         out.println("");
@@ -779,13 +779,13 @@ out.println("        "+baseClass+"::looseMarshal( wireFormat, dataStructure, dat
     generateLooseMarshalBody(out);
 
     if( marshallerAware ) {
-out.println("        info->afterMarshal( wireFormat );");
+out.println("        info->afterMarshal(wireFormat);");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW(decaf::io::IOException)" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)" );
+out.println("    AMQ_CATCHALL_THROW(decaf::io::IOException)" );
 out.println("}");
 out.println("");
 }
@@ -824,11 +824,11 @@ out.println("using namespace activemq::wireformat::openwire::marshal;");
 out.println("using namespace activemq::wireformat::openwire::marshal::generated;");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void MarshallerFactory::configure( OpenWireFormat* format ) {");
+out.println("void MarshallerFactory::configure(OpenWireFormat* format) {");
 out.println("");
 
         for ( JClass jclass : list ) {
-out.println("    format->addMarshaller( new "+jclass.getSimpleName()+"Marshaller() );");
+out.println("    format->addMarshaller(new "+jclass.getSimpleName()+"Marshaller());");
         }
 
 out.println("}");
