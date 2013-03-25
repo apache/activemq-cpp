@@ -88,6 +88,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::FifoMessageDispatchChannelTest );
 #include <activemq/core/SimplePriorityMessageDispatchChannelTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::SimplePriorityMessageDispatchChannelTest );
+#include <activemq/core/ActiveMQMessageAuditTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQMessageAuditTest );
 
 #include <activemq/state/ConnectionStateTrackerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConnectionStateTrackerTest );

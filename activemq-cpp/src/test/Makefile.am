@@ -36,6 +36,7 @@ cc_sources = \
     activemq/commands/XATransactionIdTest.cpp \
     activemq/core/ActiveMQConnectionFactoryTest.cpp \
     activemq/core/ActiveMQConnectionTest.cpp \
+    activemq/core/ActiveMQMessageAuditTest.cpp \
     activemq/core/ActiveMQSessionTest.cpp \
     activemq/core/FifoMessageDispatchChannelTest.cpp \
     activemq/core/SimplePriorityMessageDispatchChannelTest.cpp \
@@ -283,6 +284,7 @@ h_sources = \
     activemq/commands/XATransactionIdTest.h \
     activemq/core/ActiveMQConnectionFactoryTest.h \
     activemq/core/ActiveMQConnectionTest.h \
+    activemq/core/ActiveMQMessageAuditTest.h \
     activemq/core/ActiveMQSessionTest.h \
     activemq/core/FifoMessageDispatchChannelTest.h \
     activemq/core/SimplePriorityMessageDispatchChannelTest.h \

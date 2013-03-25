@@ -96,6 +96,7 @@ cc_sources = \
     activemq/core/ActiveMQConnectionMetaData.cpp \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQConsumer.cpp \
+    activemq/core/ActiveMQMessageAudit.cpp \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQQueueBrowser.cpp \
     activemq/core/ActiveMQSession.cpp \
@@ -732,6 +733,7 @@ h_sources = \
     activemq/core/ActiveMQConnectionMetaData.h \
     activemq/core/ActiveMQConstants.h \
     activemq/core/ActiveMQConsumer.h \
+    activemq/core/ActiveMQMessageAudit.h \
     activemq/core/ActiveMQProducer.h \
     activemq/core/ActiveMQQueueBrowser.h \
     activemq/core/ActiveMQSession.h \
