@@ -95,6 +95,10 @@ namespace core{
         {
             messages.push_back( data->getMessage() );
         }
+
+        virtual int getHashCode() const {
+            return 1;
+        }
     };
 }}
 

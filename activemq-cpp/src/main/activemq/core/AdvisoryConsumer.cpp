@@ -45,8 +45,9 @@ namespace core {
         int deliveredCounter;
         Pointer<ConsumerInfo> info;
         AtomicBoolean closed;
+        int hashCode;
 
-        AdvisoryConsumerConfig() : deliveredCounter(0), info(), closed(false) {
+        AdvisoryConsumerConfig() : deliveredCounter(0), info(), closed(false), hashCode() {
         }
     };
 
@@ -68,6 +69,8 @@ AdvisoryConsumer::AdvisoryConsumer(ActiveMQConnection* connection, Pointer<comma
     this->config->info->setPrefetchSize(1000);
     this->config->info->setNoLocal(true);
     this->config->info->setDispatchAsync(true);
+
+    this->config->hashCode = consumerId->getHashCode();
 
     try {
         this->connection->addDispatcher(this->config->info->getConsumerId(), this);
@@ -148,4 +151,9 @@ void AdvisoryConsumer::processDestinationInfo(Pointer<commands::DestinationInfo>
     } else if (info->getOperationType() == ActiveMQConstants::DESTINATION_REMOVE_OPERATION) {
         this->connection->removeTempDestination(tempDest);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int AdvisoryConsumer::getHashCode() const {
+   return this->config->hashCode;
 }

@@ -55,6 +55,8 @@ namespace core {
 
         virtual void dispatch(const Pointer<MessageDispatch>& message);
 
+        virtual int getHashCode() const;
+
     private:
 
         void processDestinationInfo(Pointer<commands::DestinationInfo> destination);

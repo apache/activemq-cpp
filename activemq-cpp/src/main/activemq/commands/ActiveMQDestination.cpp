@@ -26,6 +26,7 @@
 
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/util/StlSet.h>
+#include <decaf/util/HashCode.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/internal/util/StringUtils.h>
 
@@ -71,14 +72,14 @@ namespace {
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination() :
     BaseDataStructure(), exclusive(false), ordered(false), advisory(false), compositeDestinations(),
-    orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
+    orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options(), hashCode() {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination(const std::string& physicalName) :
     BaseDataStructure(), exclusive(false), ordered(false), advisory(false), compositeDestinations(),
-    orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options() {
+    orderedTarget(DEFAULT_ORDERED_TARGET), physicalName(), options(), hashCode() {
 
     this->setPhysicalName(physicalName);
 }
@@ -101,6 +102,8 @@ void ActiveMQDestination::setPhysicalName(const std::string& physicalName) {
 
     this->advisory = physicalName.find_first_of(AdvisorySupport::ADVISORY_TOPIC_PREFIX) == 0;
     this->compositeDestinations.clear();
+
+    this->hashCode = HashCode<std::string>()(this->physicalName);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

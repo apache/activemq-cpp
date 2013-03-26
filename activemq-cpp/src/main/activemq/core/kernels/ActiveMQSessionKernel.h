@@ -542,6 +542,8 @@ namespace kernels {
          */
         bool iterateConsumers();
 
+        virtual int getHashCode() const;
+
    private:
 
        /**

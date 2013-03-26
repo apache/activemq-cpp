@@ -99,12 +99,13 @@ namespace kernels{
         Pointer<CloseSynhcronization> closeSync;
         Mutex sendMutex;
         cms::MessageTransformer* transformer;
+        int hashCode;
 
     public:
 
         SessionConfig() : synchronizationRegistered(false),
                           producerLock(), producers(), consumerLock(), consumers(),
-                          scheduler(), closeSync(), sendMutex(), transformer(NULL) {}
+                          scheduler(), closeSync(), sendMutex(), transformer(NULL), hashCode() {}
         ~SessionConfig() {}
     };
 
@@ -211,6 +212,8 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
     this->sessionInfo.reset(new SessionInfo());
     this->sessionInfo->setAckMode(ackMode);
     this->sessionInfo->setSessionId(id);
+
+    this->config->hashCode = id->getHashCode();
 
     try {
         this->connection->oneway(this->sessionInfo);
@@ -1446,4 +1449,9 @@ Pointer<commands::ProducerId> ActiveMQSessionKernel::getNextProducerId() {
     producerId->setValue(this->producerIds.getNextSequenceId());
 
     return producerId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQSessionKernel::getHashCode() const {
+    return this->config->hashCode;
 }

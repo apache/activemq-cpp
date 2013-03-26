@@ -119,6 +119,8 @@ namespace kernels {
 
         virtual void dispatch( const Pointer<MessageDispatch>& message );
 
+        virtual int getHashCode() const;
+
     public:  // ActiveMQConsumerKernel Methods
 
         /**

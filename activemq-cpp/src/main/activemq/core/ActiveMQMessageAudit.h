@@ -36,6 +36,11 @@ namespace core {
 
     public:
 
+        static const int DEFAULT_WINDOW_SIZE;
+        static const int MAXIMUM_PRODUCER_COUNT;
+
+    public:
+
         /**
          * Default Constructor windowSize = 2048, maximumNumberOfProducersToTrack = 64
          */

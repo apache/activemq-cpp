@@ -44,6 +44,13 @@ namespace core {
          */
         virtual void dispatch(const Pointer<commands::MessageDispatch>& message) = 0;
 
+        /**
+         * HashCode method allowing Dispatcher instances to be used in HashMap etc.
+         *
+         * @returns hash value for this Dispatcher.
+         */
+        virtual int getHashCode() const = 0;
+
     };
 
 }}

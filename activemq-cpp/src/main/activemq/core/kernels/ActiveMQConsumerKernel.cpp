@@ -94,6 +94,7 @@ namespace kernels {
         Pointer<RedeliveryPolicy> redeliveryPolicy;
         Pointer<Exception> failureError;
         Pointer<Scheduler> scheduler;
+        int hashCode;
 
         ActiveMQConsumerKernelConfig() : listener(NULL),
                                          messageAvailableListener(NULL),
@@ -113,7 +114,8 @@ namespace kernels {
                                          redeliveryDelay(0),
                                          redeliveryPolicy(),
                                          failureError(),
-                                         scheduler() {
+                                         scheduler(),
+                                         hashCode() {
         }
     };
 
@@ -362,6 +364,7 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
     // Initialize Consumer Data
     this->session = session;
     this->consumerInfo = consumerInfo;
+    this->internal->hashCode = id->getHashCode();
     this->internal->lastDeliveredSequenceId = -1;
     this->internal->synchronizationRegistered = false;
     this->internal->additionalWindowSize = 0;
@@ -1418,4 +1421,9 @@ void ActiveMQConsumerKernel::setMessageAvailableListener(cms::MessageAvailableLi
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageAvailableListener* ActiveMQConsumerKernel::getMessageAvailableListener() const {
     return this->internal->messageAvailableListener;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConsumerKernel::getHashCode() const {
+    return this->internal->hashCode;
 }

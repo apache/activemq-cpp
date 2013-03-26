@@ -35,8 +35,8 @@
 #include <string>
 #include <map>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
     using decaf::lang::Pointer;
 
@@ -72,6 +72,7 @@ namespace commands{
 
         std::string physicalName;
         util::ActiveMQProperties options;
+        int hashCode;
 
     public:
 
@@ -104,6 +105,10 @@ namespace commands{
 
         virtual std::string toString() const;
 
+        int getHashCode() const {
+            return this->hashCode;
+        }
+
     public:
 
         /**
@@ -133,27 +138,6 @@ namespace commands{
         virtual void setAdvisory(bool advisory) {
             this->advisory = advisory;
         }
-
-//        /**
-//         * @return true if this is a destination for Consumer advisories
-//         */
-//        virtual bool isConsumerAdvisory() const {
-//            return isAdvisory() && physicalName.find(CONSUMER_ADVISORY_PREFIX) == 0;
-//        }
-//
-//        /**
-//         * @return true if this is a destination for Producer advisories
-//         */
-//        virtual bool isProducerAdvisory() const {
-//            return isAdvisory() && physicalName.find(PRODUCER_ADVISORY_PREFIX) == 0;
-//        }
-//
-//        /**
-//         * @return true if this is a destination for Connection advisories
-//         */
-//        virtual bool isConnectionAdvisory() const {
-//            return isAdvisory() && physicalName.find(CONNECTION_ADVISORY_PREFIX) == 0;
-//        }
 
         /**
          * @return Returns the exclusive.

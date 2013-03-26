@@ -39,6 +39,10 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int ActiveMQMessageAudit::DEFAULT_WINDOW_SIZE = 2048;
+const int ActiveMQMessageAudit::MAXIMUM_PRODUCER_COUNT = 64;
+
+////////////////////////////////////////////////////////////////////////////////
 namespace activemq {
 namespace core {
 
