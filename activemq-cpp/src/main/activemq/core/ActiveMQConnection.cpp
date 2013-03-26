@@ -23,6 +23,7 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/AdvisoryConsumer.h>
+#include <activemq/core/ConnectionAudit.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <activemq/core/policies/DefaultPrefetchPolicy.h>
@@ -194,6 +195,8 @@ namespace core{
         decaf::util::LinkedList<transport::TransportListener*> transportListeners;
 
         TempDestinationMap activeTempDestinations;
+
+        ConnectionAudit connectionAudit;
 
         ConnectionConfig(const Pointer<transport::Transport> transport,
                          const Pointer<decaf::util::Properties> properties) :
@@ -453,6 +456,8 @@ ActiveMQConnection::ActiveMQConnection(const Pointer<transport::Transport> trans
     // Set the initial state of the ConnectionInfo
     configuration->connectionInfo->setManageable(true);
     configuration->connectionInfo->setFaultTolerant(transport->isFaultTolerant());
+
+    configuration->connectionAudit.setCheckForDuplicates(transport->isFaultTolerant());
 
     this->config = configuration.release();
 }

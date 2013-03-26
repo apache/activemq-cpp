@@ -106,6 +106,7 @@ cc_sources = \
     activemq/core/ActiveMQXAConnectionFactory.cpp \
     activemq/core/ActiveMQXASession.cpp \
     activemq/core/AdvisoryConsumer.cpp \
+    activemq/core/ConnectionAudit.cpp \
     activemq/core/DispatchData.cpp \
     activemq/core/Dispatcher.cpp \
     activemq/core/FifoMessageDispatchChannel.cpp \
@@ -743,6 +744,7 @@ h_sources = \
     activemq/core/ActiveMQXAConnectionFactory.h \
     activemq/core/ActiveMQXASession.h \
     activemq/core/AdvisoryConsumer.h \
+    activemq/core/ConnectionAudit.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
     activemq/core/FifoMessageDispatchChannel.h \

@@ -88,6 +88,58 @@ void ActiveMQMessageAuditTest::testIsDuplicateMessageId() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMessageAuditTest::testRollbackString() {
+
+    int count = 10000;
+    ActiveMQMessageAudit audit;
+    IdGenerator idGen;
+
+    ArrayList<std::string> list;
+    for (int i = 0; i < count; i++) {
+        std::string id = idGen.generateId();
+        list.add(id);
+        CPPUNIT_ASSERT(!audit.isDuplicate(id));
+    }
+
+    int index = list.size() -1 -audit.getAuditDepth();
+    for (; index < list.size(); index++) {
+        std::string id = list.get(index);
+        CPPUNIT_ASSERT_MESSAGE("duplicate, id:" + id, audit.isDuplicate(id));
+        audit.rollback(id);
+        CPPUNIT_ASSERT_MESSAGE(std::string() + "duplicate msg:" + id, !audit.isDuplicate(id));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMessageAuditTest::testRollbackMessageId() {
+
+    int count = 10000;
+    ActiveMQMessageAudit audit;
+    ArrayList<Pointer<MessageId> > list;
+
+    Pointer<ProducerId> pid(new ProducerId);
+    pid->setConnectionId("test");
+    pid->setSessionId(0);
+    pid->setValue(1);
+
+    for (int i = 0; i < count; i++) {
+        Pointer<MessageId> id(new MessageId);
+        id->setProducerId(pid);
+        id->setProducerSequenceId(i);
+        list.add(id);
+        CPPUNIT_ASSERT(!audit.isDuplicate(id));
+    }
+
+    int index = list.size() -1 -audit.getAuditDepth();
+    for (; index < list.size(); index++) {
+        Pointer<MessageId> id = list.get(index);
+        CPPUNIT_ASSERT_MESSAGE(std::string() + "duplicate msg:" + id->toString(), audit.isDuplicate(id));
+        audit.rollback(id);
+        CPPUNIT_ASSERT_MESSAGE(std::string() + "duplicate msg:" + id->toString(), !audit.isDuplicate(id));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMessageAuditTest::testIsInOrderString() {
 
     int count = 10000;

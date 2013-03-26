@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CORE_ACTIVEMQMESSAGEAUDITTEST_H_
-#define _ACTIVEMQ_CORE_ACTIVEMQMESSAGEAUDITTEST_H_
+#ifndef _ACTIVEMQ_CORE_CONNECTIONAUDITTEST_H_
+#define _ACTIVEMQ_CORE_CONNECTIONAUDITTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -24,33 +24,27 @@
 namespace activemq {
 namespace core {
 
-    class ActiveMQMessageAuditTest : public CppUnit::TestFixture {
+    class ConnectionAuditTest : public CppUnit::TestFixture {
 
-        CPPUNIT_TEST_SUITE( ActiveMQMessageAuditTest );
-        CPPUNIT_TEST( testIsDuplicateString );
-        CPPUNIT_TEST( testIsDuplicateMessageId );
-        CPPUNIT_TEST( testIsInOrderString );
-        CPPUNIT_TEST( testIsInOrderMessageId );
-        CPPUNIT_TEST( testRollbackString );
-        CPPUNIT_TEST( testRollbackMessageId );
-        CPPUNIT_TEST( testGetLastSeqId );
+        CPPUNIT_TEST_SUITE( ConnectionAuditTest );
+        CPPUNIT_TEST( testConstructor1 );
+        CPPUNIT_TEST( testConstructor2 );
+        CPPUNIT_TEST( testIsDuplicate );
+        CPPUNIT_TEST( testRollbackDuplicate );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        ActiveMQMessageAuditTest();
-        virtual ~ActiveMQMessageAuditTest();
+        ConnectionAuditTest();
+        virtual ~ConnectionAuditTest();
 
-        void testIsDuplicateString();
-        void testIsDuplicateMessageId();
-        void testIsInOrderString();
-        void testIsInOrderMessageId();
-        void testRollbackString();
-        void testRollbackMessageId();
-        void testGetLastSeqId();
+        void testConstructor1();
+        void testConstructor2();
+        void testIsDuplicate();
+        void testRollbackDuplicate();
 
     };
 
 }}
 
-#endif /* _ACTIVEMQ_CORE_ACTIVEMQMESSAGEAUDITTEST_H_ */
+#endif /* _ACTIVEMQ_CORE_CONNECTIONAUDITTEST_H_ */
