@@ -312,7 +312,7 @@ namespace concurrent {
             /**
              * Implements AQS base acquire to succeed if ran or cancelled
              */
-            virtual int tryAcquireShared(int ignore) {
+            virtual int tryAcquireShared(int ignore DECAF_UNUSED) {
                 return innerIsDone() ? 1 : -1;
             }
 
@@ -320,7 +320,7 @@ namespace concurrent {
              * Implements AQS base release to always signal after setting
              * final done status by nulling runner thread.
              */
-            virtual bool tryReleaseShared(int ignore) {
+            virtual bool tryReleaseShared(int ignore DECAF_UNUSED) {
                 runner = NULL;
                 return true;
             }
