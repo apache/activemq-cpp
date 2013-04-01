@@ -18,6 +18,7 @@
 #include "ConnectionAuditTest.h"
 
 #include <activemq/core/ConnectionAudit.h>
+#include <activemq/core/Dispatcher.h>
 #include <activemq/core/ActiveMQMessageAudit.h>
 #include <activemq/util/IdGenerator.h>
 #include <activemq/commands/Message.h>
@@ -104,7 +105,7 @@ void ConnectionAuditTest::testIsDuplicate() {
         list.add(id);
 
         message->setMessageId(id);
-        CPPUNIT_ASSERT(!audit.isDuplicate(dispatcher, message));
+        CPPUNIT_ASSERT(!audit.isDuplicate(dispatcher.get(), message));
     }
 
     int index = list.size() -1 -audit.getAuditDepth();
@@ -112,7 +113,7 @@ void ConnectionAuditTest::testIsDuplicate() {
         Pointer<MessageId> id = list.get(index);
         message->setMessageId(id);
         CPPUNIT_ASSERT_MESSAGE(std::string() + "duplicate msg:" + id->toString(),
-                               audit.isDuplicate(dispatcher, message));
+                               audit.isDuplicate(dispatcher.get(), message));
     }
 }
 
@@ -140,7 +141,7 @@ void ConnectionAuditTest::testRollbackDuplicate() {
         list.add(id);
 
         message->setMessageId(id);
-        CPPUNIT_ASSERT(!audit.isDuplicate(dispatcher, message));
+        CPPUNIT_ASSERT(!audit.isDuplicate(dispatcher.get(), message));
     }
 
     int index = list.size() -1 -audit.getAuditDepth();
@@ -148,9 +149,9 @@ void ConnectionAuditTest::testRollbackDuplicate() {
         Pointer<MessageId> id = list.get(index);
         message->setMessageId(id);
         CPPUNIT_ASSERT_MESSAGE(std::string() + "duplicate msg:" + id->toString(),
-                               audit.isDuplicate(dispatcher, message));
-        audit.rollbackDuplicate(dispatcher, message);
+                               audit.isDuplicate(dispatcher.get(), message));
+        audit.rollbackDuplicate(dispatcher.get(), message);
         CPPUNIT_ASSERT_MESSAGE(std::string() + "duplicate msg:" + id->toString(),
-                               !audit.isDuplicate(dispatcher, message));
+                               !audit.isDuplicate(dispatcher.get(), message));
     }
 }

@@ -22,6 +22,7 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Math.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -29,6 +30,7 @@
 #include <activemq/transport/TransportRegistry.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
+#include <activemq/core/ActiveMQMessageAudit.h>
 #include <activemq/core/policies/DefaultPrefetchPolicy.h>
 #include <activemq/core/policies/DefaultRedeliveryPolicy.h>
 #include <activemq/util/URISupport.h>
@@ -77,13 +79,25 @@ namespace core{
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
+        bool sendAcksAsync;
         bool messagePrioritySupported;
         bool useCompression;
+        bool useRetroactiveConsumer;
         bool watchTopicAdvisories;
+        bool checkForDuplicates;
+        bool optimizeAcknowledge;
+        bool exclusiveConsumer;
+        bool transactedIndividualAck;
+        bool nonBlockingRedelivery;
         int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
+        int auditDepth;
+        int auditMaximumProducerNumber;
+        long long optimizeAcknowledgeTimeOut;
+        long long optimizedAckScheduledAckInterval;
+        long long consumerFailoverRedeliveryWaitPeriod;
 
         cms::ExceptionListener* defaultListener;
         cms::MessageTransformer* defaultTransformer;
@@ -99,13 +113,25 @@ namespace core{
                             dispatchAsync(true),
                             alwaysSyncSend(false),
                             useAsyncSend(false),
+                            sendAcksAsync(true),
                             messagePrioritySupported(true),
                             useCompression(false),
+                            useRetroactiveConsumer(false),
                             watchTopicAdvisories(true),
+                            checkForDuplicates(true),
+                            optimizeAcknowledge(false),
+                            exclusiveConsumer(false),
+                            transactedIndividualAck(false),
+                            nonBlockingRedelivery(false),
                             compressionLevel(-1),
                             sendTimeout(0),
                             closeTimeout(15000),
                             producerWindowSize(0),
+                            auditDepth(ActiveMQMessageAudit::DEFAULT_WINDOW_SIZE),
+                            auditMaximumProducerNumber(ActiveMQMessageAudit::MAXIMUM_PRODUCER_COUNT),
+                            optimizeAcknowledgeTimeOut(300),
+                            optimizedAckScheduledAckInterval(0),
+                            consumerFailoverRedeliveryWaitPeriod(0),
                             defaultListener(NULL),
                             defaultTransformer(NULL),
                             defaultPrefetchPolicy(new DefaultPrefetchPolicy()),
@@ -118,15 +144,12 @@ namespace core{
             this->properties->clear();
 
             if (uri.getQuery() != "") {
-
                 // Not a composite URI so this works fine.
                 try {
                     URISupport::parseQuery(uri.getQuery(), properties.get());
                 } catch (URISyntaxException& ex) {
                 }
-
             } else {
-
                 // Composite URI won't indicate it has a query even if it does.
                 try {
                     CompositeData composite = URISupport::parseComposite(uri);
@@ -139,45 +162,56 @@ namespace core{
             this->alwaysSyncSend = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND), "false"));
-
             this->useAsyncSend = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_USEASYNCSEND), "false"));
-
             this->useCompression = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_USECOMPRESSION), "false"));
-
             this->compressionLevel = Integer::parseInt(
                 properties->getProperty("connection.compressionLevel", "-1"));
-
             this->messagePrioritySupported = Boolean::parseBoolean(
                 properties->getProperty("connection.messagePrioritySupported", "true"));
-
+            this->messagePrioritySupported = Boolean::parseBoolean(
+                properties->getProperty("connection.checkForDuplicates", "true"));
+            this->messagePrioritySupported = Integer::parseInt(
+                properties->getProperty("connection.auditDepth", "2048"));
+            this->messagePrioritySupported = Integer::parseInt(
+                properties->getProperty("connection.auditMaximumProducerNumber", "64"));
             this->dispatchAsync = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_DISPATCHASYNC), "true"));
-
             this->producerWindowSize = Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE), "0"));
-
             this->sendTimeout = decaf::lang::Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_SENDTIMEOUT), "0"));
-
             this->closeTimeout = decaf::lang::Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT), "15000"));
-
             this->clientId = properties->getProperty(
                 core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_CLIENTID), clientId);
-
             this->username = properties->getProperty(
                 core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_USERNAME), username);
-
             this->password = properties->getProperty(
                 core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_PASSWORD), password);
+            this->optimizeAcknowledge = Boolean::parseBoolean(
+                properties->getProperty("connection.optimizeAcknowledge", "false"));
+            this->optimizeAcknowledge = Boolean::parseBoolean(
+                properties->getProperty("connection.exclusiveConsumer", "false"));
+            this->optimizeAcknowledge = Boolean::parseBoolean(
+                properties->getProperty("connection.transactedIndividualAck", "false"));
+            this->optimizeAcknowledge = Boolean::parseBoolean(
+                properties->getProperty("connection.useRetroactiveConsumer", "false"));
+            this->optimizeAcknowledge = Boolean::parseBoolean(
+                properties->getProperty("connection.sendAcksAsync", "true"));
+            this->messagePrioritySupported = Long::parseLong(
+                properties->getProperty("connection.optimizeAcknowledgeTimeOut", "300"));
+            this->messagePrioritySupported = Long::parseLong(
+                properties->getProperty("connection.optimizedAckScheduledAckInterval", "0"));
+            this->messagePrioritySupported = Long::parseLong(
+                properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", "0"));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
@@ -361,6 +395,9 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setRedeliveryPolicy(this->settings->defaultRedeliveryPolicy->clone());
     connection->setMessagePrioritySupported(this->settings->messagePrioritySupported);
     connection->setWatchTopicAdvisories(this->settings->watchTopicAdvisories);
+    connection->setCheckForDuplicates(this->settings->checkForDuplicates);
+    connection->setAuditDepth(this->settings->auditDepth);
+    connection->setAuditMaximumProducerNumber(this->settings->auditMaximumProducerNumber);
 
     if (this->settings->defaultListener) {
         connection->setExceptionListener(this->settings->defaultListener);
@@ -489,6 +526,16 @@ void ActiveMQConnectionFactory::setUseAsyncSend(bool value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isSendAcksAsync() const {
+    return this->settings->sendAcksAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setSendAcksAsync(bool sendAcksAsync) {
+    this->settings->sendAcksAsync = sendAcksAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQConnectionFactory::isUseCompression() const {
     return this->settings->useCompression;
 }
@@ -561,4 +608,114 @@ bool ActiveMQConnectionFactory::isWatchTopicAdvisories() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setWatchTopicAdvisories(bool value) {
     this->settings->watchTopicAdvisories = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionFactory::getAuditDepth() const {
+    return this->settings->auditDepth;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setAuditDepth(int auditDepth) {
+    this->settings->auditDepth = auditDepth;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionFactory::getAuditMaximumProducerNumber() const {
+    return this->settings->auditMaximumProducerNumber;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setAuditMaximumProducerNumber(int auditMaximumProducerNumber) {
+    this->settings->auditMaximumProducerNumber = auditMaximumProducerNumber;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isCheckForDuplicates() const {
+    return this->settings->checkForDuplicates;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setCheckForDuplicates(bool checkForDuplicates) {
+    this->settings->checkForDuplicates = checkForDuplicates;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isTransactedIndividualAck() const {
+    return this->settings->transactedIndividualAck;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setTransactedIndividualAck(bool transactedIndividualAck) {
+    this->settings->transactedIndividualAck = transactedIndividualAck;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isNonBlockingRedelivery() const {
+    return this->settings->nonBlockingRedelivery;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setNonBlockingRedelivery(bool nonBlockingRedelivery) {
+    this->settings->nonBlockingRedelivery = nonBlockingRedelivery;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isOptimizeAcknowledge() const {
+    return this->settings->optimizeAcknowledge;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setOptimizeAcknowledge(bool optimizeAcknowledge) {
+    this->settings->optimizeAcknowledge = optimizeAcknowledge;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnectionFactory::getOptimizeAcknowledgeTimeOut() const {
+    return this->settings->optimizeAcknowledgeTimeOut;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setOptimizeAcknowledgeTimeOut(long long optimizeAcknowledgeTimeOut) {
+    this->settings->optimizeAcknowledgeTimeOut = optimizeAcknowledgeTimeOut;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnectionFactory::getOptimizedAckScheduledAckInterval() const {
+    return this->settings->optimizedAckScheduledAckInterval;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setOptimizedAckScheduledAckInterval(long long optimizedAckScheduledAckInterval) {
+    this->settings->optimizedAckScheduledAckInterval = optimizedAckScheduledAckInterval;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnectionFactory::getConsumerFailoverRedeliveryWaitPeriod() const {
+    return this->settings->consumerFailoverRedeliveryWaitPeriod;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setConsumerFailoverRedeliveryWaitPeriod(long long value) {
+    this->settings->consumerFailoverRedeliveryWaitPeriod = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isUseRetroactiveConsumer() const {
+    return this->settings->useRetroactiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setUseRetroactiveConsumer(bool useRetroactiveConsumer) {
+    this->settings->useRetroactiveConsumer = useRetroactiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isExclusiveConsumer() const {
+    return this->settings->exclusiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setExclusiveConsumer(bool exclusiveConsumer) {
+    this->settings->exclusiveConsumer = exclusiveConsumer;
 }

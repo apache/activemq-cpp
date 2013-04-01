@@ -19,6 +19,7 @@
 
 #include <decaf/util/LinkedHashMap.h>
 
+#include <activemq/core/Dispatcher.h>
 #include <activemq/core/ActiveMQMessageAudit.h>
 #include <activemq/commands/ActiveMQDestination.h>
 
@@ -48,7 +49,7 @@ namespace core {
 
         Mutex mutex;
         LinkedHashMap<Pointer<ActiveMQDestination>, Pointer<ActiveMQMessageAudit> > destinations;
-        LinkedHashMap<Pointer<Dispatcher>, Pointer<ActiveMQMessageAudit> > dispatchers;
+        LinkedHashMap<Dispatcher*, Pointer<ActiveMQMessageAudit> > dispatchers;
 
         ConnectionAuditImpl() : mutex(), destinations(1000), dispatchers(1000) {
         }
@@ -79,14 +80,14 @@ ConnectionAudit::~ConnectionAudit() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionAudit::removeDispatcher(Pointer<Dispatcher> dispatcher) {
+void ConnectionAudit::removeDispatcher(Dispatcher* dispatcher) {
     synchronized(&this->impl->mutex) {
         this->impl->dispatchers.remove(dispatcher);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionAudit::isDuplicate(Pointer<Dispatcher> dispatcher, Pointer<commands::Message> message) {
+bool ConnectionAudit::isDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
 
     if (checkForDuplicates && message != NULL) {
         Pointer<ActiveMQDestination> destination = message->getDestination();
@@ -117,7 +118,7 @@ bool ConnectionAudit::isDuplicate(Pointer<Dispatcher> dispatcher, Pointer<comman
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionAudit::rollbackDuplicate(Pointer<Dispatcher> dispatcher, Pointer<commands::Message> message) {
+void ConnectionAudit::rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
     if (checkForDuplicates && message != NULL) {
         Pointer<ActiveMQDestination> destination = message->getDestination();
         if (destination != NULL) {

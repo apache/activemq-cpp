@@ -22,6 +22,7 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/core/ActiveMQConnectionMetaData.h>
+#include <activemq/core/ActiveMQMessageAudit.h>
 #include <activemq/core/AdvisoryConsumer.h>
 #include <activemq/core/ConnectionAudit.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
@@ -164,13 +165,25 @@ namespace core{
         bool dispatchAsync;
         bool alwaysSyncSend;
         bool useAsyncSend;
+        bool sendAcksAsync;
         bool messagePrioritySupported;
         bool watchTopicAdvisories;
         bool useCompression;
+        bool useRetroactiveConsumer;
+        bool checkForDuplicates;
+        bool optimizeAcknowledge;
+        bool exclusiveConsumer;
+        bool transactedIndividualAck;
+        bool nonBlockingRedelivery;
         int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
+        int auditDepth;
+        int auditMaximumProducerNumber;
+        long long optimizeAcknowledgeTimeOut;
+        long long optimizedAckScheduledAckInterval;
+        long long consumerFailoverRedeliveryWaitPeriod;
 
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
@@ -219,13 +232,25 @@ namespace core{
                              dispatchAsync(true),
                              alwaysSyncSend(false),
                              useAsyncSend(false),
+                             sendAcksAsync(true),
                              messagePrioritySupported(true),
                              watchTopicAdvisories(true),
                              useCompression(false),
+                             useRetroactiveConsumer(false),
+                             checkForDuplicates(true),
+                             optimizeAcknowledge(false),
+                             exclusiveConsumer(false),
+                             transactedIndividualAck(false),
+                             nonBlockingRedelivery(false),
                              compressionLevel(-1),
                              sendTimeout(0),
                              closeTimeout(15000),
                              producerWindowSize(0),
+                             auditDepth(ActiveMQMessageAudit::DEFAULT_WINDOW_SIZE),
+                             auditMaximumProducerNumber(ActiveMQMessageAudit::MAXIMUM_PRODUCER_COUNT),
+                             optimizeAcknowledgeTimeOut(300),
+                             optimizedAckScheduledAckInterval(0),
+                             consumerFailoverRedeliveryWaitPeriod(0),
                              defaultPrefetchPolicy(NULL),
                              defaultRedeliveryPolicy(NULL),
                              exceptionListener(NULL),
@@ -560,6 +585,7 @@ void ActiveMQConnection::removeSession(Pointer<ActiveMQSessionKernel> session) {
         this->config->sessionsLock.writeLock().lock();
         try {
             this->config->activeSessions.remove(session);
+            this->config->connectionAudit.removeDispatcher(session.get());
             this->config->sessionsLock.writeLock().unlock();
         } catch (Exception& ex) {
             this->config->sessionsLock.writeLock().unlock();
@@ -1668,6 +1694,126 @@ void ActiveMQConnection::setWatchTopicAdvisories(bool value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnection::getAuditDepth() const {
+    return this->config->auditDepth;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setAuditDepth(int auditDepth) {
+    this->config->auditDepth = auditDepth;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnection::getAuditMaximumProducerNumber() const {
+    return this->config->auditMaximumProducerNumber;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setAuditMaximumProducerNumber(int auditMaximumProducerNumber) {
+    this->config->auditMaximumProducerNumber = auditMaximumProducerNumber;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isCheckForDuplicates() const {
+    return this->config->checkForDuplicates;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setCheckForDuplicates(bool checkForDuplicates) {
+    this->config->checkForDuplicates = checkForDuplicates;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isSendAcksAsync() const {
+    return this->config->sendAcksAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setSendAcksAsync(bool sendAcksAsync) {
+    this->config->sendAcksAsync = sendAcksAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isTransactedIndividualAck() const {
+    return this->config->transactedIndividualAck;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setTransactedIndividualAck(bool transactedIndividualAck) {
+    this->config->transactedIndividualAck = transactedIndividualAck;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isNonBlockingRedelivery() const {
+    return this->config->nonBlockingRedelivery;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setNonBlockingRedelivery(bool nonBlockingRedelivery) {
+    this->config->nonBlockingRedelivery = nonBlockingRedelivery;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isOptimizeAcknowledge() const {
+    return this->config->optimizeAcknowledge;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setOptimizeAcknowledge(bool optimizeAcknowledge) {
+    this->config->optimizeAcknowledge = optimizeAcknowledge;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnection::getOptimizeAcknowledgeTimeOut() const {
+    return this->config->optimizeAcknowledgeTimeOut;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setOptimizeAcknowledgeTimeOut(long long optimizeAcknowledgeTimeOut) {
+    this->config->optimizeAcknowledgeTimeOut = optimizeAcknowledgeTimeOut;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnection::getOptimizedAckScheduledAckInterval() const {
+    return this->config->optimizedAckScheduledAckInterval;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setOptimizedAckScheduledAckInterval(long long optimizedAckScheduledAckInterval) {
+    this->config->optimizedAckScheduledAckInterval = optimizedAckScheduledAckInterval;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConnection::getConsumerFailoverRedeliveryWaitPeriod() const {
+    return this->config->consumerFailoverRedeliveryWaitPeriod;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setConsumerFailoverRedeliveryWaitPeriod(long long value) {
+    this->config->consumerFailoverRedeliveryWaitPeriod = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isUseRetroactiveConsumer() const {
+    return this->config->useRetroactiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setUseRetroactiveConsumer(bool useRetroactiveConsumer) {
+    this->config->useRetroactiveConsumer = useRetroactiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isExclusiveConsumer() const {
+    return this->config->exclusiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setExclusiveConsumer(bool exclusiveConsumer) {
+    this->config->exclusiveConsumer = exclusiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::addTempDestination(Pointer<ActiveMQTempDestination> destination) {
     this->config->activeTempDestinations.put(destination, destination);
 }
@@ -1758,4 +1904,19 @@ bool ActiveMQConnection::isDeleted(Pointer<ActiveMQTempDestination> destination)
     }
 
     return !this->config->activeTempDestinations.containsKey(destination);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
+
+    if (this->config->checkForDuplicates) {
+        return this->config->connectionAudit.isDuplicate(dispatcher, message);
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
+    this->config->connectionAudit.rollbackDuplicate(dispatcher, message);
 }

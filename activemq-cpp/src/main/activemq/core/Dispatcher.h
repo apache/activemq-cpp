@@ -25,8 +25,6 @@
 namespace activemq {
 namespace core {
 
-    using decaf::lang::Pointer;
-
     /**
      * Interface for an object responsible for dispatching messages to
      * consumers.
@@ -42,7 +40,7 @@ namespace core {
          * @param message
          *      The message to be dispatched to a waiting consumer.
          */
-        virtual void dispatch(const Pointer<commands::MessageDispatch>& message) = 0;
+        virtual void dispatch(const decaf::lang::Pointer<commands::MessageDispatch>& message) = 0;
 
         /**
          * HashCode method allowing Dispatcher instances to be used in HashMap etc.

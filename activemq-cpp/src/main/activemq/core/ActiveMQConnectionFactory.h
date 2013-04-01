@@ -40,12 +40,11 @@ namespace core{
     class AMQCPP_API ActiveMQConnectionFactory : public cms::ConnectionFactory {
     public:
 
-        // Default Broker URI if none specified
+        // Default Broker URI if none specified 'failover:tcp://localhost:61616'
         static const std::string DEFAULT_URI;
 
     private:
 
-        // d-Pointer holding pre-configured factory settings
         FactorySettings* settings;
 
     private:
@@ -59,9 +58,13 @@ namespace core{
 
         /**
          * Constructor
-         * @param url the URI of the Broker we are connecting to.
-         * @param username to authenticate with, defaults to ""
-         * @param password to authenticate with, defaults to ""
+         *
+         * @param uri
+         *      The URI of the Broker we are connecting to.
+         * @param username
+         *      The user name to authenticate with this connection.
+         * @param password
+         *      The password to authenticate with this connection.
          */
         ActiveMQConnectionFactory(const std::string& uri,
                                   const std::string& username = "",
@@ -69,9 +72,13 @@ namespace core{
 
         /**
          * Constructor
-         * @param uri the URI of the Broker we are connecting to.
-         * @param username to authenticate with, defaults to ""
-         * @param password to authenticate with, defaults to ""
+         *
+         * @param uri
+         *      The URI of the Broker we are connecting to.
+         * @param username
+         *      The user name to authenticate with this connection.
+         * @param password
+         *      The password to authenticate with this connection.
          */
         ActiveMQConnectionFactory(const decaf::net::URI& uri,
                                   const std::string& username = "",
@@ -84,8 +91,10 @@ namespace core{
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
          * called.
+         *
          * @returns a Connection Pointer
-         * @throws CMSException
+         *
+         * @throws CMSException if an error occurs.
          */
         virtual cms::Connection* createConnection();
 
@@ -93,14 +102,20 @@ namespace core{
          * Creates a connection with the specified user identity. The
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
-         * called.  The username and password values passed here do not
+         * called.  The user name and password values passed here do not
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.
-         * @param username to authenticate with
-         * @param password to authenticate with
+         *
+         * @param username
+         *      The user name to authenticate with this connection.
+         * @param password
+         *      The password to authenticate with this connection.
+         *
          * @returns a Connection Pointer
-         * @throws CMSException
+         *
+         * @throws CMSSecurityException if the user credentials are invalid.
+         * @throws CMSException if an error occurs.
          */
         virtual cms::Connection* createConnection(const std::string& username,
                                                   const std::string& password);
@@ -113,12 +128,19 @@ namespace core{
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.
-         * @param username to authenticate with
-         * @param password to authenticate with
-         * @param clientId to assign to connection if "" then a random cleint
-         *        Id is created for this connection.
+         *
+         * @param username
+         *      The user name to authenticate with this connection.
+         * @param password
+         *      The password to authenticate with this connection.
+         * @param clientId
+         *      The client Id to assign to connection if "" then a random client
+         *      Id is created for this connection.
+         *
          * @returns a Connection Pointer
-         * @throws CMSException
+         *
+         * @throws CMSSecurityException if the user credentials are invalid.
+         * @throws CMSException if an error occurs.
          */
         virtual cms::Connection* createConnection(const std::string& username,
                                                   const std::string& password,
@@ -297,6 +319,23 @@ namespace core{
         void setUseAsyncSend(bool value);
 
         /**
+         * Returns whether Message acknowledgments are sent asynchronously meaning no
+         * response is required from the broker before the ack completes.
+         *
+         * @return the sendAcksAsync configured value. (defaults to true)
+         */
+        bool isSendAcksAsync() const;
+
+        /**
+         * Sets whether Message acknowledgments are sent asynchronously meaning no
+         * response is required from the broker before the ack completes.
+         *
+         * @param sendAcksAsync
+         *      The sendAcksAsync configuration value to set.
+         */
+        void setSendAcksAsync(bool sendAcksAsync);
+
+        /**
          * Gets if the Connection is configured for Message body compression.
          * @returns if the Message body will be Compressed or not.
          */
@@ -386,6 +425,39 @@ namespace core{
         void setMessagePrioritySupported(bool value);
 
         /**
+         * Should all created consumers be retroactive.
+         *
+         * @returns true if consumer will be created with the retroactive flag set.
+         */
+        bool isUseRetroactiveConsumer() const;
+
+        /**
+         * Sets whether or not retroactive consumers are enabled. Retroactive
+         * consumers allow non-durable topic subscribers to receive old messages
+         * that were published before the non-durable subscriber started.
+         *
+         * @param useRetroactiveConsumer
+         *      The value of this configuration option.
+         */
+        void setUseRetroactiveConsumer(bool useRetroactiveConsumer);
+
+        /**
+         * Should all created consumers be exclusive.
+         *
+         * @returns true if consumer will be created with the exclusive flag set.
+         */
+        bool isExclusiveConsumer() const;
+
+        /**
+         * Enables or disables whether or not queue consumers should be exclusive or
+         * not for example to preserve ordering when not using Message Groups.
+         *
+         * @param exclusiveConsumer
+         *      The value of this configuration option.
+         */
+        void setExclusiveConsumer(bool exclusiveConsumer);
+
+        /**
          * Is the Connection created by this factory configured to watch for advisory messages
          * that inform the Connection about temporary destination create / destroy.
          *
@@ -401,6 +473,172 @@ namespace core{
          *      Boolean indicating if advisory message monitoring should be enabled.
          */
         void setWatchTopicAdvisories(bool value);
+
+        /**
+         * Get the audit depth for Messages for consumers when using a fault
+         * tolerant transport.  The higher the value the more messages are checked
+         * for duplication, and the larger the performance impact of duplicate
+         * detection will be.
+         *
+         * @returns the configured audit depth.
+         */
+        int getAuditDepth() const;
+
+        /**
+         * Set the audit depth for Messages for consumers when using a fault
+         * tolerant transport.  The higher the value the more messages are checked
+         * for duplication, and the larger the performance impact of duplicate
+         * detection will be.
+         *
+         * @param auditDepth
+         *      The configured audit depth.
+         */
+        void setAuditDepth(int auditDepth);
+
+        /**
+         * The number of Producers that will be audited.
+         *
+         * @returns the configured number of producers to include in the audit.
+         */
+        int getAuditMaximumProducerNumber() const;
+
+        /**
+         * The number of Producers that will be audited.
+         *
+         * @param auditMaximumProducerNumber
+         *      The configured number of producers to include in the audit.
+         */
+        void setAuditMaximumProducerNumber(int auditMaximumProducerNumber);
+
+        /**
+         * Gets the value of the configured Duplicate Message detection feature.
+         *
+         * When enabled and a fault tolerant transport is used (think failover) then
+         * this feature will help to detect and filter duplicate messages that might
+         * otherwise be delivered to a consumer after a connection failure.
+         *
+         * Disabling this can increase performance since no Message auditing will
+         * occur.
+         *
+         * @return the checkForDuplicates value currently set.
+         */
+        bool isCheckForDuplicates() const;
+
+        /**
+         * Gets the value of the configured Duplicate Message detection feature.
+         *
+         * When enabled and a fault tolerant transport is used (think failover) then
+         * this feature will help to detect and filter duplicate messages that might
+         * otherwise be delivered to a consumer after a connection failure.
+         *
+         * Disabling this can increase performance since no Message auditing will
+         * occur.
+         *
+         * @param checkForDuplicates
+         *      The checkForDuplicates value to be configured.
+         */
+        void setCheckForDuplicates(bool checkForDuplicates);
+
+        /**
+         * when true, submit individual transacted acks immediately rather than with transaction
+         * completion.  This allows the acks to represent delivery status which can be persisted on
+         * rollback Used in conjunction with KahaDB set to Rewrite On Redelivery.
+         *
+         * @returns true if this option is enabled.
+         */
+        bool isTransactedIndividualAck() const;
+
+        /**
+         * when true, submit individual transacted acks immediately rather than with transaction
+         * completion.  This allows the acks to represent delivery status which can be persisted on
+         * rollback Used in conjunction with KahaDB set to Rewrite On Redelivery.
+         *
+         * @param transactedIndividualAck
+         *      The value to set.
+         */
+        void setTransactedIndividualAck(bool transactedIndividualAck);
+
+        /**
+         * Returns true if non-blocking redelivery of Messages is configured for Consumers
+         * that are rolled back or recovered.
+         *
+         * @return true if non-blocking redelivery is enabled.
+         */
+        bool isNonBlockingRedelivery() const;
+
+        /**
+         * When true a MessageConsumer will not stop Message delivery before re-delivering Messages
+         * from a rolled back transaction.  This implies that message order will not be preserved and
+         * also will result in the TransactedIndividualAck option to be enabled.
+         *
+         * @param nonBlockingRedelivery
+         *      The value to configure for non-blocking redelivery.
+         */
+        void setNonBlockingRedelivery(bool nonBlockingRedelivery);
+
+        /**
+         * Gets the delay period for a consumer redelivery.
+         *
+         * @returns configured time delay in milliseconds.
+         */
+        long long getConsumerFailoverRedeliveryWaitPeriod() const;
+
+        /**
+         * Sets the delay period for a consumer redelivery.
+         *
+         * @param value
+         *      The configured time delay in milliseconds.
+         */
+        void setConsumerFailoverRedeliveryWaitPeriod(long long value);
+
+        /**
+         * @return true if optimizeAcknowledge is enabled.
+         */
+        bool isOptimizeAcknowledge() const;
+
+        /**
+         * Sets if Consumers are configured to use Optimized Acknowledge by default.
+         *
+         * @param optimizeAcknowledge
+         *      The optimizeAcknowledge mode to set.
+         */
+        void setOptimizeAcknowledge(bool optimizeAcknowledge);
+
+        /**
+         * Gets the time between optimized ack batches in milliseconds.
+         *
+         * @returns time between optimized ack batches in Milliseconds.
+         */
+        long long getOptimizeAcknowledgeTimeOut() const;
+
+        /**
+         * The max time in milliseconds between optimized ack batches.
+         *
+         * @param optimizeAcknowledgeTimeOut
+         *      The time in milliseconds for optimized ack batches.
+         */
+        void setOptimizeAcknowledgeTimeOut(long long optimizeAcknowledgeTimeOut);
+
+        /**
+         * Gets the configured time interval that is used to force all MessageConsumers that have
+         * optimizedAcknowledge enabled to send an ack for any outstanding Message Acks.  By default
+         * this value is set to zero meaning that the consumers will not do any background Message
+         * acknowledgment.
+         *
+         * @return the scheduledOptimizedAckInterval
+         */
+        long long getOptimizedAckScheduledAckInterval() const;
+
+        /**
+         * Sets the amount of time between scheduled sends of any outstanding Message Acks for
+         * consumers that have been configured with optimizeAcknowledge enabled.
+         *
+         * Time is given in Milliseconds.
+         *
+         * @param optimizedAckScheduledAckInterval
+         *      The scheduledOptimizedAckInterval to use for new Consumers.
+         */
+        void setOptimizedAckScheduledAckInterval(long long optimizedAckScheduledAckInterval);
 
     public:
 

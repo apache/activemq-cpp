@@ -238,6 +238,28 @@ namespace core{
          */
         virtual void destroyDestination(const cms::Destination* destination);
 
+        /**
+         * Allows Consumers to check if an incoming Message is a Duplicate.
+         *
+         * @param dispatcher
+         *      The Dispatcher that is checking the Message for Duplication.
+         * @param message
+         *      The Message that should be checked.
+         *
+         * @returns true if the Message was seen before.
+         */
+        bool isDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message);
+
+        /**
+         * Mark message as received.
+         *
+         * @param dispatcher
+         *      The Dispatcher instance that has received the Message.
+         * @param message
+         *      The Message that has been received.
+         */
+        void rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message);
+
     public:   // Connection Interface Methods
 
         /**
@@ -542,6 +564,222 @@ namespace core{
          *      Boolean indicating if advisory message monitoring should be enabled.
          */
         void setWatchTopicAdvisories(bool value);
+
+        /**
+         * Get the audit depth for Messages for consumers when using a fault
+         * tolerant transport.  The higher the value the more messages are checked
+         * for duplication, and the larger the performance impact of duplicate
+         * detection will be.
+         *
+         * @returns the configured audit depth.
+         */
+        int getAuditDepth() const;
+
+        /**
+         * Set the audit depth for Messages for consumers when using a fault
+         * tolerant transport.  The higher the value the more messages are checked
+         * for duplication, and the larger the performance impact of duplicate
+         * detection will be.
+         *
+         * @param auditDepth
+         *      The configured audit depth.
+         */
+        void setAuditDepth(int auditDepth);
+
+        /**
+         * The number of Producers that will be audited.
+         *
+         * @returns the configured number of producers to include in the audit.
+         */
+        int getAuditMaximumProducerNumber() const;
+
+        /**
+         * The number of Producers that will be audited.
+         *
+         * @param auditMaximumProducerNumber
+         *      The configured number of producers to include in the audit.
+         */
+        void setAuditMaximumProducerNumber(int auditMaximumProducerNumber);
+
+        /**
+         * Gets the value of the configured Duplicate Message detection feature.
+         *
+         * When enabled and a fault tolerant transport is used (think failover) then
+         * this feature will help to detect and filter duplicate messages that might
+         * otherwise be delivered to a consumer after a connection failure.
+         *
+         * Disabling this can increase performance since no Message auditing will
+         * occur.
+         *
+         * @return the checkForDuplicates value currently set.
+         */
+        bool isCheckForDuplicates() const;
+
+        /**
+         * Gets the value of the configured Duplicate Message detection feature.
+         *
+         * When enabled and a fault tolerant transport is used (think failover) then
+         * this feature will help to detect and filter duplicate messages that might
+         * otherwise be delivered to a consumer after a connection failure.
+         *
+         * Disabling this can increase performance since no Message auditing will
+         * occur.
+         *
+         * @param checkForDuplicates
+         *      The checkForDuplicates value to be configured.
+         */
+        void setCheckForDuplicates(bool checkForDuplicates);
+
+        /**
+         * when true, submit individual transacted acks immediately rather than with transaction
+         * completion.  This allows the acks to represent delivery status which can be persisted on
+         * rollback Used in conjunction with KahaDB set to Rewrite On Redelivery.
+         *
+         * @returns true if this option is enabled.
+         */
+        bool isTransactedIndividualAck() const;
+
+        /**
+         * when true, submit individual transacted acks immediately rather than with transaction
+         * completion.  This allows the acks to represent delivery status which can be persisted on
+         * rollback Used in conjunction with KahaDB set to Rewrite On Redelivery.
+         *
+         * @param transactedIndividualAck
+         *      The value to set.
+         */
+        void setTransactedIndividualAck(bool transactedIndividualAck);
+
+        /**
+         * Returns true if non-blocking redelivery of Messages is configured for Consumers
+         * that are rolled back or recovered.
+         *
+         * @return true if non-blocking redelivery is enabled.
+         */
+        bool isNonBlockingRedelivery() const;
+
+        /**
+         * When true a MessageConsumer will not stop Message delivery before re-delivering Messages
+         * from a rolled back transaction.  This implies that message order will not be preserved and
+         * also will result in the TransactedIndividualAck option to be enabled.
+         *
+         * @param nonBlockingRedelivery
+         *      The value to configure for non-blocking redelivery.
+         */
+        void setNonBlockingRedelivery(bool nonBlockingRedelivery);
+
+        /**
+         * Gets the delay period for a consumer redelivery.
+         *
+         * @returns configured time delay in milliseconds.
+         */
+        long long getConsumerFailoverRedeliveryWaitPeriod() const;
+
+        /**
+         * Sets the delay period for a consumer redelivery.
+         *
+         * @param value
+         *      The configured time delay in milliseconds.
+         */
+        void setConsumerFailoverRedeliveryWaitPeriod(long long value);
+
+        /**
+         * @return true if optimizeAcknowledge is enabled.
+         */
+        bool isOptimizeAcknowledge() const;
+
+        /**
+         * Sets if Consumers are configured to use Optimized Acknowledge by default.
+         *
+         * @param optimizeAcknowledge
+         *      The optimizeAcknowledge mode to set.
+         */
+        void setOptimizeAcknowledge(bool optimizeAcknowledge);
+
+        /**
+         * Gets the time between optimized ack batches in milliseconds.
+         *
+         * @returns time between optimized ack batches in Milliseconds.
+         */
+        long long getOptimizeAcknowledgeTimeOut() const;
+
+        /**
+         * The max time in milliseconds between optimized ack batches.
+         *
+         * @param optimizeAcknowledgeTimeOut
+         *      The time in milliseconds for optimized ack batches.
+         */
+        void setOptimizeAcknowledgeTimeOut(long long optimizeAcknowledgeTimeOut);
+
+        /**
+         * Gets the configured time interval that is used to force all MessageConsumers that have
+         * optimizedAcknowledge enabled to send an ack for any outstanding Message Acks.  By default
+         * this value is set to zero meaning that the consumers will not do any background Message
+         * acknowledgment.
+         *
+         * @return the scheduledOptimizedAckInterval
+         */
+        long long getOptimizedAckScheduledAckInterval() const;
+
+        /**
+         * Sets the amount of time between scheduled sends of any outstanding Message Acks for
+         * consumers that have been configured with optimizeAcknowledge enabled.
+         *
+         * Time is given in Milliseconds.
+         *
+         * @param optimizedAckScheduledAckInterval
+         *      The scheduledOptimizedAckInterval to use for new Consumers.
+         */
+        void setOptimizedAckScheduledAckInterval(long long optimizedAckScheduledAckInterval);
+
+        /**
+         * Should all created consumers be retroactive.
+         *
+         * @returns true if consumer will be created with the retroactive flag set.
+         */
+        bool isUseRetroactiveConsumer() const;
+
+        /**
+         * Sets whether or not retroactive consumers are enabled. Retroactive
+         * consumers allow non-durable topic subscribers to receive old messages
+         * that were published before the non-durable subscriber started.
+         *
+         * @param useRetroactiveConsumer
+         *      The value of this configuration option.
+         */
+        void setUseRetroactiveConsumer(bool useRetroactiveConsumer);
+
+        /**
+         * Should all created consumers be exclusive.
+         *
+         * @returns true if consumer will be created with the exclusive flag set.
+         */
+        bool isExclusiveConsumer() const;
+
+        /**
+         * Enables or disables whether or not queue consumers should be exclusive or
+         * not for example to preserve ordering when not using Message Groups.
+         *
+         * @param exclusiveConsumer
+         *      The value of this configuration option.
+         */
+        void setExclusiveConsumer(bool exclusiveConsumer);
+
+        /**
+         * Returns whether Message acknowledgments are sent asynchronously meaning no
+         * response is required from the broker before the ack completes.
+         *
+         * @return the sendAcksAsync configured value.
+         */
+        bool isSendAcksAsync() const;
+
+        /**
+         * Sets whether Message acknowledgments are sent asynchronously meaning no
+         * response is required from the broker before the ack completes.
+         *
+         * @param sendAcksAsync
+         *      The sendAcksAsync configuration value to set.
+         */
+        void setSendAcksAsync(bool sendAcksAsync);
 
     public: // TransportListener
 

@@ -105,7 +105,8 @@ namespace kernels{
 
         SessionConfig() : synchronizationRegistered(false),
                           producerLock(), producers(), consumerLock(), consumers(),
-                          scheduler(), closeSync(), sendMutex(), transformer(NULL), hashCode() {}
+                          scheduler(), closeSync(), sendMutex(), transformer(NULL),
+                          hashCode() {}
         ~SessionConfig() {}
     };
 
@@ -1454,4 +1455,33 @@ Pointer<commands::ProducerId> ActiveMQSessionKernel::getNextProducerId() {
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQSessionKernel::getHashCode() const {
     return this->config->hashCode;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionKernel::checkMessageListener() const {
+
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            if (consumer->getMessageListener() != NULL) {
+                throw cms::IllegalStateException(
+                    "Cannot synchronously receive a message when a MessageListener is set");
+            }
+        }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionKernel::sendAck(Pointer<MessageAck> ack, bool async) {
+    if (async || this->connection->isSendAcksAsync() || this->isTransacted()) {
+        this->connection->oneway(ack);
+    } else {
+        this->connection->syncRequest(ack);
+    }
 }

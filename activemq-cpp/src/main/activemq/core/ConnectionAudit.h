@@ -21,12 +21,13 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/Message.h>
-#include <activemq/core/Dispatcher.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace core {
 
     class ConnectionAuditImpl;
+    class Dispatcher;
 
     /**
      * Provides the Auditing functionality used by Connections to attempt to
@@ -58,11 +59,11 @@ namespace core {
 
     public:
 
-        void removeDispatcher(Pointer<Dispatcher> dispatcher);
+        void removeDispatcher(Dispatcher* dispatcher);
 
-        bool isDuplicate(Pointer<Dispatcher> dispatcher, Pointer<commands::Message> message);
+        bool isDuplicate(Dispatcher* dispatcher, decaf::lang::Pointer<commands::Message> message);
 
-        void rollbackDuplicate(Pointer<Dispatcher> dispatcher, Pointer<commands::Message> message);
+        void rollbackDuplicate(Dispatcher* dispatcher, decaf::lang::Pointer<commands::Message> message);
 
     public:
 

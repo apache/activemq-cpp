@@ -109,8 +109,6 @@ namespace kernels {
 
         virtual std::string getMessageSelector() const;
 
-        virtual void acknowledge(const Pointer<commands::MessageDispatch>& dispatch);
-
         virtual void setMessageTransformer(cms::MessageTransformer* transformer);
 
         virtual cms::MessageTransformer* getMessageTransformer() const;
@@ -129,6 +127,20 @@ namespace kernels {
          * @throw CMSException if an error occurs while ack'ing the message.
          */
         void acknowledge();
+
+        /**
+         * Method called to acknowledge the Message contained in the given MessageDispatch
+         *
+         * @throw CMSException if an error occurs while ack'ing the message.
+         */
+        void acknowledge(Pointer<commands::MessageDispatch> dispatch);
+
+        /**
+         * Method called to acknowledge the Message contained in the given MessageDispatch
+         *
+         * @throw CMSException if an error occurs while ack'ing the message.
+         */
+        void acknowledge(Pointer<commands::MessageDispatch> dispatch, int ackType);
 
         /**
          * Called to Commit the current set of messages in this Transaction
@@ -220,6 +232,37 @@ namespace kernels {
         long long getLastDeliveredSequenceId() const;
 
         /**
+         * Will Message's in a transaction be acknowledged using the Individual Acknowledge mode.
+         *
+         * @return true if individual transacted acknowledge is enabled.
+         */
+        bool isTransactedIndividualAck() const;
+
+        /**
+         * Set if Message's in a transaction be acknowledged using the Individual Acknowledge mode.
+         *
+         * @param value
+         *      True if individual transacted acknowledge is enabled.
+         */
+        void setTransactedIndividualAck(bool value);
+
+        /**
+         * Returns the delay after a failover before Message redelivery starts.
+         *
+         * @returns time in milliseconds to wait after failover.
+         */
+        long long setFailoverRedeliveryWaitPeriod() const;
+
+        /**
+         * Sets the time in milliseconds to delay after failover before starting
+         * message redelivery.
+         *
+         * @param value
+         *      Time in milliseconds to delay after failover for redelivery start.
+         */
+        void setFailoverRedeliveryWaitPeriod(long long value);
+
+        /**
          * Sets the value of the Last Delivered Sequence Id
          *
          * @param value
@@ -280,6 +323,37 @@ namespace kernels {
          */
         bool isInUse(Pointer<commands::ActiveMQDestination> destination) const;
 
+        /**
+         * Time in Milliseconds before an automatic acknowledge is done for any outstanding
+         * delivered Messages.  A value less than one means no task is scheduled.
+         *
+         * @returns time in milliseconds for the scheduled ack task.
+         */
+        long long getOptimizedAckScheduledAckInterval() const;
+
+        /**
+         * Sets the time in Milliseconds to schedule an automatic acknowledge of outstanding
+         * messages when optimize acknowledge is enabled.  A value less than one means disable
+         * any scheduled tasks.
+         *
+         * @param value
+         *      The time interval to send scheduled acks.
+         */
+        void setOptimizedAckScheduledAckInterval(long long value);
+
+        /**
+         * @returns true if this consumer is using optimize acknowledge mode.
+         */
+        bool isOptimizeAcknowledge() const;
+
+        /**
+         * Enable or disable optimized acknowledge for this consumer.
+         *
+         * @param value
+         *      True if optimize acknowledge is enabled, false otherwise.
+         */
+        void setOptimizeAcknowledge(bool value);
+
     protected:
 
         /**
@@ -303,49 +377,40 @@ namespace kernels {
          * Pre-consume processing
          * @param dispatch - the message being consumed.
          */
-        void beforeMessageIsConsumed(const Pointer<commands::MessageDispatch>& dispatch);
+        void beforeMessageIsConsumed(Pointer<commands::MessageDispatch> dispatch);
 
         /**
          * Post-consume processing
          * @param dispatch - the consumed message
          * @param messageExpired - flag indicating if the message has expired.
          */
-        void afterMessageIsConsumed(const Pointer<commands::MessageDispatch>& dispatch, bool messageExpired);
+        void afterMessageIsConsumed(Pointer<commands::MessageDispatch> dispatch, bool messageExpired);
 
     private:
 
-        // Creates a deliverable cms::Message from a received MessageDispatch, transforming if needed
-        // and configuring appropriate ack handlers.
         Pointer<cms::Message> createCMSMessage(Pointer<commands::MessageDispatch> dispatch);
 
-        // Using options from the Destination URI override any settings that are
-        // defined for this consumer.
-        void applyDestinationOptions(const Pointer<commands::ConsumerInfo>& info);
+        void applyDestinationOptions(Pointer<commands::ConsumerInfo> info);
 
-        // If supported sends a message pull request to the service provider asking
-        // for the delivery of a new message.  This is used in the case where the
-        // service provider has been configured with a zero prefetch or is only
-        // capable of delivering messages on a pull basis.  No request is made if
-        // there are already messages in the unconsumed queue since there's no need
-        // for a server round-trip in that instance.
         void sendPullRequest(long long timeout);
 
-        // Checks for the closed state and throws if so.
         void checkClosed() const;
 
-        // Sends an ack as needed in order to keep them coming in if the current
-        // ack mode allows the consumer to receive up to the prefetch limit before
-        // an real ack is sent.
-        void ackLater(const Pointer<commands::MessageDispatch>& message, int ackType);
+        void checkMessageListener() const;
 
-        // Create an Ack Message that acks all messages that have been delivered so far.
+        void ackLater(Pointer<commands::MessageDispatch> message, int ackType);
+
+        void immediateIndividualTransactedAck(Pointer<commands::MessageDispatch> dispatch);
+
         Pointer<commands::MessageAck> makeAckForAllDeliveredMessages(int type);
 
-        // Should Acks be sent on each dispatched message
         bool isAutoAcknowledgeEach() const;
 
-        // Can Acks be batched for less network overhead.
         bool isAutoAcknowledgeBatch() const;
+
+        void registerSync();
+
+        void clearDispatchList();
 
     };
 

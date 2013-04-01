@@ -29,6 +29,7 @@
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/Response.h>
+#include <activemq/commands/MessageAck.h>
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/ConsumerId.h>
@@ -542,7 +543,30 @@ namespace kernels {
          */
         bool iterateConsumers();
 
+        /**
+         * Checks if any MessageConsumer owned by this Session has a set MessageListener
+         * and throws an exception if so.  This enforces the rule that the MessageConsumers
+         * belonging to a Session either operate in sync or async receive as a group.
+         */
+        void checkMessageListener() const;
+
+        /**
+         * Returns a Hash Code for this Session based on its SessionId.
+         *
+         * @returns an int hash code based on the string balue of SessionId.
+         */
         virtual int getHashCode() const;
+
+        /**
+         * Sends the given MessageAck command to the Broker either via Synchronous call or
+         * an Asynchronous call depending on the value of the async parameter.
+         *
+         * @param ack
+         *      The MessageAck command to send.
+         * @param async
+         *      True if the command can be sent asynchronously.
+         */
+        void sendAck(decaf::lang::Pointer<commands::MessageAck> ack, bool async = false);
 
    private:
 
