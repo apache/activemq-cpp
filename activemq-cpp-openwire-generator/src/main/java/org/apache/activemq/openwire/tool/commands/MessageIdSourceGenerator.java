@@ -99,11 +99,9 @@ public class MessageIdSourceGenerator extends CommandSourceGenerator {
     }
 
     protected void generateToStringBody( PrintWriter out ) {
-        out.println("");
-        out.println("    if( key == \"\" ) {");
+        out.println("    if (key.empty()) {");
         out.println("        this->key = this->producerId->toString() + \":\" + ");
-        out.println("                    Long::toString(this->producerSequenceId) + \":\" + ");
-        out.println("                    Long::toString(this->brokerSequenceId);");
+        out.println("                    Long::toString(this->producerSequenceId);");
         out.println("    }");
         out.println("");
         out.println("    return this->key;");
