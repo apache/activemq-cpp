@@ -207,3 +207,23 @@ void ActiveMQConsumer::setMessageAvailableListener(cms::MessageAvailableListener
 cms::MessageAvailableListener* ActiveMQConsumer::getMessageAvailableListener() const {
     return this->config->kernel->getMessageAvailableListener();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQConsumer::getOptimizedAckScheduledAckInterval() const {
+    return this->config->kernel->getOptimizedAckScheduledAckInterval();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::setOptimizedAckScheduledAckInterval(long long value) {
+    this->config->kernel->setOptimizedAckScheduledAckInterval(value);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumer::isOptimizeAcknowledge() const {
+    return this->config->kernel->isOptimizeAcknowledge();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::setOptimizeAcknowledge(bool value) {
+    this->config->kernel->setOptimizeAcknowledge(value);
+}

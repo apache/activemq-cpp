@@ -44,8 +44,8 @@ namespace core{
 
     private:
 
-        ActiveMQConsumer( const ActiveMQConsumer& );
-        ActiveMQConsumer& operator= ( const ActiveMQConsumer& );
+        ActiveMQConsumer(const ActiveMQConsumer&);
+        ActiveMQConsumer& operator=(const ActiveMQConsumer&);
 
     public:
 
@@ -138,6 +138,37 @@ namespace core{
          * @returns pointer to the error that faulted this Consumer or NULL.
          */
         decaf::lang::Exception* getFailureError() const;
+
+        /**
+         * Time in Milliseconds before an automatic acknowledge is done for any outstanding
+         * delivered Messages.  A value less than one means no task is scheduled.
+         *
+         * @returns time in milliseconds for the scheduled ack task.
+         */
+        long long getOptimizedAckScheduledAckInterval() const;
+
+        /**
+         * Sets the time in Milliseconds to schedule an automatic acknowledge of outstanding
+         * messages when optimize acknowledge is enabled.  A value less than one means disable
+         * any scheduled tasks.
+         *
+         * @param value
+         *      The time interval to send scheduled acks.
+         */
+        void setOptimizedAckScheduledAckInterval(long long value);
+
+        /**
+         * @returns true if this consumer is using optimize acknowledge mode.
+         */
+        bool isOptimizeAcknowledge() const;
+
+        /**
+         * Enable or disable optimized acknowledge for this consumer.
+         *
+         * @param value
+         *      True if optimize acknowledge is enabled, false otherwise.
+         */
+        void setOptimizeAcknowledge(bool value);
 
     };
 
