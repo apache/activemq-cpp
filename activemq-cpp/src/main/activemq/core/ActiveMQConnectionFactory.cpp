@@ -207,11 +207,11 @@ namespace core{
             this->sendAcksAsync = Boolean::parseBoolean(
                 properties->getProperty("connection.sendAcksAsync", Boolean::toString(sendAcksAsync)));
             this->optimizeAcknowledgeTimeOut = Long::parseLong(
-                properties->getProperty("connection.optimizeAcknowledgeTimeOut", Integer::toString(optimizeAcknowledgeTimeOut)));
+                properties->getProperty("connection.optimizeAcknowledgeTimeOut", Long::toString(optimizeAcknowledgeTimeOut)));
             this->optimizedAckScheduledAckInterval = Long::parseLong(
-                properties->getProperty("connection.optimizedAckScheduledAckInterval", Integer::toString(optimizedAckScheduledAckInterval)));
+                properties->getProperty("connection.optimizedAckScheduledAckInterval", Long::toString(optimizedAckScheduledAckInterval)));
             this->consumerFailoverRedeliveryWaitPeriod = Long::parseLong(
-                properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", Integer::toString(consumerFailoverRedeliveryWaitPeriod)));
+                properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", Long::toString(consumerFailoverRedeliveryWaitPeriod)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
