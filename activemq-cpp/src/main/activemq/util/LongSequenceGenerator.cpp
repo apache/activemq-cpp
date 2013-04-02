@@ -34,7 +34,7 @@ LongSequenceGenerator::~LongSequenceGenerator() {
 long long LongSequenceGenerator::getNextSequenceId() {
 
     synchronized(&mutex) {
-        return this->lastSequenceId++;
+        return ++this->lastSequenceId;
     }
 
     return 0;
