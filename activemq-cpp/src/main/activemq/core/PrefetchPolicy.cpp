@@ -37,25 +37,25 @@ void PrefetchPolicy::configure(const decaf::util::Properties& properties) {
 
     try {
 
-        if (properties.hasProperty("cms.PrefetchPolicy.durableTopicPrefetch")) {
+        if (properties.hasProperty("cms.prefetchPolicy.durableTopicPrefetch")) {
             this->setDurableTopicPrefetch(Integer::parseInt(
-                properties.getProperty("cms.PrefetchPolicy.durableTopicPrefetch")));
+                properties.getProperty("cms.prefetchPolicy.durableTopicPrefetch")));
         }
-        if (properties.hasProperty("cms.PrefetchPolicy.queueBrowserPrefetch")) {
+        if (properties.hasProperty("cms.prefetchPolicy.queueBrowserPrefetch")) {
             this->setQueueBrowserPrefetch(Integer::parseInt(
-                properties.getProperty("cms.PrefetchPolicy.queueBrowserPrefetch")));
+                properties.getProperty("cms.prefetchPolicy.queueBrowserPrefetch")));
         }
-        if (properties.hasProperty("cms.PrefetchPolicy.queuePrefetch")) {
+        if (properties.hasProperty("cms.prefetchPolicy.queuePrefetch")) {
             this->setQueuePrefetch(Integer::parseInt(
-                properties.getProperty("cms.PrefetchPolicy.queuePrefetch")));
+                properties.getProperty("cms.prefetchPolicy.queuePrefetch")));
         }
-        if (properties.hasProperty("cms.PrefetchPolicy.topicPrefetch")) {
+        if (properties.hasProperty("cms.prefetchPolicy.topicPrefetch")) {
             this->setTopicPrefetch(Integer::parseInt(
-                properties.getProperty("cms.PrefetchPolicy.topicPrefetch")));
+                properties.getProperty("cms.prefetchPolicy.topicPrefetch")));
         }
 
-        if (properties.hasProperty("cms.PrefetchPolicy.all")) {
-            int value = Integer::parseInt(properties.getProperty("cms.PrefetchPolicy.all"));
+        if (properties.hasProperty("cms.prefetchPolicy.all")) {
+            int value = Integer::parseInt(properties.getProperty("cms.prefetchPolicy.all"));
 
             this->setDurableTopicPrefetch(value);
             this->setQueueBrowserPrefetch(value);
