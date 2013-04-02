@@ -20,7 +20,7 @@
 
 #include <cms/Config.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * This is an Abstract class whose purpose is to provide a container

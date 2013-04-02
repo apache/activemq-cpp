@@ -26,7 +26,7 @@
 #include <cms/CMSException.h>
 #include <cms/MessageEnumeration.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * This class implements in interface for browsing the messages in a Queue

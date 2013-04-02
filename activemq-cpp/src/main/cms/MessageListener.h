@@ -20,7 +20,7 @@
 
 #include <cms/Config.h>
 
-namespace cms{
+namespace cms {
 
     class Message;
 
@@ -30,7 +30,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API MessageListener{
+    class CMS_API MessageListener {
     public:
 
         virtual ~MessageListener();
@@ -52,7 +52,7 @@ namespace cms{
          * @param message
          *      Message object {const} pointer recipient does not own.
          */
-        virtual void onMessage( const Message* message ) = 0;
+        virtual void onMessage(const Message* message) = 0;
 
     };
 

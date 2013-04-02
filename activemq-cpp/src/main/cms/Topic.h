@@ -22,7 +22,7 @@
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * An interface encapsulating a provider-specific topic name.

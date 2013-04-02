@@ -29,7 +29,7 @@
 #include <cms/UnsupportedOperationException.h>
 #include <cms/DeliveryMode.h>
 
-namespace cms{
+namespace cms {
 
     class MessageTransformer;
 

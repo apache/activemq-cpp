@@ -26,7 +26,7 @@
 #include <cms/Startable.h>
 #include <cms/Stoppable.h>
 
-namespace cms{
+namespace cms {
 
     class MessageTransformer;
 
@@ -82,7 +82,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual Message* receive( int millisecs ) = 0;
+        virtual Message* receive(int millisecs) = 0;
 
         /**
          * Receive a Message, does not wait if there isn't a new message
@@ -102,7 +102,7 @@ namespace cms{
          *
          * @throws CMSException - If an internal error occurs.
          */
-        virtual void setMessageListener( MessageListener* listener ) = 0;
+        virtual void setMessageListener(MessageListener* listener) = 0;
 
         /**
          * Gets the MessageListener that this class will send mew Message

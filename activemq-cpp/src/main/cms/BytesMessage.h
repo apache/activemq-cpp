@@ -27,7 +27,7 @@
 #include <cms/MessageEOFException.h>
 #include <cms/MessageFormatException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * A BytesMessage object is used to send a message containing a stream of unsigned
@@ -63,7 +63,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API BytesMessage : public Message{
+    class CMS_API BytesMessage : public Message {
     public:
 
         virtual ~BytesMessage();
@@ -79,7 +79,7 @@ namespace cms{
          * @throws CMSException - If an internal error occurs.
          * @throws MessageNotWriteableException - if in Read Only Mode.
          */
-        virtual void setBodyBytes( const unsigned char* buffer, int numBytes ) = 0;
+        virtual void setBodyBytes(const unsigned char* buffer, int numBytes) = 0;
 
         /**
          * Gets the bytes that are contained in this message and returns them in a newly
@@ -137,7 +137,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBoolean( bool value ) = 0;
+        virtual void writeBoolean(bool value) = 0;
 
         /**
          * Reads a Byte from the Bytes message stream
@@ -161,7 +161,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeByte( unsigned char value ) = 0;
+        virtual void writeByte(unsigned char value) = 0;
 
         /**
          * Reads a byte array from the bytes message stream.
@@ -187,7 +187,7 @@ namespace cms{
          * @throws MessageEOFException - if unexpected end of bytes stream has been reached.
          * @throws MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual int readBytes( std::vector<unsigned char>& value ) const = 0;
+        virtual int readBytes(std::vector<unsigned char>& value) const = 0;
 
         /**
          * Writes a byte array to the bytes message stream using the vector
@@ -200,7 +200,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const std::vector<unsigned char>& value ) = 0;
+        virtual void writeBytes(const std::vector<unsigned char>& value) = 0;
 
         /**
          * Reads a portion of the bytes message stream.
@@ -233,7 +233,7 @@ namespace cms{
          * @throws MessageEOFException - if unexpected end of bytes stream has been reached.
          * @throws MessageNotReadableException - if the message is in write-only mode.
          */
-        virtual int readBytes( unsigned char* buffer, int length ) const = 0;
+        virtual int readBytes(unsigned char* buffer, int length) const = 0;
 
         /**
          * Writes a portion of a byte array to the bytes message stream.
@@ -250,7 +250,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeBytes( const unsigned char* value, int offset, int length ) = 0;
+        virtual void writeBytes(const unsigned char* value, int offset, int length) = 0;
 
         /**
          * Reads a Char from the Bytes message stream
@@ -274,7 +274,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeChar( char value ) = 0;
+        virtual void writeChar(char value) = 0;
 
         /**
          * Reads a 32 bit float from the Bytes message stream
@@ -297,7 +297,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeFloat( float value ) = 0;
+        virtual void writeFloat(float value) = 0;
 
         /**
          * Reads a 64 bit double from the Bytes message stream
@@ -320,7 +320,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeDouble( double value ) = 0;
+        virtual void writeDouble(double value) = 0;
 
         /**
          * Reads a 16 bit signed short from the Bytes message stream
@@ -344,7 +344,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeShort( short value ) = 0;
+        virtual void writeShort(short value) = 0;
 
         /**
          * Reads a 16 bit unsigned short from the Bytes message stream
@@ -368,7 +368,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeUnsignedShort( unsigned short value ) = 0;
+        virtual void writeUnsignedShort(unsigned short value) = 0;
 
         /**
          * Reads a 32 bit signed integer from the Bytes message stream
@@ -392,7 +392,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeInt( int value ) = 0;
+        virtual void writeInt(int value) = 0;
 
         /**
          * Reads a 64 bit long from the Bytes message stream
@@ -416,7 +416,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeLong( long long value ) = 0;
+        virtual void writeLong(long long value) = 0;
 
         /**
          * Reads an ASCII String from the Bytes message stream
@@ -440,7 +440,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeString( const std::string& value ) = 0;
+        virtual void writeString(const std::string& value) = 0;
 
         /**
          * Reads an UTF String from the BytesMessage stream
@@ -464,7 +464,7 @@ namespace cms{
          *                        some internal error.
          * @throws MessageNotWriteableException - if the message is in read-only mode.
          */
-        virtual void writeUTF( const std::string& value ) = 0;
+        virtual void writeUTF(const std::string& value) = 0;
 
         /**
          * Clones this message.

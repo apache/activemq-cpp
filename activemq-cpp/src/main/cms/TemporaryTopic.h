@@ -22,7 +22,7 @@
 #include <cms/Topic.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * Defines a Temporary Topic based Destination.

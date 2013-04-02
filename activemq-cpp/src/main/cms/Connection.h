@@ -25,7 +25,7 @@
 #include <cms/Session.h>
 #include <cms/ConnectionMetaData.h>
 
-namespace cms{
+namespace cms {
 
     class ExceptionListener;
     class MessageTransformer;
@@ -67,10 +67,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Connection : public Startable,
-                               public Stoppable,
-                               public Closeable
-    {
+    class CMS_API Connection : public Startable, public Stoppable, public Closeable {
     public:
 
         virtual ~Connection();

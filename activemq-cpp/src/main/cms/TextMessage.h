@@ -23,7 +23,7 @@
 #include <cms/CMSException.h>
 #include <cms/MessageNotWriteableException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * Interface for a text message.
@@ -38,7 +38,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API TextMessage : public Message{
+    class CMS_API TextMessage : public Message {
     public:
 
         virtual ~TextMessage();
@@ -62,7 +62,7 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
-        virtual void setText( const char* msg ) = 0;
+        virtual void setText(const char* msg) = 0;
 
         /**
          * Sets the message contents
@@ -73,7 +73,7 @@ namespace cms{
          * @throws CMSException - if an internal error occurs.
          * @throws MessageNotWriteableException - if the message is in read-only mode..
          */
-        virtual void setText( const std::string& msg ) = 0;
+        virtual void setText(const std::string& msg) = 0;
 
     };
 }

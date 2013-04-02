@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/Message.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * Place holder for interaction with JMS systems that support Java, the C++

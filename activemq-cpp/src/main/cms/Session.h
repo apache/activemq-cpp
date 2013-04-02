@@ -35,7 +35,7 @@
 #include <cms/TemporaryQueue.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     class MessageTransformer;
 

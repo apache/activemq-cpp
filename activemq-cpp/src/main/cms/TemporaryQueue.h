@@ -22,7 +22,7 @@
 #include <cms/Queue.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * Defines a Temporary Queue based Destination.

@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-namespace cms{
+namespace cms {
 
     /**
      * Interface for a Java-like properties object.  This is essentially

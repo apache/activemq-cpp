@@ -22,7 +22,7 @@
 
 #include <string>
 
-namespace cms{
+namespace cms {
 
     class Connection;
     class ExceptionListener;

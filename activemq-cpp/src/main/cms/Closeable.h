@@ -21,7 +21,7 @@
 #include <cms/Config.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * Interface for a class that implements the close method.
@@ -32,7 +32,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Closeable{
+    class CMS_API Closeable {
 
     public:
 

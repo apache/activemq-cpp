@@ -23,7 +23,7 @@
 
 #include <string>
 
-namespace cms{
+namespace cms {
 
     /**
      * A Destination object encapsulates a provider-specific address.

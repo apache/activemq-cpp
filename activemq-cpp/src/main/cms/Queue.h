@@ -22,7 +22,7 @@
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 
-namespace cms{
+namespace cms {
 
     /**
      * An interface encapsulating a provider-specific queue name.
@@ -34,7 +34,7 @@ namespace cms{
      *
      * @since 1.0
      */
-    class CMS_API Queue : public Destination{
+    class CMS_API Queue : public Destination {
     public:
 
         virtual ~Queue();
