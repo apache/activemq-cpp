@@ -45,6 +45,29 @@ MessageAck::MessageAck() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+MessageAck::MessageAck(const Pointer<Message>& message, int ackType, int messageCount) :
+    BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
+      messageCount(0), poisonCause(NULL) {
+
+    this->ackType = (unsigned char)ackType;
+    this->destination = message->getDestination();
+    this->lastMessageId = message->getMessageId();
+    this->messageCount = messageCount;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageAck::MessageAck(const Pointer<MessageDispatch>& dispatch, int ackType, int messageCount) :
+    BaseCommand(), destination(NULL), transactionId(NULL), consumerId(NULL), ackType(0), firstMessageId(NULL), lastMessageId(NULL), 
+      messageCount(0), poisonCause(NULL) {
+
+    this->ackType = (unsigned char)ackType;
+    this->consumerId = dispatch->getConsumerId();
+    this->destination = dispatch->getDestination();
+    this->lastMessageId = dispatch->getMessage()->getMessageId();
+    this->messageCount = messageCount;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 MessageAck::~MessageAck() {
 }
 

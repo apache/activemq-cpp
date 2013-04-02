@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageDispatch::MessageDispatch() :
-    BaseCommand(), consumerId(NULL), destination(NULL), message(NULL), redeliveryCounter(0) {
+    BaseCommand(), consumerId(NULL), destination(NULL), message(NULL), redeliveryCounter(0), rollbackCause() {
 
 }
 
@@ -225,3 +225,13 @@ void MessageDispatch::setRedeliveryCounter(int redeliveryCounter) {
 decaf::lang::Pointer<commands::Command> MessageDispatch::visit(activemq::state::CommandVisitor* visitor) {
     return visitor->processMessageDispatch(this);
 }
+////////////////////////////////////////////////////////////////////////////////
+void MessageDispatch::setRollbackCause(const decaf::lang::Exception& cause) {
+    this->rollbackCause = cause;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Exception MessageDispatch::getRollbackCause() const {
+    return this->rollbackCause;
+}
+

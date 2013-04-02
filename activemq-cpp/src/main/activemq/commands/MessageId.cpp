@@ -135,8 +135,8 @@ std::string MessageId::toString() const {
 
     if( key == "" ) {
         this->key = this->producerId->toString() + ":" + 
-                    Long::toString( this->producerSequenceId) + ":" + 
-                    Long::toString( this->brokerSequenceId);
+                    Long::toString(this->producerSequenceId) + ":" + 
+                    Long::toString(this->brokerSequenceId);
     }
 
     return this->key;

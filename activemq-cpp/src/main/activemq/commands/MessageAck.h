@@ -27,6 +27,8 @@
 #include <activemq/commands/BaseCommand.h>
 #include <activemq/commands/BrokerError.h>
 #include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/Message.h>
+#include <activemq/commands/MessageDispatch.h>
 #include <activemq/commands/MessageId.h>
 #include <activemq/commands/TransactionId.h>
 #include <activemq/util/Config.h>
@@ -72,6 +74,10 @@ namespace commands {
     public:
 
         MessageAck();
+
+        MessageAck(const Pointer<Message>& message, int ackType, int messageCount);
+
+        MessageAck(const Pointer<MessageDispatch>& dispatch, int ackType, int messageCount);
 
         virtual ~MessageAck();
 

@@ -28,6 +28,7 @@
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/Message.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Exception.h>
 #include <decaf/lang/Pointer.h>
 #include <string>
 #include <vector>
@@ -60,6 +61,10 @@ namespace commands {
 
     private:
 
+        decaf::lang::Exception rollbackCause;
+
+    private:
+
         MessageDispatch(const MessageDispatch&);
         MessageDispatch& operator= (const MessageDispatch&);
 
@@ -78,6 +83,10 @@ namespace commands {
         virtual std::string toString() const;
 
         virtual bool equals(const DataStructure* value) const;
+
+        void setRollbackCause(const decaf::lang::Exception& cause);
+
+        decaf::lang::Exception getRollbackCause() const;
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
