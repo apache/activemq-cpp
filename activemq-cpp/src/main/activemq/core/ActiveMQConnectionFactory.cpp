@@ -161,35 +161,35 @@ namespace core{
             // Check the connection options
             this->alwaysSyncSend = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND), "false"));
+                    core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND), Boolean::toString(alwaysSyncSend)));
             this->useAsyncSend = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_USEASYNCSEND), "false"));
+                    core::ActiveMQConstants::CONNECTION_USEASYNCSEND), Boolean::toString(useAsyncSend)));
             this->useCompression = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_USECOMPRESSION), "false"));
+                    core::ActiveMQConstants::CONNECTION_USECOMPRESSION), Boolean::toString(useCompression)));
             this->compressionLevel = Integer::parseInt(
-                properties->getProperty("connection.compressionLevel", "-1"));
+                properties->getProperty("connection.compressionLevel", Integer::toString(compressionLevel)));
             this->messagePrioritySupported = Boolean::parseBoolean(
-                properties->getProperty("connection.messagePrioritySupported", "true"));
-            this->messagePrioritySupported = Boolean::parseBoolean(
-                properties->getProperty("connection.checkForDuplicates", "true"));
-            this->messagePrioritySupported = Integer::parseInt(
-                properties->getProperty("connection.auditDepth", "2048"));
-            this->messagePrioritySupported = Integer::parseInt(
-                properties->getProperty("connection.auditMaximumProducerNumber", "64"));
+                properties->getProperty("connection.messagePrioritySupported", Boolean::toString(messagePrioritySupported)));
+            this->checkForDuplicates = Boolean::parseBoolean(
+                properties->getProperty("connection.checkForDuplicates", Boolean::toString(checkForDuplicates)));
+            this->auditDepth = Integer::parseInt(
+                properties->getProperty("connection.auditDepth", Integer::toString(auditDepth)));
+            this->auditMaximumProducerNumber = Integer::parseInt(
+                properties->getProperty("connection.auditMaximumProducerNumber", Integer::toString(auditMaximumProducerNumber)));
             this->dispatchAsync = Boolean::parseBoolean(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_DISPATCHASYNC), "true"));
+                    core::ActiveMQConstants::CONNECTION_DISPATCHASYNC), Boolean::toString(dispatchAsync)));
             this->producerWindowSize = Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE), "0"));
+                    core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE), Integer::toString(producerWindowSize)));
             this->sendTimeout = decaf::lang::Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_SENDTIMEOUT), "0"));
+                    core::ActiveMQConstants::CONNECTION_SENDTIMEOUT), Integer::toString(sendTimeout)));
             this->closeTimeout = decaf::lang::Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
-                    core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT), "15000"));
+                    core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT), Integer::toString(closeTimeout)));
             this->clientId = properties->getProperty(
                 core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_CLIENTID), clientId);
             this->username = properties->getProperty(
@@ -197,21 +197,21 @@ namespace core{
             this->password = properties->getProperty(
                 core::ActiveMQConstants::toString(core::ActiveMQConstants::PARAM_PASSWORD), password);
             this->optimizeAcknowledge = Boolean::parseBoolean(
-                properties->getProperty("connection.optimizeAcknowledge", "false"));
-            this->optimizeAcknowledge = Boolean::parseBoolean(
-                properties->getProperty("connection.exclusiveConsumer", "false"));
-            this->optimizeAcknowledge = Boolean::parseBoolean(
-                properties->getProperty("connection.transactedIndividualAck", "false"));
-            this->optimizeAcknowledge = Boolean::parseBoolean(
-                properties->getProperty("connection.useRetroactiveConsumer", "false"));
-            this->optimizeAcknowledge = Boolean::parseBoolean(
-                properties->getProperty("connection.sendAcksAsync", "true"));
-            this->messagePrioritySupported = Long::parseLong(
-                properties->getProperty("connection.optimizeAcknowledgeTimeOut", "300"));
-            this->messagePrioritySupported = Long::parseLong(
-                properties->getProperty("connection.optimizedAckScheduledAckInterval", "0"));
-            this->messagePrioritySupported = Long::parseLong(
-                properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", "0"));
+                properties->getProperty("connection.optimizeAcknowledge", Boolean::toString(optimizeAcknowledge)));
+            this->exclusiveConsumer = Boolean::parseBoolean(
+                properties->getProperty("connection.exclusiveConsumer", Boolean::toString(exclusiveConsumer)));
+            this->transactedIndividualAck = Boolean::parseBoolean(
+                properties->getProperty("connection.transactedIndividualAck", Boolean::toString(transactedIndividualAck)));
+            this->useRetroactiveConsumer = Boolean::parseBoolean(
+                properties->getProperty("connection.useRetroactiveConsumer", Boolean::toString(useRetroactiveConsumer)));
+            this->sendAcksAsync = Boolean::parseBoolean(
+                properties->getProperty("connection.sendAcksAsync", Boolean::toString(sendAcksAsync)));
+            this->optimizeAcknowledgeTimeOut = Long::parseLong(
+                properties->getProperty("connection.optimizeAcknowledgeTimeOut", Integer::toString(optimizeAcknowledgeTimeOut)));
+            this->optimizedAckScheduledAckInterval = Long::parseLong(
+                properties->getProperty("connection.optimizedAckScheduledAckInterval", Integer::toString(optimizedAckScheduledAckInterval)));
+            this->consumerFailoverRedeliveryWaitPeriod = Long::parseLong(
+                properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", Integer::toString(consumerFailoverRedeliveryWaitPeriod)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
@@ -398,6 +398,14 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setCheckForDuplicates(this->settings->checkForDuplicates);
     connection->setAuditDepth(this->settings->auditDepth);
     connection->setAuditMaximumProducerNumber(this->settings->auditMaximumProducerNumber);
+    connection->setOptimizeAcknowledge(this->settings->optimizeAcknowledge);
+    connection->setOptimizeAcknowledgeTimeOut(this->settings->optimizeAcknowledgeTimeOut);
+    connection->setOptimizedAckScheduledAckInterval(this->settings->optimizedAckScheduledAckInterval);
+    connection->setSendAcksAsync(this->settings->sendAcksAsync);
+    connection->setExclusiveConsumer(this->settings->exclusiveConsumer);
+    connection->setTransactedIndividualAck(this->settings->transactedIndividualAck);
+    connection->setUseRetroactiveConsumer(this->settings->useRetroactiveConsumer);
+    connection->setConsumerFailoverRedeliveryWaitPeriod(this->settings->consumerFailoverRedeliveryWaitPeriod);
 
     if (this->settings->defaultListener) {
         connection->setExceptionListener(this->settings->defaultListener);
