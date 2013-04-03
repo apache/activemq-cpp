@@ -29,7 +29,7 @@ void LongSequenceGeneratorTest::test() {
     long long result2 = sequence.getNextSequenceId();
 
     CPPUNIT_ASSERT( result1 < result2 );
-    CPPUNIT_ASSERT( result2 < sequence.getLastSequenceId() );
+    CPPUNIT_ASSERT( result2 == sequence.getLastSequenceId() );
     CPPUNIT_ASSERT( result2 < sequence.getNextSequenceId() );
 
 }
