@@ -23,7 +23,8 @@ public class LocalTransactionIdSourceGenerator extends CommandSourceGenerator {
     protected void generateToStringBody( PrintWriter out ) {
         out.println("    ostringstream stream;" );
         out.println("");
-        out.println("    stream << \"TX:\" << this->connectionId << \":\"");
+        out.println("    stream << \"TX:\"");
+        out.println("           << this->connectionId->toString() << \":\"");
         out.println("           << this->value;");
         out.println("");
         out.println("    return stream.str();");
