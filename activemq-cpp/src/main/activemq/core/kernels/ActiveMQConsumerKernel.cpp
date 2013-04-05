@@ -524,6 +524,8 @@ namespace {
                 Exception wrapper(ex.clone());
                 this->session->getConnection()->onAsyncException(wrapper);
             }
+
+            this->consumer.reset(NULL);
         }
     };
 
@@ -560,7 +562,7 @@ namespace {
     class OptimizedAckTask : public Runnable {
     private:
 
-        ActiveMQConsumerKernel* consumer;
+        Pointer<ActiveMQConsumerKernel> consumer;
         ActiveMQConsumerKernelConfig* impl;
 
     private:
@@ -570,7 +572,7 @@ namespace {
 
     public:
 
-        OptimizedAckTask(ActiveMQConsumerKernel* consumer, ActiveMQConsumerKernelConfig* impl) :
+        OptimizedAckTask(Pointer<ActiveMQConsumerKernel> consumer, ActiveMQConsumerKernelConfig* impl) :
             Runnable(), consumer(consumer), impl(impl) {}
         virtual ~OptimizedAckTask() {}
 
@@ -579,8 +581,11 @@ namespace {
                 if (impl->optimizeAcknowledge && !impl->unconsumedMessages->isClosed()) {
                     this->consumer->deliverAcks();
                 }
+
             } catch(Exception& ex) {
+                impl->session->getConnection()->onAsyncException(ex);
             }
+            this->consumer.reset(NULL);
         }
     };
 
@@ -618,6 +623,8 @@ namespace {
             } catch (Exception& e) {
                 session->getConnection()->onAsyncException(e);
             }
+
+            this->consumer.reset(NULL);
         }
     };
 }
@@ -1928,7 +1935,9 @@ void ActiveMQConsumerKernel::setOptimizedAckScheduledAckInterval(long long value
 
     // Should we periodically send out all outstanding acks.
     if (this->internal->optimizeAcknowledge && this->internal->optimizedAckScheduledAckInterval > 0) {
-        this->internal->optimizedAckTask = new OptimizedAckTask(this, this->internal);
+        Pointer<ActiveMQConsumerKernel> self =
+            this->session->lookupConsumerKernel(this->consumerInfo->getConsumerId());
+        this->internal->optimizedAckTask = new OptimizedAckTask(self, this->internal);
 
         try {
             this->session->getScheduler()->executePeriodically(

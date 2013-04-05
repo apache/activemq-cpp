@@ -212,8 +212,8 @@ namespace core{
                 properties->getProperty("connection.optimizedAckScheduledAckInterval", Long::toString(optimizedAckScheduledAckInterval)));
             this->consumerFailoverRedeliveryWaitPeriod = Long::parseLong(
                 properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", Long::toString(consumerFailoverRedeliveryWaitPeriod)));
-            this->nonBlockingRedelivery = Long::parseLong(
-                properties->getProperty("connection.nonBlockingRedelivery", Long::toString(nonBlockingRedelivery)));
+            this->nonBlockingRedelivery = Boolean::parseBoolean(
+                properties->getProperty("connection.nonBlockingRedelivery", Boolean::toString(nonBlockingRedelivery)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
@@ -407,6 +407,7 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setExclusiveConsumer(this->settings->exclusiveConsumer);
     connection->setTransactedIndividualAck(this->settings->transactedIndividualAck);
     connection->setUseRetroactiveConsumer(this->settings->useRetroactiveConsumer);
+    connection->setNonBlockingRedelivery(this->settings->nonBlockingRedelivery);
     connection->setConsumerFailoverRedeliveryWaitPeriod(this->settings->consumerFailoverRedeliveryWaitPeriod);
 
     if (this->settings->defaultListener) {

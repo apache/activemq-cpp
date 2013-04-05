@@ -47,6 +47,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireMapMessageTest.cpp \
     activemq/test/openwire/OpenwireMessageCompressionTest.cpp \
     activemq/test/openwire/OpenwireMessagePriorityTest.cpp \
+    activemq/test/openwire/OpenwireNonBlockingRedeliveryTest.cpp \
     activemq/test/openwire/OpenwireOptimizedAckTest.cpp \
     activemq/test/openwire/OpenwireQueueBrowserTest.cpp \
     activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
@@ -105,6 +106,7 @@ h_sources = \
     activemq/test/openwire/OpenwireMapMessageTest.h \
     activemq/test/openwire/OpenwireMessageCompressionTest.h \
     activemq/test/openwire/OpenwireMessagePriorityTest.h \
+    activemq/test/openwire/OpenwireNonBlockingRedeliveryTest.h \
     activemq/test/openwire/OpenwireOptimizedAckTest.h \
     activemq/test/openwire/OpenwireQueueBrowserTest.h \
     activemq/test/openwire/OpenwireSimpleRollbackTest.h \
