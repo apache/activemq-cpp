@@ -133,7 +133,7 @@ unsigned char MessageId::getDataStructureType() const {
 std::string MessageId::toString() const {
 
     if (key.empty()) {
-        this->key = this->producerId->toString() + ":" +
+        this->key = this->producerId->toString() + ":" + 
                     Long::toString(this->producerSequenceId);
     }
 

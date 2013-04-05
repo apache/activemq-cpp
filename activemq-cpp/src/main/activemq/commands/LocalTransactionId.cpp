@@ -100,16 +100,9 @@ std::string LocalTransactionId::toString() const {
 
     ostringstream stream;
 
-    stream << "LocalTransactionId { ";
-    stream << "Value = " << this->getValue();
-    stream << ", ";
-    stream << "ConnectionId = ";
-    if (this->getConnectionId() != NULL) {
-        stream << this->getConnectionId()->toString();
-    } else {
-        stream << "NULL";
-    }
-    stream << " }";
+    stream << "TX:"
+           << this->connectionId->toString() << ":"
+           << this->value;
 
     return stream.str();
 }
