@@ -212,6 +212,8 @@ namespace core{
                 properties->getProperty("connection.optimizedAckScheduledAckInterval", Long::toString(optimizedAckScheduledAckInterval)));
             this->consumerFailoverRedeliveryWaitPeriod = Long::parseLong(
                 properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", Long::toString(consumerFailoverRedeliveryWaitPeriod)));
+            this->nonBlockingRedelivery = Long::parseLong(
+                properties->getProperty("connection.nonBlockingRedelivery", Long::toString(nonBlockingRedelivery)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
