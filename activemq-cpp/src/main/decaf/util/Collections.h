@@ -22,6 +22,9 @@
 
 #include <decaf/util/Collection.h>
 #include <decaf/util/Iterator.h>
+#include <decaf/util/ListIterator.h>
+#include <decaf/util/List.h>
+#include <decaf/lang/Pointer.h>
 
 #include <vector>
 #include <memory>
@@ -37,6 +40,28 @@ namespace util {
         Collections& operator= (const Collections&);
 
     public:
+
+        /**
+         * Modifies the specified List by reversing the order of the elements.
+         *
+         * @param list
+         *      The list to reverse.
+         * @throws UnsupportedOperationException
+         *      when replacing an element in the List is not supported.
+         */
+        template<typename E>
+        static void reverse(List<E>& list) {
+            int size = list.size();
+            decaf::lang::Pointer<ListIterator<E> > front(list.listIterator());
+            decaf::lang::Pointer<ListIterator<E> > back(list.listIterator(size));
+
+            for (int i = 0; i < size / 2; i++) {
+                E frontNext = front->next();
+                E backPrev = back->previous();
+                front->set(backPrev);
+                back->set(frontNext);
+            }
+        }
 
     };
 

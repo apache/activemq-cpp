@@ -202,6 +202,7 @@ cc_sources = \
     decaf/util/ArrayListTest.cpp \
     decaf/util/ArraysTest.cpp \
     decaf/util/BitSetTest.cpp \
+    decaf/util/CollectionsTest.cpp \
     decaf/util/DateTest.cpp \
     decaf/util/Endian.cpp \
     decaf/util/HashCodeTest.cpp \
@@ -451,6 +452,7 @@ h_sources = \
     decaf/util/ArrayListTest.h \
     decaf/util/ArraysTest.h \
     decaf/util/BitSetTest.h \
+    decaf/util/CollectionsTest.h \
     decaf/util/DateTest.h \
     decaf/util/Endian.h \
     decaf/util/HashCodeTest.h \

@@ -326,6 +326,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::ReentrantLockTe
 #include <decaf/util/concurrent/locks/ReentrantReadWriteLockTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::locks::ReentrantReadWriteLockTest );
 
+#include <decaf/util/CollectionsTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::CollectionsTest );
 #include <decaf/util/HashCodeTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashCodeTest );
 #include <decaf/util/LinkedHashMapTest.h>
