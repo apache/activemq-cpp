@@ -1876,12 +1876,12 @@ void ActiveMQConnection::cleanUpTempDestinations() {
         return;
     }
 
-    Pointer<Iterator<Pointer<ActiveMQTempDestination> > > iterator(this->config->activeTempDestinations.values().iterator());
+    ArrayList< Pointer<ActiveMQTempDestination> > tempDests(this->config->activeTempDestinations.values());
+    Pointer<Iterator<Pointer<ActiveMQTempDestination> > > iterator(tempDests.iterator());
     while (iterator->hasNext()) {
         Pointer<ActiveMQTempDestination> dest = iterator->next();
 
         try {
-
             // Only delete this temporary destination if it was created from this connection, since the
             // advisory consumer tracks all temporary destinations there can be others in our mapping that
             // this connection did not create.
@@ -1890,7 +1890,6 @@ void ActiveMQConnection::cleanUpTempDestinations() {
             if (dest->getConnectionId() == thisConnectionId) {
                 this->deleteTempDestination(dest);
             }
-
         } catch (Exception& ex) {
         }
     }

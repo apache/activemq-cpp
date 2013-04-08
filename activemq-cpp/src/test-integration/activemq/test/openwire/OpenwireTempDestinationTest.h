@@ -36,6 +36,7 @@ namespace openwire{
         CPPUNIT_TEST( testPublishFailsForClosedConnection );
         CPPUNIT_TEST( testPublishFailsForDestoryedTempDestination );
         CPPUNIT_TEST( testDeleteDestinationWithSubscribersFails );
+        CPPUNIT_TEST( testCloseConnectionWithManyTempDests );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -52,6 +53,7 @@ namespace openwire{
         void testPublishFailsForClosedConnection();
         void testPublishFailsForDestoryedTempDestination();
         void testDeleteDestinationWithSubscribersFails();
+        void testCloseConnectionWithManyTempDests();
 
         virtual std::string getBrokerURL() const {
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();

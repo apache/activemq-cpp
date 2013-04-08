@@ -24,6 +24,7 @@
 #include <decaf/util/ArrayList.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
+#include <decaf/util/ArrayList.h>
 
 using namespace std;
 using namespace cms;
@@ -38,9 +39,9 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 
-namespace activemq{
-namespace test{
-namespace openwire{
+namespace activemq {
+namespace test {
+namespace openwire {
 
     class Requester : public cms::MessageListener,
                       public decaf::lang::Runnable {
@@ -413,4 +414,23 @@ void OpenwireTempDestinationTest::testDeleteDestinationWithSubscribersFails() {
         "Should fail with CMSException as Subscribers are active",
         queue->destroy(),
         CMSException);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void OpenwireTempDestinationTest::testCloseConnectionWithManyTempDests() {
+
+    ArrayList< Pointer<TemporaryQueue> > tempQueues;
+    ArrayList< Pointer<MessageProducer> > producers;
+
+    for (int i = 0; i < 25; ++i) {
+        Pointer<TemporaryQueue> tempQueue(cmsProvider->getSession()->createTemporaryQueue());
+        tempQueues.add(tempQueue);
+        Pointer<MessageProducer> producer(cmsProvider->getSession()->createProducer(tempQueue.get()));
+        producers.add(producer);
+    }
+
+    cmsProvider->getConnection()->close();
+
+    tempQueues.clear();
+    producers.clear();
 }
