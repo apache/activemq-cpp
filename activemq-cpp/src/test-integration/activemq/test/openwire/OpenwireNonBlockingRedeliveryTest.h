@@ -27,7 +27,13 @@ namespace openwire {
     class OpenwireNonBlockingRedeliveryTest : public MessagePriorityTest {
 
         CPPUNIT_TEST_SUITE( OpenwireNonBlockingRedeliveryTest );
-        CPPUNIT_TEST( testConsumerMessagesAreNotOrdered );
+//        CPPUNIT_TEST( testConsumerMessagesAreNotOrdered );
+//        CPPUNIT_TEST( testMessageDeleiveredWhenNonBlockingEnabled );
+//        CPPUNIT_TEST( testMessageDeleiveredWhenNonBlockingEnabled );
+//        CPPUNIT_TEST( testMessageDeleiveryDoesntStop );
+//        CPPUNIT_TEST( testNonBlockingMessageDeleiveryIsDelayed );
+//        CPPUNIT_TEST( testNonBlockingMessageDeleiveryWithRollbacks );
+        CPPUNIT_TEST( testNonBlockingMessageDeleiveryWithAllRolledBack );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -38,6 +44,12 @@ namespace openwire {
         virtual std::string getBrokerURL() const;
 
         void testConsumerMessagesAreNotOrdered();
+        void testMessageDeleiveredWhenNonBlockingEnabled();
+        void testMessageRedeliveriesAreInOrder();
+        void testMessageDeleiveryDoesntStop();
+        void testNonBlockingMessageDeleiveryIsDelayed();
+        void testNonBlockingMessageDeleiveryWithRollbacks();
+        void testNonBlockingMessageDeleiveryWithAllRolledBack();
 
     };
 

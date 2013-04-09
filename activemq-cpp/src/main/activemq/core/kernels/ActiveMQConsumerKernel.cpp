@@ -26,6 +26,7 @@
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
 #include <decaf/util/HashMap.h>
+#include <decaf/util/Collections.h>
 #include <decaf/util/concurrent/ExecutorService.h>
 #include <decaf/util/concurrent/Executors.h>
 #include <activemq/util/Config.h>
@@ -436,14 +437,14 @@ namespace {
 
     public:
 
-        ClientAckHandler( ActiveMQSessionKernel* session ) : session(session) {
+        ClientAckHandler(ActiveMQSessionKernel* session) : session(session) {
             if (session == NULL) {
                 throw NullPointerException(
                     __FILE__, __LINE__, "Ack Handler Created with NULL Session.");
             }
         }
 
-        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED ) {
+        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED) {
             try {
                 this->session->acknowledge();
             }
@@ -595,7 +596,7 @@ namespace {
         ActiveMQSessionKernel* session;
         Pointer<ActiveMQConsumerKernel> consumer;
         ActiveMQConsumerKernelConfig* impl;
-        LinkedList<Pointer<MessageDispatch> > redeliveries;
+        ArrayList<Pointer<MessageDispatch> > redeliveries;
 
     private:
 
@@ -608,6 +609,7 @@ namespace {
             Runnable(), session(session), consumer(consumer), impl(impl), redeliveries() {
 
             this->redeliveries.copy(impl->dispatchedMessages);
+            Collections::reverse(this->redeliveries);
         }
         virtual ~NonBlockingRedeliveryTask() {}
 
@@ -1183,7 +1185,7 @@ void ActiveMQConsumerKernel::afterMessageIsConsumed(Pointer<MessageDispatch> mes
                                 makeAckForAllDeliveredMessages(ActiveMQConstants::ACK_TYPE_CONSUMED);
                             if (ack != NULL) {
                                 this->internal->dispatchedMessages.clear();
-                                session->oneway(ack);
+                                session->sendAck(ack);
                             }
                         }
                     }
@@ -1275,7 +1277,7 @@ void ActiveMQConsumerKernel::ackLater(Pointer<MessageDispatch> dispatch, int ack
         // old pending ack being superseded by ack of another type, if is is not a delivered
         // ack and hence important, send it now so it is not lost.
         if (oldPendingAck->getAckType() != ActiveMQConstants::ACK_TYPE_DELIVERED) {
-            session->oneway(oldPendingAck);
+            session->sendAck(oldPendingAck);
         }
     }
 
@@ -1436,14 +1438,17 @@ void ActiveMQConsumerKernel::rollback() {
                     this->internal->additionalWindowSize - (int) this->internal->dispatchedMessages.size());
                 this->internal->redeliveryDelay = 0;
 
+                this->internal->deliveredCounter -= (int) internal->dispatchedMessages.size();
+                this->internal->dispatchedMessages.clear();
+
             } else {
 
                 // only redelivery_ack after first delivery
                 if (currentRedeliveryCount > 0) {
-                    Pointer<MessageAck> ack(new MessageAck(lastMsg, ActiveMQConstants::ACK_TYPE_POISON,
+                    Pointer<MessageAck> ack(new MessageAck(lastMsg, ActiveMQConstants::ACK_TYPE_REDELIVERED,
                                             this->internal->dispatchedMessages.size()));
                     ack->setFirstMessageId(firstMsgId);
-                    session->oneway(ack);
+                    session->sendAck(ack);
                 }
 
                 if (this->internal->nonBlockingRedelivery) {
@@ -1451,9 +1456,15 @@ void ActiveMQConsumerKernel::rollback() {
                     if (!this->internal->unconsumedMessages->isClosed()) {
                         Pointer<ActiveMQConsumerKernel> self =
                             this->session->lookupConsumerKernel(this->consumerInfo->getConsumerId());
+
+                        NonBlockingRedeliveryTask* redeliveryTask =
+                            new NonBlockingRedeliveryTask(session, self, this->internal);
+
+                        this->internal->deliveredCounter -= (int) internal->dispatchedMessages.size();
+                        this->internal->dispatchedMessages.clear();
+
                         this->session->getScheduler()->executeAfterDelay(
-                            new NonBlockingRedeliveryTask(session, self, this->internal),
-                            this->internal->redeliveryDelay);
+                            redeliveryTask, this->internal->redeliveryDelay);
                     }
                 } else {
                     // stop the delivery of messages.
@@ -1465,6 +1476,9 @@ void ActiveMQConsumerKernel::rollback() {
                         this->internal->unconsumedMessages->enqueueFirst(iter->next());
                     }
 
+                    this->internal->deliveredCounter -= (int) internal->dispatchedMessages.size();
+                    this->internal->dispatchedMessages.clear();
+
                     if (internal->redeliveryDelay > 0 && !this->internal->unconsumedMessages->isClosed()) {
                         Pointer<ActiveMQConsumerKernel> self =
                             this->session->lookupConsumerKernel(this->consumerInfo->getConsumerId());
@@ -1475,8 +1489,6 @@ void ActiveMQConsumerKernel::rollback() {
                     }
                 }
             }
-            this->internal->deliveredCounter -= (int) internal->dispatchedMessages.size();
-            this->internal->dispatchedMessages.clear();
         }
     }
 
