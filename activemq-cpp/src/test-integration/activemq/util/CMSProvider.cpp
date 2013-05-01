@@ -50,6 +50,18 @@ CMSProvider::CMSProvider(const std::string& brokerURL, cms::Session::Acknowledge
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+CMSProvider::CMSProvider(const std::string& brokerURL, const std::string& destinationName, const std::string& subscription, cms::Session::AcknowledgeMode ackMode) :
+    brokerURL(brokerURL), ackMode(ackMode), username(), password(), clientId(),
+    destinationName(), topic(true), durable(false), subscription(), connectionFactory(),
+    connection(), session(), consumer(), producer(), noDestProducer(), destination(), tempDestination() {
+
+    this->destinationName = destinationName;
+    this->subscription = subscription;
+
+    this->initialize();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 CMSProvider::~CMSProvider() {
     try{
         close();

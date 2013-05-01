@@ -297,7 +297,7 @@ void StompFrame::readBody(decaf::io::DataInputStream* in) {
             this->body.resize((std::size_t) content_length);
 
             // Read the Content Length now
-            in->read(&body[0], (int) body.size(), 0, content_length);
+            in->readFully(&body[0], body.size());
 
             // Content Length read, now pop the end terminator off (\0\n).
             if (in->readByte() != '\0') {

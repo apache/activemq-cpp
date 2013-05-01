@@ -18,6 +18,7 @@
 cc_sources = \
     TestRegistry.cpp \
     activemq/test/AsyncSenderTest.cpp \
+    activemq/test/BulkMessageTest.cpp \
     activemq/test/CmsConnectionStartStopTest.cpp \
     activemq/test/CmsSendWithAsyncCallbackTest.cpp \
     activemq/test/CmsTemplateTest.cpp \
@@ -58,6 +59,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
     activemq/test/openwire/OpenwireXATransactionsTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
+    activemq/test/stomp/StompBulkMessageTest.cpp \
     activemq/test/stomp/StompCmsConnectionStartStopTest.cpp \
     activemq/test/stomp/StompCmsTemplateTest.cpp \
     activemq/test/stomp/StompDurableTest.cpp \
@@ -76,6 +78,7 @@ cc_sources = \
 
 h_sources = \
     activemq/test/AsyncSenderTest.h \
+    activemq/test/BulkMessageTest.h \
     activemq/test/CMSTestFixture.h \
     activemq/test/CmsConnectionStartStopTest.h \
     activemq/test/CmsSendWithAsyncCallbackTest.h \
@@ -117,6 +120,7 @@ h_sources = \
     activemq/test/openwire/OpenwireVirtualTopicTest.h \
     activemq/test/openwire/OpenwireXATransactionsTest.h \
     activemq/test/stomp/StompAsyncSenderTest.h \
+    activemq/test/stomp/StompBulkMessageTest.h \
     activemq/test/stomp/StompCmsConnectionStartStopTest.h \
     activemq/test/stomp/StompCmsTemplateTest.h \
     activemq/test/stomp/StompDurableTest.h \

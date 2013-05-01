@@ -61,6 +61,11 @@ namespace util {
 
         CMSProvider(const std::string& brokerURL, cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE);
 
+        CMSProvider(const std::string& brokerURL,
+                    const std::string& destinationName,
+                    const std::string& subscription,
+                    cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE);
+
         virtual ~CMSProvider();
 
         virtual void close();
