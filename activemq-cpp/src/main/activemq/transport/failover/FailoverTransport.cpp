@@ -871,7 +871,7 @@ bool FailoverTransport::iterate() {
             } else {
 
                 if (this->impl->doRebalance) {
-                    if (isPriorityBackup() && connectList->getPriorityURI().equals(*this->impl->connectedTransportURI)) {
+                    if (this->impl->connectedToPrioirty || connectList->getPriorityURI().equals(*this->impl->connectedTransportURI)) {
                         // already connected to first in the list, no need to rebalance
                         this->impl->doRebalance = false;
                         return false;
@@ -941,8 +941,12 @@ bool FailoverTransport::iterate() {
                         this->impl->reconnectMutex.notifyAll();
                         this->impl->connectFailures = 0;
 
-                        this->impl->connectedToPrioirty =
-                            connectList->getPriorityURI().equals(uri) || this->impl->priorityUris->contains(uri);
+                        if (isPriorityBackup()) {
+                            this->impl->connectedToPrioirty = connectList->getPriorityURI().equals(uri) ||
+                                                              this->impl->priorityUris->contains(uri);
+                        } else {
+                            this->impl->connectedToPrioirty = false;
+                        }
 
                         // Make sure on initial startup, that the transportListener
                         // has been initialized for this instance.

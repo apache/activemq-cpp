@@ -543,7 +543,7 @@ void FailoverTransportTest::disposeOf( const Pointer<ProducerInfo>& producer,
 void FailoverTransportTest::testTransportHandlesConnectionControl() {
 
     std::string uri =
-        "failover://(mock://localhost:61616)?randomize=false";
+        "failover://(mock://localhost:61618?failOnCreate=true,mock://localhost:61616)?randomize=false";
 
     std::string reconnectStr = "mock://localhost:61613?name=Reconnect";
 
@@ -703,7 +703,7 @@ void FailoverTransportTest::testConnectedToMockBroker() {
         Thread::sleep( 200 );
     }
     CPPUNIT_ASSERT( failover->isConnected() == true );
-    CPPUNIT_ASSERT( failover->isConnectedToPriority() == true );
+    CPPUNIT_ASSERT( failover->isConnectedToPriority() == false );
 
     transport->close();
 
