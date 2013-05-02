@@ -42,7 +42,7 @@ void MarshallingSupport::writeString(decaf::io::DataOutputStream& dataOut, const
 
     try {
 
-        if (value.length() <= Short::MAX_VALUE / 4) {
+        if ((int)value.length() <= Short::MAX_VALUE / 4) {
             dataOut.write(PrimitiveValueNode::STRING_TYPE);
             MarshallingSupport::writeString16(dataOut, value);
         } else {

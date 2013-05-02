@@ -287,7 +287,7 @@ void PrimitiveTypesMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             if( size == 0 ) {
                 dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
                 dataOut.writeShort( (short)size );
-            } else if( data.size() > Short::MAX_VALUE / 4 ) {
+            } else if( (int)data.size() > Short::MAX_VALUE / 4 ) {
                 dataOut.writeByte( PrimitiveValueNode::BIG_STRING_TYPE );
                 dataOut.writeInt( size );
                 dataOut.write( (unsigned char*)data.c_str(), size, 0, size );

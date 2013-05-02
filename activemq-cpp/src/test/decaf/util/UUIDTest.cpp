@@ -250,15 +250,15 @@ void UUIDTest::testNameUUIDFromBytes() {
     CPPUNIT_ASSERT_EQUAL(2, uuid.variant());
     CPPUNIT_ASSERT_EQUAL(3, uuid.version());
 
-    CPPUNIT_ASSERT_EQUAL(0xaff565bc2f771745LL, (unsigned long long) uuid.getLeastSignificantBits());
+    CPPUNIT_ASSERT_EQUAL(0xaff565bc2f771745ULL, (unsigned long long) uuid.getLeastSignificantBits());
     CPPUNIT_ASSERT_EQUAL(0x14cdb9b4de013faaLL, uuid.getMostSignificantBits());
 
     uuid = UUID::nameUUIDFromBytes(std::vector<char>());
     CPPUNIT_ASSERT_EQUAL(2, uuid.variant());
     CPPUNIT_ASSERT_EQUAL(3, uuid.version());
 
-    CPPUNIT_ASSERT_EQUAL(0xa9800998ecf8427eLL, (unsigned long long) uuid.getLeastSignificantBits());
-    CPPUNIT_ASSERT_EQUAL(0xd41d8cd98f003204LL, (unsigned long long) uuid.getMostSignificantBits());
+    CPPUNIT_ASSERT_EQUAL(0xa9800998ecf8427eULL, (unsigned long long) uuid.getLeastSignificantBits());
+    CPPUNIT_ASSERT_EQUAL(0xd41d8cd98f003204ULL, (unsigned long long) uuid.getMostSignificantBits());
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw an NullPointerException exception",
@@ -373,7 +373,7 @@ void UUIDTest::testFromStringStringException() {
     CPPUNIT_ASSERT_EQUAL(0x0LL, uuid.getLeastSignificantBits());
 
     uuid = UUID::fromString("7fffffffffffffff-0-0-0-0");
-    CPPUNIT_ASSERT_EQUAL(0xffffffff00000000LL, (unsigned long long) uuid.getMostSignificantBits());
+    CPPUNIT_ASSERT_EQUAL(0xffffffff00000000ULL, (unsigned long long) uuid.getMostSignificantBits());
     CPPUNIT_ASSERT_EQUAL(0x0LL, uuid.getLeastSignificantBits());
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
@@ -382,12 +382,12 @@ void UUIDTest::testFromStringStringException() {
         NumberFormatException);
 
     uuid = UUID::fromString("7fffffffffffffff-7fffffffffffffff-7fffffffffffffff-0-0");
-    CPPUNIT_ASSERT_EQUAL(0xffffffffffffffffLL, (unsigned long long) uuid.getMostSignificantBits());
+    CPPUNIT_ASSERT_EQUAL(0xffffffffffffffffULL, (unsigned long long) uuid.getMostSignificantBits());
     CPPUNIT_ASSERT_EQUAL(0x0LL, uuid.getLeastSignificantBits());
 
     uuid = UUID::fromString("0-0-0-7fffffffffffffff-7fffffffffffffff");
     CPPUNIT_ASSERT_EQUAL(0x0LL, uuid.getMostSignificantBits());
-    CPPUNIT_ASSERT_EQUAL(0xffffffffffffffffLL, (unsigned long long) uuid.getLeastSignificantBits());
+    CPPUNIT_ASSERT_EQUAL(0xffffffffffffffffULL, (unsigned long long) uuid.getLeastSignificantBits());
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw an IllegalArgumentException exception",

@@ -298,7 +298,7 @@ namespace kernels {
 
         void waitForRedeliveries() {
             if (failoverRedeliveryWaitPeriod > 0 && previouslyDeliveredMessages != NULL) {
-                long expiry = System::currentTimeMillis() + failoverRedeliveryWaitPeriod;
+                long long expiry = System::currentTimeMillis() + failoverRedeliveryWaitPeriod;
                 int numberNotReplayed;
                 do {
                     numberNotReplayed = 0;
