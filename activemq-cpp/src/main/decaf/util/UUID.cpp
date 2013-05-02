@@ -299,7 +299,11 @@ UUID UUID::randomUUID() {
 
 ////////////////////////////////////////////////////////////////////////////////
 UUID UUID::nameUUIDFromBytes(const std::vector<char>& name) {
-    return UUID::nameUUIDFromBytes(&name[0], (int)name.size());
+    if (!name.empty()) {
+        return UUID::nameUUIDFromBytes(&name[0], (int)name.size());
+    } else {
+        return UUID::nameUUIDFromBytes(NULL, 0);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
