@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunitd.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib libapr-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
@@ -242,7 +242,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunit.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunit.lib libapr-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
@@ -416,7 +416,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunit.lib apr-1.lib aprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunit.lib apr-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
@@ -592,7 +592,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib aprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
@@ -743,11 +743,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\activemq\core\ActiveMQMessageAuditTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\core\ActiveMQMessageAuditTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\core\ActiveMQSessionTest.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\test\activemq\core\ActiveMQSessionTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\core\ConnectionAuditTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\core\ConnectionAuditTest.h"
 					>
 				</File>
 				<File
@@ -2331,6 +2347,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\decaf\util\CollectionsTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\CollectionsTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\decaf\util\DateTest.cpp"
 					>
 				</File>
@@ -2360,6 +2384,30 @@
 				</File>
 				<File
 					RelativePath="..\src\test\decaf\util\HashMapTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\HashSetTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\HashSetTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\LinkedHashMapTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\LinkedHashMapTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\LinkedHashSetTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\LinkedHashSetTest.h"
 					>
 				</File>
 				<File
@@ -2722,6 +2770,14 @@
 			<Filter
 				Name="security"
 				>
+				<File
+					RelativePath="..\src\test\decaf\security\MessageDigestTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\security\MessageDigestTest.h"
+					>
+				</File>
 				<File
 					RelativePath="..\src\test\decaf\security\SecureRandomTest.cpp"
 					>

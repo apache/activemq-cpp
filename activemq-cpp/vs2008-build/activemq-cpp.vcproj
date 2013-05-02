@@ -348,7 +348,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib libapr-1.lib"
 				OutputFile="$(OutDir)\activemq-cpp.dll"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				GenerateDebugInformation="true"
@@ -512,7 +512,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib libapr-1.lib"
 				OutputFile="$(OutDir)\activemq-cppd.dll"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				GenerateDebugInformation="true"
@@ -960,7 +960,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib libapr-1.lib"
 				OutputFile="$(OutDir)\activemq-cppd.dll"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				GenerateDebugInformation="true"
@@ -1124,7 +1124,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib libapr-1.lib"
 				OutputFile="$(OutDir)\activemq-cpp.dll"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				GenerateDebugInformation="true"
@@ -2673,6 +2673,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQMessageAudit.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQMessageAudit.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQProducer.cpp"
 					>
 				</File>
@@ -2742,6 +2750,14 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\AdvisoryConsumer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ConnectionAudit.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ConnectionAudit.h"
 					>
 				</File>
 				<File
@@ -4815,6 +4831,30 @@
 				<Filter
 					Name="security"
 					>
+					<File
+						RelativePath="..\src\main\decaf\internal\security\Engine.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\security\Engine.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\security\SecurityRuntime.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\security\SecurityRuntime.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\security\ServiceRegistry.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\security\ServiceRegistry.h"
+						>
+					</File>
 					<Filter
 						Name="windows"
 						>
@@ -4826,6 +4866,62 @@
 							RelativePath="..\src\main\decaf\internal\security\windows\SecureRandomImpl.h"
 							>
 						</File>
+					</Filter>
+					<Filter
+						Name="provider"
+						>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\provider\DefaultMessageDigestProviderService.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\provider\DefaultMessageDigestProviderService.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\provider\DefaultProvider.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\provider\DefaultProvider.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\provider\DefaultSecureRandomProviderService.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\internal\security\provider\DefaultSecureRandomProviderService.h"
+							>
+						</File>
+						<Filter
+							Name="crypto"
+							>
+							<File
+								RelativePath="..\src\main\decaf\internal\security\provider\crypto\MD4MessageDigestSpi.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\security\provider\crypto\MD4MessageDigestSpi.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\security\provider\crypto\MD5MessageDigestSpi.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\security\provider\crypto\MD5MessageDigestSpi.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\security\provider\crypto\SHA1MessageDigestSpi.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\main\decaf\internal\security\provider\crypto\SHA1MessageDigestSpi.h"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -5045,6 +5141,14 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\lang\exceptions\ClassCastException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\CloneNotSupportedException.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\lang\exceptions\CloneNotSupportedException.h"
 						>
 					</File>
 					<File
@@ -6161,7 +6265,23 @@
 				Name="secority"
 				>
 				<File
+					RelativePath="..\src\main\decaf\security\DigestException.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\DigestException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\GeneralSecurityException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\GeneralSecurityException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\InvalidKeyException.cpp"
 					>
 				</File>
 				<File
@@ -6169,7 +6289,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\security\Key.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\Key.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\KeyException.cpp"
 					>
 				</File>
 				<File
@@ -6177,7 +6305,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\security\KeyManagementException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\KeyManagementException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\MessageDigest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\MessageDigest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\MessageDigestSpi.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\MessageDigestSpi.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\NoSuchAlgorithmException.cpp"
 					>
 				</File>
 				<File
@@ -6185,11 +6337,47 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\security\NoSuchProviderException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\NoSuchProviderException.h"
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\security\Principal.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\Principal.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\Provider.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\Provider.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\ProviderException.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\ProviderException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\ProviderService.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\ProviderService.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\PublicKey.cpp"
 					>
 				</File>
 				<File
@@ -6213,6 +6401,26 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\security\Security.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\Security.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SecuritySpi.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SecuritySpi.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\security\SignatureException.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\security\SignatureException.h"
 					>
 				</File>
@@ -6223,6 +6431,10 @@
 						Name="x500"
 						>
 						<File
+							RelativePath="..\src\main\decaf\security\auth\x500\X500Principal.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\decaf\security\auth\x500\X500Principal.h"
 							>
 						</File>
@@ -6232,7 +6444,15 @@
 					Name="cert"
 					>
 					<File
+						RelativePath="..\src\main\decaf\security\cert\Certificate.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\security\cert\Certificate.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\security\cert\CertificateEncodingException.cpp"
 						>
 					</File>
 					<File
@@ -6240,7 +6460,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\security\cert\CertificateException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\security\cert\CertificateException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\security\cert\CertificateExpiredException.cpp"
 						>
 					</File>
 					<File
@@ -6248,11 +6476,23 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\security\cert\CertificateNotYetValidException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\security\cert\CertificateNotYetValidException.h"
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\security\cert\CertificateParsingException.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\security\cert\CertificateParsingException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\security\cert\X509Certificate.cpp"
 						>
 					</File>
 					<File
@@ -6405,11 +6645,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\HashSet.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\HashSet.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Iterator.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\util\Iterator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LinkedHashMap.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LinkedHashMap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LinkedHashSet.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\LinkedHashSet.h"
 					>
 				</File>
 				<File

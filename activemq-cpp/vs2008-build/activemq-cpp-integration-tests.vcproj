@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunitd.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib libapr-1.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
@@ -242,7 +242,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunit.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunit.lib libapr-1.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
@@ -413,7 +413,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunit.lib apr-1.lib aprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunit.lib apr-1.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
@@ -588,7 +588,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib aprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
@@ -738,6 +738,14 @@
 					</File>
 					<File
 						RelativePath="..\src\test-integration\activemq\test\AsyncSenderTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\BulkMessageTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\BulkMessageTest.h"
 						>
 					</File>
 					<File
@@ -980,6 +988,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.cpp"
 							>
 						</File>
@@ -1053,6 +1077,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompBulkMessageTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompBulkMessageTest.h"
 							>
 						</File>
 						<File
