@@ -31,7 +31,11 @@ using namespace decaf::lang;
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionStateTest::test() {
 
+    Pointer<ConnectionId> connectionId(new ConnectionId);
+    connectionId->setValue("CONNECTION");
+
     Pointer<LocalTransactionId> id( new LocalTransactionId() );
+    id->setConnectionId(connectionId);
     id->setValue( 42 );
     TransactionState state( id );
 
