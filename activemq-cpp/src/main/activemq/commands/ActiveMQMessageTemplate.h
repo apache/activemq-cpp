@@ -387,7 +387,17 @@ namespace commands {
             AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
-        virtual void setCMSMessageID(const std::string& id AMQCPP_UNUSED ) {
+        virtual void setCMSMessageID(const std::string& value) {
+            try {
+                Pointer<MessageId> id(new MessageId(value));
+                this->setMessageId(id);
+            } catch (decaf::lang::exceptions::NumberFormatException& e) {
+                // we must be some foreign JMS provider or strange user-supplied
+                // String so lets set the IDs to be 1
+                Pointer<MessageId> id(new MessageId);
+                id->setTextView(value);
+                this->setMessageId(messageId);
+            }
         }
 
         virtual int getCMSPriority() const {

@@ -49,6 +49,7 @@ namespace openwire{
         CPPUNIT_TEST( tesstStreamMessage );
         CPPUNIT_TEST( testLibraryInitShutdownInit );
         CPPUNIT_TEST( testBytesMessageSendRecvAsync );
+        CPPUNIT_TEST( testMessageIdSetOnSend );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -68,6 +69,7 @@ namespace openwire{
         void testMapMessageSendToTopic();
         void tesstStreamMessage();
         void testDestroyDestination();
+        void testMessageIdSetOnSend();
 
     };
 

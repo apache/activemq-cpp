@@ -367,3 +367,19 @@ void OpenwireSimpleTest::tesstStreamMessage() {
     CPPUNIT_ASSERT( rcvStreamMessage->readDouble() == doubleValue );
     CPPUNIT_ASSERT( rcvStreamMessage->readBytes( readBytes ) == (int)bytes.size() );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testMessageIdSetOnSend() {
+
+    // Create CMS Object for Comms
+    cms::Session* session(cmsProvider->getSession());
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+
+    auto_ptr<cms::Message> message(session->createMessage());
+    producer->send(message.get());
+
+    CPPUNIT_ASSERT(message->getCMSMessageID() != "");
+    CPPUNIT_ASSERT(message->getCMSDestination() != NULL);
+}

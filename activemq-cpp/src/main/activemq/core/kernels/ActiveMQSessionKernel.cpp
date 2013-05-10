@@ -963,11 +963,13 @@ void ActiveMQSessionKernel::send(kernels::ActiveMQProducerKernel* producer, Poin
             // to clone it.
             if (ActiveMQMessageTransformation::transformMessage(message, connection, &transformed)) {
                 amqMessage.reset(transformed);
-                // Sets the Message ID on the original message per spec.
-                message->setCMSMessageID(id->toString());
             } else {
                 amqMessage.reset(transformed->cloneDataStructure());
             }
+
+            // Sets the Message ID on the original message per spec.
+            message->setCMSMessageID(id->toString());
+            message->setCMSDestination(destination.dynamicCast<cms::Destination>().get());
 
             amqMessage->setMessageId(id);
             amqMessage->getBrokerPath().clear();

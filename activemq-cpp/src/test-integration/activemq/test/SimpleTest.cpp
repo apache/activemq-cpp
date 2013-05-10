@@ -388,7 +388,7 @@ void SimpleTest::testBytesMessageSendRecv() {
 
     unsigned char* result = bytesMessage2->getBodyBytes();
     CPPUNIT_ASSERT( result != NULL );
-    delete result;
+    delete [] result;
 
     bytesMessage2->reset();
 
@@ -432,7 +432,7 @@ namespace {
 
                 unsigned char* result = bytesMessage->getBodyBytes();
                 CPPUNIT_ASSERT( result != NULL );
-                delete result;
+                delete [] result;
 
                 passed = true;
             } catch(...) {
