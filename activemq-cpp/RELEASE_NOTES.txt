@@ -1,4 +1,31 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.7.0                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-470] - ConnectionStateTracker needs to enforce message cache size restrictions
+    [AMQCPP-474] - On closing a connection, ActiveMQ raises the exception: StlMap modified
+                   outside this iterator
+    [AMQCPP-475] - Fix for Atomics Helper for Solaris 10
+    [AMQCPP-476] - Reading of Stomp Frame with content length may throw exception
+    [AMQCPP-482] - Message.getCMSMessageID() returns an empty string after send
+
+Improvement
+
+    [AMQCPP-469] - Remove linkage to APR-Util
+    [AMQCPP-471] - Add support for Optimize Acknowledge
+    [AMQCPP-472] - Add support for Non-Blocking redelivery.
+    [AMQCPP-473] - Add some additional configuration options for URI support
+
+New Feature
+
+    [AMQCPP-367] - failover: receiving duplicate messages after a broker restart
+    [AMQCPP-479] - Add support for priority backups to failover transport.
+    [AMQCPP-480] - Add complete support for Update Cluster clients and rebalancing
+                   to Failover Transport.
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.6.0                               ==
 =========================================================================
 
