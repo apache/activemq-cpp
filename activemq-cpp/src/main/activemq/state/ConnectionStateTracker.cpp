@@ -58,7 +58,7 @@ namespace state {
     public:
 
         MessageCache(ConnectionStateTracker* parent) :
-            LinkedHashMap(), parent(parent), currentCacheSize(0) {
+            LinkedHashMap<Pointer<MessageId>, Pointer<Command> >(), parent(parent), currentCacheSize(0) {
         }
 
         virtual ~MessageCache() {}
