@@ -24,8 +24,6 @@
 #include <decaf/lang/Float.h>
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
-#include <apr_pools.h>
-#include <apr_strmatch.h>
 
 using namespace decaf;
 using namespace decaf::util;
