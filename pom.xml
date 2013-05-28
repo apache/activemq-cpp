@@ -90,9 +90,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/3.7.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/branches/3.7.x</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/branches/3.7.x</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk</url>
   </scm>
 
   <dependencyManagement>
