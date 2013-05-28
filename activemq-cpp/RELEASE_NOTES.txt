@@ -4,6 +4,15 @@
 
 Bug
 
+    [AMQCPP-483] - 3.7.0 does not compile with gcc-4.4.7 on CentOS-6
+    [AMQCPP-485] - APR-Util header include missed in latest release.
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.7.0                               ==
+=========================================================================
+
+Bug
+
     [AMQCPP-470] - ConnectionStateTracker needs to enforce message cache size restrictions
     [AMQCPP-474] - On closing a connection, ActiveMQ raises the exception: StlMap modified
                    outside this iterator
