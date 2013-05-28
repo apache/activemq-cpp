@@ -214,6 +214,8 @@ namespace core{
                 properties->getProperty("connection.consumerFailoverRedeliveryWaitPeriod", Long::toString(consumerFailoverRedeliveryWaitPeriod)));
             this->nonBlockingRedelivery = Boolean::parseBoolean(
                 properties->getProperty("connection.nonBlockingRedelivery", Boolean::toString(nonBlockingRedelivery)));
+            this->watchTopicAdvisories = Boolean::parseBoolean(
+                properties->getProperty("connection.watchTopicAdvisories", Boolean::toString(watchTopicAdvisories)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
