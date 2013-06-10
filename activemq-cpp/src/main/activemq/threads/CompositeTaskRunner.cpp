@@ -182,18 +182,18 @@ bool CompositeTaskRunner::iterate() {
 
     synchronized(&tasks) {
 
-        auto_ptr<Iterator<CompositeTask*> > iter(tasks.iterator());
-
-        while (iter->hasNext()) {
-
-            CompositeTask* task = iter->next();
+        for (int i = 0; i < tasks.size(); ++i) {
+            CompositeTask* task = tasks.pop();
 
             if (task->isPending()) {
                 task->iterate();
+                tasks.addLast(task);
 
                 // Always return true, so that we check again for any of
                 // the other tasks that might now be pending.
                 return true;
+            } else {
+                tasks.addLast(task);
             }
         }
     }
