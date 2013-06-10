@@ -21,25 +21,23 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
-    class ActiveMQConnectionTest : public CppUnit::TestFixture
-    {
+    class ActiveMQConnectionTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( ActiveMQConnectionTest );
-//        CPPUNIT_TEST( test1WithStomp );
-//        CPPUNIT_TEST( test2WithStomp );
         CPPUNIT_TEST( test2WithOpenwire );
+        CPPUNIT_TEST( testCloseCancelsHungStart );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        ActiveMQConnectionTest() {};
+        ActiveMQConnectionTest() {}
         virtual ~ActiveMQConnectionTest() {}
 
-//        void test1WithStomp();
-//        void test2WithStomp();
         void test2WithOpenwire();
+        void testCloseCancelsHungStart();
 
     };
 

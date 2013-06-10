@@ -955,8 +955,6 @@ void ActiveMQConnection::disconnect(long long lastDeliveredSequenceId) {
                     e = ex;
                 }
             }
-
-            this->config->transport.reset(NULL);
         }
 
         // If we encountered an exception - throw the first one we encountered.
