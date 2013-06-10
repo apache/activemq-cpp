@@ -7,6 +7,9 @@ Bug
     [AMQCPP-483] - 3.7.0 does not compile with gcc-4.4.7 on CentOS-6
     [AMQCPP-484] - Can't connect via Stomp to Apollo broker - ActiveMq-Cpp version: 3.7.0
     [AMQCPP-485] - APR-Util header include missed in latest release.
+    [AMQCPP-487] - CMS FailoverTransport Leaks Socket Descriptors
+    [AMQCPP-488] - closing a connection stalled in start because of failover should stop
+                   the transport safely.
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.7.0                               ==
