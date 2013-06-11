@@ -10,6 +10,7 @@ Bug
     [AMQCPP-487] - CMS FailoverTransport Leaks Socket Descriptors
     [AMQCPP-488] - closing a connection stalled in start because of failover should stop
                    the transport safely.
+    [AMQCPP-489] - Fix for Sun Studio
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.7.0                               ==
