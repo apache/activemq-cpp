@@ -32,6 +32,10 @@
 #include <vector>
 #include <list>
 
+#ifdef __SUNPRO_CC
+#include <stdlib.h>
+#endif
+
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;

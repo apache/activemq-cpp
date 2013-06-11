@@ -19,6 +19,10 @@
 
 #include <stdio.h>
 
+#ifdef __SUNPRO_CC
+#include <stdlib.h>
+#endif
+
 using namespace decaf::lang;
 using namespace cms;
 using namespace cms::stress;

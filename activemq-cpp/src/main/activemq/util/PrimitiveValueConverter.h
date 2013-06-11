@@ -57,35 +57,34 @@ namespace util {
         PrimitiveValueConverter() {}
         virtual ~PrimitiveValueConverter() {}
 
-        template< typename TO>
-        TO convert( const PrimitiveValueNode& value ) const {
+        template<typename TO>
+        TO convert(const PrimitiveValueNode& value) const {
 
             throw decaf::lang::exceptions::UnsupportedOperationException(
-                __FILE__, __LINE__, "Invalid Conversion" );
+                __FILE__, __LINE__, "Invalid Conversion");
         }
-
     };
 
     template<>
-    bool PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    bool PrimitiveValueConverter::convert<bool>(const PrimitiveValueNode& value) const;
     template<>
-    unsigned char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    unsigned char PrimitiveValueConverter::convert<unsigned char>(const PrimitiveValueNode& value) const;
     template<>
-    char PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    char PrimitiveValueConverter::convert<char>(const PrimitiveValueNode& value) const;
     template<>
-    short PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    short PrimitiveValueConverter::convert<short>(const PrimitiveValueNode& value) const;
     template<>
-    int PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    int PrimitiveValueConverter::convert<int>(const PrimitiveValueNode& value) const;
     template<>
-    long long PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    long long PrimitiveValueConverter::convert<long long>(const PrimitiveValueNode& value) const;
     template<>
-    float PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    float PrimitiveValueConverter::convert<float>(const PrimitiveValueNode& value) const;
     template<>
-    double PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    double PrimitiveValueConverter::convert<double>(const PrimitiveValueNode& value) const;
     template<>
-    std::string PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    std::string PrimitiveValueConverter::convert<std::string>(const PrimitiveValueNode& value) const;
     template<>
-    std::vector<unsigned char> PrimitiveValueConverter::convert( const PrimitiveValueNode& value ) const;
+    std::vector<unsigned char> PrimitiveValueConverter::convert<std::vector<unsigned char> >(const PrimitiveValueNode& value) const;
 
 }}
 
