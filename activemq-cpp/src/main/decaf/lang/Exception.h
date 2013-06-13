@@ -121,8 +121,10 @@ namespace lang {
         virtual const std::exception* getCause() const;
 
         /**
-         * Initializes the contained cause exception with the one given.  A copy
-         * is made to avoid ownership issues.
+         * Initializes the contained cause exception with the one given.  The caller should
+         * ensure that a valid copy of the causal exception is passed as this Exception object
+         * will take ownership of the passed pointer.  Do not pass a pointer to the address of
+         * an exception allocated on the stack or from an exception in a catch block.
          *
          * @param cause
          *      The exception that was the cause of this one.

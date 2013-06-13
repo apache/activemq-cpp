@@ -739,7 +739,8 @@ namespace concurrent{
                             this->parent->afterExecute(task, &e);
                             throw;
                         } catch (std::exception& stdex) {
-                            Exception ex(__FILE__, __LINE__, &stdex, "Caught unknown exception while executing task.");
+                            Exception ex(__FILE__, __LINE__, new std::exception(stdex),
+                                "Caught unknown exception while executing task.");
                             this->parent->afterExecute(task, &ex);
                             throw ex;
                         } catch (...) {

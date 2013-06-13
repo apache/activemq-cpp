@@ -643,7 +643,7 @@ bool ActiveMQTransactionContext::isSameRM(const XAResource* resource) {
     } catch (Exception& ex) {
         throw toXAException(ex);
     } catch (CMSException& ex) {
-        throw XAException("Could not get the Resource Manager Id.", &ex);
+        throw XAException("Could not get the Resource Manager Id.", ex.clone());
     }
 }
 
@@ -754,7 +754,7 @@ XAException ActiveMQTransactionContext::toXAException(decaf::lang::Exception& ex
 
 ////////////////////////////////////////////////////////////////////////////////
 XAException ActiveMQTransactionContext::toXAException(cms::CMSException& ex) {
-    XAException xae(ex.getMessage(), &ex);
+    XAException xae(ex.getMessage(), ex.clone());
     xae.setErrorCode(XAException::XAER_RMFAIL);
     return xae;
 }
