@@ -11,6 +11,7 @@ Bug
     [AMQCPP-488] - closing a connection stalled in start because of failover should stop
                    the transport safely.
     [AMQCPP-489] - Fix for Sun Studio
+    [AMQCPP-490] - Exception lifetime confusion can cause the application to crash 
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.7.0                               ==
