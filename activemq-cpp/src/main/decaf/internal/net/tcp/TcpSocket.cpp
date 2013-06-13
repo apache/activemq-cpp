@@ -358,7 +358,7 @@ void TcpSocket::connect(const std::string& hostname, int port, int timeout) {
             close();
         } catch (lang::Exception& cx) { /* Absorb */
         }
-        throw SocketException(&ex);
+        throw SocketException(ex.clone());
     } catch (...) {
         try {
             close();

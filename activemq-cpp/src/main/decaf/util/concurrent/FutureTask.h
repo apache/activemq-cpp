@@ -269,7 +269,7 @@ namespace concurrent {
                         this->parent->setException(ex);
                         return;
                     } catch(std::exception& stdex) {
-                        this->parent->setException(decaf::lang::Exception(&stdex));
+                        this->parent->setException(decaf::lang::Exception(new std::exception(stdex)));
                         return;
                     } catch(...) {
                         this->parent->setException(decaf::lang::Exception(
@@ -298,7 +298,7 @@ namespace concurrent {
                     this->parent->setException(ex);
                     return false;
                 } catch(std::exception& stdex) {
-                    this->parent->setException(decaf::lang::Exception(&stdex));
+                    this->parent->setException(decaf::lang::Exception(new std::exception(stdex)));
                     return false;
                 } catch(...) {
                     this->parent->setException(decaf::lang::Exception(
