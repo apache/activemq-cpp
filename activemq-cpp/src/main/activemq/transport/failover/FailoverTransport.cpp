@@ -965,6 +965,9 @@ bool FailoverTransport::iterate() {
                             this->impl->firstConnection = false;
                         }
 
+                        // Return the failures to the pool, we will try again on the next iteration.
+                        connectList->addURIs(failures);
+
                         this->impl->connected = true;
                         return false;
 
