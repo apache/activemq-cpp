@@ -29,6 +29,7 @@ namespace core {
         CPPUNIT_TEST_SUITE( ActiveMQConnectionTest );
         CPPUNIT_TEST( test2WithOpenwire );
         CPPUNIT_TEST( testCloseCancelsHungStart );
+        CPPUNIT_TEST( testExceptionInOnException );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -38,6 +39,7 @@ namespace core {
 
         void test2WithOpenwire();
         void testCloseCancelsHungStart();
+        void testExceptionInOnException();
 
     };
 

@@ -20,6 +20,7 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
@@ -40,6 +41,7 @@ using namespace activemq::core;
 using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace decaf::lang;
 
 namespace activemq {
@@ -57,10 +59,9 @@ namespace core {
 
     public:
 
-        MyCommandListener() : cmd(NULL) {
-        }
-        virtual ~MyCommandListener() {
-        }
+        MyCommandListener() : cmd(NULL) {}
+
+        virtual ~MyCommandListener() {}
 
         virtual void onCommand(commands::Command* command) {
             cmd = command;
@@ -70,18 +71,27 @@ namespace core {
     class MyExceptionListener: public cms::ExceptionListener {
     public:
 
-        bool caughtOne;
+        CountDownLatch caughtOne;
+        bool throwInCallback;
 
     public:
 
-        MyExceptionListener() : caughtOne(false) {
+        MyExceptionListener() : caughtOne(1), throwInCallback(false) {
         }
 
         virtual ~MyExceptionListener() {
         }
 
         virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED) {
-            caughtOne = true;
+            caughtOne.countDown();
+
+            if (throwInCallback) {
+                throw std::exception();
+            }
+        }
+
+        bool waitForException(int millisecs) {
+            return caughtOne.await(millisecs, TimeUnit::MILLISECONDS);
         }
     };
 
@@ -92,11 +102,9 @@ namespace core {
 
     public:
 
-        MyDispatcher() :
-                messages() {
-        }
-        virtual ~MyDispatcher() {
-        }
+        MyDispatcher() : messages() {}
+
+        virtual ~MyDispatcher() {}
 
         virtual void dispatch(const decaf::lang::Pointer<commands::MessageDispatch>& data) throw (exceptions::ActiveMQException) {
             messages.push_back(data->getMessage());
@@ -111,7 +119,6 @@ namespace core {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionTest::test2WithOpenwire() {
     try {
-        MyExceptionListener exListener;
         MyCommandListener cmdListener;
         MyDispatcher msgListener;
         std::string connectionId = "testConnectionId";
@@ -209,4 +216,33 @@ void ActiveMQConnectionTest::testCloseCancelsHungStart() {
 
     runner.join(2000);
     CPPUNIT_ASSERT(!runner.isAlive());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionTest::testExceptionInOnException() {
+
+    try {
+        MyExceptionListener exListener;
+        std::auto_ptr<ActiveMQConnectionFactory> factory(
+            new ActiveMQConnectionFactory("mock://mock"));
+        std::auto_ptr<cms::Connection> connection(factory->createConnection());
+
+        connection->setExceptionListener(&exListener);
+        CPPUNIT_ASSERT(exListener.waitForException(0) == false);
+
+        transport::mock::MockTransport* transport = transport::mock::MockTransport::getInstance();
+        CPPUNIT_ASSERT(transport != NULL);
+
+        // Setup our ExceptionListener to throw inside the onException callback
+        exListener.throwInCallback = true;
+
+        // Trigger the onException callback
+        transport->fireException(
+            exceptions::ActiveMQException(__FILE__, __LINE__, "test"));
+        CPPUNIT_ASSERT(exListener.waitForException(2000) == true);
+        connection->close();
+    } catch (exceptions::ActiveMQException& ex) {
+        ex.printStackTrace();
+        throw ex;
+    }
 }
