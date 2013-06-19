@@ -43,6 +43,7 @@ namespace core{
         CPPUNIT_TEST( testClientAck );
         CPPUNIT_TEST( testTransactionCommitOneConsumer );
         CPPUNIT_TEST( testTransactionCommitTwoConsumer );
+        CPPUNIT_TEST( testTransactionCommitAfterConsumerClosed );
         CPPUNIT_TEST( testTransactionRollbackOneConsumer );
         CPPUNIT_TEST( testTransactionRollbackTwoConsumer );
         CPPUNIT_TEST( testTransactionCloseWithoutCommit );
@@ -76,20 +77,21 @@ namespace core{
         ActiveMQSessionTest(const ActiveMQSessionTest&);
         ActiveMQSessionTest& operator= (const ActiveMQSessionTest&);
 
-    public:    // CPPUNIT Method Overrides.
+    public:
 
-        void setUp();
-        void tearDown();
-        void injectTextMessage( const std::string message,
-                                const cms::Destination& destination,
-                                const commands::ConsumerId& id,
-                                const long long timeStamp = -1,
-                                const long long timeToLive = -1 );
+        virtual void setUp();
+        virtual void tearDown();
+
+        void injectTextMessage(const std::string message,
+                               const cms::Destination& destination,
+                               const commands::ConsumerId& id,
+                               const long long timeStamp = -1,
+                               const long long timeToLive = -1);
 
     public:
 
-        ActiveMQSessionTest() : connection(), dTransport(), exListener() {}
-        virtual ~ActiveMQSessionTest() {}
+        ActiveMQSessionTest();
+        virtual ~ActiveMQSessionTest();
 
         void testAutoAcking();
         void testClientAck();
@@ -99,6 +101,7 @@ namespace core{
         void testTransactionRollbackOneConsumer();
         void testTransactionRollbackTwoConsumer();
         void testTransactionCloseWithoutCommit();
+        void testTransactionCommitAfterConsumerClosed();
         void testExpiration();
 
     };
