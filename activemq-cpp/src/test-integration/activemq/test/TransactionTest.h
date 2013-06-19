@@ -32,8 +32,8 @@ namespace test{
 
     public:
 
-        TransactionTest() {}
-        virtual ~TransactionTest() {}
+        TransactionTest();
+        virtual ~TransactionTest();
 
         virtual void setUp() {
             cmsProvider.reset(
@@ -45,6 +45,7 @@ namespace test{
         void testSendSessionClose();
         void testWithTTLSet();
         void testSendRollbackCommitRollback();
+        void testSessionCommitAfterConsumerClosed();
 
     };
 

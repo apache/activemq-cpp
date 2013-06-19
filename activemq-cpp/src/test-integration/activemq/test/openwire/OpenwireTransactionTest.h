@@ -31,6 +31,7 @@ namespace openwire{
         CPPUNIT_TEST( testSendRollback );
         CPPUNIT_TEST( testWithTTLSet );
         CPPUNIT_TEST( testSendRollbackCommitRollback );
+        CPPUNIT_TEST( testSessionCommitAfterConsumerClosed );
 //        CPPUNIT_TEST( testSendSessionClose );
         CPPUNIT_TEST_SUITE_END();
 
