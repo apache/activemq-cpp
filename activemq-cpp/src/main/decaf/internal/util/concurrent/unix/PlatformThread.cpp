@@ -306,17 +306,34 @@ void PlatformThread::initPriorityMapping(int maxPriority, std::vector<int>& mapp
 ////////////////////////////////////////////////////////////////////////////////
 void PlatformThread::createNewThread(decaf_thread_t* handle, threadMainMethod threadMain, void* threadArg,
                                      int priority, long long stackSize, long long* threadId) {
-
     pthread_attr_t attributes;
-    struct sched_param schedData;
+    int schedResult;
+    int schedPolicy;
 
-    pthread_attr_init( &attributes );
-    pthread_attr_setdetachstate(&attributes, PTHREAD_CREATE_JOINABLE);
-
-    schedData.sched_priority = priority;
-    if (pthread_attr_setschedparam(&attributes, &schedData) != 0) {
+    schedResult = pthread_attr_init(&attributes);
+    if (schedResult != 0) {
         throw RuntimeException(__FILE__, __LINE__,
-            "Failed to set new Therad priority to value: %d", schedData.sched_priority);
+            "Failed to initialize thread attribute, error value is: %d", schedResult);
+    }
+
+    schedResult = pthread_attr_getschedpolicy(&attributes, &schedPolicy);
+    if (schedResult != 0) {
+        throw RuntimeException(__FILE__, __LINE__,
+            "Failed to get thread scheduling policy, error value is: %d.", schedResult);
+    }
+
+    // only set the priority if it's a policy that allows setting of the priority.
+    if (SCHED_FIFO == schedPolicy || SCHED_RR == schedPolicy) {
+        struct sched_param schedData;
+
+        schedData.sched_priority = priority;
+        schedResult = pthread_attr_setschedparam(&attributes, &schedData);
+        if (schedResult != 0) {
+            throw RuntimeException(__FILE__, __LINE__,
+                                   "Failed to set new Thread priority to "
+                                   "value: %d, error value is: %d.",
+                                   schedData.sched_priority, schedResult);
+        }
     }
 
     if (stackSize != -1) {
@@ -331,15 +348,13 @@ void PlatformThread::createNewThread(decaf_thread_t* handle, threadMainMethod th
             throw RuntimeException(
                 __FILE__, __LINE__,
                 "Failed to create new Thread due to invalid stack size setting: %d.",
-                stackSize );
+                stackSize);
         }
     }
 
     int result = pthread_create(handle, &attributes, threadMain, threadArg);
-
     *threadId = (long long)(&handle);
-
-    pthread_attr_destroy( &attributes );
+    pthread_attr_destroy(&attributes);
 
     if( result != 0 ) {
         throw RuntimeException(
