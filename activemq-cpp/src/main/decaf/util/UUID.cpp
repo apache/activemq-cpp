@@ -109,7 +109,7 @@ namespace util {
             clockSequence = (int) ((leastSigBits & 0x3FFF000000000000ULL) >> 48);
 
             // setup node field
-            node = (leastSigBits & 0x0000FFFFFFFFFFFFL);
+            node = (leastSigBits & 0x0000FFFFFFFFFFFFULL);
         }
 
     public:
