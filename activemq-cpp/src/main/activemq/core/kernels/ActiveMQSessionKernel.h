@@ -529,7 +529,7 @@ namespace kernels {
         Pointer<ActiveMQProducerKernel> lookupProducerKernel(Pointer<commands::ProducerId> id);
 
         /**
-         * @returns a Pointer to an ActiveMQProducerKernel using its ProducerId, or NULL.
+         * @returns a Pointer to an ActiveMQConsumerKernel using its ConsumerId, or NULL.
          */
         Pointer<ActiveMQConsumerKernel> lookupConsumerKernel(Pointer<commands::ConsumerId> id);
 

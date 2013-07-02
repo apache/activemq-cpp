@@ -42,8 +42,8 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
     class MyCMSMessageListener : public cms::MessageListener {
     public:
@@ -102,6 +102,14 @@ namespace core{
         }
     };
 }}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQSessionTest::ActiveMQSessionTest() : connection(), dTransport(), exListener() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQSessionTest::~ActiveMQSessionTest() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::testCreateManyConsumersAndSetListeners() {
@@ -541,7 +549,7 @@ void ActiveMQSessionTest::testTransactionCloseWithoutCommit() {
     CPPUNIT_ASSERT_EQUAL(MSG_COUNT, (int)msgListener1.messages.size());
 
     // This is what we are testing, since there was no commit, the session
-    // will rollback the transaction when this are closed.
+    // will rollback the transaction when this is closed.
     // session->commit();
 
     consumer1->close();
@@ -606,77 +614,118 @@ void ActiveMQSessionTest::testExpiration() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionTest::setUp()
-{
-    try
-    {
+void ActiveMQSessionTest::testTransactionCommitAfterConsumerClosed() {
+
+    static const int MSG_COUNT = 50;
+    MyCMSMessageListener msgListener1;
+
+    CPPUNIT_ASSERT(connection.get() != NULL);
+
+    // Create an Transacted Session
+    std::auto_ptr<cms::Session> session(connection->createSession(cms::Session::SESSION_TRANSACTED));
+
+    // Create a Topic
+    std::auto_ptr<cms::Topic> topic1(session->createTopic("TestTopic1"));
+
+    CPPUNIT_ASSERT(topic1.get() != NULL);
+
+    // Create a consumer
+    std::auto_ptr<ActiveMQConsumer> consumer1(
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic1.get() ) ) );
+
+    CPPUNIT_ASSERT(consumer1.get() != NULL);
+    CPPUNIT_ASSERT(consumer1->getMessageSelector() == "");
+    CPPUNIT_ASSERT(consumer1->receiveNoWait() == NULL);
+    CPPUNIT_ASSERT(consumer1->receive(5) == NULL);
+
+    consumer1->setMessageListener(&msgListener1);
+
+    for (int i = 0; i < MSG_COUNT; ++i) {
+        injectTextMessage("This is a Test 1", *topic1, *(consumer1->getConsumerId()));
+    }
+
+    msgListener1.asyncWaitForMessages(MSG_COUNT);
+    CPPUNIT_ASSERT_EQUAL(MSG_COUNT, (int)msgListener1.messages.size());
+
+    consumer1->close();
+    consumer1.reset();
+    session->commit();
+
+    Pointer<cms::TextMessage> msg1 = msgListener1.messages[0].dynamicCast<cms::TextMessage>();
+    std::string text1 = msg1->getText();
+
+    CPPUNIT_ASSERT(text1 == "This is a Test 1");
+    msgListener1.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionTest::setUp() {
+
+    try {
         ActiveMQConnectionFactory factory("mock://127.0.0.1:12345?wireFormat=openwire");
 
-        connection.reset( dynamic_cast< ActiveMQConnection*>( factory.createConnection() ) );
+        connection.reset(dynamic_cast<ActiveMQConnection*>(factory.createConnection()));
 
         // Get a pointer to the Mock Transport for Message injection.
         dTransport = dynamic_cast<transport::mock::MockTransport*>(
-            connection->getTransport().narrow( typeid( transport::mock::MockTransport ) ) );
-        CPPUNIT_ASSERT( dTransport != NULL );
+            connection->getTransport().narrow(typeid(transport::mock::MockTransport)));
+        CPPUNIT_ASSERT(dTransport != NULL);
 
-        connection->setExceptionListener( &exListener );
+        connection->setExceptionListener(&exListener);
         connection->start();
-    }
-    catch(...)
-    {
+    } catch (...) {
         bool exceptionThrown = false;
-
-        CPPUNIT_ASSERT( exceptionThrown );
+        CPPUNIT_ASSERT(exceptionThrown);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::tearDown() {
-    connection.reset( NULL );
+    connection.reset(NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionTest::injectTextMessage( const std::string message,
-                                             const cms::Destination& destination,
-                                             const commands::ConsumerId& id,
-                                             const long long timeStamp,
-                                             const long long timeToLive )
-{
-    Pointer<ActiveMQTextMessage> msg( new ActiveMQTextMessage() );
+void ActiveMQSessionTest::injectTextMessage(const std::string message,
+                                            const cms::Destination& destination,
+                                            const commands::ConsumerId& id,
+                                            const long long timeStamp,
+                                            const long long timeToLive) {
 
-    Pointer<ProducerId> producerId( new ProducerId() );
-    producerId->setConnectionId( id.getConnectionId() );
-    producerId->setSessionId( id.getSessionId() );
-    producerId->setValue( 1 );
+    Pointer<ActiveMQTextMessage> msg(new ActiveMQTextMessage());
 
-    Pointer<MessageId> messageId( new MessageId() );
-    messageId->setProducerId( producerId );
-    messageId->setProducerSequenceId( 2 );
+    Pointer<ProducerId> producerId(new ProducerId());
+    producerId->setConnectionId(id.getConnectionId());
+    producerId->setSessionId(id.getSessionId());
+    producerId->setValue(1);
+
+    Pointer<MessageId> messageId(new MessageId());
+    messageId->setProducerId(producerId);
+    messageId->setProducerSequenceId(2);
 
     // Init Message
-    msg->setText( message.c_str() );
-    msg->setCMSDestination( &destination );
-    msg->setCMSMessageID( "Id: 123456" );
-    msg->setMessageId( messageId );
+    msg->setText(message.c_str());
+    msg->setCMSDestination(&destination);
+    msg->setCMSMessageID("Id: 123456");
+    msg->setMessageId(messageId);
 
     long long expiration = 0LL;
 
-    if( timeStamp != 0 ) {
-        msg->setCMSTimestamp( timeStamp );
+    if (timeStamp != 0) {
+        msg->setCMSTimestamp(timeStamp);
 
-        if( timeToLive > 0LL ) {
+        if (timeToLive > 0LL) {
             expiration = timeToLive + timeStamp;
         }
     }
 
-    msg->setCMSExpiration( expiration );
+    msg->setCMSExpiration(expiration);
 
     // Send the Message
-    CPPUNIT_ASSERT( dTransport != NULL );
+    CPPUNIT_ASSERT(dTransport != NULL);
 
-    Pointer<MessageDispatch> dispatch( new MessageDispatch() );
-    dispatch->setMessage( msg );
-    dispatch->setConsumerId( Pointer<ConsumerId>( id.cloneDataStructure() ) );
+    Pointer<MessageDispatch> dispatch(new MessageDispatch());
+    dispatch->setMessage(msg);
+    dispatch->setConsumerId(Pointer<ConsumerId>(id.cloneDataStructure()));
 
-    dTransport->fireCommand( dispatch );
+    dTransport->fireCommand(dispatch);
 }

@@ -17,6 +17,7 @@
 
 #include "TransactionTest.h"
 
+#include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <stdexcept>
@@ -24,9 +25,18 @@
 using namespace std;
 using namespace cms;
 using namespace activemq;
+using namespace activemq::core;
 using namespace activemq::test;
 using namespace activemq::util;
 using namespace activemq::exceptions;
+
+////////////////////////////////////////////////////////////////////////////////
+TransactionTest::TransactionTest() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+TransactionTest::~TransactionTest() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionTest::testSendReceiveTransactedBatches() {
@@ -247,4 +257,34 @@ void TransactionTest::testWithTTLSet() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransactionTest::testSessionCommitAfterConsumerClosed() {
+
+    ActiveMQConnectionFactory factory(getBrokerURL());
+    auto_ptr<cms::Connection> connection(factory.createConnection());
+
+    {
+        auto_ptr<cms::Session> session(connection->createSession(cms::Session::AUTO_ACKNOWLEDGE));
+        auto_ptr<cms::Queue> queue(session->createQueue("testSessionCommitAfterConsumerClosed"));
+        auto_ptr<cms::MessageProducer> producer(session->createProducer(queue.get()));
+
+        auto_ptr<cms::Message> message(session->createTextMessage("Hello"));
+        producer->send(message.get());
+        producer->close();
+        session->close();
+    }
+
+    auto_ptr<cms::Session> session(connection->createSession(cms::Session::SESSION_TRANSACTED));
+    auto_ptr<cms::Queue> queue(session->createQueue("testSessionCommitAfterConsumerClosed"));
+    auto_ptr<cms::MessageConsumer> consumer(session->createConsumer(queue.get()));
+
+    connection->start();
+
+    auto_ptr<cms::Message> message(consumer->receive(5000));
+    CPPUNIT_ASSERT(message.get() != NULL);
+
+    consumer->close();
+    session->commit();
 }
