@@ -36,8 +36,8 @@
 namespace activemq{
 namespace core{
 
-    class ActiveMQSessionTest : public CppUnit::TestFixture
-    {
+    class ActiveMQSessionTest : public CppUnit::TestFixture {
+
         CPPUNIT_TEST_SUITE( ActiveMQSessionTest );
         CPPUNIT_TEST( testAutoAcking );
         CPPUNIT_TEST( testClientAck );

@@ -645,9 +645,10 @@ void ActiveMQSessionTest::testTransactionCommitAfterConsumerClosed() {
     }
 
     msgListener1.asyncWaitForMessages(MSG_COUNT);
-    CPPUNIT_ASSERT_EQUAL(MSG_COUNT, (int )msgListener1.messages.size());
+    CPPUNIT_ASSERT_EQUAL(MSG_COUNT, (int)msgListener1.messages.size());
 
     consumer1->close();
+    consumer1.reset();
     session->commit();
 
     Pointer<cms::TextMessage> msg1 = msgListener1.messages[0].dynamicCast<cms::TextMessage>();

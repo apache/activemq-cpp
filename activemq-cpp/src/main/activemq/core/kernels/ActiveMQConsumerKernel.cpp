@@ -97,6 +97,7 @@ namespace kernels {
         decaf::util::concurrent::Mutex listenerMutex;
         AtomicBoolean deliveringAcks;
         AtomicBoolean started;
+        AtomicBoolean closeSyncRegistered;
         Pointer<MessageDispatchChannel> unconsumedMessages;
         decaf::util::LinkedList< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
         long long lastDeliveredSequenceId;
@@ -133,6 +134,7 @@ namespace kernels {
                                          listenerMutex(),
                                          deliveringAcks(),
                                          started(),
+                                         closeSyncRegistered(),
                                          unconsumedMessages(),
                                          dispatchedMessages(),
                                          lastDeliveredSequenceId(0),
@@ -340,7 +342,7 @@ namespace {
     class TransactionSynhcronization : public Synchronization {
     private:
 
-        ActiveMQConsumerKernel* consumer;
+        Pointer<ActiveMQConsumerKernel> consumer;
         ActiveMQConsumerKernelConfig* impl;
 
     private:
@@ -350,7 +352,7 @@ namespace {
 
     public:
 
-        TransactionSynhcronization(ActiveMQConsumerKernel* consumer, ActiveMQConsumerKernelConfig* impl) :
+        TransactionSynhcronization(Pointer<ActiveMQConsumerKernel> consumer, ActiveMQConsumerKernelConfig* impl) :
             Synchronization(), consumer(consumer), impl(impl) {
 
             if (consumer == NULL) {
@@ -377,11 +379,13 @@ namespace {
         virtual void afterCommit() {
             consumer->commit();
             consumer->setSynchronizationRegistered(false);
+            consumer.reset(NULL);
         }
 
         virtual void afterRollback() {
             consumer->rollback();
             consumer->setSynchronizationRegistered(false);
+            consumer.reset(NULL);
         }
     };
 
@@ -393,7 +397,7 @@ namespace {
     class CloseSynhcronization : public Synchronization {
     private:
 
-        ActiveMQConsumerKernel* consumer;
+        Pointer<ActiveMQConsumerKernel> consumer;
 
     private:
 
@@ -402,7 +406,7 @@ namespace {
 
     public:
 
-        CloseSynhcronization(ActiveMQConsumerKernel* consumer) : consumer(consumer) {
+        CloseSynhcronization(Pointer<ActiveMQConsumerKernel> consumer) : consumer(consumer) {
             if (consumer == NULL) {
                 throw NullPointerException(__FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
             }
@@ -415,10 +419,12 @@ namespace {
 
         virtual void afterCommit() {
             consumer->doClose();
+            consumer.reset(NULL);
         }
 
         virtual void afterRollback() {
             consumer->doClose();
+            consumer.reset(NULL);
         }
     };
 
@@ -787,9 +793,12 @@ void ActiveMQConsumerKernel::close() {
         if (!this->isClosed()) {
 
             if (this->session->getTransactionContext() != NULL &&
-                this->session->getTransactionContext()->isInTransaction()) {
+                this->session->getTransactionContext()->isInTransaction() &&
+                this->internal->closeSyncRegistered.compareAndSet(false, true)) {
 
-                Pointer<Synchronization> sync(new CloseSynhcronization(this));
+                Pointer<ActiveMQConsumerKernel> self =
+                    this->session->lookupConsumerKernel(this->consumerInfo->getConsumerId());
+                Pointer<Synchronization> sync(new CloseSynhcronization(self));
                 this->session->getTransactionContext()->addSynchronization(sync);
             } else {
                 doClose();
@@ -1134,7 +1143,9 @@ void ActiveMQConsumerKernel::registerSync() {
     this->session->doStartTransaction();
     if (!this->internal->synchronizationRegistered) {
         this->internal->synchronizationRegistered = true;
-        Pointer<Synchronization> sync(new TransactionSynhcronization(this, this->internal));
+        Pointer<ActiveMQConsumerKernel> self =
+            this->session->lookupConsumerKernel(this->consumerInfo->getConsumerId());
+        Pointer<Synchronization> sync(new TransactionSynhcronization(self, this->internal));
         this->session->getTransactionContext()->addSynchronization(sync);
     }
 }
