@@ -38,7 +38,7 @@ namespace concurrent{
     /**
      * Max number of TLS keys that a thread can use.
      */
-    #define DECAF_MAX_TLS_SLOTS 256
+    #define DECAF_MAX_TLS_SLOTS 384
 
     /**
      * This is the main method for thread instances, this value is valid
