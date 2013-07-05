@@ -13,6 +13,9 @@ Bug
     [AMQCPP-489] - Fix for Sun Studio
     [AMQCPP-490] - Exception lifetime confusion can cause the application to crash
     [AMQCPP-491] - Connection didn't switch to the slave broker when the master broker is down
+    [AMQCPP-494] - Commiting a session with a deleted consumer causes access violation
+    [AMQCPP-497] - Compilation of 3.7.0 fails for Linux systems (Redhat 5.8 and SuSE SLES 10)
+    [AMQCPP-498] - Client doesn't work on Linux Red Hat 6.4 systems, fails when setting thread priority
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.7.0                               ==
