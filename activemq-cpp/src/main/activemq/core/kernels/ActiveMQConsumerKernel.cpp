@@ -792,7 +792,8 @@ void ActiveMQConsumerKernel::close() {
     try {
         if (!this->isClosed()) {
 
-            if (this->session->getTransactionContext() != NULL &&
+            if (!this->internal->dispatchedMessages.isEmpty() &&
+                this->session->getTransactionContext() != NULL &&
                 this->session->getTransactionContext()->isInTransaction() &&
                 this->internal->closeSyncRegistered.compareAndSet(false, true)) {
 
