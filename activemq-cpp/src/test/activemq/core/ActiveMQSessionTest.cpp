@@ -659,6 +659,42 @@ void ActiveMQSessionTest::testTransactionCommitAfterConsumerClosed() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionTest::testCreateTempQueueByName() {
+
+    MyCMSMessageListener msgListener1;
+
+    CPPUNIT_ASSERT(connection.get() != NULL);
+    CPPUNIT_ASSERT(connection->isStarted() == true);
+
+    // Create an Auto Ack Session
+    std::auto_ptr<cms::Session> session(connection->createSession());
+
+    // Create a Topic
+    std::auto_ptr<cms::Queue> queue(session->createQueue("ID:TestQueue"));
+
+    CPPUNIT_ASSERT(queue.get() != NULL);
+    CPPUNIT_ASSERT(queue->getDestinationType() == cms::Destination::TEMPORARY_QUEUE);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionTest::testCreateTempTopicByName() {
+
+    MyCMSMessageListener msgListener1;
+
+    CPPUNIT_ASSERT(connection.get() != NULL);
+    CPPUNIT_ASSERT(connection->isStarted() == true);
+
+    // Create an Auto Ack Session
+    std::auto_ptr<cms::Session> session(connection->createSession());
+
+    // Create a Topic
+    std::auto_ptr<cms::Topic> topic(session->createTopic("ID:TestTopic"));
+
+    CPPUNIT_ASSERT(topic.get() != NULL);
+    CPPUNIT_ASSERT(topic->getDestinationType() == cms::Destination::TEMPORARY_TOPIC);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::setUp() {
 
     try {

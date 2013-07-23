@@ -747,6 +747,10 @@ cms::Queue* ActiveMQSessionKernel::createQueue(const std::string& queueName) {
                 __FILE__, __LINE__, "Destination Name cannot be the Empty String." );
         }
 
+        if (queueName.find(commands::ActiveMQDestination::TEMP_DESTINATION_NAME_PREFIX) == 0) {
+            return new ActiveMQTempQueue(queueName);
+        }
+
         return new commands::ActiveMQQueue(queueName);
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -762,6 +766,10 @@ cms::Topic* ActiveMQSessionKernel::createTopic(const std::string& topicName) {
         if (topicName == "") {
             throw IllegalArgumentException(
                 __FILE__, __LINE__, "Destination Name cannot be the Empty String." );
+        }
+
+        if (topicName.find(commands::ActiveMQDestination::TEMP_DESTINATION_NAME_PREFIX) == 0) {
+            return new ActiveMQTempTopic(topicName);
         }
 
         return new commands::ActiveMQTopic(topicName);

@@ -49,6 +49,7 @@ const std::string ActiveMQDestination::QUEUE_QUALIFIED_PREFIX = "queue://";
 const std::string ActiveMQDestination::TOPIC_QUALIFIED_PREFIX = "topic://";
 const std::string ActiveMQDestination::TEMP_QUEUE_QUALIFED_PREFIX = "temp-queue://";
 const std::string ActiveMQDestination::TEMP_TOPIC_QUALIFED_PREFIX = "temp-topic://";
+const std::string ActiveMQDestination::TEMP_DESTINATION_NAME_PREFIX = "ID:";
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {

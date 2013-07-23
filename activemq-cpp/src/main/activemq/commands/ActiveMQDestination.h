@@ -78,6 +78,8 @@ namespace commands {
 
         const static unsigned char ID_ACTIVEMQDESTINATION = 0;
 
+        static const std::string TEMP_DESTINATION_NAME_PREFIX;
+
         typedef decaf::lang::PointerComparator<ActiveMQDestination> COMPARATOR;
 
     private:

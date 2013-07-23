@@ -49,6 +49,8 @@ namespace core{
         CPPUNIT_TEST( testTransactionCloseWithoutCommit );
         CPPUNIT_TEST( testExpiration );
         CPPUNIT_TEST( testCreateManyConsumersAndSetListeners );
+        CPPUNIT_TEST( testCreateTempQueueByName );
+        CPPUNIT_TEST( testCreateTempTopicByName );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -103,6 +105,8 @@ namespace core{
         void testTransactionCloseWithoutCommit();
         void testTransactionCommitAfterConsumerClosed();
         void testExpiration();
+        void testCreateTempQueueByName();
+        void testCreateTempTopicByName();
 
     };
 
