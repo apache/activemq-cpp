@@ -1393,6 +1393,7 @@ void ActiveMQConsumerKernel::commit() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumerKernel::rollback() {
 
+    clearDispatchList();
     synchronized(this->internal->unconsumedMessages.get()) {
 
         if (this->internal->optimizeAcknowledge) {
