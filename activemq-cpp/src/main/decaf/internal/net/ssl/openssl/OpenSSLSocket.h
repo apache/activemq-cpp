@@ -40,7 +40,7 @@ namespace openssl {
      *
      * @since 1.0
      */
-    class DECAF_API OpenSSLSocket : public decaf::net::ssl::SSLSocket {
+    class DECAF_API OpenSSLSocket: public decaf::net::ssl::SSLSocket {
     private:
 
         // Private data related to the OpenSSL Socket impl.
@@ -57,31 +57,30 @@ namespace openssl {
 
     private:
 
-        OpenSSLSocket( const OpenSSLSocket& );
-        OpenSSLSocket& operator= ( const OpenSSLSocket& );
+        OpenSSLSocket(const OpenSSLSocket&);
+        OpenSSLSocket& operator=(const OpenSSLSocket&);
 
     public:
 
-        OpenSSLSocket( OpenSSLParameters* parameters );
+        OpenSSLSocket(OpenSSLParameters* parameters);
 
-        OpenSSLSocket( OpenSSLParameters* parameters, const decaf::net::InetAddress* address, int port );
+        OpenSSLSocket(OpenSSLParameters* parameters, const decaf::net::InetAddress* address, int port);
 
-        OpenSSLSocket( OpenSSLParameters* parameters, const decaf::net::InetAddress* address, int port,
-                       const decaf::net::InetAddress* localAddress, int localPort );
+        OpenSSLSocket(OpenSSLParameters* parameters, const decaf::net::InetAddress* address, int port, const decaf::net::InetAddress* localAddress, int localPort);
 
-        OpenSSLSocket( OpenSSLParameters* parameters, const std::string& host, int port );
+        OpenSSLSocket(OpenSSLParameters* parameters, const std::string& host, int port);
 
-        OpenSSLSocket( OpenSSLParameters* parameters, const std::string& host, int port,
-                       const decaf::net::InetAddress* localAddress, int localPort );
+        OpenSSLSocket(OpenSSLParameters* parameters, const std::string& host, int port, const decaf::net::InetAddress* localAddress, int localPort);
 
         virtual ~OpenSSLSocket();
 
-    public:  // Socket Overrides.
+    public:
+        // Socket Overrides.
 
         /**
          * {@inheritDoc}
          */
-        virtual void connect( const std::string& host, int port, int timeout );
+        virtual void connect(const std::string& host, int port, int timeout);
 
         /**
          * {@inheritDoc}
@@ -111,14 +110,24 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void setOOBInline( bool value );
+        virtual void setOOBInline(bool value);
 
         /**
          * {@inheritDoc}
          */
-        virtual void sendUrgentData( int data );
+        virtual void sendUrgentData(int data);
 
-    public:  // SSLSocket Overrides
+    public: // SSLSocket Overrides
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual decaf::net::ssl::SSLParameters getSSLParameters() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual void setSSLParameters(const decaf::net::ssl::SSLParameters& value);
 
         /**
          * {@inheritDoc}
@@ -138,7 +147,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void setEnabledCipherSuites( const std::vector<std::string>& suites );
+        virtual void setEnabledCipherSuites(const std::vector<std::string>& suites);
 
         /**
          * {@inheritDoc}
@@ -148,7 +157,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void setEnabledProtocols( const std::vector<std::string>& protocols );
+        virtual void setEnabledProtocols(const std::vector<std::string>& protocols);
 
         /**
          * {@inheritDoc}
@@ -158,7 +167,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void setUseClientMode( bool value );
+        virtual void setUseClientMode(bool value);
 
         /**
          * {@inheritDoc}
@@ -168,7 +177,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void setNeedClientAuth( bool value );
+        virtual void setNeedClientAuth(bool value);
 
         /**
          * {@inheritDoc}
@@ -178,7 +187,7 @@ namespace openssl {
         /**
          * {@inheritDoc}
          */
-        virtual void setWantClientAuth( bool value );
+        virtual void setWantClientAuth(bool value);
 
         /**
          * {@inheritDoc}
@@ -205,7 +214,7 @@ namespace openssl {
          * @throw NullPointerException if buffer is Null.
          * @throw IndexOutOfBoundsException if offset + length is greater than buffer size.
          */
-        int read( unsigned char* buffer, int size, int offset, int length );
+        int read(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Writes the specified data in the passed in buffer to the Socket.
@@ -223,7 +232,7 @@ namespace openssl {
          * @throw NullPointerException if buffer is Null.
          * @throw IndexOutOfBoundsException if offset + length is greater than buffer size.
          */
-        void write( const unsigned char* buffer, int size, int offset, int length );
+        void write(const unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Gets the number of bytes in the Socket buffer that can be read without blocking.
@@ -238,7 +247,7 @@ namespace openssl {
 
         // Perform some additional checks on the Server's Certificate to ensure that
         // its really valid.
-        void verifyServerCert( const std::string& serverName );
+        void verifyServerCert(const std::string& serverName);
 
     };
 

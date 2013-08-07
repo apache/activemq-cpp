@@ -22,18 +22,18 @@ using namespace decaf::net;
 using namespace decaf::net::ssl;
 
 ////////////////////////////////////////////////////////////////////////////////
-SSLParameters::SSLParameters() : cipherSuites(), protocols(), needClientAuth( false ), wantClientAuth( false ) {
+SSLParameters::SSLParameters() :
+    cipherSuites(), protocols(), serverNames(), needClientAuth(false), wantClientAuth(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SSLParameters::SSLParameters( const std::vector<std::string>& cipherSuites ) :
-    cipherSuites( cipherSuites ), protocols(), needClientAuth( false ), wantClientAuth( false ) {
+SSLParameters::SSLParameters(const std::vector<std::string>& cipherSuites) :
+    cipherSuites(cipherSuites), protocols(), serverNames(), needClientAuth(false), wantClientAuth(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SSLParameters::SSLParameters( const std::vector<std::string>& cipherSuites,
-                              const std::vector<std::string>& protocols ) :
-    cipherSuites( cipherSuites ), protocols( protocols ), needClientAuth( false ), wantClientAuth( false ) {
+SSLParameters::SSLParameters(const std::vector<std::string>& cipherSuites, const std::vector<std::string>& protocols) :
+    cipherSuites(cipherSuites), protocols(protocols), serverNames(), needClientAuth(false), wantClientAuth(false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

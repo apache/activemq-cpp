@@ -52,16 +52,17 @@ namespace openssl {
 
         std::vector<std::string> enabledCipherSuites;
         std::vector<std::string> enabledProtocols;
+        std::vector<std::string> serverNames;
 
     private:
 
-        OpenSSLParameters( const OpenSSLParameters& );
-        OpenSSLParameters& operator= ( const OpenSSLParameters& );
+        OpenSSLParameters(const OpenSSLParameters&);
+        OpenSSLParameters& operator=(const OpenSSLParameters&);
 
     public:
 
 #ifdef HAVE_OPENSSL
-        OpenSSLParameters( SSL_CTX* context );
+        OpenSSLParameters(SSL_CTX* context);
 #endif
 
         virtual ~OpenSSLParameters();
@@ -98,11 +99,15 @@ namespace openssl {
 
         std::vector<std::string> getEnabledCipherSuites() const;
 
-        void setEnabledCipherSuites( const std::vector<std::string>& suites );
+        void setEnabledCipherSuites(const std::vector<std::string>& suites);
 
         std::vector<std::string> getEnabledProtocols() const;
 
-        void setEnabledProtocols( const std::vector<std::string>& protocols );
+        void setEnabledProtocols(const std::vector<std::string>& protocols);
+
+        std::vector<std::string> getServerNames() const;
+
+        void setServerNames(const std::vector<std::string>& serverNames);
 
 #ifdef HAVE_OPENSSL
 

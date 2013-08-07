@@ -74,6 +74,14 @@ void SslTransport::configureSocket(Socket* socket) {
                 "Socket passed was not an SSLSocket instance.");
         }
 
+        SSLParameters params = sslSocket->getSSLParameters();
+
+        std::vector<std::string> serverNames;
+        serverNames.push_back(this->getLocation().getHost());
+        params.setServerNames(serverNames);
+
+        sslSocket->setSSLParameters(params);
+
         TcpTransport::configureSocket(socket);
     }
     DECAF_CATCH_RETHROW(NullPointerException)

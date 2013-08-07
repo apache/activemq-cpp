@@ -362,3 +362,8 @@ void TcpTransport::setTcpNoDelay(bool tcpNoDelay) {
 bool TcpTransport::isTcpNoDelay() const {
     return this->impl->tcpNoDelay;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::net::URI TcpTransport::getLocation() const {
+    return this->impl->location;
+}

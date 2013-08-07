@@ -32,6 +32,7 @@ namespace ssl {
 
         std::vector<std::string> cipherSuites;
         std::vector<std::string> protocols;
+        std::vector<std::string> serverNames;
         bool needClientAuth;
         bool wantClientAuth;
 
@@ -50,7 +51,7 @@ namespace ssl {
          * @param cipherSuites
          *      The vector of cipherSuites for this SSLParameters instance (can be empty).
          */
-        SSLParameters( const std::vector<std::string>& cipherSuites );
+        SSLParameters(const std::vector<std::string>& cipherSuites);
 
         /**
          * Creates a new SSLParameters instance with the given cipherSuites value and protocols
@@ -61,8 +62,7 @@ namespace ssl {
          * @param protocols
          *      The vector of protocols for this SSLParameters instance (can be empty).
          */
-        SSLParameters( const std::vector<std::string>& cipherSuites,
-                       const std::vector<std::string>& protocols );
+        SSLParameters(const std::vector<std::string>& cipherSuites, const std::vector<std::string>& protocols);
 
         virtual ~SSLParameters();
 
@@ -79,7 +79,7 @@ namespace ssl {
          * @param cipherSuites
          *      The vector of cipherSuites (can be an empty vector).
          */
-        void setCipherSuites( const std::vector<std::string>& cipherSuites ) {
+        void setCipherSuites(const std::vector<std::string>& cipherSuites) {
             this->cipherSuites = cipherSuites;
         }
 
@@ -96,7 +96,7 @@ namespace ssl {
          * @param protocols
          *      the vector of protocols (or an empty vector)
          */
-        void setProtocols( const std::vector<std::string>& protocols ) {
+        void setProtocols(const std::vector<std::string>& protocols) {
             this->protocols = protocols;
         }
 
@@ -113,7 +113,7 @@ namespace ssl {
          *
          * @param whether client authentication should be requested.
          */
-        void setWantClientAuth( bool wantClientAuth ) {
+        void setWantClientAuth(bool wantClientAuth) {
             this->wantClientAuth = wantClientAuth;
             this->needClientAuth = false;
         }
@@ -132,9 +132,32 @@ namespace ssl {
          * @param needClientAuth
          *      whether client authentication should be required.
          */
-        void setNeedClientAuth( bool needClientAuth ) {
+        void setNeedClientAuth(bool needClientAuth) {
             this->needClientAuth = needClientAuth;
             this->wantClientAuth = false;
+        }
+
+        /**
+         * Sets the Server Names that this client wants to encode for use during the
+         * SSL Handshaking phase.  The list is copied so the values cannot be changed
+         * later.
+         *
+         * @param serverNames
+         *      The server name to encode into the SSL handshake.
+         */
+        void setServerNames(const std::vector<std::string>& serverNames) {
+            this->serverNames = serverNames;
+        }
+
+        /**
+         * Gets the currently set list of server names used.  This method returns a copy
+         * of the list so that it cannot be modified.  If updates are needed a new list
+         * must be set via {#setServerNames}.
+         *
+         * @returns a list of server names if any were previously configured.
+         */
+        std::vector<std::string> getServerNames() const {
+            return this->serverNames;
         }
 
     };

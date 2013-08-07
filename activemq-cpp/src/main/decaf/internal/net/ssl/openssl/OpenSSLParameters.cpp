@@ -36,20 +36,21 @@ using namespace decaf::internal::net::ssl::openssl;
 #ifdef HAVE_OPENSSL
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenSSLParameters::OpenSSLParameters( SSL_CTX* context ) : needClientAuth( false ),
-                                                           wantClientAuth( false ),
-                                                           useClientMode( true ),
-                                                           context( context ),
-                                                           ssl( NULL ),
-                                                           enabledCipherSuites(),
-                                                           enabledProtocols() {
+OpenSSLParameters::OpenSSLParameters(SSL_CTX* context) : needClientAuth(false),
+                                                         wantClientAuth(false),
+                                                         useClientMode(true),
+                                                         context(context),
+                                                         ssl(NULL),
+                                                         enabledCipherSuites(),
+                                                         enabledProtocols(),
+                                                         serverNames() {
 
-    if( context == NULL ) {
-        throw NullPointerException( __FILE__, __LINE__, "SSL Context was NULL" );
+    if (context == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "SSL Context was NULL");
     }
 
     // Create a new SSL instance for this Parameters object, each one needs its own.
-    this->ssl = SSL_new( context );
+    this->ssl = SSL_new(context);
 }
 
 #endif
@@ -59,12 +60,10 @@ OpenSSLParameters::~OpenSSLParameters() {
 
     try {
 #ifdef HAVE_OPENSSL
-
-    SSL_free( this->ssl );
-
+        SSL_free(this->ssl);
 #endif
     }
-    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
 }
 
@@ -84,8 +83,7 @@ std::vector<std::string> OpenSSLParameters::getEnabledCipherSuites() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLParameters::setEnabledCipherSuites( const std::vector<std::string>& suites ) {
-
+void OpenSSLParameters::setEnabledCipherSuites(const std::vector<std::string>& suites) {
     // Cache the setting for quicker retrieval
     this->enabledCipherSuites = suites;
 }
@@ -96,10 +94,20 @@ std::vector<std::string> OpenSSLParameters::getEnabledProtocols() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenSSLParameters::setEnabledProtocols( const std::vector<std::string>& protocols ) {
-
+void OpenSSLParameters::setEnabledProtocols(const std::vector<std::string>& protocols) {
     // Cache the setting for quicker retrieval
     this->enabledProtocols = protocols;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> OpenSSLParameters::getServerNames() const {
+    return this->serverNames;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenSSLParameters::setServerNames(const std::vector<std::string>& serverNames) {
+    // Cache the setting for quicker retrieval
+    this->serverNames = serverNames;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +119,7 @@ OpenSSLParameters* OpenSSLParameters::clone() const {
 
     cloned->enabledProtocols = this->enabledProtocols;
     cloned->enabledCipherSuites = this->enabledCipherSuites;
+    cloned->serverNames = this->serverNames;
     cloned->needClientAuth = this->needClientAuth;
     cloned->wantClientAuth = this->wantClientAuth;
     cloned->useClientMode = this->useClientMode;

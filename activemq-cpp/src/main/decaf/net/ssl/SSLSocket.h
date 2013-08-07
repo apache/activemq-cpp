@@ -51,7 +51,7 @@ namespace ssl {
          * @throws NullPointerException if the InetAddress instance in NULL.
          * @throws IllegalArgumentException if the port if not in range [0...65535]
          */
-        SSLSocket( const InetAddress* address, int port );
+        SSLSocket(const InetAddress* address, int port);
 
         /**
          * Creates a new SSLSocket instance and connects it to the given address and port.
@@ -71,7 +71,7 @@ namespace ssl {
          * @throws NullPointerException if the InetAddress instance in NULL.
          * @throws IllegalArgumentException if the port if not in range [0...65535]
          */
-        SSLSocket( const InetAddress* address, int port, const InetAddress* localAddress, int localPort );
+        SSLSocket(const InetAddress* address, int port, const InetAddress* localAddress, int localPort);
 
         /**
          * Creates a new SSLSocket instance and connects it to the given host and port.
@@ -87,7 +87,7 @@ namespace ssl {
          * @throws IOException if an I/O error occurs while connecting the Socket.
          * @throws IllegalArgumentException if the port if not in range [0...65535]
          */
-        SSLSocket( const std::string& host, int port );
+        SSLSocket(const std::string& host, int port);
 
         /**
          * Creates a new SSLSocket instance and connects it to the given host and port.
@@ -107,7 +107,7 @@ namespace ssl {
          * @throws IOException if an I/O error occurs while connecting the Socket.
          * @throws IllegalArgumentException if the port if not in range [0...65535]
          */
-        SSLSocket( const std::string& host, int port, const InetAddress* localAddress, int localPort );
+        SSLSocket(const std::string& host, int port, const InetAddress* localAddress, int localPort);
 
         virtual ~SSLSocket();
 
@@ -147,7 +147,7 @@ namespace ssl {
          *
          * @throws IllegalArgumentException if the vector is empty or one of the names is invalid.
          */
-        virtual void setEnabledCipherSuites( const std::vector<std::string>& suites ) = 0;
+        virtual void setEnabledCipherSuites(const std::vector<std::string>& suites) = 0;
 
         /**
          * Returns a vector containing the names of all the currently enabled Protocols for
@@ -167,7 +167,7 @@ namespace ssl {
          *
          * @throws IllegalArgumentException if the vector is empty or one of the names is invalid.
          */
-        virtual void setEnabledProtocols( const std::vector<std::string>& protocols ) = 0;
+        virtual void setEnabledProtocols(const std::vector<std::string>& protocols) = 0;
 
         /**
          * Returns an SSLParameters object for this SSLSocket instance.
@@ -195,7 +195,7 @@ namespace ssl {
          * @throws IllegalArgumentException if an error occurs while calling setEnabledCipherSuites
          *         or setEnabledProtocols.
          */
-        virtual void setSSLParameters( const SSLParameters& value );
+        virtual void setSSLParameters(const SSLParameters& value);
 
         /**
          * Initiates a handshake for this SSL Connection, this can be necessary for several reasons such
@@ -221,7 +221,7 @@ namespace ssl {
          *
          * @throw IllegalArguementException if the handshake process has begun and mode is lcoked.
          */
-        virtual void setUseClientMode( bool value ) = 0;
+        virtual void setUseClientMode(bool value) = 0;
 
         /**
          * Gets whether this Socket is in Client or Server mode, true indicates that the mode is
@@ -242,7 +242,7 @@ namespace ssl {
          * @param value
          *      The value indicating if a client is required to authenticate itself or not.
          */
-        virtual void setNeedClientAuth( bool value ) = 0;
+        virtual void setNeedClientAuth(bool value) = 0;
 
         /**
          * Returns if this socket is configured to require client authentication, true means that is has
@@ -265,7 +265,7 @@ namespace ssl {
          * @param value
          *      The value indicating if a client is requested to authenticate itself or not.
          */
-        virtual void setWantClientAuth( bool value ) = 0;
+        virtual void setWantClientAuth(bool value) = 0;
 
         /**
          * Returns if this socket is configured to request client authentication, true means that is has

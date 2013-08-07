@@ -107,6 +107,8 @@ namespace tcp {
 
     protected:
 
+        decaf::net::URI getLocation() const;
+
         virtual void beforeNextIsStarted();
 
         virtual void afterNextIsStopped();
