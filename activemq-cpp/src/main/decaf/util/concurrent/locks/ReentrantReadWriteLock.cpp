@@ -23,6 +23,7 @@
 #include <decaf/lang/ThreadLocal.h>
 #include <decaf/lang/exceptions/IllegalMonitorStateException.h>
 #include <decaf/util/concurrent/locks/AbstractQueuedSynchronizer.h>
+#include <decaf/util/concurrent/atomic/AtomicReference.h>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -30,6 +31,7 @@ using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::util::concurrent::locks;
+using namespace decaf::util::concurrent::atomic;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
@@ -39,10 +41,10 @@ namespace {
      * cached in cachedHoldCounter in class Sync
      */
     struct HoldCounter {
-        int count;
         Thread* thread;
+        int count;
 
-        HoldCounter() : count(0), thread(Thread::currentThread()) {}
+        HoldCounter() : thread(Thread::currentThread()), count(0) {}
     };
 
     class ThreadLocalHoldCounter : public ThreadLocal<HoldCounter> {
@@ -97,14 +99,6 @@ namespace {
         ThreadLocalHoldCounter readHolds;
 
         /**
-         * The hold count of the last thread to successfully acquire
-         * readLock. This saves ThreadLocal lookup in the common case
-         * where the next thread to release is the last one to
-         * acquire.
-         */
-        HoldCounter cachedHoldCounter;
-
-        /**
          * firstReader is the first thread to have acquired the read lock.
          * firstReaderHoldCount is firstReader's hold count.
          *
@@ -120,7 +114,7 @@ namespace {
 
     public:
 
-        Sync() : readHolds(), cachedHoldCounter(), firstReader(NULL), firstReaderHoldCount(0) {}
+        Sync() : readHolds(), firstReader(NULL), firstReaderHoldCount(0) {}
 
         virtual ~Sync() {}
 
@@ -193,10 +187,7 @@ namespace {
                     firstReaderHoldCount--;
                 }
             } else {
-                HoldCounter rh = cachedHoldCounter;
-                if (rh.thread == NULL || rh.thread != current) {
-                    rh = readHolds.get();
-                }
+                HoldCounter rh = readHolds.get();
                 int count = rh.count;
                 if (count <= 1) {
                     readHolds.remove();
@@ -207,7 +198,6 @@ namespace {
                 }
                 --rh.count;
                 readHolds.set(rh);
-                cachedHoldCounter = rh;
             }
 
             for (;;) {
@@ -248,16 +238,9 @@ namespace {
                 } else if (firstReader == current) {
                     firstReaderHoldCount++;
                 } else {
-                    HoldCounter rh = cachedHoldCounter;
-                    if (rh.thread == NULL || rh.thread != current) {
-                        cachedHoldCounter = rh = readHolds.get();
-                    } else if (rh.count == 0) {
-                        readHolds.set(rh);
-                    }
-
+                    HoldCounter rh = readHolds.get();
                     rh.count++;
                     readHolds.set(rh);
-                    cachedHoldCounter = rh;
                 }
                 return 1;
             }
@@ -283,16 +266,13 @@ namespace {
                 } else if (readerShouldBlock()) {
                     // Make sure we're not acquiring read lock reentrantly
                     if (firstReader == current) {
-                        // assert firstReaderHoldCount > 0;
+                        if (firstReaderHoldCount > 0) {
+                            throw Exception(__FILE__, __LINE__, "Read lock should not be aquired reentrantlly.");
+                        }
                     } else {
-                        if (rh.thread == NULL) {
-                            rh = cachedHoldCounter;
-                            if (rh.thread == NULL || rh.thread != current) {
-                                rh = readHolds.get();
-                                if (rh.count == 0) {
-                                    readHolds.remove();
-                                }
-                            }
+                        rh = readHolds.get();
+                        if (rh.count == 0) {
+                            readHolds.remove();
                         }
 
                         if (rh.count == 0) {
@@ -310,17 +290,9 @@ namespace {
                     } else if (firstReader == current) {
                         firstReaderHoldCount++;
                     } else {
-                        if (rh.thread == NULL) {
-                            rh = cachedHoldCounter;
-                        }
-                        if (rh.thread == NULL || rh.thread != current) {
-                            rh = readHolds.get();
-                        } else if (rh.count == 0) {
-                            readHolds.set(rh);
-                        }
+                        rh = readHolds.get();
                         rh.count++;
                         readHolds.set(rh);
-                        cachedHoldCounter = rh; // cache for release
                     }
                     return 1;
                 }
@@ -374,15 +346,9 @@ namespace {
                     } else if (firstReader == current) {
                         firstReaderHoldCount++;
                     } else {
-                        HoldCounter rh = cachedHoldCounter;
-                        if (rh.thread == NULL || rh.thread != current) {
-                            cachedHoldCounter = rh = readHolds.get();
-                        } else if (rh.count == 0) {
-                            readHolds.set(rh);
-                        }
+                        HoldCounter rh = readHolds.get();//cachedHoldCounter;
                         rh.count++;
                         readHolds.set(rh);
-                        cachedHoldCounter = rh;
                     }
                     return true;
                 }
@@ -424,11 +390,6 @@ namespace {
             Thread* current = Thread::currentThread();
             if (firstReader == current) {
                 return firstReaderHoldCount;
-            }
-
-            HoldCounter rh = cachedHoldCounter;
-            if (rh.thread != NULL && rh.thread == current) {
-                return rh.count;
             }
 
             int count = readHolds.get().count;
