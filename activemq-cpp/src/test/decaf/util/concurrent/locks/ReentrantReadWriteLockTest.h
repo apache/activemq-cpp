@@ -90,6 +90,7 @@ namespace locks {
         CPPUNIT_TEST( testHasWaiters );
         CPPUNIT_TEST( testGetWaitQueueLength );
         CPPUNIT_TEST( testGetWaitingThreads );
+        CPPUNIT_TEST( testMultipleReaderThreads );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -158,6 +159,7 @@ namespace locks {
         void testHasWaiters();
         void testGetWaitQueueLength();
         void testGetWaitingThreads();
+        void testMultipleReaderThreads();
 
     };
 

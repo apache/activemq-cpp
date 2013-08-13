@@ -46,8 +46,8 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class ThreadProperties {
     private:
@@ -147,18 +147,18 @@ void Thread::start() {
 
     try {
 
-        if( Threading::getThreadState(this->properties->handle) > Thread::NEW ) {
+        if (Threading::getThreadState(this->properties->handle) > Thread::NEW) {
             throw IllegalThreadStateException(
                 __FILE__, __LINE__,
                 "Thread::start - Thread already started");
         }
 
         Threading::start(this->properties->handle);
-     }
-     DECAF_CATCH_RETHROW( IllegalThreadStateException )
-     DECAF_CATCH_RETHROW( RuntimeException )
-     DECAF_CATCH_EXCEPTION_CONVERT( NullPointerException, RuntimeException )
-     DECAF_CATCHALL_THROW( RuntimeException )
+    }
+    DECAF_CATCH_RETHROW(IllegalThreadStateException)
+    DECAF_CATCH_RETHROW(RuntimeException)
+    DECAF_CATCH_EXCEPTION_CONVERT(NullPointerException, RuntimeException)
+    DECAF_CATCHALL_THROW(RuntimeException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,7 +169,7 @@ void Thread::join() {
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::join(long long millisecs) {
 
-    if( millisecs < 0 ) {
+    if (millisecs < 0) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::join( millisecs ) - Value given {%d} is less than 0", millisecs );
@@ -181,13 +181,13 @@ void Thread::join(long long millisecs) {
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::join(long long millisecs, int nanos) {
 
-    if( millisecs < 0 ) {
+    if (millisecs < 0) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::join( millisecs, nanos ) - Value given {%d} is less than 0", millisecs );
     }
 
-    if( nanos < 0 || nanos > 999999 ) {
+    if (nanos < 0 || nanos > 999999) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::join( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
@@ -204,13 +204,13 @@ void Thread::sleep(long long millisecs) {
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep(long long millisecs, int nanos) {
 
-    if( millisecs < 0 ) {
+    if (millisecs < 0) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::sleep( millisecs, nanos ) - Value given {%d} is less than 0", millisecs );
     }
 
-    if( nanos < 0 || nanos > 999999 ) {
+    if (nanos < 0 || nanos > 999999) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "Thread::sleep( millisecs, nanos ) - Nanoseconds must be in range [0...999999]" );
@@ -279,7 +279,6 @@ void Thread::setDefaultUncaughtExceptionHandler(Thread::UncaughtExceptionHandler
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Thread::toString() const {
-
     return std::string(Threading::getThreadName(this->properties->handle)) + ": Priority=" +
            Integer::toString(Threading::getThreadPriority(this->properties->handle)) +
            ", ThreadID=" + Long::toString( Threading::getThreadId(this->properties->handle));

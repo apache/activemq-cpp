@@ -2280,3 +2280,61 @@ void ReentrantReadWriteLockTest::testWriteLockToString() {
     std::string ls = lock.writeLock().toString();
     CPPUNIT_ASSERT(ls.find_first_of("Locked") != std::string::npos);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    const int MAX_ITERATION = 5000;
+
+    class TestMultipleReaderThreadsRunnable : public Runnable {
+    private:
+
+        ReentrantReadWriteLockTest* test;
+        ReentrantReadWriteLock* lock;
+
+    private:
+
+        TestMultipleReaderThreadsRunnable(const TestMultipleReaderThreadsRunnable&);
+        TestMultipleReaderThreadsRunnable operator= (const TestMultipleReaderThreadsRunnable&);
+
+    public:
+
+        TestMultipleReaderThreadsRunnable(ReentrantReadWriteLockTest* test, ReentrantReadWriteLock* lock) :
+            Runnable(), test(test), lock(lock) {}
+        virtual ~TestMultipleReaderThreadsRunnable() {}
+
+        virtual void run() {
+            try {
+                for (int i = 0; i < MAX_ITERATION; ++i) {
+                    test->threadAssertTrue(lock->readLock().tryLock());
+                    lock->readLock().unlock();
+                }
+            } catch (Exception& ex) {
+                test->threadUnexpectedException();
+            }
+        }
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReentrantReadWriteLockTest::testMultipleReaderThreads() {
+    const int THREAD_QTY = 50;
+
+    ReentrantReadWriteLock lock;
+    TestMultipleReaderThreadsRunnable runnable(this, &lock);
+
+    std::vector<Thread*> threads;
+    for (int i = 0; i < THREAD_QTY; ++i) {
+        threads.push_back(new Thread(&runnable));
+    }
+
+    for (int i = 0; i < THREAD_QTY; ++i) {
+        threads[i]->start();
+    }
+
+    for (int i = 0; i < THREAD_QTY; ++i) {
+        threads[i]->join();
+        delete threads[i];
+    }
+}
+

@@ -25,15 +25,15 @@
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/Config.h>
 
-namespace decaf{
-namespace internal{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace internal {
+namespace util {
+namespace concurrent {
     class Threading;
     struct ThreadHandle;
 }}}
-namespace lang
-{
+namespace lang {
+
     class ThreadGroup;
     class ThreadProperties;
 
@@ -81,7 +81,7 @@ namespace lang
         static const int MAX_PRIORITY = 10;
 
         /** Represents the various states that the Thread can be in during its lifetime. */
-        enum State{
+        enum State {
 
             /** Before a Thread is started it exists in this State. */
             NEW = 0,
