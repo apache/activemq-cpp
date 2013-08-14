@@ -2,6 +2,28 @@
 ==  Release Notes for ActiveMQ CPP 3.8.0                               ==
 =========================================================================
 
+Bug
+
+    [AMQCPP-483] - 3.7.0 does not compile with gcc-4.4.7 on CentOS-6
+    [AMQCPP-484] - Can't connect via Stomp to Apollo broker - ActiveMq-Cpp version: 3.7.0
+    [AMQCPP-485] - APR-Util header include missed in latest release.
+    [AMQCPP-487] - CMS FailoverTransport Leaks Socket Descriptors
+    [AMQCPP-488] - closing a connection stalled in start because of failover should stop the transport safely.
+    [AMQCPP-489] - Compilation Error Fix for Sun Studio under Solaris 10
+    [AMQCPP-490] - Exception lifetime confusion can cause the application to crash
+    [AMQCPP-491] - Connection didn't switch to the slave broker when the master broker is down
+    [AMQCPP-494] - Commiting a session with a deleted consumer causes access violation
+    [AMQCPP-497] - Compilation of 3.7.0 fails for Linux systems (Redhat 5.8 and SuSE SLES 10)
+    [AMQCPP-498] - Client doesn't work on Linux Red Hat 6.4 systems, fails when setting thread priority
+    [AMQCPP-501] - Consumers remain active after being deleted
+    [AMQCPP-505] - For SSL connections ensure the SNI field is set.
+    [AMQCPP-506] - Exception "attempt to unlock read lock, not locked by current thread" when doing
+                   performance testing
+
+New Feature
+
+    [AMQCPP-502] - Can't send to temporary queues created by name
+
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.7.1                               ==

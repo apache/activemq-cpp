@@ -74,6 +74,7 @@ std::vector<std::string> ActiveMQConnectionMetaData::getCMSXPropertyNames() cons
 
     std::vector<std::string> jmxProperties;
 
+    jmxProperties.push_back( "JMSXUserID" );
     jmxProperties.push_back( "JMSXGroupID" );
     jmxProperties.push_back( "JMSXGroupSeq" );
     jmxProperties.push_back( "JMSXDeliveryCount" );
