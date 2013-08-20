@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\test-integration\activemq\test\AsyncSenderTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\BulkMessageTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\CmsConnectionStartStopTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\CmsSendWithAsyncCallbackTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\CmsTemplateTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\DurableTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\ExpirationTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\JmsMessageGroupsTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\MapMessageTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\MessageCompressionTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\MessagePriorityTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireAdvisorysTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireClientAckTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsConnectionStartStopTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireTempDestinationTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireXATransactionsTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\QueueBrowserTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\SimpleRollbackTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\SimpleTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\SlowListenerTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompBulkMessageTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompCmsConnectionStartStopTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompCmsTemplateTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompDurableTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompExpirationTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompJmsMessageGroupsTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompSimpleRollbackTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompSimpleTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompSlowListenerTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompTransactionTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\TransactionTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\VirtualTopicTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\util\CMSListener.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\util\CMSProvider.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\util\IntegrationCommon.cpp" />
+    <ClCompile Include="..\src\test-integration\main.cpp" />
+    <ClCompile Include="..\src\test-integration\TestRegistry.cpp" />
+    <ClCompile Include="..\src\test-integration\util\teamcity\TeamCityProgressListener.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\test-integration\activemq\test\AsyncSenderTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\BulkMessageTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\CmsConnectionStartStopTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\CmsSendWithAsyncCallbackTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\CmsTemplateTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\CMSTestFixture.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\DurableTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\ExpirationTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\JmsMessageGroupsTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\MapMessageTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\MessageCompressionTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\MessagePriorityTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireAdvisorysTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireClientAckTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsConnectionStartStopTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireTempDestinationTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireXATransactionsTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\QueueBrowserTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\SimpleRollbackTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\SimpleTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\SlowListenerTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompBulkMessageTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompCmsConnectionStartStopTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompCmsTemplateTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompDurableTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompExpirationTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompJmsMessageGroupsTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompSimpleRollbackTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompSimpleTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompSlowListenerTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompTransactionTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\TransactionTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\VirtualTopicTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\util\CMSListener.h" />
+    <ClInclude Include="..\src\test-integration\activemq\util\CMSProvider.h" />
+    <ClInclude Include="..\src\test-integration\activemq\util\IntegrationCommon.h" />
+    <ClInclude Include="..\src\test-integration\util\teamcity\TeamCityProgressListener.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C3ADFAF2-12C2-4915-ADBE-F36D6905F82E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>activemqcppintegrationtests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\test\activemq\cmsutil\CmsAccessorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\cmsutil\CmsDestinationAccessorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\cmsutil\CmsTemplateTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\cmsutil\DynamicDestinationResolverTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\cmsutil\SessionPoolTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQBytesMessageTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQDestinationTest2.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQMapMessageTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQMessageTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQQueueTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQStreamMessageTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQTempQueueTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQTempTopicTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQTextMessageTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\ActiveMQTopicTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\BrokerIdTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\BrokerInfoTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\commands\XATransactionIdTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\ActiveMQConnectionFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\ActiveMQConnectionTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\ActiveMQMessageAuditTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\ActiveMQSessionTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\ConnectionAuditTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\FifoMessageDispatchChannelTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\core\SimplePriorityMessageDispatchChannelTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\exceptions\ActiveMQExceptionTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\mock\MockBrokerService.cpp" />
+    <ClCompile Include="..\src\test\activemq\state\ConnectionStateTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\state\ConnectionStateTrackerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\state\ConsumerStateTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\state\ProducerStateTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\state\SessionStateTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\state\TransactionStateTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\threads\CompositeTaskRunnerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\threads\DedicatedTaskRunnerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\threads\SchedulerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\correlator\ResponseCorrelatorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\failover\FailoverTransportTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\inactivity\InactivityMonitorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\IOTransportTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\mock\MockTransportFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\tcp\TcpTransportTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\transport\TransportRegistryTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\ActiveMQMessageTransformationTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\AdvisorySupportTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\IdGeneratorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\LongSequenceGeneratorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\MarshallingSupportTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\MemoryUsageTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\PrimitiveListTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\PrimitiveMapTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\PrimitiveValueConverterTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\PrimitiveValueNodeTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\util\URISupportTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\BaseDataStreamMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQBlobMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQBytesMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQMapMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQObjectMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQQueueMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQStreamMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTempQueueMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTempTopicMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTextMessageMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTopicMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\BrokerIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\BrokerInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionControlMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionErrorMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConsumerControlMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConsumerIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConsumerInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ControlCommandMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DataArrayResponseMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DataResponseMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DestinationInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DiscoveryEventMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ExceptionResponseMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\FlushCommandMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\IntegerResponseMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalQueueAckMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalTopicAckMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalTraceMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalTransactionMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\KeepAliveInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\LastPartialCommandMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\LocalTransactionIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageAckMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageDispatchMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageDispatchNotificationMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessagePullMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\NetworkBridgeFilterMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\PartialCommandMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ProducerAckMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ProducerIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ProducerInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\RemoveInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\RemoveSubscriptionInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ReplayCommandMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ResponseMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\SessionIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\SessionInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ShutdownInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\SubscriptionInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\TransactionInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\WireFormatInfoMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\generated\XATransactionIdMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshallerTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\OpenWireFormatTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\utils\BooleanStreamTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\utils\HexTableTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\openwire\utils\MessagePropertyInterceptorTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\stomp\StompHelperTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\stomp\StompWireFormatFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\stomp\StompWireFormatTest.cpp" />
+    <ClCompile Include="..\src\test\activemq\wireformat\WireFormatRegistryTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\net\ssl\DefaultSSLSocketFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\net\URIEncoderDecoderTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\net\URIHelperTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\BufferFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\ByteArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\CharArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\DoubleArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\FloatArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\IntArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\LongArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\nio\ShortArrayBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\util\ByteArrayAdapterTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\util\concurrent\TransferQueueTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\util\concurrent\TransferStackTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\internal\util\TimerTaskHeapTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\BufferedInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\BufferedOutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\ByteArrayInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\ByteArrayOutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\DataInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\DataOutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\FilterInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\FilterOutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\InputStreamReaderTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\InputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\OutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\OutputStreamWriterTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\PushbackInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\ReaderTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\io\WriterTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\ArrayPointerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\BooleanTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\ByteTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\CharacterTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\DoubleTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\ExceptionTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\FloatTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\IntegerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\LongTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\MathTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\PointerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\ShortTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\StringTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\SystemTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\ThreadLocalTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\ThreadTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\Inet4AddressTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\Inet6AddressTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\InetAddressTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\ServerSocketTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\SocketFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\SocketTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\ssl\SSLSocketFactoryTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\URISyntaxExceptionTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\URITest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\URLDecoderTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\URLEncoderTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\nio\BufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\security\MessageDigestTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\security\SecureRandomTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\AbstractCollectionTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\AbstractListTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\AbstractSequentialListTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\ArrayListTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\ArraysTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\BitSetTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\CollectionsTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\AbstractExecutorServiceTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\atomic\AtomicBooleanTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\atomic\AtomicIntegerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\atomic\AtomicReferenceTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\ConcurrentHashMapTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\ConcurrentStlMapTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\CopyOnWriteArrayListTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\CopyOnWriteArraySetTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\CountDownLatchTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\ExecutorsTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\ExecutorsTestSupport.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\FutureTaskTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\LinkedBlockingQueueTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\locks\AbstractQueuedSynchronizerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\locks\LockSupportTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\locks\ReentrantLockTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\locks\ReentrantReadWriteLockTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\MutexTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\SemaphoreTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\SynchronousQueueTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\ThreadPoolExecutorTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\concurrent\TimeUnitTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\DateTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\Endian.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\HashCodeTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\HashMapTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\HashSetTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\LinkedHashMapTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\LinkedHashSetTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\LinkedListTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\ListTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\LRUCacheTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\PriorityQueueTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\PropertiesTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\QueueTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\RandomTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\SetTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\StlMapTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\StringTokenizerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\TimerTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\UUIDTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\Adler32Test.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\CheckedInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\CheckedOutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\CRC32Test.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\DeflaterOutputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\DeflaterTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\InflaterInputStreamTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\util\zip\InflaterTest.cpp" />
+    <ClCompile Include="..\src\test\main.cpp" />
+    <ClCompile Include="..\src\test\testRegistry.cpp" />
+    <ClCompile Include="..\src\test\util\teamcity\TeamCityProgressListener.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\test\activemq\cmsutil\CmsAccessorTest.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\CmsDestinationAccessorTest.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\CmsTemplateTest.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummyConnection.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummyConnectionFactory.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummyConsumer.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummyMessage.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummyMessageCreator.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummyProducer.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DummySession.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\DynamicDestinationResolverTest.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\MessageContext.h" />
+    <ClInclude Include="..\src\test\activemq\cmsutil\SessionPoolTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQBytesMessageTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQDestinationTest2.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQMapMessageTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQMessageTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQQueueTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQStreamMessageTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQTempQueueTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQTempTopicTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQTextMessageTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\ActiveMQTopicTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\BrokerIdTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\BrokerInfoTest.h" />
+    <ClInclude Include="..\src\test\activemq\commands\XATransactionIdTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\ActiveMQConnectionFactoryTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\ActiveMQConnectionTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\ActiveMQMessageAuditTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\ActiveMQSessionTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\ConnectionAuditTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\FifoMessageDispatchChannelTest.h" />
+    <ClInclude Include="..\src\test\activemq\core\SimplePriorityMessageDispatchChannelTest.h" />
+    <ClInclude Include="..\src\test\activemq\exceptions\ActiveMQExceptionTest.h" />
+    <ClInclude Include="..\src\test\activemq\mock\MockBrokerService.h" />
+    <ClInclude Include="..\src\test\activemq\state\ConnectionStateTest.h" />
+    <ClInclude Include="..\src\test\activemq\state\ConnectionStateTrackerTest.h" />
+    <ClInclude Include="..\src\test\activemq\state\ConsumerStateTest.h" />
+    <ClInclude Include="..\src\test\activemq\state\ProducerStateTest.h" />
+    <ClInclude Include="..\src\test\activemq\state\SessionStateTest.h" />
+    <ClInclude Include="..\src\test\activemq\state\TransactionStateTest.h" />
+    <ClInclude Include="..\src\test\activemq\threads\CompositeTaskRunnerTest.h" />
+    <ClInclude Include="..\src\test\activemq\threads\DedicatedTaskRunnerTest.h" />
+    <ClInclude Include="..\src\test\activemq\threads\SchedulerTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\correlator\ResponseCorrelatorTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\failover\FailoverTransportTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\inactivity\InactivityMonitorTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\IOTransportTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\mock\MockTransportFactoryTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\tcp\TcpTransportTest.h" />
+    <ClInclude Include="..\src\test\activemq\transport\TransportRegistryTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\ActiveMQMessageTransformationTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\AdvisorySupportTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\IdGeneratorTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\LongSequenceGeneratorTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\MarshallingSupportTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\MemoryUsageTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\PrimitiveListTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\PrimitiveMapTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\PrimitiveValueConverterTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\PrimitiveValueNodeTest.h" />
+    <ClInclude Include="..\src\test\activemq\util\URISupportTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\BaseDataStreamMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQBlobMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQBytesMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQMapMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQObjectMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQQueueMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQStreamMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTempQueueMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTempTopicMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTextMessageMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ActiveMQTopicMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\BrokerIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\BrokerInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionControlMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionErrorMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConnectionInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConsumerControlMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConsumerIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ConsumerInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ControlCommandMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DataArrayResponseMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DataResponseMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DestinationInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\DiscoveryEventMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ExceptionResponseMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\FlushCommandMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\IntegerResponseMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalQueueAckMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalTopicAckMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalTraceMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\JournalTransactionMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\KeepAliveInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\LastPartialCommandMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\LocalTransactionIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageAckMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageDispatchMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageDispatchNotificationMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessageIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\MessagePullMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\NetworkBridgeFilterMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\PartialCommandMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ProducerAckMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ProducerIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ProducerInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\RemoveInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\RemoveSubscriptionInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ReplayCommandMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ResponseMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\SessionIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\SessionInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\ShutdownInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\SubscriptionInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\TransactionInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\WireFormatInfoMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\generated\XATransactionIdMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshallerTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\OpenWireFormatTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\utils\BooleanStreamTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\utils\HexTableTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\openwire\utils\MessagePropertyInterceptorTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\stomp\StompHelperTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\stomp\StompWireFormatFactoryTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\stomp\StompWireFormatTest.h" />
+    <ClInclude Include="..\src\test\activemq\wireformat\WireFormatRegistryTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\net\ssl\DefaultSSLSocketFactoryTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\net\URIEncoderDecoderTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\net\URIHelperTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\BufferFactoryTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\ByteArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\CharArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\DoubleArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\FloatArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\IntArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\LongArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\nio\ShortArrayBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\util\ByteArrayAdapterTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\util\concurrent\TransferQueueTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\util\concurrent\TransferStackTest.h" />
+    <ClInclude Include="..\src\test\decaf\internal\util\TimerTaskHeapTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\BufferedInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\BufferedOutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\ByteArrayInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\ByteArrayOutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\DataInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\DataOutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\FilterInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\FilterOutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\InputStreamReaderTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\InputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\OutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\OutputStreamWriterTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\PushbackInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\ReaderTest.h" />
+    <ClInclude Include="..\src\test\decaf\io\WriterTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\ArrayPointerTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\BooleanTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\ByteTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\CharacterTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\DoubleTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\ExceptionTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\FloatTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\IntegerTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\LongTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\MathTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\PointerTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\ShortTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\StringTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\SystemTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\ThreadLocalTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\ThreadTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\Inet4AddressTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\Inet6AddressTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\InetAddressTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\ServerSocketTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\SocketFactoryTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\SocketTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\ssl\SSLSocketFactoryTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\URISyntaxExceptionTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\URITest.h" />
+    <ClInclude Include="..\src\test\decaf\net\URLDecoderTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\URLEncoderTest.h" />
+    <ClInclude Include="..\src\test\decaf\nio\BufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\security\MessageDigestTest.h" />
+    <ClInclude Include="..\src\test\decaf\security\SecureRandomTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\AbstractCollectionTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\AbstractListTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\AbstractSequentialListTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\ArrayListTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\ArraysTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\BitSetTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\CollectionsTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\AbstractExecutorServiceTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\atomic\AtomicBooleanTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\atomic\AtomicIntegerTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\atomic\AtomicReferenceTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\ConcurrentHashMapTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\ConcurrentStlMapTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\CopyOnWriteArrayListTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\CopyOnWriteArraySetTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\CountDownLatchTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\ExecutorsTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\ExecutorsTestSupport.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\FutureTaskTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\LinkedBlockingQueueTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\locks\AbstractQueuedSynchronizerTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\locks\LockSupportTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\locks\ReentrantLockTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\locks\ReentrantReadWriteLockTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\MutexTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\SemaphoreTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\SynchronousQueueTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\ThreadPoolExecutorTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\concurrent\TimeUnitTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\DateTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\Endian.h" />
+    <ClInclude Include="..\src\test\decaf\util\HashCodeTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\HashMapTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\HashSetTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\LinkedHashMapTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\LinkedHashSetTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\LinkedListTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\ListTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\LRUCacheTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\PriorityQueueTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\PropertiesTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\QueueTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\RandomTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\SetTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\StlMapTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\StringTokenizerTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\TimerTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\UUIDTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\Adler32Test.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\CheckedInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\CheckedOutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\CRC32Test.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\DeflaterOutputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\DeflaterTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\InflaterInputStreamTest.h" />
+    <ClInclude Include="..\src\test\decaf\util\zip\InflaterTest.h" />
+    <ClInclude Include="..\src\test\util\teamcity\TeamCityProgressListener.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7A4B01E3-C410-4024-BC42-D80976CAF23D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>activemqcppunittests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
