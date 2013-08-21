@@ -21,7 +21,9 @@
     <ClCompile Include="..\src\main\activemq\cmsutil\MessageCreator.cpp" />
     <ClCompile Include="..\src\main\activemq\cmsutil\PooledSession.cpp" />
     <ClCompile Include="..\src\main\activemq\cmsutil\ProducerCallback.cpp" />
-    <ClCompile Include="..\src\main\activemq\cmsutil\ResourceLifecycleManager.cpp" />
+    <ClCompile Include="..\src\main\activemq\cmsutil\ResourceLifecycleManager.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\activemq\cmsutil\SessionCallback.cpp" />
     <ClCompile Include="..\src\main\activemq\cmsutil\SessionPool.cpp" />
     <ClCompile Include="..\src\main\activemq\commands\ActiveMQBlobMessage.cpp" />
@@ -62,7 +64,9 @@
     <ClCompile Include="..\src\main\activemq\commands\KeepAliveInfo.cpp" />
     <ClCompile Include="..\src\main\activemq\commands\LastPartialCommand.cpp" />
     <ClCompile Include="..\src\main\activemq\commands\LocalTransactionId.cpp" />
-    <ClCompile Include="..\src\main\activemq\commands\Message.cpp" />
+    <ClCompile Include="..\src\main\activemq\commands\Message.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\activemq\commands\MessageAck.cpp" />
     <ClCompile Include="..\src\main\activemq\commands\MessageDispatch.cpp" />
     <ClCompile Include="..\src\main\activemq\commands\MessageDispatchNotification.cpp" />
@@ -252,6 +256,10 @@
     <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\WireFormatInfoMarshaller.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\XATransactionIdMarshaller.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshaller.cpp" />
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireFormat.cpp" />
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatFactory.cpp" />
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatNegotiator.cpp" />
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireResponseBuilder.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\openwire\utils\BooleanStream.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\openwire\utils\HexTable.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\openwire\utils\MessagePropertyInterceptor.cpp" />
@@ -264,55 +272,202 @@
     <ClCompile Include="..\src\main\activemq\wireformat\WireFormatFactory.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\WireFormatNegotiator.cpp" />
     <ClCompile Include="..\src\main\activemq\wireformat\WireFormatRegistry.cpp" />
-    <ClCompile Include="..\src\main\cms\AsyncCallback.cpp" />
-    <ClCompile Include="..\src\main\cms\BytesMessage.cpp" />
-    <ClCompile Include="..\src\main\cms\Closeable.cpp" />
-    <ClCompile Include="..\src\main\cms\CMSException.cpp" />
-    <ClCompile Include="..\src\main\cms\CMSProperties.cpp" />
-    <ClCompile Include="..\src\main\cms\CMSSecurityException.cpp" />
-    <ClCompile Include="..\src\main\cms\Connection.cpp" />
-    <ClCompile Include="..\src\main\cms\ConnectionFactory.cpp" />
-    <ClCompile Include="..\src\main\cms\ConnectionMetaData.cpp" />
-    <ClCompile Include="..\src\main\cms\DeliveryMode.cpp" />
-    <ClCompile Include="..\src\main\cms\Destination.cpp" />
-    <ClCompile Include="..\src\main\cms\ExceptionListener.cpp" />
-    <ClCompile Include="..\src\main\cms\IllegalStateException.cpp" />
-    <ClCompile Include="..\src\main\cms\InvalidClientIdException.cpp" />
-    <ClCompile Include="..\src\main\cms\InvalidDestinationException.cpp" />
-    <ClCompile Include="..\src\main\cms\InvalidSelectorException.cpp" />
-    <ClCompile Include="..\src\main\cms\MapMessage.cpp" />
-    <ClCompile Include="..\src\main\cms\Message.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageAvailableListener.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageConsumer.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageEnumeration.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageEOFException.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageFormatException.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageListener.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageNotReadableException.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageNotWriteableException.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageProducer.cpp" />
-    <ClCompile Include="..\src\main\cms\MessageTransformer.cpp" />
-    <ClCompile Include="..\src\main\cms\ObjectMessage.cpp" />
-    <ClCompile Include="..\src\main\cms\Queue.cpp" />
-    <ClCompile Include="..\src\main\cms\QueueBrowser.cpp" />
-    <ClCompile Include="..\src\main\cms\ResourceAllocationException.cpp" />
-    <ClCompile Include="..\src\main\cms\Session.cpp" />
-    <ClCompile Include="..\src\main\cms\Startable.cpp" />
-    <ClCompile Include="..\src\main\cms\Stoppable.cpp" />
-    <ClCompile Include="..\src\main\cms\StreamMessage.cpp" />
-    <ClCompile Include="..\src\main\cms\TemporaryQueue.cpp" />
-    <ClCompile Include="..\src\main\cms\TemporaryTopic.cpp" />
-    <ClCompile Include="..\src\main\cms\TextMessage.cpp" />
-    <ClCompile Include="..\src\main\cms\Topic.cpp" />
-    <ClCompile Include="..\src\main\cms\TransactionInProgressException.cpp" />
-    <ClCompile Include="..\src\main\cms\TransactionRolledBackException.cpp" />
-    <ClCompile Include="..\src\main\cms\UnsupportedOperationException.cpp" />
-    <ClCompile Include="..\src\main\cms\XAConnection.cpp" />
-    <ClCompile Include="..\src\main\cms\XAConnectionFactory.cpp" />
-    <ClCompile Include="..\src\main\cms\XAException.cpp" />
-    <ClCompile Include="..\src\main\cms\XAResource.cpp" />
-    <ClCompile Include="..\src\main\cms\XASession.cpp" />
-    <ClCompile Include="..\src\main\cms\Xid.cpp" />
+    <ClCompile Include="..\src\main\cms\AsyncCallback.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\BytesMessage.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Closeable.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\CMSException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\CMSProperties.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\CMSSecurityException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Connection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ConnectionFactory.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ConnectionMetaData.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\DeliveryMode.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Destination.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ExceptionListener.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\IllegalStateException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\InvalidClientIdException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\InvalidDestinationException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\InvalidSelectorException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MapMessage.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Message.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageAvailableListener.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageConsumer.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageEnumeration.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageEOFException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageFormatException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageListener.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageNotReadableException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageNotWriteableException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageProducer.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageTransformer.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ObjectMessage.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Queue.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\QueueBrowser.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ResourceAllocationException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Session.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Startable.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Stoppable.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\StreamMessage.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TemporaryQueue.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TemporaryTopic.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TextMessage.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Topic.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TransactionInProgressException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TransactionRolledBackException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\UnsupportedOperationException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAConnection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAConnectionFactory.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAResource.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XASession.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Xid.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\decaf\internal\AprPool.cpp" />
     <ClCompile Include="..\src\main\decaf\internal\DecafRuntime.cpp" />
     <ClCompile Include="..\src\main\decaf\internal\io\StandardErrorOutputStream.cpp" />
@@ -389,7 +544,9 @@
     <ClCompile Include="..\src\main\decaf\io\BufferedOutputStream.cpp" />
     <ClCompile Include="..\src\main\decaf\io\ByteArrayInputStream.cpp" />
     <ClCompile Include="..\src\main\decaf\io\ByteArrayOutputStream.cpp" />
-    <ClCompile Include="..\src\main\decaf\io\Closeable.cpp" />
+    <ClCompile Include="..\src\main\decaf\io\Closeable.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\decaf\io\DataInput.cpp" />
     <ClCompile Include="..\src\main\decaf\io\DataInputStream.cpp" />
     <ClCompile Include="..\src\main\decaf\io\DataOutput.cpp" />
@@ -422,7 +579,9 @@
     <ClCompile Include="..\src\main\decaf\lang\exceptions\CloneNotSupportedException.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalArgumentException.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalMonitorStateException.cpp" />
-    <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalStateException.cpp" />
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalStateException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalThreadStateException.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\exceptions\IndexOutOfBoundsException.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\exceptions\InterruptedException.cpp" />
@@ -432,7 +591,9 @@
     <ClCompile Include="..\src\main\decaf\lang\exceptions\NumberFormatException.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\exceptions\OutOfMemoryError.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\exceptions\RuntimeException.cpp" />
-    <ClCompile Include="..\src\main\decaf\lang\exceptions\UnsupportedOperationException.cpp" />
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\UnsupportedOperationException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\decaf\lang\Float.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\Integer.cpp" />
     <ClCompile Include="..\src\main\decaf\lang\Iterable.cpp" />
@@ -563,7 +724,10 @@
     <ClCompile Include="..\src\main\decaf\util\concurrent\Future.cpp" />
     <ClCompile Include="..\src\main\decaf\util\concurrent\FutureTask.cpp" />
     <ClCompile Include="..\src\main\decaf\util\concurrent\LinkedBlockingQueue.cpp" />
-    <ClCompile Include="..\src\main\decaf\util\concurrent\Lock.cpp" />
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Lock.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)Decaf.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)Decaf.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\decaf\util\concurrent\locks\AbstractOwnableSynchronizer.cpp" />
     <ClCompile Include="..\src\main\decaf\util\concurrent\locks\AbstractQueuedSynchronizer.cpp" />
     <ClCompile Include="..\src\main\decaf\util\concurrent\locks\Condition.cpp" />
@@ -889,6 +1053,10 @@
     <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\WireFormatInfoMarshaller.h" />
     <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\XATransactionIdMarshaller.h" />
     <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshaller.h" />
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireFormat.h" />
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatFactory.h" />
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatNegotiator.h" />
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireResponseBuilder.h" />
     <ClInclude Include="..\src\main\activemq\wireformat\openwire\utils\BooleanStream.h" />
     <ClInclude Include="..\src\main\activemq\wireformat\openwire\utils\HexTable.h" />
     <ClInclude Include="..\src\main\activemq\wireformat\openwire\utils\MessagePropertyInterceptor.h" />
@@ -1356,7 +1524,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <OutputFile>$(OutDir)\libactivemq-cppd.lib</OutputFile>
+      <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

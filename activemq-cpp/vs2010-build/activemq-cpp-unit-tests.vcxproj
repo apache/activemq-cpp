@@ -50,10 +50,8 @@
     <ClCompile Include="..\src\test\activemq\transport\correlator\ResponseCorrelatorTest.cpp" />
     <ClCompile Include="..\src\test\activemq\transport\failover\FailoverTransportTest.cpp" />
     <ClCompile Include="..\src\test\activemq\transport\inactivity\InactivityMonitorTest.cpp" />
-    <ClCompile Include="..\src\test\activemq\transport\IOTransportTest.cpp" />
     <ClCompile Include="..\src\test\activemq\transport\mock\MockTransportFactoryTest.cpp" />
     <ClCompile Include="..\src\test\activemq\transport\tcp\TcpTransportTest.cpp" />
-    <ClCompile Include="..\src\test\activemq\transport\TransportRegistryTest.cpp" />
     <ClCompile Include="..\src\test\activemq\util\ActiveMQMessageTransformationTest.cpp" />
     <ClCompile Include="..\src\test\activemq\util\AdvisorySupportTest.cpp" />
     <ClCompile Include="..\src\test\activemq\util\IdGeneratorTest.cpp" />
@@ -299,10 +297,8 @@
     <ClInclude Include="..\src\test\activemq\transport\correlator\ResponseCorrelatorTest.h" />
     <ClInclude Include="..\src\test\activemq\transport\failover\FailoverTransportTest.h" />
     <ClInclude Include="..\src\test\activemq\transport\inactivity\InactivityMonitorTest.h" />
-    <ClInclude Include="..\src\test\activemq\transport\IOTransportTest.h" />
     <ClInclude Include="..\src\test\activemq\transport\mock\MockTransportFactoryTest.h" />
     <ClInclude Include="..\src\test\activemq\transport\tcp\TcpTransportTest.h" />
-    <ClInclude Include="..\src\test\activemq\transport\TransportRegistryTest.h" />
     <ClInclude Include="..\src\test\activemq\util\ActiveMQMessageTransformationTest.h" />
     <ClInclude Include="..\src\test\activemq\util\AdvisorySupportTest.h" />
     <ClInclude Include="..\src\test\activemq\util\IdGeneratorTest.h" />
