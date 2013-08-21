@@ -1,0 +1,4040 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="activemq">
+      <UniqueIdentifier>{e2ceb112-2c10-4ab6-8290-71fd5a2b2010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cms">
+      <UniqueIdentifier>{1e2f205e-5298-46ea-a5a6-d870b4242b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf">
+      <UniqueIdentifier>{5e7f8fe6-e727-4999-94c8-686b13177c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\cmsutil">
+      <UniqueIdentifier>{49a4e2cb-b455-4cd8-8183-980770a10176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\core">
+      <UniqueIdentifier>{1715ceb5-bf60-42c0-aae1-c26a9a50f68c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\exceptions">
+      <UniqueIdentifier>{248e0415-38e2-4867-9f6c-6a1ba6872112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\io">
+      <UniqueIdentifier>{d410c543-01d8-4737-8e04-f7f929fbae9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\library">
+      <UniqueIdentifier>{da7a4158-3443-40a8-955e-9108d7bc099e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\state">
+      <UniqueIdentifier>{ace2915c-eca5-447a-a5b3-1ca6fd4342c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\threads">
+      <UniqueIdentifier>{eac8450b-36c6-41b2-bea1-b45e0ef258a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport">
+      <UniqueIdentifier>{d2826962-fade-4b5e-ba6d-bdbb4c4bb59e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\util">
+      <UniqueIdentifier>{a348a657-afe3-4b67-8334-5bd85c7897a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\wireformat">
+      <UniqueIdentifier>{64a86261-49bb-4dc6-b2c8-b27c3b70857f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\core\kernels">
+      <UniqueIdentifier>{32b18575-2c6f-4d4a-b72c-7ba3d956c872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\core\policy">
+      <UniqueIdentifier>{581c96cb-08dd-4fce-8759-2a08df71daa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\commands">
+      <UniqueIdentifier>{26043afd-8484-426f-b625-ae226ba5f8c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\wireformat\openwire">
+      <UniqueIdentifier>{961dcc73-61ab-4631-a882-b3e472ea9a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\wireformat\stomp">
+      <UniqueIdentifier>{280c7186-894c-418a-8c45-c0560f299bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\wireformat\openwire\marshal">
+      <UniqueIdentifier>{d1ef98ed-beed-489e-8c51-05395b512e05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\wireformat\openwire\utils">
+      <UniqueIdentifier>{17f596f2-03dd-4f5e-bf1b-aaf8b44cbeea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\wireformat\openwire\marshal\generated">
+      <UniqueIdentifier>{ec2c89ef-d456-45d7-974a-74953c569748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\correlator">
+      <UniqueIdentifier>{53b19ed4-7b16-4d5a-8f4e-97276640c8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\failover">
+      <UniqueIdentifier>{69fb9cf7-7093-4c69-bc58-d78bf183bf6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\inactivity">
+      <UniqueIdentifier>{4bdbc51c-01ed-4676-bca1-a235bca5c5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\logging">
+      <UniqueIdentifier>{b4926f8d-be46-4c9a-85e2-8ab36c8969a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\mock">
+      <UniqueIdentifier>{d55dcd52-0c68-4043-af00-f4e03f30cad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\tcp">
+      <UniqueIdentifier>{e6284749-20c5-4ac3-a9a0-622f2114cde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal">
+      <UniqueIdentifier>{bd7eb902-adc6-4e83-a487-5ce506399c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\io">
+      <UniqueIdentifier>{38912f7b-324d-47d1-a1a6-58dbe10fe705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\lang">
+      <UniqueIdentifier>{5d4d74e4-28fb-4b79-b98b-21528983aa0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\net">
+      <UniqueIdentifier>{1fa9df42-691f-46d8-a542-0ae8bc19050e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\nio">
+      <UniqueIdentifier>{79fdf808-d81e-40de-b7cc-9bd2f57eace5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\security">
+      <UniqueIdentifier>{7caccb7c-611c-476f-bc94-d7633740ecb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util">
+      <UniqueIdentifier>{50b49780-3140-47f9-b3cf-761a24ed50b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\io">
+      <UniqueIdentifier>{f9a02042-f7ba-4eef-9919-c3e4e148e79c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\net">
+      <UniqueIdentifier>{7894ffb2-9941-4425-8fee-694c8d11297c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\nio">
+      <UniqueIdentifier>{e6359bd1-1c39-4370-b484-841ae14ffcc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\security">
+      <UniqueIdentifier>{a446e69c-60ad-410c-a0ca-ca0f431b3d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\util">
+      <UniqueIdentifier>{24f48725-99ff-4a97-8c69-8caa162623e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\lang\exceptions">
+      <UniqueIdentifier>{2933b54d-7f6e-4693-ad3b-c14125a3d9ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\util\concurrent">
+      <UniqueIdentifier>{fb385413-b0c4-42d7-a22e-23233b1de74b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\util\zip">
+      <UniqueIdentifier>{7dbd46bb-c5f6-4598-a4e8-55de5585c3a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\security\provider">
+      <UniqueIdentifier>{356ae7ca-f527-4bc9-8b74-386b0d04709e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\security\windows">
+      <UniqueIdentifier>{69bd170f-25fc-4845-9c53-142d74095c90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\util\concurrent\windows">
+      <UniqueIdentifier>{369aaf52-bf0c-435d-b934-3022434ee2c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\security\provider\crypto">
+      <UniqueIdentifier>{4c93cef4-e2d5-46b1-b8e0-d14c6c56313f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\net\ssl">
+      <UniqueIdentifier>{d023d147-ef1d-44c2-aca6-6767a46fbd9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\net\ssl\openssl">
+      <UniqueIdentifier>{9963682c-a87b-4e68-a4c7-688da3782961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\net\tcp">
+      <UniqueIdentifier>{5950ab23-6da5-4ec8-ba56-5a48d9464c1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\net\ssl">
+      <UniqueIdentifier>{b31b85ad-a278-4d2a-889d-97aa31007f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util\concurrent">
+      <UniqueIdentifier>{00c01dbb-cbd8-484d-9571-e935b21282ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util\logging">
+      <UniqueIdentifier>{f4a08d19-5002-4d26-bc9b-95dd5a776b9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util\zip">
+      <UniqueIdentifier>{d20f5b85-62ae-4e62-9e36-3210ca0c95ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\security\auth">
+      <UniqueIdentifier>{79c11892-04cd-4296-8bf5-70316e79c285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\security\cert">
+      <UniqueIdentifier>{877c355a-0f8c-4a8d-b459-c01332cf50b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util\concurrent\locks">
+      <UniqueIdentifier>{b5467bbf-a5dd-4926-b028-b3bd99fa73dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util\concurrent\atomic">
+      <UniqueIdentifier>{a5990c7b-155d-454c-bc55-acbf55e46a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\security\auth\x500">
+      <UniqueIdentifier>{4fb83310-1373-4283-bc8c-864b82a87c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\util\comparators">
+      <UniqueIdentifier>{f4100c60-25f0-4cb8-8b37-8c13f50671cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main\activemq\cmsutil\CachedConsumer.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\CachedProducer.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\CmsAccessor.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\CmsDestinationAccessor.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\CmsTemplate.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\DestinationResolver.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\DynamicDestinationResolver.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\MessageCreator.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\PooledSession.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\ProducerCallback.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\ResourceLifecycleManager.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\SessionCallback.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\cmsutil\SessionPool.cpp">
+      <Filter>activemq\cmsutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQAckHandler.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQConnection.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQConnectionFactory.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQConnectionMetaData.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQConstants.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQConsumer.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQMessageAudit.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQProducer.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQQueueBrowser.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQSession.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQSessionExecutor.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQTransactionContext.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQXAConnection.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQXAConnectionFactory.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQXASession.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\AdvisoryConsumer.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ConnectionAudit.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\DispatchData.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\Dispatcher.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\FifoMessageDispatchChannel.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\MessageDispatchChannel.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\PrefetchPolicy.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\RedeliveryPolicy.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\SimplePriorityMessageDispatchChannel.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\Synchronization.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\kernels\ActiveMQConsumerKernel.cpp">
+      <Filter>activemq\core\kernels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\kernels\ActiveMQProducerKernel.cpp">
+      <Filter>activemq\core\kernels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\kernels\ActiveMQSessionKernel.cpp">
+      <Filter>activemq\core\kernels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\kernels\ActiveMQXASessionKernel.cpp">
+      <Filter>activemq\core\kernels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\policies\DefaultPrefetchPolicy.cpp">
+      <Filter>activemq\core\policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\policies\DefaultRedeliveryPolicy.cpp">
+      <Filter>activemq\core\policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQBlobMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQBytesMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQDestination.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQMapMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQObjectMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQQueue.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQStreamMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQTempDestination.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQTempQueue.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQTempTopic.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQTextMessage.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ActiveMQTopic.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\BrokerError.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\BrokerId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\BrokerInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConnectionControl.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConnectionError.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConnectionId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConnectionInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConsumerControl.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConsumerId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ConsumerInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ControlCommand.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\DataArrayResponse.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\DataResponse.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\DestinationInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\DiscoveryEvent.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ExceptionResponse.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\FlushCommand.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\IntegerResponse.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\JournalQueueAck.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\JournalTopicAck.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\JournalTrace.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\JournalTransaction.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\KeepAliveInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\LastPartialCommand.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\LocalTransactionId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\Message.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\MessageAck.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\MessageDispatch.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\MessageDispatchNotification.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\MessageId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\MessagePull.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\NetworkBridgeFilter.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\PartialCommand.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ProducerAck.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ProducerId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ProducerInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\RemoveInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\RemoveSubscriptionInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ReplayCommand.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\Response.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\SessionId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\SessionInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\ShutdownInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\SubscriptionInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\TransactionId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\TransactionInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\WireFormatInfo.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\commands\XATransactionId.cpp">
+      <Filter>activemq\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\exceptions\ActiveMQException.cpp">
+      <Filter>activemq\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\exceptions\BrokerException.cpp">
+      <Filter>activemq\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\exceptions\ConnectionFailedException.cpp">
+      <Filter>activemq\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\io\LoggingInputStream.cpp">
+      <Filter>activemq\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\io\LoggingOutputStream.cpp">
+      <Filter>activemq\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\library\ActiveMQCPP.cpp">
+      <Filter>activemq\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\MarshalAware.cpp">
+      <Filter>activemq\wireformat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\WireFormat.cpp">
+      <Filter>activemq\wireformat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\WireFormatFactory.cpp">
+      <Filter>activemq\wireformat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\WireFormatNegotiator.cpp">
+      <Filter>activemq\wireformat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\WireFormatRegistry.cpp">
+      <Filter>activemq\wireformat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\stomp\StompCommandConstants.cpp">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\stomp\StompFrame.cpp">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\stomp\StompHelper.cpp">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\stomp\StompWireFormat.cpp">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\stomp\StompWireFormatFactory.cpp">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireFormat.cpp">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatFactory.cpp">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatNegotiator.cpp">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\OpenWireResponseBuilder.cpp">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\utils\BooleanStream.cpp">
+      <Filter>activemq\wireformat\openwire\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\utils\HexTable.cpp">
+      <Filter>activemq\wireformat\openwire\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\utils\MessagePropertyInterceptor.cpp">
+      <Filter>activemq\wireformat\openwire\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\BaseDataStreamMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\DataStreamMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQBlobMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQBytesMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQDestinationMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQMapMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQObjectMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQQueueMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQStreamMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTempDestinationMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTempQueueMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTempTopicMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTextMessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTopicMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\BaseCommandMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\BrokerIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\BrokerInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionControlMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionErrorMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConsumerControlMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConsumerIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConsumerInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ControlCommandMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DataArrayResponseMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DataResponseMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DestinationInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DiscoveryEventMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ExceptionResponseMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\FlushCommandMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\IntegerResponseMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalQueueAckMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalTopicAckMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalTraceMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalTransactionMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\KeepAliveInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\LastPartialCommandMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\LocalTransactionIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MarshallerFactory.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageAckMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageDispatchMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageDispatchNotificationMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessagePullMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\NetworkBridgeFilterMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\PartialCommandMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ProducerAckMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ProducerIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ProducerInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\RemoveInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\RemoveSubscriptionInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ReplayCommandMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ResponseMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\SessionIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\SessionInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ShutdownInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\SubscriptionInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\TransactionIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\TransactionInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\WireFormatInfoMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\wireformat\openwire\marshal\generated\XATransactionIdMarshaller.cpp">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\ActiveMQMessageTransformation.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\ActiveMQProperties.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\AdvisorySupport.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\CMSExceptionSupport.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\CompositeData.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\IdGenerator.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\LongSequenceGenerator.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\MarshallingSupport.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\MemoryUsage.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\PrimitiveList.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\PrimitiveMap.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\PrimitiveValueConverter.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\PrimitiveValueNode.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\Service.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\ServiceListener.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\ServiceStopper.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\ServiceSupport.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\URISupport.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\util\Usage.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\AbstractTransportFactory.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\CompositeTransport.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\DefaultTransportListener.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\FutureResponse.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\IOTransport.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\ResponseCallback.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\Transport.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\TransportFilter.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\TransportRegistry.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\correlator\ResponseCorrelator.cpp">
+      <Filter>activemq\transport\correlator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\BackupTransport.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\BackupTransportPool.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\CloseTransportsTask.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\FailoverTransport.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\FailoverTransportFactory.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\FailoverTransportListener.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\failover\URIPool.cpp">
+      <Filter>activemq\transport\failover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\inactivity\InactivityMonitor.cpp">
+      <Filter>activemq\transport\inactivity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\inactivity\ReadChecker.cpp">
+      <Filter>activemq\transport\inactivity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\inactivity\WriteChecker.cpp">
+      <Filter>activemq\transport\inactivity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\logging\LoggingTransport.cpp">
+      <Filter>activemq\transport\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\mock\InternalCommandListener.cpp">
+      <Filter>activemq\transport\mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\mock\MockTransport.cpp">
+      <Filter>activemq\transport\mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\mock\MockTransportFactory.cpp">
+      <Filter>activemq\transport\mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\mock\ResponseBuilder.cpp">
+      <Filter>activemq\transport\mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\tcp\SslTransport.cpp">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\tcp\SslTransportFactory.cpp">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\tcp\TcpTransport.cpp">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\tcp\TcpTransportFactory.cpp">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\CompositeTask.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\CompositeTaskRunner.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\DedicatedTaskRunner.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\Scheduler.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\SchedulerTimerTask.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\Task.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\threads\TaskRunner.cpp">
+      <Filter>activemq\threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\CommandVisitor.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\CommandVisitorAdapter.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\ConnectionState.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\ConnectionStateTracker.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\ConsumerState.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\ProducerState.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\SessionState.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\Tracked.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\state\TransactionState.cpp">
+      <Filter>activemq\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\AsyncCallback.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\BytesMessage.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Closeable.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\CMSException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\CMSProperties.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\CMSSecurityException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Connection.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ConnectionFactory.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ConnectionMetaData.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\DeliveryMode.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Destination.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ExceptionListener.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\IllegalStateException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\InvalidClientIdException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\InvalidDestinationException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\InvalidSelectorException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MapMessage.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Message.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageAvailableListener.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageConsumer.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageEnumeration.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageEOFException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageFormatException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageListener.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageNotReadableException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageNotWriteableException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageProducer.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\MessageTransformer.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ObjectMessage.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Queue.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\QueueBrowser.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\ResourceAllocationException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Session.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Startable.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Stoppable.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\StreamMessage.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TemporaryQueue.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TemporaryTopic.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TextMessage.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Topic.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TransactionInProgressException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\TransactionRolledBackException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\UnsupportedOperationException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAConnection.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAConnectionFactory.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAException.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XAResource.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\XASession.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\Xid.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\AprPool.cpp">
+      <Filter>decaf\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\DecafRuntime.cpp">
+      <Filter>decaf\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\io\StandardErrorOutputStream.cpp">
+      <Filter>decaf\internal\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\io\StandardInputStream.cpp">
+      <Filter>decaf\internal\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\io\StandardOutputStream.cpp">
+      <Filter>decaf\internal\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\DefaultServerSocketFactory.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\DefaultSocketFactory.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\Network.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\SocketFileDescriptor.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\URIEncoderDecoder.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\URIHelper.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\tcp\TcpSocket.cpp">
+      <Filter>decaf\internal\net\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\tcp\TcpSocketInputStream.cpp">
+      <Filter>decaf\internal\net\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\tcp\TcpSocketOutputStream.cpp">
+      <Filter>decaf\internal\net\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\DefaultSSLContext.cpp">
+      <Filter>decaf\internal\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\DefaultSSLServerSocketFactory.cpp">
+      <Filter>decaf\internal\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\DefaultSSLSocketFactory.cpp">
+      <Filter>decaf\internal\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLContextSpi.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLParameters.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocket.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocketFactory.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocket.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketException.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketFactory.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketInputStream.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketOutputStream.cpp">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\ByteArrayAdapter.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\GenericResource.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\HexStringParser.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\Resource.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\ResourceLifecycleManager.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\StringUtils.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\TimerTaskHeap.cpp">
+      <Filter>decaf\internal\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\adler32.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\crc32.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\deflate.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\gzclose.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\gzlib.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\gzread.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\gzwrite.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\infback.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\inffast.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\inflate.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\inftrees.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\trees.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\uncompr.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\zutil.c">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\concurrent\ExecutorsSupport.cpp">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\concurrent\SynchronizableImpl.cpp">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\concurrent\Threading.cpp">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\concurrent\ThreadLocalImpl.cpp">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\concurrent\windows\Atomics.cpp">
+      <Filter>decaf\internal\util\concurrent\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\concurrent\windows\PlatformThread.cpp">
+      <Filter>decaf\internal\util\concurrent\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\Engine.cpp">
+      <Filter>decaf\internal\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\SecurityRuntime.cpp">
+      <Filter>decaf\internal\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\ServiceRegistry.cpp">
+      <Filter>decaf\internal\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\windows\SecureRandomImpl.cpp">
+      <Filter>decaf\internal\security\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\provider\DefaultMessageDigestProviderService.cpp">
+      <Filter>decaf\internal\security\provider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\provider\DefaultProvider.cpp">
+      <Filter>decaf\internal\security\provider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\provider\DefaultSecureRandomProviderService.cpp">
+      <Filter>decaf\internal\security\provider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\provider\crypto\MD4MessageDigestSpi.cpp">
+      <Filter>decaf\internal\security\provider\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\provider\crypto\MD5MessageDigestSpi.cpp">
+      <Filter>decaf\internal\security\provider\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\security\provider\crypto\SHA1MessageDigestSpi.cpp">
+      <Filter>decaf\internal\security\provider\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\BufferFactory.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\ByteArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\CharArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\DoubleArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\FloatArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\IntArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\LongArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\nio\ShortArrayBuffer.cpp">
+      <Filter>decaf\internal\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\BlockingByteArrayInputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\BufferedInputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\BufferedOutputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\ByteArrayInputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\ByteArrayOutputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\Closeable.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\DataInput.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\DataInputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\DataOutput.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\DataOutputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\EOFException.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\FileDescriptor.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\FilterInputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\FilterOutputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\Flushable.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\InputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\InputStreamReader.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\InterruptedIOException.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\IOException.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\OutputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\OutputStreamWriter.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\PushbackInputStream.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\Reader.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\UnsupportedEncodingException.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\UTFDataFormatException.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\io\Writer.cpp">
+      <Filter>decaf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Appendable.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Boolean.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Byte.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Character.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\CharSequence.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Comparable.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Double.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Exception.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Float.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Integer.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Iterable.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Long.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Math.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Readable.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Runnable.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Runtime.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Short.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\String.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\System.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Thread.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\ThreadGroup.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\ThreadLocal.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Throwable.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Types.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\ClassCastException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\CloneNotSupportedException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalArgumentException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalMonitorStateException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalStateException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\IllegalThreadStateException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\IndexOutOfBoundsException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\InterruptedException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\InvalidStateException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\NegativeArraySizeException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\NullPointerException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\NumberFormatException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\OutOfMemoryError.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\RuntimeException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\UnsupportedOperationException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\BindException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ConnectException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\DatagramPacket.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\HttpRetryException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\Inet4Address.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\Inet6Address.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\InetAddress.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\InetSocketAddress.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\MalformedURLException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\NoRouteToHostException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\PortUnreachableException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ProtocolException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ServerSocket.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ServerSocketFactory.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\Socket.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketAddress.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketError.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketFactory.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketImpl.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketImplFactory.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketOptions.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\SocketTimeoutException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\UnknownHostException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\UnknownServiceException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URI.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URISyntaxException.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URL.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URLDecoder.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URLEncoder.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLContext.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLContextSpi.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLParameters.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLServerSocket.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLServerSocketFactory.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLSocket.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ssl\SSLSocketFactory.cpp">
+      <Filter>decaf\net\ssl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\Buffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\BufferOverflowException.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\BufferUnderflowException.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\ByteBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\CharBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\DoubleBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\FloatBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\IntBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\InvalidMarkException.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\LongBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\ReadOnlyBufferException.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\nio\ShortBuffer.cpp">
+      <Filter>decaf\nio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\DigestException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\GeneralSecurityException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\InvalidKeyException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\Key.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\KeyException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\KeyManagementException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\MessageDigest.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\MessageDigestSpi.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\NoSuchAlgorithmException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\NoSuchProviderException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\Principal.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\Provider.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\ProviderException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\ProviderService.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\PublicKey.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\SecureRandom.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\SecureRandomSpi.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\Security.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\SecuritySpi.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\SignatureException.cpp">
+      <Filter>decaf\security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\Certificate.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\CertificateEncodingException.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\CertificateException.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\CertificateExpiredException.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\CertificateNotYetValidException.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\CertificateParsingException.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\cert\X509Certificate.cpp">
+      <Filter>decaf\security\cert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\security\auth\x500\X500Principal.cpp">
+      <Filter>decaf\security\auth\x500</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\AbstractCollection.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\AbstractList.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\AbstractMap.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\AbstractQueue.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\AbstractSequentialList.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\AbstractSet.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\ArrayList.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Arrays.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\BitSet.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Collection.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Collections.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Comparator.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\ConcurrentModificationException.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Date.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Deque.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\HashCode.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\HashMap.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\HashSet.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Iterator.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\LinkedHashMap.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\LinkedHashSet.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\LinkedList.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\List.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\ListIterator.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\LRUCache.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Map.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\MapEntry.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\NoSuchElementException.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\PriorityQueue.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Properties.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Queue.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Random.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Set.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\StlList.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\StlMap.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\StlQueue.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\StlSet.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\StringTokenizer.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\Timer.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\TimerTask.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\UUID.cpp">
+      <Filter>decaf\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\Adler32.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\CheckedInputStream.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\CheckedOutputStream.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\Checksum.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\CRC32.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\DataFormatException.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\Deflater.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\DeflaterOutputStream.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\Inflater.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\InflaterInputStream.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\zip\ZipException.cpp">
+      <Filter>decaf\util\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\ConsoleHandler.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\ErrorManager.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\Formatter.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\Handler.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\Level.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\Logger.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\LoggerHierarchy.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\LogManager.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\LogRecord.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\LogWriter.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\SimpleFormatter.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\SimpleLogger.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\StreamHandler.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\logging\XMLFormatter.cpp">
+      <Filter>decaf\util\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\AbstractExecutorService.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\BlockingQueue.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\BrokenBarrierException.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Callable.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\CancellationException.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ConcurrentHashMap.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ConcurrentMap.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ConcurrentStlMap.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\CopyOnWriteArrayList.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\CopyOnWriteArraySet.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\CountDownLatch.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Delayed.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ExecutionException.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Executor.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Executors.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ExecutorService.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Future.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\FutureTask.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\LinkedBlockingQueue.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Lock.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Mutex.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\RejectedExecutionException.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\RejectedExecutionHandler.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\RunnableFuture.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Semaphore.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\Synchronizable.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\SynchronousQueue.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ThreadFactory.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\ThreadPoolExecutor.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\TimeoutException.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\TimeUnit.cpp">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\atomic\AtomicBoolean.cpp">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\atomic\AtomicInteger.cpp">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\atomic\AtomicRefCounter.cpp">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\atomic\AtomicReference.cpp">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\AbstractOwnableSynchronizer.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\AbstractQueuedSynchronizer.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\Condition.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\Lock.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\LockSupport.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\ReadWriteLock.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\ReentrantLock.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\concurrent\locks\ReentrantReadWriteLock.cpp">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\util\comparators\Less.cpp">
+      <Filter>decaf\util\comparators</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\main\activemq\cmsutil\CachedConsumer.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\CachedProducer.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\CmsAccessor.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\CmsDestinationAccessor.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\CmsTemplate.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\DestinationResolver.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\DynamicDestinationResolver.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\MessageCreator.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\PooledSession.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\ProducerCallback.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\ResourceLifecycleManager.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\SessionCallback.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\cmsutil\SessionPool.h">
+      <Filter>activemq\cmsutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQAckHandler.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQConnection.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQConnectionFactory.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQConnectionMetaData.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQConstants.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQConsumer.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQMessageAudit.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQProducer.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQQueueBrowser.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQSession.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQSessionExecutor.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQTransactionContext.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQXAConnection.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQXAConnectionFactory.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQXASession.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\AdvisoryConsumer.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ConnectionAudit.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\DispatchData.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\Dispatcher.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\FifoMessageDispatchChannel.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\MessageDispatchChannel.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\PrefetchPolicy.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\RedeliveryPolicy.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\SimplePriorityMessageDispatchChannel.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\Synchronization.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\kernels\ActiveMQConsumerKernel.h">
+      <Filter>activemq\core\kernels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\kernels\ActiveMQProducerKernel.h">
+      <Filter>activemq\core\kernels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\kernels\ActiveMQSessionKernel.h">
+      <Filter>activemq\core\kernels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\kernels\ActiveMQXASessionKernel.h">
+      <Filter>activemq\core\kernels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\policies\DefaultPrefetchPolicy.h">
+      <Filter>activemq\core\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\policies\DefaultRedeliveryPolicy.h">
+      <Filter>activemq\core\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQBlobMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQBytesMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQDestination.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQMapMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQMessageTemplate.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQObjectMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQQueue.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQStreamMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQTempDestination.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQTempQueue.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQTempTopic.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQTextMessage.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ActiveMQTopic.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\BaseCommand.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\BaseDataStructure.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\BooleanExpression.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\BrokerError.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\BrokerId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\BrokerInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\Command.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConnectionControl.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConnectionError.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConnectionId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConnectionInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConsumerControl.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConsumerId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ConsumerInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ControlCommand.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\DataArrayResponse.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\DataResponse.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\DataStructure.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\DestinationInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\DiscoveryEvent.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ExceptionResponse.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\FlushCommand.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\IntegerResponse.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\JournalQueueAck.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\JournalTopicAck.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\JournalTrace.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\JournalTransaction.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\KeepAliveInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\LastPartialCommand.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\LocalTransactionId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\Message.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\MessageAck.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\MessageDispatch.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\MessageDispatchNotification.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\MessageId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\MessagePull.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\NetworkBridgeFilter.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\PartialCommand.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ProducerAck.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ProducerId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ProducerInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\RemoveInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\RemoveSubscriptionInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ReplayCommand.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\Response.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\SessionId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\SessionInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\ShutdownInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\SubscriptionInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\TransactionId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\TransactionInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\WireFormatInfo.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\commands\XATransactionId.h">
+      <Filter>activemq\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\exceptions\ActiveMQException.h">
+      <Filter>activemq\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\exceptions\BrokerException.h">
+      <Filter>activemq\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\exceptions\ConnectionFailedException.h">
+      <Filter>activemq\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\exceptions\ExceptionDefines.h">
+      <Filter>activemq\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\io\LoggingInputStream.h">
+      <Filter>activemq\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\io\LoggingOutputStream.h">
+      <Filter>activemq\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\library\ActiveMQCPP.h">
+      <Filter>activemq\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\MarshalAware.h">
+      <Filter>activemq\wireformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\WireFormat.h">
+      <Filter>activemq\wireformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\WireFormatFactory.h">
+      <Filter>activemq\wireformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\WireFormatNegotiator.h">
+      <Filter>activemq\wireformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\WireFormatRegistry.h">
+      <Filter>activemq\wireformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\stomp\StompCommandConstants.h">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\stomp\StompFrame.h">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\stomp\StompHelper.h">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\stomp\StompWireFormat.h">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\stomp\StompWireFormatFactory.h">
+      <Filter>activemq\wireformat\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireFormat.h">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatFactory.h">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireFormatNegotiator.h">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\OpenWireResponseBuilder.h">
+      <Filter>activemq\wireformat\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\utils\BooleanStream.h">
+      <Filter>activemq\wireformat\openwire\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\utils\HexTable.h">
+      <Filter>activemq\wireformat\openwire\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\utils\MessagePropertyInterceptor.h">
+      <Filter>activemq\wireformat\openwire\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\BaseDataStreamMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\DataStreamMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\PrimitiveTypesMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQBlobMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQBytesMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQDestinationMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQMapMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQObjectMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQQueueMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQStreamMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTempDestinationMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTempQueueMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTempTopicMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTextMessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ActiveMQTopicMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\BaseCommandMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\BrokerIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\BrokerInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionControlMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionErrorMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConnectionInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConsumerControlMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConsumerIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ConsumerInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ControlCommandMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DataArrayResponseMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DataResponseMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DestinationInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\DiscoveryEventMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ExceptionResponseMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\FlushCommandMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\IntegerResponseMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalQueueAckMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalTopicAckMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalTraceMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\JournalTransactionMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\KeepAliveInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\LastPartialCommandMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\LocalTransactionIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MarshallerFactory.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageAckMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageDispatchMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageDispatchNotificationMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessageMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\MessagePullMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\NetworkBridgeFilterMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\PartialCommandMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ProducerAckMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ProducerIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ProducerInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\RemoveInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\RemoveSubscriptionInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ReplayCommandMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ResponseMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\SessionIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\SessionInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\ShutdownInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\SubscriptionInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\TransactionIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\TransactionInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\WireFormatInfoMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\wireformat\openwire\marshal\generated\XATransactionIdMarshaller.h">
+      <Filter>activemq\wireformat\openwire\marshal\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\ActiveMQMessageTransformation.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\ActiveMQProperties.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\AdvisorySupport.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\CMSExceptionSupport.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\CompositeData.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\Config.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\IdGenerator.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\LongSequenceGenerator.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\MarshallingSupport.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\MemoryUsage.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\PrimitiveList.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\PrimitiveMap.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\PrimitiveValueConverter.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\PrimitiveValueNode.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\Service.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\ServiceListener.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\ServiceStopper.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\ServiceSupport.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\URISupport.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\util\Usage.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\AbstractTransportFactory.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\CompositeTransport.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\DefaultTransportListener.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\FutureResponse.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\IOTransport.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\ResponseCallback.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\Transport.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\TransportFactory.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\TransportFilter.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\TransportListener.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\TransportRegistry.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\correlator\ResponseCorrelator.h">
+      <Filter>activemq\transport\correlator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\BackupTransport.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\BackupTransportPool.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\CloseTransportsTask.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\FailoverTransport.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\FailoverTransportFactory.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\FailoverTransportListener.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\failover\URIPool.h">
+      <Filter>activemq\transport\failover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\inactivity\InactivityMonitor.h">
+      <Filter>activemq\transport\inactivity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\inactivity\ReadChecker.h">
+      <Filter>activemq\transport\inactivity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\inactivity\WriteChecker.h">
+      <Filter>activemq\transport\inactivity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\logging\LoggingTransport.h">
+      <Filter>activemq\transport\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\mock\InternalCommandListener.h">
+      <Filter>activemq\transport\mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\mock\MockTransport.h">
+      <Filter>activemq\transport\mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\mock\MockTransportFactory.h">
+      <Filter>activemq\transport\mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\mock\ResponseBuilder.h">
+      <Filter>activemq\transport\mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\tcp\SslTransport.h">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\tcp\SslTransportFactory.h">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\tcp\TcpTransport.h">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\tcp\TcpTransportFactory.h">
+      <Filter>activemq\transport\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\CompositeTask.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\CompositeTaskRunner.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\DedicatedTaskRunner.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\Scheduler.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\SchedulerTimerTask.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\Task.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\threads\TaskRunner.h">
+      <Filter>activemq\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\CommandVisitor.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\CommandVisitorAdapter.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\ConnectionState.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\ConnectionStateTracker.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\ConsumerState.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\ProducerState.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\SessionState.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\Tracked.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\state\TransactionState.h">
+      <Filter>activemq\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\AsyncCallback.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\BytesMessage.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Closeable.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\CMSException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\CMSProperties.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\CMSSecurityException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Config.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Connection.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\ConnectionFactory.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\ConnectionMetaData.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\DeliveryMode.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Destination.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\ExceptionListener.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\IllegalStateException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\InvalidClientIdException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\InvalidDestinationException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\InvalidSelectorException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MapMessage.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Message.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageAvailableListener.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageConsumer.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageEnumeration.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageEOFException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageFormatException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageListener.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageNotReadableException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageNotWriteableException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageProducer.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\MessageTransformer.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\ObjectMessage.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Queue.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\QueueBrowser.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\ResourceAllocationException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Session.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Startable.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Stoppable.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\StreamMessage.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\TemporaryQueue.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\TemporaryTopic.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\TextMessage.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Topic.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\TransactionInProgressException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\TransactionRolledBackException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\UnsupportedOperationException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\XAConnection.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\XAConnectionFactory.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\XAException.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\XAResource.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\XASession.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\Xid.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\AprPool.h">
+      <Filter>decaf\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\DecafRuntime.h">
+      <Filter>decaf\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\io\StandardErrorOutputStream.h">
+      <Filter>decaf\internal\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\io\StandardInputStream.h">
+      <Filter>decaf\internal\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\io\StandardOutputStream.h">
+      <Filter>decaf\internal\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\DefaultServerSocketFactory.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\DefaultSocketFactory.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\Network.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\SocketFileDescriptor.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\URIEncoderDecoder.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\URIHelper.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\URIType.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\tcp\TcpSocket.h">
+      <Filter>decaf\internal\net\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\tcp\TcpSocketInputStream.h">
+      <Filter>decaf\internal\net\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\tcp\TcpSocketOutputStream.h">
+      <Filter>decaf\internal\net\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\DefaultSSLContext.h">
+      <Filter>decaf\internal\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\DefaultSSLServerSocketFactory.h">
+      <Filter>decaf\internal\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\DefaultSSLSocketFactory.h">
+      <Filter>decaf\internal\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLContextSpi.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLParameters.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocket.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLServerSocketFactory.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocket.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketException.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketFactory.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketInputStream.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\ssl\openssl\OpenSSLSocketOutputStream.h">
+      <Filter>decaf\internal\net\ssl\openssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\ByteArrayAdapter.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\GenericResource.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\HexStringParser.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\Resource.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\ResourceLifecycleManager.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\StringUtils.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\TimerTaskHeap.h">
+      <Filter>decaf\internal\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\crc32.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\deflate.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\gzguts.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\inffast.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\inffixed.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\inflate.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\inftrees.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\trees.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\zconf.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\zlib.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\zip\zutil.h">
+      <Filter>decaf\internal\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\Atomics.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\ExecutorsSupport.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\PlatformThread.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\SynchronizableImpl.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\Threading.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\ThreadingTypes.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\ThreadLocalImpl.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\Transferer.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\TransferQueue.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\TransferStack.h">
+      <Filter>decaf\internal\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\util\concurrent\windows\PlatformDefs.h">
+      <Filter>decaf\internal\util\concurrent\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\Engine.h">
+      <Filter>decaf\internal\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\SecurityRuntime.h">
+      <Filter>decaf\internal\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\ServiceRegistry.h">
+      <Filter>decaf\internal\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\windows\SecureRandomImpl.h">
+      <Filter>decaf\internal\security\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\provider\DefaultMessageDigestProviderService.h">
+      <Filter>decaf\internal\security\provider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\provider\DefaultProvider.h">
+      <Filter>decaf\internal\security\provider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\provider\DefaultSecureRandomProviderService.h">
+      <Filter>decaf\internal\security\provider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\provider\crypto\MD4MessageDigestSpi.h">
+      <Filter>decaf\internal\security\provider\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\provider\crypto\MD5MessageDigestSpi.h">
+      <Filter>decaf\internal\security\provider\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\security\provider\crypto\SHA1MessageDigestSpi.h">
+      <Filter>decaf\internal\security\provider\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\BufferFactory.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\ByteArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\CharArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\DoubleArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\FloatArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\IntArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\LongArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\nio\ShortArrayBuffer.h">
+      <Filter>decaf\internal\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\BlockingByteArrayInputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\BufferedInputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\BufferedOutputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\ByteArrayInputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\ByteArrayOutputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\Closeable.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\DataInput.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\DataInputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\DataOutput.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\DataOutputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\EOFException.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\FileDescriptor.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\FilterInputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\FilterOutputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\Flushable.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\InputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\InputStreamReader.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\InterruptedIOException.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\IOException.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\OutputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\OutputStreamWriter.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\PushbackInputStream.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\Reader.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\UnsupportedEncodingException.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\UTFDataFormatException.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\io\Writer.h">
+      <Filter>decaf\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Appendable.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\ArrayPointer.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Boolean.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Byte.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Character.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\CharSequence.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Comparable.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Double.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Exception.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Float.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Integer.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Iterable.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Long.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Math.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Number.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Pointer.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Readable.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Runnable.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Runtime.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Short.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\String.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\System.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Thread.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\ThreadGroup.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\ThreadLocal.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Throwable.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\Types.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\ClassCastException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\CloneNotSupportedException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\ExceptionDefines.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\IllegalArgumentException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\IllegalMonitorStateException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\IllegalStateException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\IllegalThreadStateException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\IndexOutOfBoundsException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\InterruptedException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\InvalidStateException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\NegativeArraySizeException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\NullPointerException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\NumberFormatException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\OutOfMemoryError.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\RuntimeException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\UnsupportedOperationException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\BindException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ConnectException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\DatagramPacket.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\HttpRetryException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\Inet4Address.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\Inet6Address.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\InetAddress.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\InetSocketAddress.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\MalformedURLException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\NoRouteToHostException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\PortUnreachableException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ProtocolException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ServerSocket.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ServerSocketFactory.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\Socket.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketAddress.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketError.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketFactory.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketImpl.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketImplFactory.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketOptions.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\SocketTimeoutException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\UnknownHostException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\UnknownServiceException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URI.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URISyntaxException.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URL.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URLDecoder.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URLEncoder.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLContext.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLContextSpi.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLParameters.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLServerSocket.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLServerSocketFactory.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLSocket.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ssl\SSLSocketFactory.h">
+      <Filter>decaf\net\ssl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\Buffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\BufferOverflowException.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\BufferUnderflowException.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\ByteBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\CharBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\DoubleBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\FloatBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\IntBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\InvalidMarkException.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\LongBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\ReadOnlyBufferException.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\nio\ShortBuffer.h">
+      <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\DigestException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\GeneralSecurityException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\InvalidKeyException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\Key.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\KeyException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\KeyManagementException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\MessageDigest.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\MessageDigestSpi.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\NoSuchAlgorithmException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\NoSuchProviderException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\Principal.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\Provider.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\ProviderException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\ProviderService.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\PublicKey.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\SecureRandom.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\SecureRandomSpi.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\Security.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\SecuritySpi.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\SignatureException.h">
+      <Filter>decaf\security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\Certificate.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\CertificateEncodingException.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\CertificateException.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\CertificateExpiredException.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\CertificateNotYetValidException.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\CertificateParsingException.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\cert\X509Certificate.h">
+      <Filter>decaf\security\cert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\security\auth\x500\X500Principal.h">
+      <Filter>decaf\security\auth\x500</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\AbstractCollection.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\AbstractList.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\AbstractMap.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\AbstractQueue.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\AbstractSequentialList.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\AbstractSet.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\ArrayList.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Arrays.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\BitSet.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Collection.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Collections.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Comparator.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\ConcurrentModificationException.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Config.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Date.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Deque.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\HashCode.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\HashMap.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\HashSet.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Iterator.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\LinkedHashMap.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\LinkedHashSet.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\LinkedList.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\List.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\ListIterator.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\LRUCache.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Map.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\MapEntry.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\NoSuchElementException.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\PriorityQueue.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Properties.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Queue.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Random.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Set.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\StlList.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\StlMap.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\StlQueue.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\StlSet.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\StringTokenizer.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\Timer.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\TimerTask.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\UUID.h">
+      <Filter>decaf\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\Adler32.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\CheckedInputStream.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\CheckedOutputStream.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\Checksum.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\CRC32.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\DataFormatException.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\Deflater.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\DeflaterOutputStream.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\Inflater.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\InflaterInputStream.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\zip\ZipException.h">
+      <Filter>decaf\util\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\ConsoleHandler.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\ErrorManager.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\Filter.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\Formatter.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\Handler.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\Level.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\Logger.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\LoggerCommon.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\LoggerDefines.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\LoggerHierarchy.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\LogManager.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\LogRecord.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\LogWriter.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\MarkBlockLogger.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\PropertiesChangeListener.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\SimpleFormatter.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\SimpleLogger.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\StreamHandler.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\logging\XMLFormatter.h">
+      <Filter>decaf\util\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\AbstractExecutorService.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\BlockingQueue.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\BrokenBarrierException.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Callable.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\CancellationException.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Concurrent.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ConcurrentHashMap.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ConcurrentMap.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ConcurrentStlMap.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\CopyOnWriteArrayList.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\CopyOnWriteArraySet.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\CountDownLatch.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Delayed.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ExecutionException.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Executor.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Executors.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ExecutorService.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Future.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\FutureTask.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\LinkedBlockingQueue.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Lock.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Mutex.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\RejectedExecutionException.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\RejectedExecutionHandler.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\RunnableFuture.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Semaphore.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\Synchronizable.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\SynchronousQueue.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ThreadFactory.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\ThreadPoolExecutor.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\TimeoutException.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\TimeUnit.h">
+      <Filter>decaf\util\concurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\atomic\AtomicBoolean.h">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\atomic\AtomicInteger.h">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\atomic\AtomicRefCounter.h">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\atomic\AtomicReference.h">
+      <Filter>decaf\util\concurrent\atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\AbstractOwnableSynchronizer.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\AbstractQueuedSynchronizer.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\Condition.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\Lock.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\LockSupport.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\ReadWriteLock.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\ReentrantLock.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\concurrent\locks\ReentrantReadWriteLock.h">
+      <Filter>decaf\util\concurrent\locks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\util\comparators\Less.h">
+      <Filter>decaf\util\comparators</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\main\activemq\commands\srcmakefile.mk">
+      <Filter>activemq\commands</Filter>
+    </None>
+  </ItemGroup>
+</Project>

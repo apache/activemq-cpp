@@ -1,0 +1,371 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="activemq">
+      <UniqueIdentifier>{1069c37d-18c7-4a4e-a100-0c2090e7bf68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{9c24b2ad-7c19-4bb2-83f3-a7ba039a4b42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\teamcity">
+      <UniqueIdentifier>{4b6226c7-159c-4dd4-a77f-1a6b534991a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\test">
+      <UniqueIdentifier>{b0442ead-dc21-4b29-a0a8-95274be6e35d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\util">
+      <UniqueIdentifier>{3f572bb6-1f1e-439a-87fe-fc5157492ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\test\stomp">
+      <UniqueIdentifier>{b478cf71-92f8-48cc-ad50-3ec1caf77d77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\test\openwire">
+      <UniqueIdentifier>{c7baa1dd-6d69-4182-b599-6333d11a7882}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\test-integration\util\teamcity\TeamCityProgressListener.cpp">
+      <Filter>util\teamcity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\main.cpp" />
+    <ClCompile Include="..\src\test-integration\TestRegistry.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\util\CMSListener.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\util\CMSProvider.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\util\IntegrationCommon.cpp">
+      <Filter>activemq\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\AsyncSenderTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\BulkMessageTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\CmsConnectionStartStopTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\CmsSendWithAsyncCallbackTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\CmsTemplateTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\DurableTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\ExpirationTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\JmsMessageGroupsTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\MapMessageTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\MessageCompressionTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\MessagePriorityTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\QueueBrowserTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\SimpleRollbackTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\SimpleTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\SlowListenerTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\TransactionTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\VirtualTopicTest.cpp">
+      <Filter>activemq\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompBulkMessageTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompCmsConnectionStartStopTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompCmsTemplateTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompDurableTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompExpirationTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompJmsMessageGroupsTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompSimpleRollbackTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompSimpleTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompSlowListenerTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\stomp\StompTransactionTest.cpp">
+      <Filter>activemq\test\stomp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireAdvisorysTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireClientAckTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsConnectionStartStopTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireTempDestinationTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireXATransactionsTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\test-integration\util\teamcity\TeamCityProgressListener.h">
+      <Filter>util\teamcity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\util\CMSListener.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\util\CMSProvider.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\util\IntegrationCommon.h">
+      <Filter>activemq\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\AsyncSenderTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\BulkMessageTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\CmsConnectionStartStopTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\CmsSendWithAsyncCallbackTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\CmsTemplateTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\CMSTestFixture.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\DurableTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\ExpirationTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\JmsMessageGroupsTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\MapMessageTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\MessageCompressionTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\MessagePriorityTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\QueueBrowserTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\SimpleRollbackTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\SimpleTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\SlowListenerTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\TransactionTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\VirtualTopicTest.h">
+      <Filter>activemq\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompBulkMessageTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompCmsConnectionStartStopTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompCmsTemplateTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompDurableTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompExpirationTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompJmsMessageGroupsTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompSimpleRollbackTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompSimpleTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompSlowListenerTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\stomp\StompTransactionTest.h">
+      <Filter>activemq\test\stomp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireAdvisorysTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireClientAckTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsConnectionStartStopTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireTempDestinationTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireVirtualTopicTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireXATransactionsTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
