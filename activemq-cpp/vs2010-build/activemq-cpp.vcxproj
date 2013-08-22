@@ -23,6 +23,7 @@
     <ClCompile Include="..\src\main\activemq\cmsutil\ProducerCallback.cpp" />
     <ClCompile Include="..\src\main\activemq\cmsutil\ResourceLifecycleManager.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\src\main\activemq\cmsutil\SessionCallback.cpp" />
     <ClCompile Include="..\src\main\activemq\cmsutil\SessionPool.cpp" />
@@ -525,8 +526,14 @@
     <ClCompile Include="..\src\main\decaf\internal\util\ResourceLifecycleManager.cpp" />
     <ClCompile Include="..\src\main\decaf\internal\util\StringUtils.cpp" />
     <ClCompile Include="..\src\main\decaf\internal\util\TimerTaskHeap.cpp" />
-    <ClCompile Include="..\src\main\decaf\internal\util\zip\adler32.c" />
-    <ClCompile Include="..\src\main\decaf\internal\util\zip\crc32.c" />
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\adler32.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)ZLib.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)ZLib.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\util\zip\crc32.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)ZLib.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\%(FileName)ZLib.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\src\main\decaf\internal\util\zip\deflate.c" />
     <ClCompile Include="..\src\main\decaf\internal\util\zip\gzclose.c" />
     <ClCompile Include="..\src\main\decaf\internal\util\zip\gzlib.c" />
@@ -1534,7 +1541,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
