@@ -89,11 +89,13 @@
             #pragma warning(disable: 4822)
         #endif
 
-        #ifndef _SECURE_SCL
-            #define _SECURE_SCL 1
-        #endif
-        #ifndef _SCL_SECURE_NO_WARNINGS
-            #define _SCL_SECURE_NO_WARNINGS 1
+        #if defined(_MSC_VER) && _MSC_VER < 1600
+            #ifndef _SECURE_SCL
+                #define _SECURE_SCL 1
+            #endif
+            #ifndef _SCL_SECURE_NO_WARNINGS
+                #define _SCL_SECURE_NO_WARNINGS 1
+            #endif
         #endif
 
         /*
