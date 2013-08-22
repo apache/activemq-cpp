@@ -839,6 +839,12 @@
     <ClCompile Include="..\src\test\decaf\nio\BufferTest.cpp">
       <Filter>decaf\nio</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\test\activemq\transport\IOTransportTest.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test\activemq\transport\TransportRegistryTest.cpp">
+      <Filter>activemq\transport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\test\util\teamcity\TeamCityProgressListener.h">
@@ -1569,6 +1575,12 @@
     </ClInclude>
     <ClInclude Include="..\src\test\decaf\nio\BufferTest.h">
       <Filter>decaf\nio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test\activemq\transport\IOTransportTest.h">
+      <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test\activemq\transport\TransportRegistryTest.h">
+      <Filter>activemq\transport</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
