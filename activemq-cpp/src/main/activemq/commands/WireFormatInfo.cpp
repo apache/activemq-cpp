@@ -36,14 +36,14 @@ using namespace activemq::commands;
 WireFormatInfo::WireFormatInfo() : BaseCommand(), magic(), marshalledProperties(), properties(), version(5) {
 
     // Initialize the MAGIC buffer.
-    magic.push_back( 'A' );
-    magic.push_back( 'c' );
-    magic.push_back( 't' );
-    magic.push_back( 'i' );
-    magic.push_back( 'v' );
-    magic.push_back( 'e' );
-    magic.push_back( 'M' );
-    magic.push_back( 'Q' );
+    magic.push_back('A');
+    magic.push_back('c');
+    magic.push_back('t');
+    magic.push_back('i');
+    magic.push_back('v');
+    magic.push_back('e');
+    magic.push_back('M');
+    magic.push_back('Q');
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,20 +61,19 @@ DataStructure* WireFormatInfo::cloneDataStructure() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
+void WireFormatInfo::copyDataStructure(const DataStructure* src) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand::copyDataStructure(src);
 
-    const WireFormatInfo* srcPtr = dynamic_cast<const WireFormatInfo*>( src );
+    const WireFormatInfo* srcPtr = dynamic_cast<const WireFormatInfo*>(src);
 
-    if( srcPtr == NULL || src == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__,
-            "WireFormatInfo::copyDataStructure - src is NULL or invalid" );
+    if (srcPtr == NULL || src == NULL) {
+        throw NullPointerException(__FILE__, __LINE__,
+            "WireFormatInfo::copyDataStructure - src is NULL or invalid");
     }
 
-    this->properties.copy( srcPtr->getProperties() );
+    this->properties.copy(srcPtr->getProperties());
     this->version = srcPtr->getVersion();
 }
 
@@ -96,9 +95,9 @@ std::string WireFormatInfo::toString() const {
     std::vector<unsigned char> marshalledProperties;
 
     stream << "Magic = [ ";
-    for( size_t imagic = 0; imagic < magic.size(); ++imagic ) {
+    for (size_t imagic = 0; imagic < magic.size(); ++imagic) {
         stream << magic[imagic];
-        if( imagic < magic.size() - 1 ) {
+        if (imagic < magic.size() - 1) {
             stream << ", ";
         }
     }
@@ -121,50 +120,49 @@ std::string WireFormatInfo::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool WireFormatInfo::equals( const DataStructure* value ) const {
 
-    const WireFormatInfo* wireFormatInfo =
-        dynamic_cast<const WireFormatInfo*>( value );
+    const WireFormatInfo* wireFormatInfo = dynamic_cast<const WireFormatInfo*>(value);
 
-    if( value == NULL || wireFormatInfo == NULL ) {
+    if (value == NULL || wireFormatInfo == NULL) {
         return false;
     }
 
-    if( magic != wireFormatInfo->getMagic() ) {
+    if (magic != wireFormatInfo->getMagic()) {
         return false;
     }
-    if( marshalledProperties != wireFormatInfo->getMarshalledProperties() ) {
+    if (marshalledProperties != wireFormatInfo->getMarshalledProperties()) {
         return false;
     }
-    if( !properties.equals( wireFormatInfo->properties ) ) {
+    if (!properties.equals(wireFormatInfo->properties)) {
         return false;
     }
-    if( version != wireFormatInfo->getVersion() ) {
+    if (version != wireFormatInfo->getVersion()) {
         return false;
     }
-    if( isStackTraceEnabled() != wireFormatInfo->isStackTraceEnabled() ) {
+    if (isStackTraceEnabled() != wireFormatInfo->isStackTraceEnabled()) {
         return false;
     }
-    if( isTcpNoDelayEnabled() != wireFormatInfo->isTcpNoDelayEnabled() ) {
+    if (isTcpNoDelayEnabled() != wireFormatInfo->isTcpNoDelayEnabled()) {
         return false;
     }
-    if( isCacheEnabled() != wireFormatInfo->isCacheEnabled() ) {
+    if (isCacheEnabled() != wireFormatInfo->isCacheEnabled()) {
         return false;
     }
-    if( getCacheSize() != wireFormatInfo->getCacheSize() ) {
+    if (getCacheSize() != wireFormatInfo->getCacheSize()) {
         return false;
     }
-    if( isTightEncodingEnabled() != wireFormatInfo->isTightEncodingEnabled() ) {
+    if (isTightEncodingEnabled() != wireFormatInfo->isTightEncodingEnabled()) {
         return false;
     }
-    if( isSizePrefixDisabled() != wireFormatInfo->isSizePrefixDisabled() ) {
+    if (isSizePrefixDisabled() != wireFormatInfo->isSizePrefixDisabled()) {
         return false;
     }
-    if( !BaseCommand::equals( value ) ) {
+    if (!BaseCommand::equals(value)) {
         return false;
     }
-    if( getMaxInactivityDuration() != wireFormatInfo->getMaxInactivityDuration() ) {
+    if (getMaxInactivityDuration() != wireFormatInfo->getMaxInactivityDuration()) {
         return false;
     }
-    if( getMaxInactivityDurationInitalDelay() != wireFormatInfo->getMaxInactivityDurationInitalDelay() ) {
+    if (getMaxInactivityDurationInitalDelay() != wireFormatInfo->getMaxInactivityDurationInitalDelay()) {
         return false;
     }
 
@@ -172,27 +170,25 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> WireFormatInfo::visit( activemq::state::CommandVisitor* visitor )
-    throw( activemq::exceptions::ActiveMQException ) {
-
-    return visitor->processWireFormat( this );
+decaf::lang::Pointer<commands::Command> WireFormatInfo::visit(activemq::state::CommandVisitor* visitor) {
+    return visitor->processWireFormat(this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool WireFormatInfo::isValid() const {
 
-    if( magic.size() != std::string( "ActiveMQ" ).size() ) {
+    if (magic.size() != std::string("ActiveMQ").size()) {
         return false;
     }
 
-    if( magic[0] != 'A' ||
+    if (magic[0] != 'A' ||
         magic[1] != 'c' ||
         magic[2] != 't' ||
         magic[3] != 'i' ||
         magic[4] != 'v' ||
         magic[5] != 'e' ||
         magic[6] != 'M' ||
-        magic[7] != 'Q' ) {
+        magic[7] != 'Q') {
 
         return false;
     }
@@ -204,21 +200,21 @@ bool WireFormatInfo::isValid() const {
 bool WireFormatInfo::isStackTraceEnabled() const {
 
     try {
-        return properties.getBool( "StackTraceEnabled" );
+        return properties.getBool("StackTraceEnabled");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setStackTraceEnabled( bool stackTraceEnabled ) {
+void WireFormatInfo::setStackTraceEnabled(bool stackTraceEnabled) {
 
     try {
-        properties.setBool( "StackTraceEnabled", stackTraceEnabled );
+        properties.setBool("StackTraceEnabled", stackTraceEnabled);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -226,21 +222,21 @@ void WireFormatInfo::setStackTraceEnabled( bool stackTraceEnabled ) {
 bool WireFormatInfo::isTcpNoDelayEnabled() const {
 
     try {
-        return properties.getBool( "TcpNoDelayEnabled" );
+        return properties.getBool("TcpNoDelayEnabled");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
+void WireFormatInfo::setTcpNoDelayEnabled(bool tcpNoDelayEnabled) {
 
     try {
-        properties.setBool( "TcpNoDelayEnabled", tcpNoDelayEnabled );
+        properties.setBool("TcpNoDelayEnabled", tcpNoDelayEnabled);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -250,20 +246,20 @@ bool WireFormatInfo::isCacheEnabled() const {
     try {
         return false;
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setCacheEnabled( bool cacheEnabled AMQCPP_UNUSED ) {
+void WireFormatInfo::setCacheEnabled(bool cacheEnabled AMQCPP_UNUSED) {
 
     try {
         // Turning this on is not supported as it causes the client to not work.
-        properties.setBool( "CacheEnabled", false );
+        properties.setBool("CacheEnabled", false);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -271,21 +267,21 @@ void WireFormatInfo::setCacheEnabled( bool cacheEnabled AMQCPP_UNUSED ) {
 bool WireFormatInfo::isTightEncodingEnabled() const {
 
     try {
-        return properties.getBool( "TightEncodingEnabled" );
+        return properties.getBool("TightEncodingEnabled");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setTightEncodingEnabled( bool tightEncodingEnabled ) {
+void WireFormatInfo::setTightEncodingEnabled(bool tightEncodingEnabled) {
 
     try {
-        properties.setBool( "TightEncodingEnabled", tightEncodingEnabled );
+        properties.setBool("TightEncodingEnabled", tightEncodingEnabled);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -293,109 +289,106 @@ void WireFormatInfo::setTightEncodingEnabled( bool tightEncodingEnabled ) {
 bool WireFormatInfo::isSizePrefixDisabled() const {
 
     try {
-        return properties.getBool( "SizePrefixDisabled" );
+        return properties.getBool("SizePrefixDisabled");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setSizePrefixDisabled( bool sizePrefixDisabled ) {
+void WireFormatInfo::setSizePrefixDisabled(bool sizePrefixDisabled) {
 
     try {
-        properties.setBool( "SizePrefixDisabled", sizePrefixDisabled );
+        properties.setBool("SizePrefixDisabled", sizePrefixDisabled);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::beforeMarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
+void WireFormatInfo::beforeMarshal(WireFormat* wireFormat AMQCPP_UNUSED) {
 
-    try{
-
+    try {
         marshalledProperties.clear();
-        if( !properties.isEmpty() ) {
-            marshal::PrimitiveTypesMarshaller::marshal(
-                &properties, marshalledProperties );
+        if (!properties.isEmpty()) {
+            marshal::PrimitiveTypesMarshaller::marshal(&properties, marshalledProperties);
         }
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED ) {
+void WireFormatInfo::afterUnmarshal(WireFormat* wireFormat AMQCPP_UNUSED) {
 
-    try{
-
-        marshal::PrimitiveTypesMarshaller::unmarshal(
-            &properties, marshalledProperties );
+    try {
+        marshal::PrimitiveTypesMarshaller::unmarshal(&properties, marshalledProperties);
     }
-    AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
-    AMQ_CATCHALL_THROW( decaf::io::IOException )
+    AMQ_CATCH_RETHROW(decaf::io::IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
+    AMQ_CATCHALL_THROW(decaf::io::IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long WireFormatInfo::getMaxInactivityDuration() const {
+
     try {
-        return properties.getLong( "MaxInactivityDuration" );
+        return properties.getLong("MaxInactivityDuration");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return 0LL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setMaxInactivityDuration( long long maxInactivityDuration ) {
+void WireFormatInfo::setMaxInactivityDuration(long long maxInactivityDuration) {
     try {
-        properties.setLong( "MaxInactivityDuration", maxInactivityDuration );
+        properties.setLong("MaxInactivityDuration", maxInactivityDuration);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long WireFormatInfo::getMaxInactivityDurationInitalDelay() const {
     try {
-        return properties.getLong( "MaxInactivityDurationInitalDelay" );
+        return properties.getLong("MaxInactivityDurationInitalDelay");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return 0LL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setMaxInactivityDurationInitalDelay( long long maxInactivityDurationInitalDelay ) {
+void WireFormatInfo::setMaxInactivityDurationInitalDelay(long long maxInactivityDurationInitalDelay) {
     try {
-        properties.setLong( "MaxInactivityDurationInitalDelay", maxInactivityDurationInitalDelay );
+        properties.setLong("MaxInactivityDurationInitalDelay", maxInactivityDurationInitalDelay);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int WireFormatInfo::getCacheSize() const {
     try {
-        return properties.getInt( "CacheSize" );
+        return properties.getInt("CacheSize");
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 
     return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatInfo::setCacheSize( int value ) {
+void WireFormatInfo::setCacheSize(int value) {
     try {
-        properties.setInt( "CacheSize", value );
+        properties.setInt("CacheSize", value);
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
     AMQ_CATCHALL_NOTHROW()
 }
