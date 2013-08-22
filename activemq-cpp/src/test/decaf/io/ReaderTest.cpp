@@ -56,10 +56,7 @@ namespace {
     protected:
 
         virtual int doReadArrayBounded( char* buffer, int size,
-                                        int offset, int length )
-            throw( decaf::io::IOException,
-                   decaf::lang::exceptions::NullPointerException,
-                   decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                        int offset, int length ) {
 
             if( contents.empty() ) {
                 return -1;

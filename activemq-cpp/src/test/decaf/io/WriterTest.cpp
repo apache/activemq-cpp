@@ -62,10 +62,7 @@ namespace {
         }
 
         virtual void doWriteArrayBounded(
-            const char* buffer, int size, int offset, int length )
-                throw( decaf::io::IOException,
-                       decaf::lang::exceptions::NullPointerException,
-                       decaf::lang::exceptions::IndexOutOfBoundsException ) {
+            const char* buffer, int size, int offset, int length ) {
 
             if( NULL == contents ) {
                 throw IOException( __FILE__, __LINE__, "Writer was already closed." );

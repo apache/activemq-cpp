@@ -43,7 +43,7 @@ namespace {
 
         const char* getBuffer() const{ return buffer; }
 
-        virtual void doWriteByte( unsigned char c ) throw (IOException){
+        virtual void doWriteByte( unsigned char c ) {
             if( pos >= 100 ){
                 throw IOException();
             }
@@ -52,10 +52,7 @@ namespace {
         }
 
         virtual void doWriteByteArrayBounded( const unsigned char* buffer, int size,
-                                              int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::NullPointerException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException ) {
+                                              int offset, int length ) {
 
             if( (pos + length) > 100 ){
                 throw IOException();

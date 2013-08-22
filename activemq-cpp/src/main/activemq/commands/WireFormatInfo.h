@@ -70,7 +70,7 @@ namespace commands{
         }
 
         virtual decaf::lang::Pointer<commands::Command> visit(
-            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException );
+            activemq::state::CommandVisitor* visitor );
 
         /**
          * Get the current Wireformat Version

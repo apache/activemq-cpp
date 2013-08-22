@@ -108,7 +108,7 @@ namespace {
             return this->closed;
         }
 
-        virtual int available() const throw (IOException){
+        virtual int available() const {
             if( isClosed() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -118,7 +118,7 @@ namespace {
             return len - pos;
         }
 
-        virtual int doReadByte() throw (IOException){
+        virtual int doReadByte() {
             if( this->isThrowOnRead() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -132,10 +132,7 @@ namespace {
             return data.c_str()[pos++];
         }
 
-        virtual int doReadArrayOffsetAndLength( unsigned char* buffer, int size, int offset, int length )
-            throw ( decaf::io::IOException,
-                    decaf::lang::exceptions::IndexOutOfBoundsException,
-                    decaf::lang::exceptions::NullPointerException ) {
+        virtual int doReadArrayOffsetAndLength( unsigned char* buffer, int size, int offset, int length ) {
 
             int numToRead = std::min( length, available() );
 

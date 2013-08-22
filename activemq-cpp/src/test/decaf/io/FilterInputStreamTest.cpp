@@ -57,7 +57,7 @@ namespace {
             return this->closed;
         }
 
-        virtual int available() const throw (IOException){
+        virtual int available() {
             if( isClosed() ) {
                 throw IOException(
                     __FILE__, __LINE__,
