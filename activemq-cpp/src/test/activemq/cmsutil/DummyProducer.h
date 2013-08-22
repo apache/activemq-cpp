@@ -90,7 +90,7 @@ namespace cmsutil {
          * @param mode
          *      The DeliveryMode
          */
-        virtual void setDeliveryMode(int mode) throw (cms::CMSException) {
+        virtual void setDeliveryMode(int mode) {
             this->deliveryMode = mode;
         }
 
@@ -99,7 +99,7 @@ namespace cmsutil {
          *
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode() const throw (cms::CMSException) {
+        virtual int getDeliveryMode() const {
             return deliveryMode;
         }
 
@@ -109,7 +109,7 @@ namespace cmsutil {
          * @param value
          *      boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageID(bool value) throw (cms::CMSException) {
+        virtual void setDisableMessageID(bool value) {
             disableMessageId = value;
         }
 
@@ -118,7 +118,7 @@ namespace cmsutil {
          *
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageID() const throw (cms::CMSException) {
+        virtual bool getDisableMessageID() const {
             return disableMessageId;
         }
 
@@ -126,7 +126,7 @@ namespace cmsutil {
          * Sets if Message Time Stamps are disbled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageTimeStamp(bool value) throw (cms::CMSException) {
+        virtual void setDisableMessageTimeStamp(bool value) {
             disableMessageTimestamp = value;
         }
 
@@ -135,7 +135,7 @@ namespace cmsutil {
          *
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp() const throw (cms::CMSException) {
+        virtual bool getDisableMessageTimeStamp() const {
             return disableMessageTimestamp;
         }
 
@@ -145,7 +145,7 @@ namespace cmsutil {
          * @param priority
          *      int value for Priority level
          */
-        virtual void setPriority(int priority) throw (cms::CMSException) {
+        virtual void setPriority(int priority) {
             this->priority = priority;
         }
 
@@ -154,7 +154,7 @@ namespace cmsutil {
          *
          * @return int based priority level
          */
-        virtual int getPriority() const throw (cms::CMSException) {
+        virtual int getPriority() const {
             return priority;
         }
 
@@ -166,7 +166,7 @@ namespace cmsutil {
          * @param time
          *      default time to live value in milliseconds
          */
-        virtual void setTimeToLive(long long time) throw (cms::CMSException) {
+        virtual void setTimeToLive(long long time) {
             ttl = time;
         }
 
@@ -175,7 +175,7 @@ namespace cmsutil {
          *
          * @return Time to live value in milliseconds
          */
-        virtual long long getTimeToLive() const throw (cms::CMSException) {
+        virtual long long getTimeToLive() const {
             return ttl;
         }
 

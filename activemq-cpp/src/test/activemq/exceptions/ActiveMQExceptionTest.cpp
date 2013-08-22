@@ -29,7 +29,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
-    void testMethod() throw ( cms::CMSException ) {
+    void testMethod() {
         throw cms::MessageNotReadableException( "TEST", NULL );
     }
 }

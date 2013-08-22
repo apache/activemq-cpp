@@ -72,7 +72,7 @@ namespace cmsutil{
 
             virtual void onSend(const cms::Destination* destination,
                 cms::Message* message, int deliveryMode, int priority,
-                long long timeToLive) throw (cms::CMSException){
+                long long timeToLive) {
                 this->dest = destination;
                 this->message = message;
                 this->deliveryMode = deliveryMode;
@@ -83,7 +83,7 @@ namespace cmsutil{
             virtual cms::Message* doReceive(const cms::Destination* dest,
                     const std::string& selector,
                     bool noLocal,
-                    long long timeout) throw (cms::CMSException){
+                    long long timeout) {
                 this->dest = dest;
                 this->selector = selector;
                 this->noLocal = noLocal;

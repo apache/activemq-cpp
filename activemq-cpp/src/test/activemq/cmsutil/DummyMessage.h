@@ -38,11 +38,11 @@ namespace cmsutil {
 
         virtual void clearProperties() {}
 
-        virtual std::vector<std::string> getPropertyNames() const throw (cms::CMSException) {
+        virtual std::vector<std::string> getPropertyNames() const {
             return std::vector<std::string>();
         }
 
-        virtual bool propertyExists(const std::string& name) const throw (cms::CMSException) {
+        virtual bool propertyExists(const std::string& name) const {
             return false;
         }
 
