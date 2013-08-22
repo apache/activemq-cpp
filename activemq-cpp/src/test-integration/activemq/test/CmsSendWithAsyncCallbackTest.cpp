@@ -91,7 +91,7 @@ namespace {
                 dynamic_cast<ActiveMQProducer*>(session->createProducer(destination.get())));
         producer->setDeliveryMode(DeliveryMode::PERSISTENT);
 
-        long start = System::currentTimeMillis();
+        long long start = System::currentTimeMillis();
 
         for (int i = 0; i < count; i++) {
             std::auto_ptr<cms::TextMessage> message(session->createTextMessage("Hello"));
@@ -110,7 +110,7 @@ namespace {
                 dynamic_cast<ActiveMQProducer*>(session->createProducer(destination.get())));
         producer->setDeliveryMode(DeliveryMode::PERSISTENT);
 
-        long start = System::currentTimeMillis();
+        long long start = System::currentTimeMillis();
 
         for (int i = 0; i < count; i++) {
             std::auto_ptr<cms::TextMessage> message(session->createTextMessage("Hello"));
