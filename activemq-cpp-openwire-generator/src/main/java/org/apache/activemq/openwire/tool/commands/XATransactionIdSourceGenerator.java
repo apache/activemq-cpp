@@ -136,7 +136,9 @@ public class XATransactionIdSourceGenerator extends CommandSourceGenerator {
         out.println("        return 0;");
         out.println("    }");
         out.println("");
-        out.println("    std::copy( this->branchQualifier.begin(), this->branchQualifier.end(), buffer );");
+        out.println("    for (int i = 0; i < (int)this->branchQualifier.size(); ++i) {");
+        out.println("        buffer[i] = this->branchQualifier.at(i);");
+        out.println("    }");
         out.println("");
         out.println("    return (int)this->branchQualifier.size();");
         out.println("}");
@@ -160,7 +162,9 @@ public class XATransactionIdSourceGenerator extends CommandSourceGenerator {
         out.println("        return 0;");
         out.println("    }");
         out.println("");
-        out.println("    std::copy( this->globalTransactionId.begin(), this->globalTransactionId.end(), buffer );");
+        out.println("    for (int i = 0; i < (int)this->globalTransactionId.size(); ++i) {");
+        out.println("        buffer[i] = this->globalTransactionId.at(i);");
+        out.println("    }");
         out.println("");
         out.println("    return (int)this->globalTransactionId.size();");
         out.println("}");

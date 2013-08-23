@@ -351,7 +351,9 @@ int XATransactionId::getBranchQualifier( unsigned char* buffer, int size ) const
         return 0;
     }
 
-    std::copy( this->branchQualifier.begin(), this->branchQualifier.end(), buffer );
+    for (int i = 0; i < (int)this->branchQualifier.size(); ++i) {
+        buffer[i] = this->branchQualifier.at(i);
+    }
 
     return (int)this->branchQualifier.size();
 }
@@ -375,7 +377,9 @@ int XATransactionId::getGlobalTransactionId( unsigned char* buffer, int size ) c
         return 0;
     }
 
-    std::copy( this->globalTransactionId.begin(), this->globalTransactionId.end(), buffer );
+    for (int i = 0; i < (int)this->globalTransactionId.size(); ++i) {
+        buffer[i] = this->globalTransactionId.at(i);
+    }
 
     return (int)this->globalTransactionId.size();
 }
