@@ -40,6 +40,11 @@
   <ItemGroup>
     <ProjectReference Include="activemq-cpp.vcxproj">
       <Project>{5e5a9e11-9f2f-4819-ae41-cca7d6029197}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
