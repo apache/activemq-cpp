@@ -1889,7 +1889,7 @@
     <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -1904,7 +1904,7 @@
     <TargetName>libactivemq-cppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>libactivemq-cppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -1914,10 +1914,10 @@
     <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -1928,11 +1928,11 @@
     <TargetName>activemq-cpp</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>libactivemq-cpp</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>libactivemq-cpp</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
