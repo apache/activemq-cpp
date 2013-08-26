@@ -1880,27 +1880,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
     <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>libactivemq-cppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>activemq-cppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>libactivemq-cppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
@@ -1908,10 +1908,10 @@
     <TargetName>libactivemq-cppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
-    <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
+    <OutDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
@@ -1920,11 +1920,11 @@
     <OutDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>libactivemq-cpp</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
-    <IntDir>$(SolutionDir)$(ProjectName)\$(PlatformName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>activemq-cpp</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -1977,7 +1977,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>
       </PrecompiledHeaderOutputFile>
-      <DisableSpecificWarnings>4355,4521</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4355;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -2083,7 +2083,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>
       </PrecompiledHeaderOutputFile>
-      <DisableSpecificWarnings>4355,4521</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4355;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
