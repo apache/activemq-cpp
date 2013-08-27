@@ -2521,7 +2521,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2547,7 +2547,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;HAVE_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2573,7 +2573,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2588,7 +2588,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
@@ -2601,7 +2601,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;HAVE_OPENSSL</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2616,7 +2616,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
@@ -2629,7 +2629,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2655,7 +2655,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;HAVE_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2681,7 +2681,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2696,6 +2696,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
@@ -2707,7 +2709,7 @@
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;HAVE_OPENSSL</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -2722,6 +2724,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
@@ -2735,7 +2739,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2762,7 +2766,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;HAVE_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2789,7 +2793,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2804,7 +2808,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
       <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
@@ -2818,7 +2822,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;HAVE_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2832,8 +2836,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libapr-1.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
       <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
@@ -2847,7 +2851,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2874,7 +2878,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;HAVE_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2901,7 +2905,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2915,6 +2919,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libapr-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
@@ -2928,7 +2934,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;HAVE_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(CPPUNIT_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>
@@ -2942,6 +2948,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(APR_DIST)\$(PlatformName)\lib;$(APR_DIST)\$(PlatformName)\bin;$(OPENSSL_DIST)\$(PlatformName)\lib;$(OPENSSL_DIST)\$(PlatformName)\bin;$(PLATFORM_SDK)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libapr-1.lib</AdditionalDependencies>
     </Link>
     <Lib>
       <OutputFile>$(OutDir)\libactivemq-cpp.lib</OutputFile>
