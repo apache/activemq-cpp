@@ -24,6 +24,9 @@ New Feature
 
     [AMQCPP-502] - Can't send to temporary queues created by name
 
+Task
+
+    [AMQCPP-507] - Add new Visual Studio 2010 Project files
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.7.1                               ==
