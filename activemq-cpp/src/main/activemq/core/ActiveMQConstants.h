@@ -29,7 +29,7 @@ namespace core{
      * Each constant is defined as an enumeration and has functions that
      * convert back an forth between string and enum values.
      */
-    class AMQCPP_API ActiveMQConstants{
+    class AMQCPP_API ActiveMQConstants {
     public:
 
         // Flags to indicate Transaction States.
@@ -65,7 +65,7 @@ namespace core{
          * These values represent the options that can be appended to an
          * Destination name, i.e. /topic/foo?consumer.exclusive=true
          */
-        enum DestinationOption{
+        enum DestinationOption {
             CONSUMER_PREFECTCHSIZE,
             CUNSUMER_MAXPENDINGMSGLIMIT,
             CONSUMER_NOLOCAL,
@@ -81,8 +81,7 @@ namespace core{
          * These values represent the parameters that can be added to the
          * connection URI that affect the ActiveMQ Core API
          */
-        enum URIParam
-        {
+        enum URIParam {
             CONNECTION_SENDTIMEOUT,
             CONNECTION_PRODUCERWINDOWSIZE,
             CONNECTION_CLOSETIMEOUT,

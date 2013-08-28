@@ -34,7 +34,7 @@ map< std::string, ActiveMQConstants::URIParam >
 ActiveMQConstants::StaticInitializer ActiveMQConstants::staticInits;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConstants::StaticInitializer::StaticInitializer(){
+ActiveMQConstants::StaticInitializer::StaticInitializer() {
 
     destOptions[CONSUMER_PREFECTCHSIZE] = "consumer.prefetchSize";
     destOptions[CUNSUMER_MAXPENDINGMSGLIMIT] = "consumer.maximumPendingMessageLimit";
