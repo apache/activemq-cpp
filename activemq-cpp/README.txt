@@ -245,7 +245,9 @@ We do not support using the GNU compiler on Windows, using the Cygwin package
 or the MinGW platform, several issues with sockets and threading were found to
 exist when trying to use these solutions.
 
-However we do support using the MSVC compiler on Windows.
+However we do support using the MSVC compiler on Windows, we provide a set of
+Visual Studio project files for v2010, newer version should be able to upgrade
+these files to the newest format.
 
 There are a couple or things that you will need to setup to ensure that
 the MSVC compile succeeds.
@@ -260,18 +262,110 @@ the MSVC compile succeeds.
   and executable you will also need to install the MS Redistributable for the
   version of Visual Studio which you used to build the library.
 
-* Ensure that the path to you MSVC install is set in the PATH env variable.
-  You can test this by typing cl.exe at the command line, if you get an
-  error complaining that its not found, then you'll need to fix your PATH.
+6.1 Project Settings
 
-* The Project files reference the CPPUnit libraries for the Integration and
-  Unit tests builds. In order for these to build correctly you must
-  either configure the global settings in Visual Studio for include and library
-  folders or add new settings to each of the projects in the solution to point
-  to these locations.
+The Visual Studio 2010 Project files included with the code have been configured to look
+for the various headers and library files of the APR, OpenSSL and CPPUnit projects using
+a predefined directory structure and a set of environment variables which can be used to
+define the exact location on disk.
 
-* The Project files reference the APR libraries for the Integration and
-  Unit tests builds. In order for these to build correctly you must
-  either configure the global settings in Visual Studio for include and library
-  folders or add new settings to each of the projects in the solution to point
-  to these locations.
+The directory structure for each dependency is prefixed with an environment variable, the
+set of variables is as follows:
+
+    Library        Recommended Version     Windows Env Var
+    ------------------------------------------------------------
+      APR             >= 1.3                 ${APR_DIST}
+      CPPUNIT         >= 1.10.2              ${CPPUNIT_DIST}
+      OpenSSL         >= 1.5.24              ${OPENSSL_DIST}
+      Platform SDK    {varies}               ${PLATFORM_SDK}
+
+Under each of the library dependencies the structure should be layed out as follows:
+
+      ${APR_DIST}\
+          win32\
+             include\
+             lib\
+             bin\
+          x64\
+             include\
+             lib\
+             bin\
+      ${CPPUNIT_DIST}\
+          win32\
+             include\
+             lib\
+          x64\
+             include\
+             lib\
+      ${OPENSSL_DIST}\
+          win32\
+             include\
+             lib\
+             bin\
+             exp\
+          x64\
+             include\
+             lib\
+             bin\
+             exp\
+
+6.2  Obtaining and building the dependent libraries
+
+Before you can build the ActiveMQ-CPP library you need to get builds of the required libraries
+installed on you system.  This is not always simple on windows, we will offer a few tips to try
+and make getting a copy of each here but you might also want to consult Google and ask on the
+mailing list for more help.
+
+6.2.1  APR library.
+
+APR is provided in source form only from the Apache Software Foundation.  You will need to build
+a library from source by downloading the latest release from:
+
+    http://apr.apache.org/
+
+At the time of this writing the latest version was v1.4.8 and is recommended since its build
+support files are working with the Visual Studio 2010 tools.
+
+APR is built from the command line using its provided Make files.  When building the library you
+need to ensure you are in the right environment to produce the desired architecture builds (x64 or
+win32).  You can open a command line that's correct by using the shortcuts under the Visual Studio
+start menu location (ex. Visual Studio 2010 / Visual Studio Tools / Visual Studio x64 win 64 Command Prompt
+
+Once you are in the proper command prompt change to the directory where your APR source code is
+located (ex: C:\APR) and then run the build for the library to produce the desired ARCH build.
+
+For a 32 bit library which installs into a proper distribution directory run:
+
+   nmake -f Makefile.win ARCH="win32 Release" PREFIX=C:\dist\APR\x64 buildall install clean
+
+and for a 64 bit build of the library use the command.
+
+   nmake -f Makefile.win ARCH="x64 Release" PREFIX=C:\dist\APR\x64 buildall install clean
+
+6.2.2  CPPUnit
+
+To build the CPPUnit library for later Visual Studio versions such as 2010+ you need to download the
+most up to date code for CPPUnit v1.12.1+ from its SVN location.  The current location is:
+
+   https://svn.code.sf.net/p/cppunit/code/trunk/cppunit
+
+Once you have checked out the code you can use the included Visual Studio 2010 project files to
+build the various target (Debug, Release, Debug DLL, Release DLL) and copy each to the location
+you have chosen, just ensure you follow the directory layout as specified above.
+
+6.2.3   OpenSSL
+
+OpenSSL can be the harder one to obtain on Windows.  If you choose to use SSL on Windows you need
+to locate a build of OpenSSL that matches your Visual Stidio version (2010 at the time of this
+writing) and install it into the location matching the directory layout configured in the ActiveMQ-CPP
+project files.   Builds for visual studio 2008 were available online at this location:
+
+   http://slproweb.com/products/Win32OpenSSL.html
+
+Before attempting to build OpenSSL yourself you should check to see if newer 2010 versions are
+available.  If you find you need to build it yourself you should consult Google to find useful
+Blog postings that detail how to get started with the build process for OpenSSL on Windows.
+
+
+
+
