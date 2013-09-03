@@ -1334,6 +1334,38 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\DestinationEvent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\DestinationEvent.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\DestinationListener.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\DestinationListener.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\DestinationSource.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\DestinationSource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\EnhancedConnection.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\main\cms\EnhancedConnection.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\ExceptionListener.cpp"
 				>
 			</File>
@@ -2670,6 +2702,22 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQConsumer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQDestinationEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQDestinationEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQDestinationSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQDestinationSource.h"
 					>
 				</File>
 				<File
