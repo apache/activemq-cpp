@@ -57,7 +57,7 @@ namespace {
             return this->closed;
         }
 
-        virtual int available() {
+        virtual int available() const {
             if( isClosed() ) {
                 throw IOException(
                     __FILE__, __LINE__,
@@ -133,11 +133,13 @@ namespace {
 void FilterInputStreamTest::testAvailable() {
 
     std::string testStr = "TEST12345678910";
-    MyInputStream myStream( testStr );
-    FilterInputStream is( &myStream );
+    MyInputStream myStream(testStr);
+    FilterInputStream is(&myStream);
 
-    CPPUNIT_ASSERT_MESSAGE( "Returned incorrect number of available bytes",
-                            is.available() == (int)testStr.length() );
+    int available = is.available();
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect number of available bytes",
+                                 (int)testStr.length(), available);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
