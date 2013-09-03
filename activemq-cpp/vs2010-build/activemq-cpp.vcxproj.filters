@@ -2067,6 +2067,24 @@
     <ClCompile Include="..\src\main\decaf\util\comparators\Less.cpp">
       <Filter>decaf\util\comparators</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\main\cms\DestinationEvent.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\DestinationListener.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\DestinationSource.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\cms\EnhancedConnection.cpp">
+      <Filter>cms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQDestinationEvent.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQDestinationSource.cpp">
+      <Filter>activemq\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\main\activemq\cmsutil\CachedConsumer.h">
@@ -4030,6 +4048,24 @@
     </ClInclude>
     <ClInclude Include="..\src\main\decaf\util\comparators\Less.h">
       <Filter>decaf\util\comparators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\DestinationEvent.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\DestinationListener.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\DestinationSource.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\cms\EnhancedConnection.h">
+      <Filter>cms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQDestinationEvent.h">
+      <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQDestinationSource.h">
+      <Filter>activemq\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

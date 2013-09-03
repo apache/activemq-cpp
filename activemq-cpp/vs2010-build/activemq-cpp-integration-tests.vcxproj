@@ -85,6 +85,7 @@
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireEnhancedConnectionTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireCmsSendWithAsyncCallbackTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireEnhancedConnectionTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireIndividualAckTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.h" />

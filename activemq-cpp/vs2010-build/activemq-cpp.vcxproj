@@ -164,6 +164,8 @@
     <ClCompile Include="..\src\main\activemq\core\ActiveMQConnectionMetaData.cpp" />
     <ClCompile Include="..\src\main\activemq\core\ActiveMQConstants.cpp" />
     <ClCompile Include="..\src\main\activemq\core\ActiveMQConsumer.cpp" />
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQDestinationEvent.cpp" />
+    <ClCompile Include="..\src\main\activemq\core\ActiveMQDestinationSource.cpp" />
     <ClCompile Include="..\src\main\activemq\core\ActiveMQMessageAudit.cpp" />
     <ClCompile Include="..\src\main\activemq\core\ActiveMQProducer.cpp" />
     <ClCompile Include="..\src\main\activemq\core\ActiveMQQueueBrowser.cpp" />
@@ -539,6 +541,10 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='ReleaseSSL-DLL|x64'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\src\main\cms\DestinationEvent.cpp" />
+    <ClCompile Include="..\src\main\cms\DestinationListener.cpp" />
+    <ClCompile Include="..\src\main\cms\DestinationSource.cpp" />
+    <ClCompile Include="..\src\main\cms\EnhancedConnection.cpp" />
     <ClCompile Include="..\src\main\cms\ExceptionListener.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='DebugSSL|Win32'">$(IntDir)\%(FileName)CMS.obj</ObjectFileName>
@@ -1685,6 +1691,8 @@
     <ClInclude Include="..\src\main\activemq\core\ActiveMQConnectionMetaData.h" />
     <ClInclude Include="..\src\main\activemq\core\ActiveMQConstants.h" />
     <ClInclude Include="..\src\main\activemq\core\ActiveMQConsumer.h" />
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQDestinationEvent.h" />
+    <ClInclude Include="..\src\main\activemq\core\ActiveMQDestinationSource.h" />
     <ClInclude Include="..\src\main\activemq\core\ActiveMQMessageAudit.h" />
     <ClInclude Include="..\src\main\activemq\core\ActiveMQProducer.h" />
     <ClInclude Include="..\src\main\activemq\core\ActiveMQQueueBrowser.h" />
@@ -1878,6 +1886,10 @@
     <ClInclude Include="..\src\main\cms\ConnectionMetaData.h" />
     <ClInclude Include="..\src\main\cms\DeliveryMode.h" />
     <ClInclude Include="..\src\main\cms\Destination.h" />
+    <ClInclude Include="..\src\main\cms\DestinationEvent.h" />
+    <ClInclude Include="..\src\main\cms\DestinationListener.h" />
+    <ClInclude Include="..\src\main\cms\DestinationSource.h" />
+    <ClInclude Include="..\src\main\cms\EnhancedConnection.h" />
     <ClInclude Include="..\src\main\cms\ExceptionListener.h" />
     <ClInclude Include="..\src\main\cms\IllegalStateException.h" />
     <ClInclude Include="..\src\main\cms\InvalidClientIdException.h" />
