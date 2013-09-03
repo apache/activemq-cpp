@@ -18,11 +18,6 @@
 #ifndef _ACTIVEMQ_COMMANDS_ACTIVEMQTEMPQUEUE_H_
 #define _ACTIVEMQ_COMMANDS_ACTIVEMQTEMPQUEUE_H_
 
-// Turn off warning message for ignored exception specification
-#ifdef _MSC_VER
-#pragma warning( disable : 4290 )
-#endif
-
 #include <activemq/util/Config.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <cms/TemporaryQueue.h>
@@ -30,11 +25,10 @@
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQTempQueue : public ActiveMQTempDestination,
-                                         public cms::TemporaryQueue {
+    class AMQCPP_API ActiveMQTempQueue: public ActiveMQTempDestination, public cms::TemporaryQueue {
     public:
 
         const static unsigned char ID_ACTIVEMQTEMPQUEUE = 102;
@@ -60,22 +54,22 @@ namespace commands{
 
         virtual bool equals(const DataStructure* value) const;
 
-        virtual const cms::Destination* getCMSDestination() const {
+        virtual const cms::TemporaryQueue* getCMSDestination() const {
             return this;
         }
 
-    public:   // CMS Destination
+    public: // CMS Destination
 
         virtual cms::Destination::DestinationType getDestinationType() const {
             return cms::Destination::TEMPORARY_QUEUE;
         }
 
         virtual cms::Destination* clone() const {
-            return dynamic_cast<cms::Destination*> (this->cloneDataStructure());
+            return dynamic_cast<cms::Destination*>(this->cloneDataStructure());
         }
 
         virtual void copy(const cms::Destination& source) {
-            this->copyDataStructure(dynamic_cast<const DataStructure*> (&source));
+            this->copyDataStructure(dynamic_cast<const DataStructure*>(&source));
         }
 
         virtual const cms::CMSProperties& getCMSProperties() const {

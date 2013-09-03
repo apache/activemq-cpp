@@ -1,0 +1,264 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "OpenwireEnhancedConnectionTest.h"
+
+#include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/core/ActiveMQConnection.h>
+#include <activemq/core/ActiveMQSession.h>
+#include <activemq/exceptions/ActiveMQException.h>
+
+#include <decaf/lang/Pointer.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/concurrent/TimeUnit.h>
+
+#include <cms/ConnectionFactory.h>
+#include <cms/Connection.h>
+#include <cms/Session.h>
+#include <cms/ConnectionFactory.h>
+#include <cms/Connection.h>
+#include <cms/DestinationListener.h>
+#include <cms/DestinationSource.h>
+#include <cms/EnhancedConnection.h>
+
+#include <memory>
+
+using namespace cms;
+using namespace std;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
+using namespace activemq;
+using namespace activemq::core;
+using namespace activemq::commands;
+using namespace activemq::exceptions;
+using namespace activemq::test;
+using namespace activemq::test::openwire;
+
+////////////////////////////////////////////////////////////////////////////////
+OpenwireEnhancedConnectionTest::OpenwireEnhancedConnectionTest() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenwireEnhancedConnectionTest::~OpenwireEnhancedConnectionTest() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class TestDestinationListener : public DestinationListener {
+    public:
+
+        int queueCount;
+        int topicCount;
+        int tempQueueCount;
+        int tempTopicCount;
+
+        TestDestinationListener() : DestinationListener(),
+                                    queueCount(0),
+                                    topicCount(0),
+                                    tempQueueCount(0),
+                                    tempTopicCount(0) {
+        }
+
+        virtual void onDestinationEvent(cms::DestinationEvent* event) {
+
+            cms::Destination::DestinationType type = event->getDestination()->getDestinationType();
+            switch (type) {
+                case cms::Destination::QUEUE:
+                    if (event->isAddOperation()) {
+                        queueCount++;
+                    } else {
+                        queueCount--;
+                    }
+                    break;
+                case cms::Destination::TOPIC:
+                    if (event->isAddOperation()) {
+                        topicCount++;
+                    } else {
+                        topicCount--;
+                    }
+                    break;
+                case cms::Destination::TEMPORARY_QUEUE:
+                    if (event->isAddOperation()) {
+                        tempQueueCount++;
+                    } else {
+                        tempQueueCount--;
+                    }
+                    break;
+                case cms::Destination::TEMPORARY_TOPIC:
+                    if (event->isAddOperation()) {
+                        tempTopicCount++;
+                    } else {
+                        tempTopicCount--;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        void reset() {
+            queueCount = 0;
+            topicCount = 0;
+            tempQueueCount = 0;
+            tempTopicCount = 0;
+        }
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireEnhancedConnectionTest::testDestinationSourceGetters() {
+
+    TestDestinationListener listener;
+
+    std::auto_ptr<ConnectionFactory> factory(
+        ConnectionFactory::createCMSConnectionFactory( getBrokerURL() ) );
+    CPPUNIT_ASSERT( factory.get() != NULL );
+
+    std::auto_ptr<Connection> connection( factory->createConnection() );
+    CPPUNIT_ASSERT( connection.get() != NULL );
+
+    std::auto_ptr<Session> session( connection->createSession() );
+    CPPUNIT_ASSERT( session.get() != NULL );
+
+    ActiveMQConnection* amq = dynamic_cast<ActiveMQConnection*>(connection.get());
+    CPPUNIT_ASSERT(amq != NULL);
+
+    cms::EnhancedConnection* enhanced = dynamic_cast<cms::EnhancedConnection*>(connection.get());
+    CPPUNIT_ASSERT(enhanced != NULL);
+
+    std::auto_ptr<cms::DestinationSource> source(enhanced->getDestinationSource());
+    CPPUNIT_ASSERT(source.get() != NULL);
+
+    source->setListener(&listener);
+
+    connection->start();
+    source->start();
+
+    std::auto_ptr<Destination> destination1( session->createTopic("Test.Topic") );
+    std::auto_ptr<MessageConsumer> consumer1( session->createConsumer( destination1.get() ) );
+    std::auto_ptr<Destination> destination2( session->createQueue("Test.Queue") );
+    std::auto_ptr<MessageConsumer> consumer2( session->createConsumer( destination2.get() ) );
+
+    consumer1->close();
+    consumer2->close();
+
+    std::auto_ptr<Destination> destination3( session->createTemporaryQueue() );
+    std::auto_ptr<Destination> destination4( session->createTemporaryTopic() );
+
+    Thread::sleep(1500);
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one Queue", 1, listener.queueCount);
+    CPPUNIT_ASSERT_MESSAGE("Should be at least Topic", listener.topicCount >= 1);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Queue", 1, listener.tempQueueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Topic", 1, listener.tempTopicCount);
+
+    amq->destroyDestination(destination1.get());
+    amq->destroyDestination(destination2.get());
+
+    Thread::sleep(1500);
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be no Queues", 0, listener.queueCount);
+
+    source->stop();
+
+    std::auto_ptr<Destination> destination5( session->createTemporaryQueue() );
+    std::auto_ptr<Destination> destination6( session->createTemporaryTopic() );
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Queue", 1, listener.tempQueueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Topic", 1, listener.tempTopicCount);
+
+    listener.reset();
+    source->start();
+
+    std::auto_ptr<Destination> destination7( session->createTemporaryQueue() );
+    std::auto_ptr<Destination> destination8( session->createTemporaryTopic() );
+
+    Thread::sleep(1500);
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be two temp Queues", 3, listener.tempQueueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be two temp Topics", 3, listener.tempTopicCount);
+
+    source->stop();
+    connection->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireEnhancedConnectionTest::testDestinationSource() {
+
+    TestDestinationListener listener;
+
+    std::auto_ptr<ConnectionFactory> factory(
+        ConnectionFactory::createCMSConnectionFactory( getBrokerURL() ) );
+    CPPUNIT_ASSERT( factory.get() != NULL );
+
+    std::auto_ptr<Connection> connection( factory->createConnection() );
+    CPPUNIT_ASSERT( connection.get() != NULL );
+
+    std::auto_ptr<Session> session( connection->createSession() );
+    CPPUNIT_ASSERT( session.get() != NULL );
+
+    ActiveMQConnection* amq = dynamic_cast<ActiveMQConnection*>(connection.get());
+    CPPUNIT_ASSERT(amq != NULL);
+
+    cms::EnhancedConnection* enhanced = dynamic_cast<cms::EnhancedConnection*>(connection.get());
+    CPPUNIT_ASSERT(enhanced != NULL);
+
+    std::auto_ptr<cms::DestinationSource> source(enhanced->getDestinationSource());
+    CPPUNIT_ASSERT(source.get() != NULL);
+
+    source->setListener(&listener);
+
+    connection->start();
+    source->start();
+
+    TimeUnit::SECONDS.sleep(1);
+
+    CPPUNIT_ASSERT_EQUAL(0, (int)source->getQueues().size());
+    CPPUNIT_ASSERT_EQUAL(0, (int)source->getTopics().size());
+    CPPUNIT_ASSERT_EQUAL(0, (int)source->getTemporaryQueues().size());
+    CPPUNIT_ASSERT_EQUAL(0, (int)source->getTemporaryTopics().size());
+
+    std::auto_ptr<Destination> destination1(session->createTemporaryQueue());
+    std::auto_ptr<Destination> destination2(session->createTemporaryTopic());
+    std::auto_ptr<Destination> destination3(session->createTemporaryQueue());
+    std::auto_ptr<Destination> destination4(session->createTemporaryTopic());
+    std::auto_ptr<Destination> destination5(session->createTemporaryQueue());
+    std::auto_ptr<Destination> destination6(session->createTemporaryTopic());
+
+    TimeUnit::SECONDS.sleep(2);
+
+    std::vector<cms::TemporaryQueue*> tempQueues = source->getTemporaryQueues();
+    std::vector<cms::TemporaryTopic*> tempTopics = source->getTemporaryTopics();
+
+    CPPUNIT_ASSERT_EQUAL(3, (int)tempQueues.size());
+    CPPUNIT_ASSERT_EQUAL(3, (int)tempTopics.size());
+
+    for (int i = 0; i < 3; ++i) {
+        delete tempQueues[i];
+        delete tempTopics[i];
+    }
+
+    source->stop();
+    connection->close();
+}

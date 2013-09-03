@@ -18,11 +18,6 @@
 #ifndef _ACTIVEMQ_COMMANDS_ACTIVEMQTEMPTOPIC_H_
 #define _ACTIVEMQ_COMMANDS_ACTIVEMQTEMPTOPIC_H_
 
-// Turn off warning message for ignored exception specification
-#ifdef _MSC_VER
-#pragma warning( disable : 4290 )
-#endif
-
 #include <activemq/util/Config.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <cms/TemporaryTopic.h>
@@ -30,11 +25,10 @@
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQTempTopic : public ActiveMQTempDestination,
-                                         public cms::TemporaryTopic {
+    class AMQCPP_API ActiveMQTempTopic: public ActiveMQTempDestination, public cms::TemporaryTopic {
     public:
 
         const static unsigned char ID_ACTIVEMQTEMPTOPIC = 103;
@@ -60,23 +54,22 @@ namespace commands{
 
         virtual bool equals(const DataStructure* value) const;
 
-        virtual const cms::Destination* getCMSDestination() const {
+        virtual const cms::TemporaryTopic* getCMSDestination() const {
             return this;
         }
 
-    public:
-        // CMS Destination
+    public: // CMS Destination
 
         virtual cms::Destination::DestinationType getDestinationType() const {
             return cms::Destination::TEMPORARY_TOPIC;
         }
 
         virtual cms::Destination* clone() const {
-            return dynamic_cast<cms::Destination*> (this->cloneDataStructure());
+            return dynamic_cast<cms::Destination*>(this->cloneDataStructure());
         }
 
         virtual void copy(const cms::Destination& source) {
-            this->copyDataStructure(dynamic_cast<const DataStructure*> (&source));
+            this->copyDataStructure(dynamic_cast<const DataStructure*>(&source));
         }
 
         virtual const cms::CMSProperties& getCMSProperties() const {
@@ -85,7 +78,7 @@ namespace commands{
 
         virtual bool equals(const cms::Destination& other) const;
 
-    public:  // CMS Temporary Topic
+    public: // CMS Temporary Topic
 
         virtual std::string getTopicName() const {
             return this->getPhysicalName();

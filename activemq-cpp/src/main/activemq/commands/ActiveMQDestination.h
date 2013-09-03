@@ -18,11 +18,6 @@
 #ifndef _ACTIVEMQ_COMMANDS_ACTIVEMQDESTINATION_H_
 #define _ACTIVEMQ_COMMANDS_ACTIVEMQDESTINATION_H_
 
-// Turn off warning message for ignored exception specification
-#ifdef _MSC_VER
-#pragma warning( disable : 4290 )
-#endif
-
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
 #include <activemq/util/ActiveMQProperties.h>

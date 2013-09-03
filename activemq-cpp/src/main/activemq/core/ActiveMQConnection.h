@@ -18,7 +18,7 @@
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 
-#include <cms/Connection.h>
+#include <cms/EnhancedConnection.h>
 #include <activemq/util/Config.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
@@ -57,7 +57,7 @@ namespace core{
      *
      * @since 2.0
      */
-    class AMQCPP_API ActiveMQConnection : public virtual cms::Connection,
+    class AMQCPP_API ActiveMQConnection : public virtual cms::EnhancedConnection,
                                           public transport::TransportListener {
     private:
 
@@ -323,6 +323,11 @@ namespace core{
          * {@inheritDoc}
          */
         virtual cms::MessageTransformer* getMessageTransformer() const;
+
+        /**
+         * {@inheritDoc}
+         */
+        virtual cms::DestinationSource* getDestinationSource();
 
     public:   // Configuration Options
 

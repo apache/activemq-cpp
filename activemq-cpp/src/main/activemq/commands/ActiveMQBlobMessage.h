@@ -18,11 +18,6 @@
 #ifndef _ACTIVEMQ_COMMANDS_ACTIVEMQBLOBMESSAGE_H_
 #define _ACTIVEMQ_COMMANDS_ACTIVEMQBLOBMESSAGE_H_
 
-// Turn off warning message for ignored exception specification
-#ifdef _MSC_VER
-#pragma warning( disable : 4290 )
-#endif
-
 #include <activemq/util/Config.h>
 #include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <cms/Message.h>

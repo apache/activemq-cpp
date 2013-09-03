@@ -32,39 +32,38 @@
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQQueue : public ActiveMQDestination,
-                                     public cms::Queue {
+    class AMQCPP_API ActiveMQQueue : public ActiveMQDestination, public cms::Queue {
     public:
 
         const static unsigned char ID_ACTIVEMQQUEUE = 100;
 
     private:
 
-        ActiveMQQueue( const ActiveMQQueue& );
-        ActiveMQQueue& operator= ( const ActiveMQQueue& );
+        ActiveMQQueue(const ActiveMQQueue&);
+        ActiveMQQueue& operator=(const ActiveMQQueue&);
 
     public:
 
         ActiveMQQueue();
 
-        ActiveMQQueue( const std::string& name );
+        ActiveMQQueue(const std::string& name);
 
-        virtual ~ActiveMQQueue() throw();
+        virtual ~ActiveMQQueue() throw ();
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQQueue* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
-        virtual const cms::Destination* getCMSDestination() const {
+        virtual const cms::Queue* getCMSDestination() const {
             return this;
         }
 
@@ -75,20 +74,18 @@ namespace commands{
         }
 
         virtual cms::Destination* clone() const {
-            return dynamic_cast<cms::Destination*>(
-                this->cloneDataStructure() );
+            return dynamic_cast<cms::Destination*>(this->cloneDataStructure());
         }
 
-        virtual void copy( const cms::Destination& source ) {
-            this->copyDataStructure(
-                dynamic_cast<const DataStructure*>( &source ) );
+        virtual void copy(const cms::Destination& source) {
+            this->copyDataStructure(dynamic_cast<const DataStructure*>(&source));
         }
 
         virtual const cms::CMSProperties& getCMSProperties() const {
             return this->getOptions();
         }
 
-        virtual bool equals( const cms::Destination& other ) const;
+        virtual bool equals(const cms::Destination& other) const;
 
     public:  // CMS Queue
 

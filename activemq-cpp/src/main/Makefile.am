@@ -96,6 +96,8 @@ cc_sources = \
     activemq/core/ActiveMQConnectionMetaData.cpp \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQConsumer.cpp \
+    activemq/core/ActiveMQDestinationEvent.cpp \
+    activemq/core/ActiveMQDestinationSource.cpp \
     activemq/core/ActiveMQMessageAudit.cpp \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQQueueBrowser.cpp \
@@ -284,6 +286,10 @@ cc_sources = \
     cms/ConnectionMetaData.cpp \
     cms/DeliveryMode.cpp \
     cms/Destination.cpp \
+    cms/DestinationEvent.cpp \
+    cms/DestinationListener.cpp \
+    cms/DestinationSource.cpp \
+    cms/EnhancedConnection.cpp \
     cms/ExceptionListener.cpp \
     cms/IllegalStateException.cpp \
     cms/InvalidClientIdException.cpp \
@@ -734,6 +740,8 @@ h_sources = \
     activemq/core/ActiveMQConnectionMetaData.h \
     activemq/core/ActiveMQConstants.h \
     activemq/core/ActiveMQConsumer.h \
+    activemq/core/ActiveMQDestinationEvent.h \
+    activemq/core/ActiveMQDestinationSource.h \
     activemq/core/ActiveMQMessageAudit.h \
     activemq/core/ActiveMQProducer.h \
     activemq/core/ActiveMQQueueBrowser.h \
@@ -927,6 +935,10 @@ h_sources = \
     cms/ConnectionMetaData.h \
     cms/DeliveryMode.h \
     cms/Destination.h \
+    cms/DestinationEvent.h \
+    cms/DestinationListener.h \
+    cms/DestinationSource.h \
+    cms/EnhancedConnection.h \
     cms/ExceptionListener.h \
     cms/IllegalStateException.h \
     cms/InvalidClientIdException.h \

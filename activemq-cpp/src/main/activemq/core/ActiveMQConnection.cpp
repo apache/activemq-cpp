@@ -23,6 +23,7 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/ActiveMQMessageAudit.h>
+#include <activemq/core/ActiveMQDestinationSource.h>
 #include <activemq/core/AdvisoryConsumer.h>
 #include <activemq/core/ConnectionAudit.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
@@ -1504,6 +1505,11 @@ void ActiveMQConnection::setMessageTransformer(cms::MessageTransformer* transfor
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageTransformer* ActiveMQConnection::getMessageTransformer() const {
     return this->config->transformer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::DestinationSource* ActiveMQConnection::getDestinationSource() {
+    return new ActiveMQDestinationSource(this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
