@@ -90,9 +90,10 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk</url>
+    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/activemq-cpp.git</connection>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/activemq-cpp.git</developerConnection>
+    <url>https://fisheye6.atlassian.com/browse/~br=master/activemq-cpp-git</url>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencyManagement>
