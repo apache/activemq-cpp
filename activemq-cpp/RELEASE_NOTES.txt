@@ -23,6 +23,7 @@ Bug
 New Feature
 
     [AMQCPP-502] - Can't send to temporary queues created by name
+    [AMQCPP-508] - Add DestinationSource interfaces in CMS and provide an ActiveMQ implementation
 
 Task
 
