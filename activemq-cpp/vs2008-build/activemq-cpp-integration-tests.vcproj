@@ -932,6 +932,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireEnhancedConnectionTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireEnhancedConnectionTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.cpp"
 							>
 						</File>
