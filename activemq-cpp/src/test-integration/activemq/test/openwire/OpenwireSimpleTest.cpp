@@ -383,3 +383,26 @@ void OpenwireSimpleTest::testMessageIdSetOnSend() {
     CPPUNIT_ASSERT(message->getCMSMessageID() != "");
     CPPUNIT_ASSERT(message->getCMSDestination() != NULL);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testReceiveWithSessionSyncDispatch() {
+
+    ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>(cmsProvider->getConnection());
+    amqConnection->setAlwaysSessionAsync(false);
+
+    cmsProvider->reconnectSession();
+
+    // Create CMS Object for Comms
+    cms::Session* session( cmsProvider->getSession() );
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+
+    // Send some text messages
+    producer->send( txtMessage.get() );
+
+    auto_ptr<cms::Message> message( consumer->receive( 1000 ) );
+    CPPUNIT_ASSERT( message.get() != NULL );
+}

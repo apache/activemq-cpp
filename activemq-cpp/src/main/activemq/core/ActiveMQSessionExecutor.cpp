@@ -81,9 +81,12 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::execute(const Pointer<MessageDispatch>& dispatch) {
 
-    // Add the data to the queue.
-    this->messageQueue->enqueue(dispatch);
-    this->wakeup();
+    if (this->session->isSessionAsyncDispatch()) {
+        this->messageQueue->enqueue(dispatch);
+        this->wakeup();
+    } else {
+        this->dispatch(dispatch);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +99,10 @@ void ActiveMQSessionExecutor::executeFirst(const Pointer<MessageDispatch>& dispa
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::wakeup() {
+
+    if (!this->session->isSessionAsyncDispatch()) {
+        return;
+    }
 
     Pointer<TaskRunner> taskRunner;
     synchronized(messageQueue.get()) {

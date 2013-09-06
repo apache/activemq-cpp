@@ -90,8 +90,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
     class ConnectionThreadFactory : public ThreadFactory {
     private:
@@ -176,6 +176,7 @@ namespace core{
         bool exclusiveConsumer;
         bool transactedIndividualAck;
         bool nonBlockingRedelivery;
+        bool alwaysSessionAsync;
         int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
@@ -243,6 +244,7 @@ namespace core{
                              exclusiveConsumer(false),
                              transactedIndividualAck(false),
                              nonBlockingRedelivery(false),
+                             alwaysSessionAsync(true),
                              compressionLevel(-1),
                              sendTimeout(0),
                              closeTimeout(15000),
@@ -544,7 +546,8 @@ cms::Session* ActiveMQConnection::createSession(cms::Session::AcknowledgeMode ac
         // Create the session instance as a Session Kernel we then create and return a
         // ActiveMQSession instance that acts as a proxy to the kernel caller can delete
         // that at any time since we only refer to the Pointer to the session kernel.
-        Pointer<ActiveMQSessionKernel> session(new ActiveMQSessionKernel(this, getNextSessionId(), ackMode, *this->config->properties));
+        Pointer<ActiveMQSessionKernel> session(
+            new ActiveMQSessionKernel(this, getNextSessionId(), ackMode, *this->config->properties));
 
         session->setMessageTransformer(this->config->transformer);
 
@@ -1923,4 +1926,14 @@ bool ActiveMQConnection::isDuplicate(Dispatcher* dispatcher, Pointer<commands::M
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
     this->config->connectionAudit.rollbackDuplicate(dispatcher, message);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isAlwaysSessionAsync() const {
+    return this->config->alwaysSessionAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setAlwaysSessionAsync(bool alwaysSessionAsync) {
+    this->config->alwaysSessionAsync = alwaysSessionAsync;
 }

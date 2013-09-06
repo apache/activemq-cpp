@@ -27,8 +27,8 @@
 #include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
 
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
     using decaf::lang::Pointer;
 
@@ -639,6 +639,24 @@ namespace core{
          *      The scheduledOptimizedAckInterval to use for new Consumers.
          */
         void setOptimizedAckScheduledAckInterval(long long optimizedAckScheduledAckInterval);
+
+        /**
+         * Returns the current value of the always session async option.
+         *
+         * @return Returns the alwaysSessionAsync configuration setting.
+         */
+        bool isAlwaysSessionAsync() const;
+
+        /**
+         * If this flag is not set 'true' then a separate thread is not used for dispatching messages
+         * for each Session in the Connection. However, a separate thread is always used if there
+         * is more than one session, or the session isn't in auto acknowledge or duplicates ok mode.
+         * By default this value is set to true and session dispatch happens asynchronously.
+         *
+         * @param alwaysSessionAsync
+         * 		The alwaysSessionAsync value to use when creating new sessions.
+         */
+        void setAlwaysSessionAsync(bool alwaysSessionAsync);
 
     public:
 

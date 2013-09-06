@@ -568,6 +568,20 @@ namespace kernels {
          */
         void sendAck(decaf::lang::Pointer<commands::MessageAck> ack, bool async = false);
 
+        /**
+         * Returns true if this session is dispatching messages to its consumers asynchronously.
+         *
+         * @return Returns the sessionAsyncDispatch.
+         */
+        bool isSessionAsyncDispatch() const;
+
+        /**
+         * Configures asynchronous message dispatch to this session's consumers.
+         *
+         * @param sessionAsyncDispatch The sessionAsyncDispatch to set.
+         */
+        void setSessionAsyncDispatch(bool sessionAsyncDispatch);
+
    private:
 
        /**

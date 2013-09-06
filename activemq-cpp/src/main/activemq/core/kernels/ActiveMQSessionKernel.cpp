@@ -100,13 +100,14 @@ namespace kernels{
         Mutex sendMutex;
         cms::MessageTransformer* transformer;
         int hashCode;
+        bool sessionAsyncDispatch;
 
     public:
 
         SessionConfig() : synchronizationRegistered(false),
                           producerLock(), producers(), consumerLock(), consumers(),
                           scheduler(), closeSync(), sendMutex(), transformer(NULL),
-                          hashCode() {}
+                          hashCode(), sessionAsyncDispatch(true) {}
         ~SessionConfig() {}
     };
 
@@ -226,8 +227,9 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
 
     this->closed.set(false);
     this->lastDeliveredSequenceId = -1;
+    this->config->sessionAsyncDispatch = connection->isAlwaysSessionAsync();
 
-    // Create a Transaction objet
+    // Create a Transaction object
     this->transaction.reset(new ActiveMQTransactionContext(this, properties));
 
     // Create the session executor object.
@@ -1494,4 +1496,14 @@ void ActiveMQSessionKernel::sendAck(Pointer<MessageAck> ack, bool async) {
     } else {
         this->connection->syncRequest(ack);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQSessionKernel::isSessionAsyncDispatch() const {
+    return this->config->sessionAsyncDispatch;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSessionKernel::setSessionAsyncDispatch(bool sessionAsyncDispatch) {
+    this->config->sessionAsyncDispatch = sessionAsyncDispatch;
 }

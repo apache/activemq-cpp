@@ -89,6 +89,7 @@ namespace core{
         bool exclusiveConsumer;
         bool transactedIndividualAck;
         bool nonBlockingRedelivery;
+        bool alwaysSessionAsync;
         int compressionLevel;
         unsigned int sendTimeout;
         unsigned int closeTimeout;
@@ -123,6 +124,7 @@ namespace core{
                             exclusiveConsumer(false),
                             transactedIndividualAck(false),
                             nonBlockingRedelivery(false),
+                            alwaysSessionAsync(true),
                             compressionLevel(-1),
                             sendTimeout(0),
                             closeTimeout(15000),
@@ -216,6 +218,8 @@ namespace core{
                 properties->getProperty("connection.nonBlockingRedelivery", Boolean::toString(nonBlockingRedelivery)));
             this->watchTopicAdvisories = Boolean::parseBoolean(
                 properties->getProperty("connection.watchTopicAdvisories", Boolean::toString(watchTopicAdvisories)));
+            this->alwaysSessionAsync = Boolean::parseBoolean(
+                properties->getProperty("connection.alwaysSessionAsync", Boolean::toString(alwaysSessionAsync)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
@@ -411,6 +415,7 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setUseRetroactiveConsumer(this->settings->useRetroactiveConsumer);
     connection->setNonBlockingRedelivery(this->settings->nonBlockingRedelivery);
     connection->setConsumerFailoverRedeliveryWaitPeriod(this->settings->consumerFailoverRedeliveryWaitPeriod);
+    connection->setAlwaysSessionAsync(this->settings->alwaysSessionAsync);
 
     if (this->settings->defaultListener) {
         connection->setExceptionListener(this->settings->defaultListener);
@@ -731,4 +736,14 @@ bool ActiveMQConnectionFactory::isExclusiveConsumer() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setExclusiveConsumer(bool exclusiveConsumer) {
     this->settings->exclusiveConsumer = exclusiveConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isAlwaysSessionAsync() const {
+    return this->settings->alwaysSessionAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setAlwaysSessionAsync(bool alwaysSessionAsync) {
+    this->settings->alwaysSessionAsync = alwaysSessionAsync;
 }
