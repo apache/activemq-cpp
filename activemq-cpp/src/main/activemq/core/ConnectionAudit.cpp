@@ -18,6 +18,7 @@
 #include "ConnectionAudit.h"
 
 #include <decaf/util/LinkedHashMap.h>
+#include <decaf/util/StlMap.h>
 
 #include <activemq/core/Dispatcher.h>
 #include <activemq/core/ActiveMQMessageAudit.h>
@@ -48,10 +49,11 @@ namespace core {
     public:
 
         Mutex mutex;
-        LinkedHashMap<Pointer<ActiveMQDestination>, Pointer<ActiveMQMessageAudit> > destinations;
+
+        StlMap<Pointer<ActiveMQDestination>, Pointer<ActiveMQMessageAudit>, ActiveMQDestination::COMPARATOR> destinations;
         LinkedHashMap<Dispatcher*, Pointer<ActiveMQMessageAudit> > dispatchers;
 
-        ConnectionAuditImpl() : mutex(), destinations(1000), dispatchers(1000) {
+        ConnectionAuditImpl() : mutex(), destinations(), dispatchers(1000) {
         }
     };
 }}
