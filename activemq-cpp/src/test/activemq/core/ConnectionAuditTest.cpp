@@ -94,11 +94,12 @@ void ConnectionAuditTest::testIsDuplicate() {
     pid->setSessionId(0);
     pid->setValue(1);
 
-    Pointer<ActiveMQDestination> destination(new ActiveMQQueue("TEST.QUEUE"));
     Pointer<Message> message(new Message());
-    message->setDestination(destination);
 
     for (int i = 0; i < count; i++) {
+        Pointer<ActiveMQDestination> destination(new ActiveMQQueue("TEST.QUEUE"));
+        message->setDestination(destination);
+
         Pointer<MessageId> id(new MessageId);
         id->setProducerId(pid);
         id->setProducerSequenceId(i);
