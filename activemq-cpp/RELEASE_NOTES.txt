@@ -4,6 +4,14 @@
 
 Bug
 
+    [AMQCPP-510] - Consumer leaks memory with failover and checkForDuplicates=true
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.8.0                               ==
+=========================================================================
+
+Bug
+
     [AMQCPP-483] - 3.7.0 does not compile with gcc-4.4.7 on CentOS-6
     [AMQCPP-484] - Can't connect via Stomp to Apollo broker - ActiveMq-Cpp version: 3.7.0
     [AMQCPP-485] - APR-Util header include missed in latest release.
