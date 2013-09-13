@@ -73,7 +73,7 @@ namespace {
             Pointer<BytesMessage> message;
 
             for( int i = 0; i < num; ++i ) {
-                message.reset( session->createBytesMessage( (const unsigned char*) body.c_str(), body.length() ) );
+                message.reset( session->createBytesMessage( (const unsigned char*) body.c_str(), (int) body.length() ) );
                 producer->send( message.get() );
             }
         }
@@ -95,17 +95,15 @@ void BulkMessageTest::testBulkMessageSendReceive() {
     static const int MSG_SIZE = 8192;
 
     // Create CMS Object for consumer Comms
-    cms::Session* session( cmsProvider->getSession() );
     cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-    Destination* destination = cmsProvider->getDestination();
 
-    ProducerThread thread( this->getBrokerURL(), cmsProvider->getDestinationName(), cmsProvider->getSubscription(), MSG_COUNT, MSG_SIZE );
+    ProducerThread thread(this->getBrokerURL(), cmsProvider->getDestinationName(), cmsProvider->getSubscription(), MSG_COUNT, MSG_SIZE);
     thread.start();
 
     Pointer<cms::Message> message;
 
-    for( int i = 0; i < MSG_COUNT ; ++i ) {
-        CPPUNIT_ASSERT_NO_THROW( message.reset( consumer->receive( 2000 ) ) );
-        CPPUNIT_ASSERT( message.get() != NULL );
+    for (int i = 0; i < MSG_COUNT; ++i) {
+        CPPUNIT_ASSERT_NO_THROW(message.reset(consumer->receive(2000)));
+        CPPUNIT_ASSERT(message.get() != NULL);
     }
 }
