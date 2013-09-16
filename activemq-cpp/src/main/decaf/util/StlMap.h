@@ -28,6 +28,7 @@
 #include <decaf/util/AbstractCollection.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/comparators/Less.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/Collection.h>
 #include <decaf/util/Set.h>
@@ -43,7 +44,7 @@ namespace util{
      *
      * @since 1.0
      */
-    template <typename K, typename V, typename COMPARATOR = std::less<K> >
+    template <typename K, typename V, typename COMPARATOR = decaf::util::comparators::Less<K> >
     class StlMap : public Map<K, V> {
     private:
 
@@ -129,8 +130,7 @@ namespace util{
 
         public:
 
-            EntryIterator(StlMap* parent) : AbstractMapIterator(parent) {
-            }
+            EntryIterator(StlMap* parent) : AbstractMapIterator(parent) {}
 
             virtual ~EntryIterator() {}
 
@@ -156,8 +156,7 @@ namespace util{
 
         public:
 
-            KeyIterator(StlMap* parent) : AbstractMapIterator(parent) {
-            }
+            KeyIterator(StlMap* parent) : AbstractMapIterator(parent) {}
 
             virtual ~KeyIterator() {}
 
@@ -264,8 +263,7 @@ namespace util{
 
         public:
 
-            ConstEntryIterator(const StlMap* parent) : ConstAbstractMapIterator(parent) {
-            }
+            ConstEntryIterator(const StlMap* parent) : ConstAbstractMapIterator(parent) {}
 
             virtual ~ConstEntryIterator() {}
 
@@ -320,8 +318,7 @@ namespace util{
 
         public:
 
-            ConstValueIterator(const StlMap* parent) : ConstAbstractMapIterator(parent) {
-            }
+            ConstValueIterator(const StlMap* parent) : ConstAbstractMapIterator(parent) {}
 
             virtual ~ConstValueIterator() {}
 
@@ -355,8 +352,7 @@ namespace util{
 
         public:
 
-            StlMapEntrySet(StlMap* parent) : AbstractSet< MapEntry<K,V> >(), associatedMap(parent) {
-            }
+            StlMapEntrySet(StlMap* parent) : AbstractSet< MapEntry<K,V> >(), associatedMap(parent) {}
 
             virtual ~StlMapEntrySet() {}
 
@@ -459,8 +455,7 @@ namespace util{
 
         public:
 
-            StlMapKeySet(StlMap* parent) : AbstractSet<K>(), associatedMap(parent) {
-            }
+            StlMapKeySet(StlMap* parent) : AbstractSet<K>(), associatedMap(parent) {}
 
             virtual ~StlMapKeySet() {}
 
@@ -505,8 +500,7 @@ namespace util{
 
         public:
 
-            ConstStlMapKeySet(const StlMap* parent) : AbstractSet<K>(), associatedMap(parent) {
-            }
+            ConstStlMapKeySet(const StlMap* parent) : AbstractSet<K>(), associatedMap(parent) {}
 
             virtual ~ConstStlMapKeySet() {}
 
@@ -552,8 +546,7 @@ namespace util{
 
         public:
 
-            StlMapValueCollection(StlMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
-            }
+            StlMapValueCollection(StlMap* parent) : AbstractCollection<V>(), associatedMap(parent) {}
 
             virtual ~StlMapValueCollection() {}
 
@@ -590,8 +583,7 @@ namespace util{
 
         public:
 
-            ConstStlMapValueCollection(const StlMap* parent) : AbstractCollection<V>(), associatedMap(parent) {
-            }
+            ConstStlMapValueCollection(const StlMap* parent) : AbstractCollection<V>(), associatedMap(parent) {}
 
             virtual ~ConstStlMapValueCollection() {}
 
