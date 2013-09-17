@@ -190,7 +190,7 @@
                   <tasks>
                     <echo>Running OpenWire Generator</echo>
                     <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask" classpathref="maven.compile.classpath" />
-                    <generate maxVersion="9" source="${activemq-core-dir}" target="${basedir}" />
+                    <generate maxVersion="10" source="${activemq-client-dir}" target="${basedir}" />
                   </tasks>
                 </configuration>
                 <goals>

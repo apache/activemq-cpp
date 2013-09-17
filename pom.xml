@@ -66,7 +66,7 @@
     <annogen-version>0.1.0</annogen-version>
     <ant-version>1.7.0</ant-version>
     <xstream-version>1.4.1</xstream-version>
-    <activemq-core-dir>${ACTIVEMQ_SRC_HOME}/activemq-client/</activemq-core-dir>
+    <activemq-client-dir>${ACTIVEMQ_SRC_HOME}/activemq-client/</activemq-client-dir>
     <activemq-cpp-openwire-generator-version>2.0</activemq-cpp-openwire-generator-version>
   </properties>
 
