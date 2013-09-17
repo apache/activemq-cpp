@@ -47,8 +47,9 @@ namespace commands {
     class AMQCPP_API NetworkBridgeFilter : public BaseDataStructure {
     protected:
 
-        int networkTTL;
         Pointer<BrokerId> networkBrokerId;
+        int messageTTL;
+        int consumerTTL;
 
     public:
 
@@ -75,12 +76,15 @@ namespace commands {
 
         virtual bool equals(const DataStructure* value) const;
 
-        virtual int getNetworkTTL() const;
-        virtual void setNetworkTTL( int networkTTL );
-
         virtual const Pointer<BrokerId>& getNetworkBrokerId() const;
         virtual Pointer<BrokerId>& getNetworkBrokerId();
         virtual void setNetworkBrokerId( const Pointer<BrokerId>& networkBrokerId );
+
+        virtual int getMessageTTL() const;
+        virtual void setMessageTTL( int messageTTL );
+
+        virtual int getConsumerTTL() const;
+        virtual void setConsumerTTL( int consumerTTL );
 
     };
 

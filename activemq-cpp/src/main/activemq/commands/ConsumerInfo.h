@@ -58,6 +58,7 @@ namespace commands {
         int maximumPendingMessageLimit;
         bool dispatchAsync;
         std::string selector;
+        std::string clientId;
         std::string subscriptionName;
         bool noLocal;
         bool exclusive;
@@ -133,6 +134,10 @@ namespace commands {
         virtual const std::string& getSelector() const;
         virtual std::string& getSelector();
         virtual void setSelector( const std::string& selector );
+
+        virtual const std::string& getClientId() const;
+        virtual std::string& getClientId();
+        virtual void setClientId( const std::string& clientId );
 
         virtual const std::string& getSubscriptionName() const;
         virtual std::string& getSubscriptionName();

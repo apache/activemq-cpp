@@ -683,6 +683,7 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
     Pointer<ConsumerInfo> consumerInfo(new ConsumerInfo());
 
     consumerInfo->setConsumerId(id);
+    consumerInfo->setClientId(session->getConnection()->getClientID());
     consumerInfo->setDestination(destination);
     consumerInfo->setSubscriptionName(name);
     consumerInfo->setSelector(selector);

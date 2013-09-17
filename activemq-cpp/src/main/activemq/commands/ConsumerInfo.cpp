@@ -40,8 +40,9 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerInfo::ConsumerInfo() :
     BaseCommand(), consumerId(NULL), browser(false), destination(NULL), prefetchSize(0), maximumPendingMessageLimit(0), dispatchAsync(false), 
-      selector(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), brokerPath(), 
-      additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), networkConsumerPath() {
+      selector(""), clientId(""), subscriptionName(""), noLocal(false), exclusive(false), retroactive(false), priority(0), 
+      brokerPath(), additionalPredicate(NULL), networkSubscription(false), optimizedAcknowledge(false), noRangeAcks(false), 
+      networkConsumerPath() {
 
 }
 
@@ -85,6 +86,7 @@ void ConsumerInfo::copyDataStructure(const DataStructure* src) {
     this->setMaximumPendingMessageLimit(srcPtr->getMaximumPendingMessageLimit());
     this->setDispatchAsync(srcPtr->isDispatchAsync());
     this->setSelector(srcPtr->getSelector());
+    this->setClientId(srcPtr->getClientId());
     this->setSubscriptionName(srcPtr->getSubscriptionName());
     this->setNoLocal(srcPtr->isNoLocal());
     this->setExclusive(srcPtr->isExclusive());
@@ -135,6 +137,8 @@ std::string ConsumerInfo::toString() const {
     stream << "DispatchAsync = " << this->isDispatchAsync();
     stream << ", ";
     stream << "Selector = " << this->getSelector();
+    stream << ", ";
+    stream << "ClientId = " << this->getClientId();
     stream << ", ";
     stream << "SubscriptionName = " << this->getSubscriptionName();
     stream << ", ";
@@ -233,6 +237,9 @@ bool ConsumerInfo::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getSelector() != valuePtr->getSelector()) {
+        return false;
+    }
+    if (this->getClientId() != valuePtr->getClientId()) {
         return false;
     }
     if (this->getSubscriptionName() != valuePtr->getSubscriptionName()) {
@@ -373,6 +380,21 @@ std::string& ConsumerInfo::getSelector() {
 ////////////////////////////////////////////////////////////////////////////////
 void ConsumerInfo::setSelector(const std::string& selector) {
     this->selector = selector;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& ConsumerInfo::getClientId() const {
+    return clientId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& ConsumerInfo::getClientId() {
+    return clientId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerInfo::setClientId(const std::string& clientId) {
+    this->clientId = clientId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

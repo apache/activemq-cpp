@@ -47,7 +47,8 @@ Message::Message() :
     BaseCommand(), producerId(NULL), destination(NULL), transactionId(NULL), originalDestination(NULL), messageId(NULL), originalTransactionId(NULL), 
       groupID(""), groupSequence(0), correlationId(""), persistent(false), expiration(0), priority(0), replyTo(NULL), timestamp(0), 
       type(""), content(), marshalledProperties(), dataStructure(NULL), targetConsumerId(NULL), compressed(false), redeliveryCounter(0), 
-      brokerPath(), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(), brokerInTime(0), brokerOutTime(0), ackHandler(NULL), properties(), readOnlyProperties(false), readOnlyBody(false), connection(NULL) {
+      brokerPath(), arrival(0), userID(""), recievedByDFBridge(false), droppable(false), cluster(), brokerInTime(0), brokerOutTime(0), 
+      jMSXGroupFirstForConsumer(false), ackHandler(NULL), properties(), readOnlyProperties(false), readOnlyBody(false), connection(NULL) {
 
 }
 
@@ -113,6 +114,7 @@ void Message::copyDataStructure(const DataStructure* src) {
     this->setCluster(srcPtr->getCluster());
     this->setBrokerInTime(srcPtr->getBrokerInTime());
     this->setBrokerOutTime(srcPtr->getBrokerOutTime());
+    this->setJMSXGroupFirstForConsumer(srcPtr->isJMSXGroupFirstForConsumer());
     this->properties.copy(srcPtr->properties);
     this->setAckHandler(srcPtr->getAckHandler());
     this->setReadOnlyBody(srcPtr->isReadOnlyBody());
@@ -272,6 +274,8 @@ std::string Message::toString() const {
     stream << "BrokerInTime = " << this->getBrokerInTime();
     stream << ", ";
     stream << "BrokerOutTime = " << this->getBrokerOutTime();
+    stream << ", ";
+    stream << "JMSXGroupFirstForConsumer = " << this->isJMSXGroupFirstForConsumer();
     stream << " }";
 
     return stream.str();
@@ -427,6 +431,9 @@ bool Message::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getBrokerOutTime() != valuePtr->getBrokerOutTime()) {
+        return false;
+    }
+    if (this->isJMSXGroupFirstForConsumer() != valuePtr->isJMSXGroupFirstForConsumer()) {
         return false;
     }
     if (ackHandler != valuePtr->getAckHandler()){
@@ -824,6 +831,16 @@ long long Message::getBrokerOutTime() const {
 ////////////////////////////////////////////////////////////////////////////////
 void Message::setBrokerOutTime(long long brokerOutTime) {
     this->brokerOutTime = brokerOutTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Message::isJMSXGroupFirstForConsumer() const {
+    return jMSXGroupFirstForConsumer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::setJMSXGroupFirstForConsumer(bool jMSXGroupFirstForConsumer) {
+    this->jMSXGroupFirstForConsumer = jMSXGroupFirstForConsumer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

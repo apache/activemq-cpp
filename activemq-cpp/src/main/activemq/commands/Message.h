@@ -88,6 +88,7 @@ namespace commands{
         std::vector< decaf::lang::Pointer<BrokerId> > cluster;
         long long brokerInTime;
         long long brokerOutTime;
+        bool jMSXGroupFirstForConsumer;
 
     public:
 
@@ -374,6 +375,9 @@ namespace commands{
 
         virtual long long getBrokerOutTime() const;
         virtual void setBrokerOutTime( long long brokerOutTime );
+
+        virtual bool isJMSXGroupFirstForConsumer() const;
+        virtual void setJMSXGroupFirstForConsumer( bool jMSXGroupFirstForConsumer );
 
         /**
          * @return an answer of true to the isMessage() query.

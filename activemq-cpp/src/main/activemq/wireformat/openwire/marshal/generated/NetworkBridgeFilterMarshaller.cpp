@@ -59,9 +59,17 @@ void NetworkBridgeFilterMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, D
 
         NetworkBridgeFilter* info =
             dynamic_cast<NetworkBridgeFilter*>(dataStructure);
-        info->setNetworkTTL(dataIn->readInt());
+
+        int wireVersion = wireFormat->getVersion();
+
         info->setNetworkBrokerId(Pointer<BrokerId>(dynamic_cast<BrokerId* >(
             tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
+        if (wireVersion >= 10) {
+            info->setMessageTTL(dataIn->readInt());
+        }
+        if (wireVersion >= 10) {
+            info->setConsumerTTL(dataIn->readInt());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -77,9 +85,16 @@ int NetworkBridgeFilterMarshaller::tightMarshal1(OpenWireFormat* wireFormat, Dat
             dynamic_cast<NetworkBridgeFilter*>(dataStructure);
 
         int rc = BaseDataStreamMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
-        rc += tightMarshalCachedObject1(wireFormat, info->getNetworkBrokerId().get(), bs);
 
-        return rc + 4;
+        int wireVersion = wireFormat->getVersion();
+
+        rc += tightMarshalCachedObject1(wireFormat, info->getNetworkBrokerId().get(), bs);
+        if (wireVersion >= 10) {
+        }
+        if (wireVersion >= 10) {
+        }
+
+        return rc + 8;
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -95,8 +110,16 @@ void NetworkBridgeFilterMarshaller::tightMarshal2(OpenWireFormat* wireFormat, Da
 
         NetworkBridgeFilter* info =
             dynamic_cast<NetworkBridgeFilter*>(dataStructure);
-        dataOut->writeInt(info->getNetworkTTL());
+
+        int wireVersion = wireFormat->getVersion();
+
         tightMarshalCachedObject2(wireFormat, info->getNetworkBrokerId().get(), dataOut, bs);
+        if (wireVersion >= 10) {
+            dataOut->writeInt(info->getMessageTTL());
+        }
+        if (wireVersion >= 10) {
+            dataOut->writeInt(info->getConsumerTTL());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
@@ -111,9 +134,17 @@ void NetworkBridgeFilterMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, D
         BaseDataStreamMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         NetworkBridgeFilter* info =
             dynamic_cast<NetworkBridgeFilter*>(dataStructure);
-        info->setNetworkTTL(dataIn->readInt());
+
+        int wireVersion = wireFormat->getVersion();
+
         info->setNetworkBrokerId(Pointer<BrokerId>(dynamic_cast<BrokerId*>(
             looseUnmarshalCachedObject(wireFormat, dataIn))));
+        if (wireVersion >= 10) {
+            info->setMessageTTL(dataIn->readInt());
+        }
+        if (wireVersion >= 10) {
+            info->setConsumerTTL(dataIn->readInt());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -128,8 +159,16 @@ void NetworkBridgeFilterMarshaller::looseMarshal(OpenWireFormat* wireFormat, Dat
         NetworkBridgeFilter* info =
             dynamic_cast<NetworkBridgeFilter*>(dataStructure);
         BaseDataStreamMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
-        dataOut->writeInt(info->getNetworkTTL());
+
+        int wireVersion = wireFormat->getVersion();
+
         looseMarshalCachedObject(wireFormat, info->getNetworkBrokerId().get(), dataOut);
+        if (wireVersion >= 10) {
+            dataOut->writeInt(info->getMessageTTL());
+        }
+        if (wireVersion >= 10) {
+            dataOut->writeInt(info->getConsumerTTL());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)

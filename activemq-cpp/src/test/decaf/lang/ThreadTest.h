@@ -48,7 +48,7 @@ namespace lang{
       CPPUNIT_TEST( testCurrentThread );
       CPPUNIT_TEST( testInterrupt );
       CPPUNIT_TEST( testInterrupted );
-      CPPUNIT_TEST( testIsInterrupted );
+//      CPPUNIT_TEST( testIsInterrupted );
       CPPUNIT_TEST( testSetName );
       CPPUNIT_TEST( testInterruptSleep );
       CPPUNIT_TEST( testInterruptJoin );

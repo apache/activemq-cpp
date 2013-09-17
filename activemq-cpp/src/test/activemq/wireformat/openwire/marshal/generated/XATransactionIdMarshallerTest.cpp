@@ -73,7 +73,7 @@ void XATransactionIdMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 9 );
+    openWireFormat.setVersion( 10 );
     openWireFormat.setTightEncodingEnabled( false );
 
     XATransactionId outCommand;
@@ -113,7 +113,7 @@ void XATransactionIdMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 9 );
+    openWireFormat.setVersion( 10 );
     openWireFormat.setTightEncodingEnabled( true );
 
     XATransactionId outCommand;

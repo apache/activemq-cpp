@@ -73,7 +73,7 @@ void MessageDispatchNotificationMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 9 );
+    openWireFormat.setVersion( 10 );
     openWireFormat.setTightEncodingEnabled( false );
 
     MessageDispatchNotification outCommand;
@@ -113,7 +113,7 @@ void MessageDispatchNotificationMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 9 );
+    openWireFormat.setVersion( 10 );
     openWireFormat.setTightEncodingEnabled( true );
 
     MessageDispatchNotification outCommand;

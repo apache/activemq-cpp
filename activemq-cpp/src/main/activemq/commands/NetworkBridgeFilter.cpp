@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkBridgeFilter::NetworkBridgeFilter() :
-    BaseDataStructure(), networkTTL(0), networkBrokerId(NULL) {
+    BaseDataStructure(), networkBrokerId(NULL), messageTTL(0), consumerTTL(0) {
 
 }
 
@@ -76,8 +76,9 @@ void NetworkBridgeFilter::copyDataStructure(const DataStructure* src) {
     // Copy the data of the base class or classes
     BaseDataStructure::copyDataStructure(src);
 
-    this->setNetworkTTL(srcPtr->getNetworkTTL());
     this->setNetworkBrokerId(srcPtr->getNetworkBrokerId());
+    this->setMessageTTL(srcPtr->getMessageTTL());
+    this->setConsumerTTL(srcPtr->getConsumerTTL());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,14 +92,16 @@ std::string NetworkBridgeFilter::toString() const {
     ostringstream stream;
 
     stream << "NetworkBridgeFilter { ";
-    stream << "NetworkTTL = " << this->getNetworkTTL();
-    stream << ", ";
     stream << "NetworkBrokerId = ";
     if (this->getNetworkBrokerId() != NULL) {
         stream << this->getNetworkBrokerId()->toString();
     } else {
         stream << "NULL";
     }
+    stream << ", ";
+    stream << "MessageTTL = " << this->getMessageTTL();
+    stream << ", ";
+    stream << "ConsumerTTL = " << this->getConsumerTTL();
     stream << " }";
 
     return stream.str();
@@ -117,9 +120,6 @@ bool NetworkBridgeFilter::equals(const DataStructure* value) const {
         return false;
     }
 
-    if (this->getNetworkTTL() != valuePtr->getNetworkTTL()) {
-        return false;
-    }
     if (this->getNetworkBrokerId() != NULL) {
         if (!this->getNetworkBrokerId()->equals( valuePtr->getNetworkBrokerId().get())) {
             return false;
@@ -127,20 +127,16 @@ bool NetworkBridgeFilter::equals(const DataStructure* value) const {
     } else if (valuePtr->getNetworkBrokerId() != NULL) {
         return false;
     }
+    if (this->getMessageTTL() != valuePtr->getMessageTTL()) {
+        return false;
+    }
+    if (this->getConsumerTTL() != valuePtr->getConsumerTTL()) {
+        return false;
+    }
     if (!BaseDataStructure::equals(value)) {
         return false;
     }
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int NetworkBridgeFilter::getNetworkTTL() const {
-    return networkTTL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilter::setNetworkTTL(int networkTTL) {
-    this->networkTTL = networkTTL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,5 +152,25 @@ decaf::lang::Pointer<BrokerId>& NetworkBridgeFilter::getNetworkBrokerId() {
 ////////////////////////////////////////////////////////////////////////////////
 void NetworkBridgeFilter::setNetworkBrokerId(const decaf::lang::Pointer<BrokerId>& networkBrokerId) {
     this->networkBrokerId = networkBrokerId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int NetworkBridgeFilter::getMessageTTL() const {
+    return messageTTL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NetworkBridgeFilter::setMessageTTL(int messageTTL) {
+    this->messageTTL = messageTTL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int NetworkBridgeFilter::getConsumerTTL() const {
+    return consumerTTL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NetworkBridgeFilter::setConsumerTTL(int consumerTTL) {
+    this->consumerTTL = consumerTTL;
 }
 

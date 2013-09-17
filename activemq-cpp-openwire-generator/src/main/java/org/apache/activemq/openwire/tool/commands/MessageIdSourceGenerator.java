@@ -80,11 +80,6 @@ public class MessageIdSourceGenerator extends CommandSourceGenerator {
         out.println("    this->key = messageKey;");
         out.println("}");
         out.println("");
-        out.println("////////////////////////////////////////////////////////////////////////////////");
-        out.println("void MessageId::setTextView(const std::string& key) {");
-        out.println("    this->key = key;");
-        out.println("}");
-        out.println("");
 
         super.generateAdditionalMethods(out);
     }
@@ -100,8 +95,16 @@ public class MessageIdSourceGenerator extends CommandSourceGenerator {
 
     protected void generateToStringBody( PrintWriter out ) {
         out.println("    if (key.empty()) {");
-        out.println("        this->key = this->producerId->toString() + \":\" + ");
-        out.println("                    Long::toString(this->producerSequenceId);");
+        out.println("        if (!textView.empty()) {");
+        out.println("            if (textView.find_first_of(\"ID:\") == 0) {");
+        out.println("                key = textView;");
+        out.println("            } else {");
+        out.println("                key = \"ID:\" + textView;");
+        out.println("            }");
+        out.println("        } else {");
+        out.println("            this->key = this->producerId->toString() + \":\" + ");
+        out.println("                        Long::toString(this->producerSequenceId);");
+        out.println("        }");
         out.println("    }");
         out.println("");
         out.println("    return this->key;");

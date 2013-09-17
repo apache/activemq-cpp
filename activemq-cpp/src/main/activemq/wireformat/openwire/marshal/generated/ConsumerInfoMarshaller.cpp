@@ -71,6 +71,9 @@ void ConsumerInfoMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStru
         info->setMaximumPendingMessageLimit(dataIn->readInt());
         info->setDispatchAsync(bs->readBoolean());
         info->setSelector(tightUnmarshalString(dataIn, bs));
+        if (wireVersion >= 10) {
+            info->setClientId(tightUnmarshalString(dataIn, bs));
+        }
         info->setSubscriptionName(tightUnmarshalString(dataIn, bs));
         info->setNoLocal(bs->readBoolean());
         info->setExclusive(bs->readBoolean());
@@ -128,6 +131,9 @@ int ConsumerInfoMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStruct
         rc += tightMarshalCachedObject1(wireFormat, info->getDestination().get(), bs);
         bs->writeBoolean(info->isDispatchAsync());
         rc += tightMarshalString1(info->getSelector(), bs);
+        if (wireVersion >= 10) {
+            rc += tightMarshalString1(info->getClientId(), bs);
+        }
         rc += tightMarshalString1(info->getSubscriptionName(), bs);
         bs->writeBoolean(info->isNoLocal());
         bs->writeBoolean(info->isExclusive());
@@ -167,6 +173,9 @@ void ConsumerInfoMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStruc
         dataOut->writeInt(info->getMaximumPendingMessageLimit());
         bs->readBoolean();
         tightMarshalString2(info->getSelector(), dataOut, bs);
+        if (wireVersion >= 10) {
+            tightMarshalString2(info->getClientId(), dataOut, bs);
+        }
         tightMarshalString2(info->getSubscriptionName(), dataOut, bs);
         bs->readBoolean();
         bs->readBoolean();
@@ -206,6 +215,9 @@ void ConsumerInfoMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStru
         info->setMaximumPendingMessageLimit(dataIn->readInt());
         info->setDispatchAsync(dataIn->readBoolean());
         info->setSelector(looseUnmarshalString(dataIn));
+        if (wireVersion >= 10) {
+            info->setClientId(looseUnmarshalString(dataIn));
+        }
         info->setSubscriptionName(looseUnmarshalString(dataIn));
         info->setNoLocal(dataIn->readBoolean());
         info->setExclusive(dataIn->readBoolean());
@@ -264,6 +276,9 @@ void ConsumerInfoMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStruct
         dataOut->writeInt(info->getMaximumPendingMessageLimit());
         dataOut->writeBoolean(info->isDispatchAsync());
         looseMarshalString(info->getSelector(), dataOut);
+        if (wireVersion >= 10) {
+            looseMarshalString(info->getClientId(), dataOut);
+        }
         looseMarshalString(info->getSubscriptionName(), dataOut);
         dataOut->writeBoolean(info->isNoLocal());
         dataOut->writeBoolean(info->isExclusive());

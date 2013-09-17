@@ -59,6 +59,12 @@ void MessageIdMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructu
 
         MessageId* info =
             dynamic_cast<MessageId*>(dataStructure);
+
+        int wireVersion = wireFormat->getVersion();
+
+        if (wireVersion >= 10) {
+            info->setTextView(tightUnmarshalString(dataIn, bs));
+        }
         info->setProducerId(Pointer<ProducerId>(dynamic_cast<ProducerId* >(
             tightUnmarshalCachedObject(wireFormat, dataIn, bs))));
         info->setProducerSequenceId(tightUnmarshalLong(wireFormat, dataIn, bs));
@@ -78,6 +84,12 @@ int MessageIdMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure
             dynamic_cast<MessageId*>(dataStructure);
 
         int rc = BaseDataStreamMarshaller::tightMarshal1(wireFormat, dataStructure, bs);
+
+        int wireVersion = wireFormat->getVersion();
+
+        if (wireVersion >= 10) {
+            rc += tightMarshalString1(info->getTextView(), bs);
+        }
         rc += tightMarshalCachedObject1(wireFormat, info->getProducerId().get(), bs);
         rc += tightMarshalLong1(wireFormat, info->getProducerSequenceId(), bs);
         rc += tightMarshalLong1(wireFormat, info->getBrokerSequenceId(), bs);
@@ -98,6 +110,12 @@ void MessageIdMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructur
 
         MessageId* info =
             dynamic_cast<MessageId*>(dataStructure);
+
+        int wireVersion = wireFormat->getVersion();
+
+        if (wireVersion >= 10) {
+            tightMarshalString2(info->getTextView(), dataOut, bs);
+        }
         tightMarshalCachedObject2(wireFormat, info->getProducerId().get(), dataOut, bs);
         tightMarshalLong2(wireFormat, info->getProducerSequenceId(), dataOut, bs);
         tightMarshalLong2(wireFormat, info->getBrokerSequenceId(), dataOut, bs);
@@ -115,6 +133,12 @@ void MessageIdMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructu
         BaseDataStreamMarshaller::looseUnmarshal(wireFormat, dataStructure, dataIn);
         MessageId* info =
             dynamic_cast<MessageId*>(dataStructure);
+
+        int wireVersion = wireFormat->getVersion();
+
+        if (wireVersion >= 10) {
+            info->setTextView(looseUnmarshalString(dataIn));
+        }
         info->setProducerId(Pointer<ProducerId>(dynamic_cast<ProducerId*>(
             looseUnmarshalCachedObject(wireFormat, dataIn))));
         info->setProducerSequenceId(looseUnmarshalLong(wireFormat, dataIn));
@@ -133,6 +157,12 @@ void MessageIdMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure
         MessageId* info =
             dynamic_cast<MessageId*>(dataStructure);
         BaseDataStreamMarshaller::looseMarshal(wireFormat, dataStructure, dataOut);
+
+        int wireVersion = wireFormat->getVersion();
+
+        if (wireVersion >= 10) {
+            looseMarshalString(info->getTextView(), dataOut);
+        }
         looseMarshalCachedObject(wireFormat, info->getProducerId().get(), dataOut);
         looseMarshalLong(wireFormat, info->getProducerSequenceId(), dataOut);
         looseMarshalLong(wireFormat, info->getBrokerSequenceId(), dataOut);

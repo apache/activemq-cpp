@@ -118,6 +118,9 @@ void MessageMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, DataStructure
         if (wireVersion >= 3) {
             info->setBrokerOutTime(tightUnmarshalLong(wireFormat, dataIn, bs));
         }
+        if (wireVersion >= 10) {
+            info->setJMSXGroupFirstForConsumer(bs->readBoolean());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -171,6 +174,9 @@ int MessageMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataStructure* 
         }
         if (wireVersion >= 3) {
             rc += tightMarshalLong1(wireFormat, info->getBrokerOutTime(), bs);
+        }
+        if (wireVersion >= 10) {
+            bs->writeBoolean(info->isJMSXGroupFirstForConsumer());
         }
 
         return rc + 9;
@@ -234,6 +240,9 @@ void MessageMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataStructure*
         }
         if (wireVersion >= 3) {
             tightMarshalLong2(wireFormat, info->getBrokerOutTime(), dataOut, bs);
+        }
+        if (wireVersion >= 10) {
+            bs->readBoolean();
         }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
@@ -318,6 +327,9 @@ void MessageMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, DataStructure
         if (wireVersion >= 3) {
             info->setBrokerOutTime(looseUnmarshalLong(wireFormat, dataIn));
         }
+        if (wireVersion >= 10) {
+            info->setJMSXGroupFirstForConsumer(dataIn->readBoolean());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -379,6 +391,9 @@ void MessageMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataStructure* 
         }
         if (wireVersion >= 3) {
             looseMarshalLong(wireFormat, info->getBrokerOutTime(), dataOut);
+        }
+        if (wireVersion >= 10) {
+            dataOut->writeBoolean(info->isJMSXGroupFirstForConsumer());
         }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)

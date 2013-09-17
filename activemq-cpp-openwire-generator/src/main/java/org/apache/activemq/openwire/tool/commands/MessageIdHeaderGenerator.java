@@ -56,8 +56,6 @@ public class MessageIdHeaderGenerator extends CommandHeaderGenerator {
     protected void generateAdditonalMembers( PrintWriter out ) {
         out.println("        void setValue(const std::string& key);");
         out.println("");
-        out.println("        void setTextView(const std::string& key);");
-        out.println("");
 
         super.generateAdditonalMembers( out );
     }
