@@ -73,12 +73,12 @@ namespace util {
          * @param collection - the collection to copy
          * @return a reference to this collection
          */
-        AbstractCollection<E>& operator= ( const AbstractCollection<E>& collection ) {
+        AbstractCollection<E>& operator= (const AbstractCollection<E>& collection) {
             this->clear();
 
-            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-            while( iter->hasNext() ) {
-                this->add( iter->next() );
+            std::auto_ptr<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
+                this->add(iter->next());
             }
 
             return *this;
@@ -100,9 +100,8 @@ namespace util {
          *        if the clear operation is not supported by this collection
          */
         virtual void clear() {
-
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
                 iter->next();
                 iter->remove();
             }
@@ -114,12 +113,11 @@ namespace util {
          * This implementation iterates over the elements in the collection, checking each
          * element in turn for equality with the specified element.
          */
-        virtual bool contains( const E& value ) const {
-
+        virtual bool contains(const E& value) const {
             bool result = false;
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( iter->next() == value ) {
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
+                if (iter->next() == value) {
                     result = true;
                 }
             }
@@ -134,11 +132,11 @@ namespace util {
          * returned by the iterator in turn to see if it's contained in this collection. If
          * all elements are so contained true is returned, otherwise false.
          */
-        virtual bool containsAll( const Collection<E>& collection ) const {
+        virtual bool containsAll(const Collection<E>& collection) const {
 
-            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-            while( iter->hasNext() ) {
-                if( !this->contains( iter->next() ) ) {
+            std::auto_ptr<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
+                if (!this->contains(iter->next())) {
                     return false;
                 }
             }
@@ -155,13 +153,13 @@ namespace util {
          *
          * @return true if this Collection is equal to the one given.
          */
-        virtual bool equals( const Collection<E>& collection ) const {
+        virtual bool equals(const Collection<E>& collection) const {
 
-            if( this == &collection ) {
+            if (this == &collection) {
                 return true;
             }
 
-            if( this->size() == collection.size() && this->containsAll( collection ) ) {
+            if (this->size() == collection.size() && this->containsAll(collection)) {
                 return true;
             }
 
@@ -181,12 +179,12 @@ namespace util {
          * @throws IllegalStateException if the elements cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual void copy( const Collection<E>& collection ) {
+        virtual void copy(const Collection<E>& collection) {
             this->clear();
 
-            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-            while( iter->hasNext() ) {
-                this->add( iter->next() );
+            std::auto_ptr<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
+                this->add(iter->next());
             }
         }
 
@@ -206,7 +204,7 @@ namespace util {
          *
          * This implementation always throws an UnsupportedOperationException.
          */
-        virtual bool add( const E& value DECAF_UNUSED ) {
+        virtual bool add(const E& value DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "AbstractCollection add is not implemented.");
         }
@@ -220,12 +218,12 @@ namespace util {
          * Note that this implementation will throw an UnsupportedOperationException unless add
          * is overridden (assuming the specified collection is non-empty).
          */
-        virtual bool addAll( const Collection<E>& collection ) {
+        virtual bool addAll(const Collection<E>& collection) {
 
             bool result = false;
-            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
-            while( iter->hasNext() ) {
-                result = this->add( iter->next() ) || result;
+            std::auto_ptr<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
+                result = this->add(iter->next()) || result;
             }
 
             return result;
@@ -242,11 +240,11 @@ namespace util {
          * returned by this collection's iterator method does not implement the remove method and
          * this collection contains the specified object.
          */
-        virtual bool remove( const E& value ) {
+        virtual bool remove(const E& value) {
 
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( value == iter->next() ) {
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
+                if (value == iter->next()) {
                     iter->remove();
                     return true;
                 }
@@ -266,12 +264,12 @@ namespace util {
          * iterator returned by the iterator method does not implement the remove method and this
          * collection contains one or more elements in common with the specified collection.
          */
-        virtual bool removeAll( const Collection<E>& collection ) {
+        virtual bool removeAll(const Collection<E>& collection) {
 
             bool result = false;
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( collection.contains( iter->next() ) ) {
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
+                if (collection.contains(iter->next())) {
                     iter->remove();
                     result = true;
                 }
@@ -291,12 +289,12 @@ namespace util {
          * iterator returned by the iterator method does not implement the remove method and this
          * collection contains one or more elements not present in the specified collection.
          */
-        virtual bool retainAll( const Collection<E>& collection ) {
+        virtual bool retainAll(const Collection<E>& collection) {
 
             bool result = false;
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( !collection.contains( iter->next() ) ) {
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
+                if (!collection.contains(iter->next())) {
                     iter->remove();
                     result = true;
                 }
@@ -315,11 +313,11 @@ namespace util {
          */
         virtual std::vector<E> toArray() const {
             std::vector<E> valueArray;
-            valueArray.reserve( this->size() );
+            valueArray.reserve(this->size());
 
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                valueArray.push_back( iter->next() );
+            std::auto_ptr<Iterator<E> > iter(this->iterator());
+            while (iter->hasNext()) {
+                valueArray.push_back(iter->next());
             }
 
             return valueArray;
@@ -343,12 +341,12 @@ namespace util {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) {
-            mutex.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            mutex.wait(millisecs);
         }
 
-        virtual void wait( long long millisecs, int nanos ) {
-            mutex.wait( millisecs, nanos );
+        virtual void wait(long long millisecs, int nanos) {
+            mutex.wait(millisecs, nanos);
         }
 
         virtual void notify() {

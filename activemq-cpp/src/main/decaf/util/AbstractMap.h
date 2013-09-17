@@ -63,14 +63,11 @@ namespace util {
 
     public:
 
-        AbstractMap() : Map<K, V>(), mutex() {
-        }
+        AbstractMap() : Map<K, V>(), mutex() {}
 
-        AbstractMap(const Map<K, V>& map) : Map<K, V>(), mutex() {
-        }
+        AbstractMap(const Map<K, V>& map) : Map<K, V>(), mutex() {}
 
-        AbstractMap(const AbstractMap<K, V>& map) : Map<K, V>(), mutex() {
-        }
+        AbstractMap(const AbstractMap<K, V>& map) : Map<K, V>(), mutex() {}
 
         virtual ~AbstractMap() {}
 
@@ -92,12 +89,12 @@ namespace util {
             mutex.wait();
         }
 
-        virtual void wait( long long millisecs ) {
-            mutex.wait( millisecs );
+        virtual void wait(long long millisecs) {
+            mutex.wait(millisecs);
         }
 
-        virtual void wait( long long millisecs, int nanos ) {
-            mutex.wait( millisecs, nanos );
+        virtual void wait(long long millisecs, int nanos) {
+            mutex.wait(millisecs, nanos);
         }
 
         virtual void notify() {

@@ -60,12 +60,12 @@ namespace util {
          */
         virtual bool add(const E& value) {
 
-            if (this->offer(value )) {
+            if (this->offer(value)) {
                 return true;
             }
 
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__, "Unable to add specified element to the Queue." );
+                __FILE__, __LINE__, "Unable to add specified element to the Queue.");
         }
 
         /**
@@ -100,7 +100,7 @@ namespace util {
             }
 
             throw decaf::util::NoSuchElementException(
-                __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
+                __FILE__, __LINE__, "Unable to remove specified element from the Queue.");
         }
 
         /**
@@ -112,12 +112,12 @@ namespace util {
         virtual E element() const {
 
             E result;
-            if (this->peek( result ) == true) {
+            if (this->peek(result) == true) {
                 return result;
             }
 
             throw decaf::util::NoSuchElementException(
-                __FILE__, __LINE__, "Unable to remove specified element from the Queue." );
+                __FILE__, __LINE__, "Unable to remove specified element from the Queue.");
         }
 
         /**

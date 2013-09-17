@@ -90,12 +90,12 @@ namespace util {
 
                 if (parent == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
-                        __FILE__, __LINE__, "List Iterator constructed with NULL parent" );
+                        __FILE__, __LINE__, "List Iterator constructed with NULL parent");
                 }
 
                 if (start < 0 || start > parent->size()) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                         __FILE__, __LINE__, "start index passed was negative or greater than size()" );
+                         __FILE__, __LINE__, "start index passed was negative or greater than size()");
                 }
 
                 this->numLeft = parent->size() - start;
@@ -113,7 +113,7 @@ namespace util {
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
+                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected.");
                 }
 
                 try {
@@ -126,7 +126,7 @@ namespace util {
                     return result;
                 } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
-                        __FILE__, __LINE__, "Next called without a next element to process." );
+                        __FILE__, __LINE__, "Next called without a next element to process.");
                 }
             }
 
@@ -134,12 +134,12 @@ namespace util {
 
                 if (this->lastPosition == -1) {
                     throw decaf::lang::exceptions::IllegalStateException(
-                        __FILE__, __LINE__, "Remove called before next() was called." );
+                        __FILE__, __LINE__, "Remove called before next() was called.");
                 }
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
+                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected.");
                 }
 
                 try {
@@ -152,18 +152,18 @@ namespace util {
 
                 } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification detected." );
+                        __FILE__, __LINE__, "Concurrent Modification detected.");
                 }
 
                 this->expectedModCount = this->parent->modCount;
                 this->lastPosition = -1;
             }
 
-            virtual void add( const E& value ) {
+            virtual void add(const E& value) {
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
+                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected.");
                 }
 
                 try {
@@ -172,7 +172,7 @@ namespace util {
                     this->lastPosition = -1;
                 } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
-                        __FILE__, __LINE__, "Add called without a next element to process." );
+                        __FILE__, __LINE__, "Add called without a next element to process.");
                 }
             }
 
@@ -188,7 +188,7 @@ namespace util {
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification detected." );
+                        __FILE__, __LINE__, "Concurrent Modification detected.");
                 }
 
                 try {
@@ -201,7 +201,7 @@ namespace util {
                     return result;
                 } catch( decaf::lang::exceptions::IndexOutOfBoundsException& e ) {
                     throw decaf::util::NoSuchElementException(
-                        __FILE__, __LINE__, "No previous element exists." );
+                        __FILE__, __LINE__, "No previous element exists.");
                 }
             }
 
@@ -209,11 +209,11 @@ namespace util {
                 return this->parent->size() - this->numLeft - 1;
             }
 
-            virtual void set( const E& value ) {
+            virtual void set(const E& value) {
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification detected." );
+                        __FILE__, __LINE__, "Concurrent Modification detected.");
                 }
 
                 try {
@@ -244,12 +244,12 @@ namespace util {
 
                 if (parent == NULL) {
                     throw decaf::lang::exceptions::NullPointerException(
-                        __FILE__, __LINE__, "List Iterator constructed with NULL parent" );
+                        __FILE__, __LINE__, "List Iterator constructed with NULL parent");
                 }
 
                 if (start < 0 || start > parent->size()) {
                     throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                         __FILE__, __LINE__, "start index passed was negative or greater than size()" );
+                         __FILE__, __LINE__, "start index passed was negative or greater than size()");
                 }
 
                 this->numLeft = parent->size() - start;
@@ -267,7 +267,7 @@ namespace util {
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected." );
+                        __FILE__, __LINE__, "Concurrent Modification of Parent List detected.");
                 }
 
                 try {
@@ -280,20 +280,20 @@ namespace util {
                     return result;
                 } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
-                        __FILE__, __LINE__, "Next called without a next element to process." );
+                        __FILE__, __LINE__, "Next called without a next element to process.");
                 }
             }
 
             virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
-                    "AbstractList::Iterator::remove - Const Iterator." );
+                    "AbstractList::Iterator::remove - Const Iterator.");
             }
 
             virtual void add(const E& value DECAF_UNUSED) {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
-                    "AbstractList::ListIterator::radd - Const Iterator." );
+                    "AbstractList::ListIterator::radd - Const Iterator.");
             }
 
             virtual bool hasPrevious() const {
@@ -308,7 +308,7 @@ namespace util {
 
                 if (this->expectedModCount != this->parent->modCount) {
                     throw ConcurrentModificationException(
-                        __FILE__, __LINE__, "Concurrent Modification detected." );
+                        __FILE__, __LINE__, "Concurrent Modification detected.");
                 }
 
                 try {
@@ -321,7 +321,7 @@ namespace util {
                     return result;
                 } catch (decaf::lang::exceptions::IndexOutOfBoundsException& e) {
                     throw decaf::util::NoSuchElementException(
-                        __FILE__, __LINE__, "No previous element exists." );
+                        __FILE__, __LINE__, "No previous element exists.");
                 }
             }
 
@@ -332,7 +332,7 @@ namespace util {
             virtual void set(const E& value DECAF_UNUSED) {
                 throw lang::exceptions::UnsupportedOperationException(
                     __FILE__, __LINE__,
-                    "AbstractList::ListIterator::set - Const Iterator." );
+                    "AbstractList::ListIterator::set - Const Iterator.");
             }
         };
 
@@ -374,7 +374,7 @@ namespace util {
 
         virtual void add(int index DECAF_UNUSED, const E& element DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
-                __FILE__, __LINE__, "Abstract list does not implement the add method." );
+                __FILE__, __LINE__, "Abstract list does not implement the add method.");
         }
 
         // Use this method since our own addAll will hide the base class version.
@@ -391,12 +391,12 @@ namespace util {
 
         virtual E removeAt(int index DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
-                __FILE__, __LINE__, "Abstract list does not implement the removeAt method." );
+                __FILE__, __LINE__, "Abstract list does not implement the removeAt method.");
         }
 
         virtual E set(int index DECAF_UNUSED, const E& element DECAF_UNUSED) {
             throw decaf::lang::exceptions::UnsupportedOperationException(
-                __FILE__, __LINE__, "Abstract list does not implement the set method." );
+                __FILE__, __LINE__, "Abstract list does not implement the set method.");
         }
 
         virtual int indexOf(const E& value) const {
