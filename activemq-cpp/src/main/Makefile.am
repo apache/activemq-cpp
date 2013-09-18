@@ -582,6 +582,7 @@ cc_sources = \
     decaf/util/Timer.cpp \
     decaf/util/TimerTask.cpp \
     decaf/util/UUID.cpp \
+    decaf/util/comparators/Equals.cpp \
     decaf/util/comparators/Less.cpp \
     decaf/util/concurrent/AbstractExecutorService.cpp \
     decaf/util/concurrent/BlockingQueue.cpp \
@@ -1241,6 +1242,7 @@ h_sources = \
     decaf/util/Timer.h \
     decaf/util/TimerTask.h \
     decaf/util/UUID.h \
+    decaf/util/comparators/Equals.h \
     decaf/util/comparators/Less.h \
     decaf/util/concurrent/AbstractExecutorService.h \
     decaf/util/concurrent/BlockingQueue.h \

@@ -95,15 +95,15 @@ namespace util {
 
     public:
 
-        ArrayList<E>& operator= ( const ArrayList<E>& list ) {
+        ArrayList<E>& operator= (const ArrayList<E>& list) {
             this->clear();
             this->addAll( list );
             return *this;
         }
 
-        ArrayList<E>& operator= ( const Collection<E>& collection ) {
+        ArrayList<E>& operator= (const Collection<E>& collection) {
             this->clear();
-            this->addAll( 0, collection );
+            this->addAll(0, collection);
             return *this;
         }
 
@@ -126,17 +126,17 @@ namespace util {
          * @param minimumCapacity
          *      The desired minimum capacity for this ArrayList.
          */
-        void ensureCapacity( int minimumCapacity ) {
+        void ensureCapacity(int minimumCapacity) {
 
-            if( minimumCapacity < 0 || this->capacity >= minimumCapacity ) {
+            if (minimumCapacity < 0 || this->capacity >= minimumCapacity) {
                 return;
             }
 
             int newCapacity = minimumCapacity == 0 ? 10 : minimumCapacity;
 
             E* newElements = new E[newCapacity];
-            if( this->curSize > 0 ) {
-                decaf::lang::System::arraycopy( this->elements, this->head, newElements, 0, this->curSize );
+            if (this->curSize > 0) {
+                decaf::lang::System::arraycopy(this->elements, this->head, newElements, 0, this->curSize);
             }
             delete [] this->elements;
             this->elements = newElements;
@@ -150,13 +150,13 @@ namespace util {
          */
         void trimToSize() {
 
-            if( this->curSize < this->capacity ) {
+            if (this->curSize < this->capacity) {
 
                 int newCapacity = this->curSize == 0 ? 10 : this->curSize;
 
                 E* newElements = new E[newCapacity];
-                if( this->curSize > 0 ) {
-                    System::arraycopy( this->elements, 0, newElements, 0, this->curSize );
+                if (this->curSize > 0) {
+                    System::arraycopy(this->elements, 0, newElements, 0, this->curSize);
                 }
 
                 delete [] this->elements;
@@ -185,12 +185,11 @@ namespace util {
             return this->curSize;
         }
 
-        virtual E set( int index, const E& element ) {
+        virtual E set(int index, const E& element) {
 
-            if( index < 0 || index >= this->curSize ) {
+            if (index < 0 || index >= this->curSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "List::get - Index greater than size() or negative" );
+                    __FILE__, __LINE__, "Index greater than size() or negative");
             }
 
             E oldValue = this->elements[index];
@@ -199,40 +198,38 @@ namespace util {
             return oldValue;
         }
 
-        virtual E get( int index ) const {
+        virtual E get(int index) const {
 
-            if( index < 0 || index >= this->curSize ) {
+            if (index < 0 || index >= this->curSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "List::get - Index greater than size() or negative" );
+                    __FILE__, __LINE__, "Index greater than size() or negative");
             }
 
             return this->elements[index];
         }
 
-        virtual bool add( const E& value ) {
+        virtual bool add(const E& value) {
 
-            this->expandEnd( 1 );
+            this->expandEnd(1);
             this->elements[this->curSize++] = value;
             AbstractList<E>::modCount++;
 
             return true;
         }
 
-        virtual void add( int index, const E& element ) {
+        virtual void add(int index, const E& element) {
 
-            if( index < 0 || index > this->curSize ) {
+            if (index < 0 || index > this->curSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "Index was negative or greater than size()" );
+                    __FILE__, __LINE__, "Index was negative or greater than size()");
             }
 
-            if( index == 0 ) {
-                this->expandFront( 1 );
-            } else if( index == this->curSize ) {
-                this->expandEnd( 1 );
+            if (index == 0) {
+                this->expandFront(1);
+            } else if (index == this->curSize) {
+                this->expandEnd(1);
             } else {
-                this->expandMiddle( index, 1 );
+                this->expandMiddle(index, 1);
             }
 
             this->elements[index] = element;
@@ -240,18 +237,18 @@ namespace util {
             AbstractList<E>::modCount++;
         }
 
-        virtual bool addAll( const Collection<E>& collection ) {
+        virtual bool addAll(const Collection<E>& collection) {
 
             int csize = collection.size();
-            if( csize == 0 ) {
+            if (csize == 0) {
                 return false;
             }
 
             std::vector<E> array = collection.toArray();
 
-            this->expandEnd( csize );
+            this->expandEnd(csize);
 
-            for( int i = 0; i < csize; ++i ) {
+            for (int i = 0; i < csize; ++i) {
                 this->elements[this->curSize++] = array[i];
             }
 
@@ -260,30 +257,29 @@ namespace util {
             return true;
         }
 
-        virtual bool addAll( int index, const Collection<E>& collection ) {
+        virtual bool addAll(int index, const Collection<E>& collection) {
 
-            if( index < 0 || index > this->curSize ) {
+            if(index < 0 || index > this->curSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "List::addAll - Index greater than size()" );
+                    __FILE__, __LINE__, "Index greater than size()");
             }
 
             int csize = collection.size();
-            if( csize == 0 ) {
+            if (csize == 0) {
                 return false;
             }
 
             std::vector<E> array = collection.toArray();
 
-            if( index == 0 ) {
-                this->expandFront( csize );
-            } else if( index == this->curSize ) {
-                this->expandEnd( csize );
+            if (index == 0) {
+                this->expandFront(csize);
+            } else if (index == this->curSize) {
+                this->expandEnd(csize);
             } else {
-                this->expandMiddle( index, csize );
+                this->expandMiddle(index, csize);
             }
 
-            for( int i = 0; i < csize; ++i, ++this->curSize ) {
+            for (int i = 0; i < csize; ++i, ++this->curSize) {
                 this->elements[index++] = array[i];
             }
 
@@ -292,31 +288,30 @@ namespace util {
             return true;
         }
 
-        virtual bool remove( const E& value ) {
+        virtual bool remove(const E& value) {
 
-            int result = indexOf( value );
-            if( result != -1 ) {
-                this->removeAt( result );
+            int result = indexOf(value);
+            if (result != -1) {
+                this->removeAt(result);
                 return true;
             }
 
             return false;
         }
 
-        virtual E removeAt( int index ) {
+        virtual E removeAt(int index) {
 
-            if( index < 0 || index >= this->curSize ) {
+            if (index < 0 || index >= this->curSize) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
-                        __FILE__, __LINE__,
-                        "List::removeAt - Index greater than size() or negative" );
+                    __FILE__, __LINE__, "Index greater than size() or negative");
             }
 
             E old = this->elements[index];
 
-            System::arraycopy( this->elements, 0, this->elements, 0, index );
+            System::arraycopy(this->elements, 0, this->elements, 0, index);
 
-            if( this->curSize > index ) {
-                System::arraycopy( this->elements, index + 1, this->elements, index, this->curSize - index - 1 );
+            if (this->curSize > index) {
+                System::arraycopy(this->elements, index + 1, this->elements, index, this->curSize - index - 1);
             }
 
             this->elements[--this->curSize] = E();
@@ -325,14 +320,14 @@ namespace util {
             return old;
         }
 
-        virtual bool contains( const E& value ) const {
-            return this->indexOf( value ) != -1;
+        virtual bool contains(const E& value) const {
+            return this->indexOf(value) != -1;
         }
 
-        virtual int indexOf( const E& value ) const {
+        virtual int indexOf(const E& value) const {
 
-            for( int i = 0; i < this->curSize; ++i ) {
-                if( this->elements[i] == value ) {
+            for (int i = 0; i < this->curSize; ++i) {
+                if (this->elements[i] == value) {
                     return i;
                 }
             }
@@ -340,10 +335,10 @@ namespace util {
             return -1;
         }
 
-        virtual int lastIndexOf( const E& value ) const {
+        virtual int lastIndexOf(const E& value) const {
 
-            for( int i = this->curSize - 1; i >= 0; --i ) {
-                if( this->elements[i] == value ) {
+            for (int i = this->curSize - 1; i >= 0; --i) {
+                if (this->elements[i] == value) {
                     return i;
                 }
             }
@@ -355,8 +350,8 @@ namespace util {
 
             std::vector<E> result;
 
-            for( int i = 0; i < this->curSize; ++i ) {
-                result.push_back( this->elements[i] );
+            for (int i = 0; i < this->curSize; ++i) {
+                result.push_back(this->elements[i]);
             }
 
             return result;
@@ -366,82 +361,81 @@ namespace util {
 
             std::string result;
 
-            result.append( "decaf::util::ArrayList [  size = " );
-            result.append( decaf::lang::Integer::toString( this->curSize ) );
-            result.append( " ]");
+            result.append("decaf::util::ArrayList [ size = ");
+            result.append(decaf::lang::Integer::toString(this->curSize));
+            result.append(" ]");
 
             return result;
         }
 
     private:
 
-        void expandFront( int amount ) {
+        void expandFront(int amount) {
 
-            if( amount == 0 ) {
+            if (amount == 0) {
                 return;
             }
 
             E* previous = this->elements;
 
-            if( amount > this->capacity - this->curSize ) {
+            if (amount > this->capacity - this->curSize) {
                 this->capacity = this->capacity + amount + 11;
                 this->elements = new E[this->capacity];
             }
 
-            if( this->curSize > 0 ) {
-                System::arraycopy( previous, 0, this->elements, amount, this->curSize );
+            if (this->curSize > 0) {
+                System::arraycopy(previous, 0, this->elements, amount, this->curSize);
             }
 
-            if( previous != this->elements ) {
+            if (previous != this->elements) {
                 delete [] previous;
             }
         }
 
-        void expandEnd( int amount ) {
+        void expandEnd(int amount) {
 
-            if( amount == 0 ) {
+            if (amount == 0) {
                 return;
             }
 
             E* previous = this->elements;
 
-            if( amount > this->capacity - this->curSize ) {
+            if (amount > this->capacity - this->curSize) {
                 this->capacity = this->capacity + amount + 11;
                 this->elements = new E[this->capacity];
                 System::arraycopy( previous, 0, this->elements, 0, this->curSize );
             }
 
-            if( previous != this->elements ) {
+            if(previous != this->elements) {
                 delete [] previous;
             }
         }
 
-        void expandMiddle( int index, int amount ) {
+        void expandMiddle(int index, int amount) {
 
-            if( amount == 0 ) {
+            if (amount == 0) {
                 return;
             }
 
             E* previous = this->elements;
 
-            if( amount > this->capacity - this->curSize ) {
+            if (amount > this->capacity - this->curSize) {
                 this->capacity = this->capacity + amount + 11;
                 this->elements = new E[this->capacity];
             }
 
-            if( this->curSize > 0 ) {
-                System::arraycopy( previous, 0, this->elements, 0, index );
+            if (this->curSize > 0) {
+                System::arraycopy(previous, 0, this->elements, 0, index);
             }
 
-            if( this->curSize > index ) {
-                System::arraycopy( previous, index, this->elements, index + amount, this->curSize - index );
+            if (this->curSize > index) {
+                System::arraycopy(previous, index, this->elements, index + amount, this->curSize - index);
             }
 
-            if( previous != this->elements ) {
+            if (previous != this->elements) {
                 delete [] previous;
             }
         }
-
     };
 
 }}

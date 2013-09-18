@@ -32,7 +32,8 @@ namespace core{
 namespace commands{
 
     class AMQCPP_API ActiveMQTempDestination : public ActiveMQDestination,
-                                               public cms::Closeable {
+                                               public cms::Closeable,
+                                               public decaf::lang::Comparable<ActiveMQTempDestination> {
     protected:
 
         /**
@@ -77,6 +78,22 @@ namespace commands{
 
         virtual bool equals(const DataStructure* value) const {
             return ActiveMQDestination::equals(value);
+        }
+
+        virtual int compareTo(const ActiveMQTempDestination& value) const {
+            return ActiveMQDestination::compareTo(value);
+        }
+
+        virtual bool equals(const ActiveMQTempDestination& value) const {
+            return ActiveMQDestination::equals(&value);
+        }
+
+        virtual bool operator==(const ActiveMQTempDestination& value) const {
+            return ActiveMQDestination::equals(&value);
+        }
+
+        virtual bool operator<(const ActiveMQTempDestination& value) const {
+            return ActiveMQDestination::compareTo(value) < 0;
         }
 
         virtual void close();

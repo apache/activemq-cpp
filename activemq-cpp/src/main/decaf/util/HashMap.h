@@ -392,7 +392,7 @@ namespace util {
 
             virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+                    __FILE__, __LINE__, "Cannot write to a const Iterator.");
             }
         };
 
@@ -420,7 +420,7 @@ namespace util {
 
             virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+                    __FILE__, __LINE__, "Cannot write to a const Iterator.");
             }
         };
 
@@ -448,7 +448,7 @@ namespace util {
 
             virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__, "Cannot write to a const Iterator." );
+                    __FILE__, __LINE__, "Cannot write to a const Iterator.");
             }
         };
 
@@ -557,7 +557,7 @@ namespace util {
             }
         };
 
-        protected:
+    protected:
 
         class HashMapKeySet : public AbstractSet<K> {
         private:

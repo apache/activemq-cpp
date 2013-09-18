@@ -29,7 +29,9 @@ namespace comparators {
      * less than the second.  This can be used in Collection classes to sort elements
      * according to their natural ordering.  By design the Comparator's compare function
      * return more information about comparison than the STL binary function's boolean
-     * compare operator.  In this case the compare method will return
+     * compare operator.  In this case the compare method will return a value of zero if
+     * two values are equal or a positive or negative value to indicate greater than or
+     * less then.
      *
      * @since 1.0
      */
@@ -40,15 +42,15 @@ namespace comparators {
         Less() {}
         virtual ~Less() {}
 
-        virtual bool operator() ( const E& left, const E& right ) const {
+        virtual bool operator()(const E& left, const E& right) const {
             return left < right;
         }
 
-        virtual int compare( const E& o1, const E& o2 ) const {
+        virtual int compare(const E& o1, const E& o2) const {
 
-            if( o1 > o2 ) {
+            if (o1 > o2) {
                 return 1;
-            } else if( o1 < o2 ) {
+            } else if (o1 < o2) {
                 return -1;
             }
 

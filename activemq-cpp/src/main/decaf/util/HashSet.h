@@ -78,8 +78,7 @@ namespace util {
          * Constructs a new, empty set; the backing HashMap instance has default initial
          * capacity (16) and load factor (0.75).
          */
-        HashSet() : AbstractSet<E>(), backingMap(new HashMap<E, Set<E>*, HASHCODE>()) {
-        }
+        HashSet() : AbstractSet<E>(), backingMap(new HashMap<E, Set<E>*, HASHCODE>()) {}
 
         /**
          * Constructs a new, empty set; the backing HashMap instance has the specified initial
@@ -88,8 +87,7 @@ namespace util {
          * @param capacity
          *      The initial capacity of this HashSet.
          */
-        HashSet(int capacity) : AbstractSet<E>(), backingMap(new HashMap<E, Set<E>*, HASHCODE>(capacity)) {
-        }
+        HashSet(int capacity) : AbstractSet<E>(), backingMap(new HashMap<E, Set<E>*, HASHCODE>(capacity)) {}
 
         /**
          * Constructs a new instance of {@code HashSet} with the specified capacity
@@ -178,23 +176,6 @@ namespace util {
         virtual void clear() {
             this->backingMap->clear();
         }
-
-        /**
-         * Returns a new {@code HashSet} with the same elements and size as this
-         * {@code HashSet}.
-         *
-         * @return a shallow copy of this {@code HashSet}.
-         * @see java.lang.Cloneable
-         */
-//        virtual Object clone() {
-//            try {
-//                HashSet<E> clone = (HashSet<E>) super.clone();
-//                clone.backingMap = (HashMap<E, HashSet<E>>) backingMap.clone();
-//                return clone;
-//            } catch (CloneNotSupportedException e) {
-//                return null;
-//            }
-//        }
 
         /**
          * Searches this {@code HashSet} for the specified object.
