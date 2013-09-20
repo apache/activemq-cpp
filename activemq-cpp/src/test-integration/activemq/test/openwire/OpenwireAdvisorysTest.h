@@ -31,6 +31,7 @@ namespace openwire {
 
         CPPUNIT_TEST_SUITE( OpenwireAdvisorysTest );
         CPPUNIT_TEST( testConnectionAdvisories );
+        CPPUNIT_TEST( testConcurrentTempDestCreation );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,6 +48,7 @@ namespace openwire {
         virtual void tearDown() {}
 
         void testConnectionAdvisories();
+        void testConcurrentTempDestCreation();
 
     };
 

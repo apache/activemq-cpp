@@ -27,6 +27,8 @@
 #include <decaf/lang/exceptions/ClassCastException.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/concurrent/TimeUnit.h>
 #include <decaf/util/UUID.h>
 
 #include <cms/ConnectionFactory.h>
@@ -48,6 +50,7 @@ using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::commands;
@@ -113,3 +116,66 @@ void OpenwireAdvisorysTest::testConnectionAdvisories() {
     connection->close();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class ConnectionLoadThread : public Thread {
+    private:
+
+        ConnectionFactory* factory;
+        bool noErrors;
+
+    public:
+
+        ConnectionLoadThread(ConnectionFactory* factory) :
+            Thread(), factory(factory), noErrors(true) {
+        }
+
+        virtual ~ConnectionLoadThread() {}
+
+        bool isNoErrors() const {
+            return this->noErrors;
+        }
+
+        virtual void run() {
+
+            try {
+                for (unsigned int i = 0; i < 50; ++i) {
+                    auto_ptr<Connection> connection(factory->createConnection());
+                    connection->start();
+                    auto_ptr<Session> session(connection->createSession(Session::AUTO_ACKNOWLEDGE));
+
+                    for (unsigned int j = 0; j < 100; ++j) {
+                        auto_ptr<Queue> queue(session->createTemporaryQueue());
+                        auto_ptr<MessageProducer> producer(session->createProducer(queue.get()));
+                    }
+
+                    TimeUnit::MILLISECONDS.sleep(20);
+                    connection->close();
+                }
+            } catch(...) {
+                noErrors = false;
+            }
+        }
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireAdvisorysTest::testConcurrentTempDestCreation() {
+
+    std::auto_ptr<ConnectionFactory> factory(
+        ConnectionFactory::createCMSConnectionFactory( getBrokerURL() ) );
+
+    ConnectionLoadThread thread1(factory.get());
+    ConnectionLoadThread thread2(factory.get());
+
+    thread1.start();
+    thread2.start();
+
+    thread1.join();
+    thread2.join();
+
+    CPPUNIT_ASSERT(thread1.isNoErrors());
+    CPPUNIT_ASSERT(thread2.isNoErrors());
+}

@@ -92,7 +92,7 @@ AdvisoryConsumer::~AdvisoryConsumer() {
 ////////////////////////////////////////////////////////////////////////////////
 void AdvisoryConsumer::dispose() {
 
-    if (!this->config->closed.compareAndSet(false, true)) {
+    if (this->config->closed.compareAndSet(false, true)) {
 
         try {
             this->connection->oneway(this->config->info->createRemoveCommand());

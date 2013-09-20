@@ -738,6 +738,10 @@ void ActiveMQConnection::close() {
 
         // As TemporaryQueue and TemporaryTopic instances are bound to a connection
         // we should just delete them after the connection is closed to free up memory
+        if (this->config->advisoryConsumer != NULL) {
+            this->config->advisoryConsumer->dispose();
+        }
+
         ArrayList<Pointer<ActiveMQTempDestination> > tempDests(this->config->activeTempDestinations.values());
         Pointer<Iterator<Pointer<ActiveMQTempDestination> > > iterator(tempDests.iterator());
 
