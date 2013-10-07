@@ -105,7 +105,6 @@ void StompFrame::toStream(decaf::io::DataOutputStream* stream) const {
     }
 
     if ((this->getBodyLength() == 0) || (this->getProperty(StompCommandConstants::HEADER_CONTENTLENGTH) != "")) {
-
         stream->write('\0');
     }
 
@@ -196,9 +195,7 @@ void StompFrame::readHeaders(decaf::io::DataInputStream* in) {
             // Check for an empty line to demark the end of the header section.
             // if its not the end then we have a header to process, so parse it.
             if (numChars == 1 && buffer[0] == '\0') {
-
                 endOfHeaders = true;
-
             } else {
 
                 // Search through this line to separate the key/value pair.
@@ -214,7 +211,9 @@ void StompFrame::readHeaders(decaf::io::DataInputStream* in) {
                         const char* value = reinterpret_cast<char*>(&buffer[ix + 1]);
 
                         // Assign the header key/value pair.
-                        this->getProperties().setProperty(key, value);
+                        if (!this->getProperties().hasProperty(key)) {
+                            this->getProperties().setProperty(key, value);
+                        }
 
                         // Break out of the for loop.
                         break;
