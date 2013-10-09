@@ -483,7 +483,7 @@ void ActiveMQSessionKernel::recover() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionKernel::clearMessagesInProgress() {
+void ActiveMQSessionKernel::clearMessagesInProgress(Pointer<AtomicInteger> transportsInterrupted) {
 
     if (this->executor.get() != NULL) {
         this->executor->clearMessagesInProgress();
@@ -495,6 +495,7 @@ void ActiveMQSessionKernel::clearMessagesInProgress() {
         while (iter->hasNext()) {
             Pointer<ActiveMQConsumerKernel> consumer = iter->next();
             consumer->inProgressClearRequired();
+            transportsInterrupted->incrementAndGet();
             this->connection->getScheduler()->executeAfterDelay(
                 new ClearConsumerTask(consumer), 0LL);
         }

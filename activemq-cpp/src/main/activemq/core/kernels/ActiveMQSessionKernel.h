@@ -43,6 +43,7 @@
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
 
 #include <string>
 #include <memory>
@@ -462,7 +463,8 @@ namespace kernels {
          * Request that this Session inform all of its consumers to clear all messages that
          * are currently in progress.
          */
-        void clearMessagesInProgress();
+        void clearMessagesInProgress(
+            decaf::lang::Pointer<decaf::util::concurrent::atomic::AtomicInteger> transportsInterrupted);
 
         /**
          * Causes the Session to wakeup its executer and ensure all messages are dispatched.

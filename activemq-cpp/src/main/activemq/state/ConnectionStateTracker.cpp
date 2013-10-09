@@ -528,12 +528,16 @@ Pointer<Command> ConnectionStateTracker::processRemoveConsumer(ConsumerId* id) {
                 Pointer<ConnectionId> connectionId = sessionId->getParentId();
                 if (connectionId != NULL) {
                     Pointer<ConnectionState> cs = this->impl->connectionStates.get(connectionId);
+                    Pointer<ConsumerId> consumerId(id->cloneDataStructure());
                     if (cs != NULL) {
                         Pointer<SessionState> ss = cs->getSessionState(sessionId);
                         if (ss != NULL) {
-                            ss->removeConsumer(Pointer<ConsumerId>(id->cloneDataStructure()));
+                            ss->removeConsumer(consumerId);
                         }
                     }
+                    try {
+                        cs->getRecoveringPullConsumers().remove(consumerId);
+                    } catch (NoSuchElementException e) {}
                 }
             }
         }

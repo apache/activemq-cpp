@@ -52,6 +52,7 @@
 #include <decaf/util/concurrent/ThreadPoolExecutor.h>
 #include <decaf/util/concurrent/LinkedBlockingQueue.h>
 #include <decaf/util/concurrent/locks/ReentrantReadWriteLock.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
 
 #include <activemq/commands/Command.h>
 #include <activemq/commands/ActiveMQMessage.h>
@@ -86,6 +87,7 @@ using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+using namespace decaf::util::concurrent::atomic;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -196,7 +198,7 @@ namespace core {
         Pointer<commands::ConnectionInfo> connectionInfo;
         Pointer<commands::BrokerInfo> brokerInfo;
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
-        Pointer<CountDownLatch> transportInterruptionProcessingComplete;
+        Pointer<AtomicInteger> transportInterruptionProcessingComplete;
         Pointer<CountDownLatch> brokerInfoReceived;
         Pointer<AdvisoryConsumer> advisoryConsumer;
 
@@ -283,6 +285,7 @@ namespace core {
             decaf::lang::Pointer<ConnectionId> connectionId(new ConnectionId());
             connectionId->setValue(uniqueId);
 
+            this->transportInterruptionProcessingComplete.reset(new AtomicInteger());
             this->executor.reset(
                 new ThreadPoolExecutor(1, 1, 5, TimeUnit::SECONDS,
                     new LinkedBlockingQueue<Runnable*>(),
@@ -769,24 +772,6 @@ void ActiveMQConnection::close() {
             }
         }
 
-        // Ensure that interruption processing completes in case any consumers were
-        // still in the process when we closed them.
-        try {
-            Pointer<CountDownLatch> latch = this->config->transportInterruptionProcessingComplete;
-            if (latch != NULL) {
-                int count = latch->getCount();
-                for (; count > 0; count--) {
-                    latch->countDown();
-                }
-            }
-        } catch (Exception& error) {
-            if (!hasException) {
-                ex = error;
-                ex.setMark(__FILE__, __LINE__);
-                hasException = true;
-            }
-        }
-
         // Now inform the Broker we are shutting down.
         try {
             this->disconnect(lastDeliveredSequenceId);
@@ -1213,13 +1198,13 @@ void ActiveMQConnection::transportInterrupted() {
 
     int consumers = this->config->watchTopicAdvisories ? (int) this->config->dispatchers.size() - 1 : (int) this->config->dispatchers.size();
 
-    this->config->transportInterruptionProcessingComplete.reset(new CountDownLatch(consumers));
+    this->config->transportInterruptionProcessingComplete->set(0);
 
     this->config->sessionsLock.readLock().lock();
     try {
         std::auto_ptr<Iterator<Pointer<ActiveMQSessionKernel> > > sessions(this->config->activeSessions.iterator());
         while (sessions->hasNext()) {
-            sessions->next()->clearMessagesInProgress();
+            sessions->next()->clearMessagesInProgress(this->config->transportInterruptionProcessingComplete);
         }
         this->config->sessionsLock.readLock().unlock();
     } catch (Exception& ex) {
@@ -1423,45 +1408,30 @@ void ActiveMQConnection::removeTransportListener(TransportListener* transportLis
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::waitForTransportInterruptionProcessingToComplete() {
 
-    Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
-    if (cdl != NULL) {
-
-        while (!closed.get() && !transportFailed.get() && cdl->getCount() > 0) {
-            cdl->await(10, TimeUnit::SECONDS);
-        }
-
+    while (!closed.get() && !transportFailed.get() && this->config->transportInterruptionProcessingComplete->get() > 0) {
         signalInterruptionProcessingComplete();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setTransportInterruptionProcessingComplete() {
-
-    Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
-    if (cdl != NULL) {
-        cdl->countDown();
-
-        try {
-            signalInterruptionProcessingComplete();
-        } catch (InterruptedException& ignored) {
-        }
+    if (this->config->transportInterruptionProcessingComplete->decrementAndGet() == 0) {
+        signalInterruptionProcessingComplete();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::signalInterruptionProcessingComplete() {
 
-    Pointer<CountDownLatch> cdl = this->config->transportInterruptionProcessingComplete;
+    FailoverTransport* failoverTransport =
+        dynamic_cast<FailoverTransport*>(this->config->transport->narrow(typeid(FailoverTransport)));
 
-    if (cdl->getCount() == 0) {
-
-        this->config->transportInterruptionProcessingComplete.reset(NULL);
-        FailoverTransport* failoverTransport = dynamic_cast<FailoverTransport*>(this->config->transport->narrow(typeid(FailoverTransport)));
-
-        if (failoverTransport != NULL) {
-            failoverTransport->setConnectionInterruptProcessingComplete(this->config->connectionInfo->getConnectionId());
-        }
+    if (failoverTransport != NULL) {
+        failoverTransport->setConnectionInterruptProcessingComplete(
+            this->config->connectionInfo->getConnectionId());
     }
+
+    this->config->transportInterruptionProcessingComplete->set(0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
