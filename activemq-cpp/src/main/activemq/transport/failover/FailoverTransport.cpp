@@ -722,11 +722,11 @@ void FailoverTransport::handleTransportFailure(const decaf::lang::Exception& err
 
             // Notify before we attempt to reconnect so that the consumers have a chance
             // to cleanup their state.
-            if (this->impl->transportListener != NULL) {
-                this->impl->transportListener->transportInterrupted();
-            }
-
             if (reconnectOk) {
+                if (this->impl->transportListener != NULL) {
+                    this->impl->transportListener->transportInterrupted();
+                }
+
                 this->impl->updated->removeURI(failedUri);
                 this->impl->taskRunner->wakeup();
             } else if (!this->impl->closed) {
