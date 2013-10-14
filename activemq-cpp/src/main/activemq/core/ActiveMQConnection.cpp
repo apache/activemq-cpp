@@ -1196,8 +1196,6 @@ void ActiveMQConnection::onClientInternalException(const decaf::lang::Exception&
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::transportInterrupted() {
 
-    int consumers = this->config->watchTopicAdvisories ? (int) this->config->dispatchers.size() - 1 : (int) this->config->dispatchers.size();
-
     this->config->transportInterruptionProcessingComplete->set(0);
 
     this->config->sessionsLock.readLock().lock();
