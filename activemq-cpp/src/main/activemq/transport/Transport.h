@@ -27,6 +27,7 @@
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
+#include <activemq/util/Service.h>
 #include <activemq/transport/ResponseCallback.h>
 #include <activemq/transport/FutureResponse.h>
 #include <activemq/commands/Command.h>
@@ -56,7 +57,7 @@ namespace transport{
      * object when created so that they can turn the built in Commands to /
      * from the required wire format encoding.
      */
-    class AMQCPP_API Transport: public decaf::io::Closeable {
+    class AMQCPP_API Transport : public activemq::util::Service, public decaf::io::Closeable {
     public:
 
         virtual ~Transport();

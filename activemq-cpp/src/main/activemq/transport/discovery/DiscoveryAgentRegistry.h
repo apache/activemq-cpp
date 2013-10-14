@@ -15,50 +15,49 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRY_H_
-#define _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYAGENTREGISTRY_H_
+#define _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYAGENTREGISTRY_H_
 
 #include <activemq/util/Config.h>
 
 #include <string>
 #include <vector>
-#include <activemq/transport/TransportFactory.h>
 
 #include <decaf/util/StlMap.h>
-#include <decaf/util/NoSuchElementException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
-#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq {
 namespace library {
     class ActiveMQCPP;
 }
 namespace transport {
+namespace discovery {
+
+    class DiscoveryAgentFactory;
 
     /**
-     * Registry of all Transport Factories that are available to the client
-     * at runtime.  New Transport's must have a factory registered here before
-     * a connection attempt is made.
+     * Registry of all Discovery Agent Factories that are available to the client
+     * at runtime.  New Agents must have a factory registered here before an attempt
+     * to create a DiscoveryTansport which uses that agent.
      *
-     * @since 3.0
+     * @since 3.9.0
      */
-    class AMQCPP_API TransportRegistry {
+    class AMQCPP_API DiscoveryAgentRegistry {
     private:
 
-        decaf::util::StlMap<std::string, TransportFactory*> registry;
+        decaf::util::StlMap<std::string, DiscoveryAgentFactory*> registry;
 
     private:
 
-        TransportRegistry();
-        TransportRegistry(const TransportRegistry& registry);
-        TransportRegistry& operator=(const TransportRegistry& registry);
+        DiscoveryAgentRegistry();
+        DiscoveryAgentRegistry(const DiscoveryAgentRegistry& registry);
+        DiscoveryAgentRegistry& operator=(const DiscoveryAgentRegistry& registry);
 
     public:
 
-        virtual ~TransportRegistry();
+        virtual ~DiscoveryAgentRegistry();
 
         /**
-         * Gets a Registered TransportFactory from the Registry and returns it
+         * Gets a Registered DiscoveryAgentFactory from the Registry and returns it
          * if there is not a registered format factory with the given name an exception
          * is thrown.
          *
@@ -69,10 +68,10 @@ namespace transport {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        TransportFactory* findFactory(const std::string& name) const;
+        DiscoveryAgentFactory* findFactory(const std::string& name) const;
 
         /**
-         * Registers a new TransportFactory with this Registry.  If a Factory with the
+         * Registers a new DiscoveryAgentFactory with this Registry.  If a Factory with the
          * given name is already registered it is overwritten with the new one.  Once a
          * factory is added to the Registry its lifetime is controlled by the Registry, it
          * will be deleted once the Registry has been deleted.
@@ -85,7 +84,7 @@ namespace transport {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory(const std::string& name, TransportFactory* factory);
+        void registerFactory(const std::string& name, DiscoveryAgentFactory* factory);
 
         /**
          * Unregisters the Factory with the given name and deletes that instance of the
@@ -102,12 +101,12 @@ namespace transport {
         void unregisterAllFactories();
 
         /**
-         * Retrieves a list of the names of all the Registered Transport's in this
+         * Retrieves a list of the names of all the Registered Agents in this
          * Registry.
          *
-         * @returns stl vector of strings with all the Transport names registered.
+         * @returns stl vector of strings with all the Agent names registered.
          */
-        std::vector<std::string> getTransportNames() const;
+        std::vector<std::string> getAgentNames() const;
 
     public:
 
@@ -115,7 +114,7 @@ namespace transport {
          * Gets the single instance of the TransportRegistry
          * @return reference to the single instance of this Registry
          */
-        static TransportRegistry& getInstance();
+        static DiscoveryAgentRegistry& getInstance();
 
     private:
 
@@ -126,6 +125,6 @@ namespace transport {
 
     };
 
-}}
+}}}
 
-#endif /* _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRY_H_ */
+#endif /* _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYAGENTREGISTRY_H_ */

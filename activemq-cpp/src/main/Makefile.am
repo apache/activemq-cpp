@@ -155,6 +155,13 @@ cc_sources = \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
     activemq/transport/correlator/ResponseCorrelator.cpp \
+    activemq/transport/discovery/DiscoveredBrokerData.cpp \
+    activemq/transport/discovery/DiscoveryAgent.cpp \
+    activemq/transport/discovery/DiscoveryAgentFactory.cpp \
+    activemq/transport/discovery/DiscoveryAgentRegistry.cpp \
+    activemq/transport/discovery/DiscoveryListener.cpp \
+    activemq/transport/discovery/DiscoveryTransport.cpp \
+    activemq/transport/discovery/DiscoveryTransportFactory.cpp \
     activemq/transport/failover/BackupTransport.cpp \
     activemq/transport/failover/BackupTransportPool.cpp \
     activemq/transport/failover/CloseTransportsTask.cpp \
@@ -191,6 +198,7 @@ cc_sources = \
     activemq/util/ServiceListener.cpp \
     activemq/util/ServiceStopper.cpp \
     activemq/util/ServiceSupport.cpp \
+    activemq/util/Suspendable.cpp \
     activemq/util/URISupport.cpp \
     activemq/util/Usage.cpp \
     activemq/wireformat/MarshalAware.cpp \
@@ -803,6 +811,13 @@ h_sources = \
     activemq/transport/TransportListener.h \
     activemq/transport/TransportRegistry.h \
     activemq/transport/correlator/ResponseCorrelator.h \
+    activemq/transport/discovery/DiscoveredBrokerData.h \
+    activemq/transport/discovery/DiscoveryAgent.h \
+    activemq/transport/discovery/DiscoveryAgentFactory.h \
+    activemq/transport/discovery/DiscoveryAgentRegistry.h \
+    activemq/transport/discovery/DiscoveryListener.h \
+    activemq/transport/discovery/DiscoveryTransport.h \
+    activemq/transport/discovery/DiscoveryTransportFactory.h \
     activemq/transport/failover/BackupTransport.h \
     activemq/transport/failover/BackupTransportPool.h \
     activemq/transport/failover/CloseTransportsTask.h \
@@ -840,6 +855,7 @@ h_sources = \
     activemq/util/ServiceListener.h \
     activemq/util/ServiceStopper.h \
     activemq/util/ServiceSupport.h \
+    activemq/util/Suspendable.h \
     activemq/util/URISupport.h \
     activemq/util/Usage.h \
     activemq/wireformat/MarshalAware.h \

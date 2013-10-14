@@ -63,15 +63,15 @@ namespace {
         PARSE_MODE_IGNORE = 4
     };
 
-    void dumpString( std::ostringstream& buffer, const std::string& string, bool key ) {
+    void dumpString(std::ostringstream& buffer, const std::string& string, bool key) {
 
         std::size_t i = 0;
-        if( !key && i < string.length() && string.at(i) == ' ' ) {
+        if (!key && i < string.length() && string.at(i) == ' ') {
             buffer << "\\ ";
             i++;
         }
 
-        for( ; i < string.length(); i++ ) {
+        for (; i < string.length(); i++) {
 
             char ch = string.at(i);
 
@@ -89,17 +89,17 @@ namespace {
                     buffer << "\\r";
                     break;
                 default:
-                    if( std::string( "\\#!=:" ).find( ch ) != std::string::npos || ( key && ch == ' ' ) ) {
+                    if (std::string("\\#!=:").find(ch) != std::string::npos || (key && ch == ' ')) {
                         buffer << '\\';
                     }
 
-                    if( ch >= ' ' && ch <= '~' ) {
+                    if (ch >= ' ' && ch <= '~') {
                         buffer << ch;
                     } else {
 
-                        std::string hex = Integer::toHexString( ch );
+                        std::string hex = Integer::toHexString(ch);
                         buffer << "\\u";
-                        for( std::size_t j = 0; j < 4 - hex.length(); j++ ) {
+                        for (std::size_t j = 0; j < 4 - hex.length(); j++) {
                             buffer << "0";
                         }
                         buffer << hex;
@@ -112,36 +112,36 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties() : internal( new PropertiesInternal() ), defaults() {
+Properties::Properties() : internal(new PropertiesInternal()), defaults() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties::Properties( const Properties& src ) : internal( new PropertiesInternal() ), defaults() {
+Properties::Properties(const Properties& src) : internal(new PropertiesInternal()), defaults() {
 
-    this->internal->properties.copy( src.internal->properties );
+    this->internal->properties.copy(src.internal->properties);
 
-    if( src.defaults.get() != NULL ) {
-        this->defaults.reset( src.defaults->clone() );
+    if (src.defaults.get() != NULL) {
+        this->defaults.reset(src.defaults->clone());
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Properties::~Properties() {
-    try{
+    try {
         delete this->internal;
     }
-    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties& Properties::operator= ( const Properties& source ) {
+Properties& Properties::operator=(const Properties& source) {
 
-    if( this == &source ) {
+    if (this == &source) {
         return *this;
     }
 
-    this->copy( source );
+    this->copy(source);
 
     return *this;
 }
@@ -159,20 +159,20 @@ bool Properties::isEmpty() const {
 int Properties::size() const {
 
     synchronized( &( internal->properties ) ) {
-        return (int)internal->properties.size();
+        return (int) internal->properties.size();
     }
 
     return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char* Properties::getProperty( const std::string& name ) const{
+const char* Properties::getProperty(const std::string& name) const {
 
     synchronized( &( internal->properties ) ) {
-        if( this->internal->properties.containsKey( name ) ) {
-            return this->internal->properties.get( name ).c_str();
-        } else if( this->defaults != NULL && this->defaults->hasProperty( name ) ) {
-            return this->defaults->getProperty( name );
+        if (this->internal->properties.containsKey(name)) {
+            return this->internal->properties.get(name).c_str();
+        } else if (this->defaults != NULL && this->defaults->hasProperty(name)) {
+            return this->defaults->getProperty(name);
         }
     }
 
@@ -180,14 +180,13 @@ const char* Properties::getProperty( const std::string& name ) const{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Properties::getProperty( const std::string& name,
-                                     const std::string& defaultValue ) const {
+std::string Properties::getProperty(const std::string& name, const std::string& defaultValue) const {
 
-    synchronized( &( internal->properties ) ) {
-        if( this->internal->properties.containsKey( name ) ) {
-            return this->internal->properties.get( name );
-        } else if( this->defaults != NULL && this->defaults->hasProperty( name ) ) {
-            return this->defaults->getProperty( name );
+    synchronized(&(internal->properties)) {
+        if (this->internal->properties.containsKey(name)) {
+            return this->internal->properties.get(name);
+        } else if (this->defaults != NULL && this->defaults->hasProperty(name)) {
+            return this->defaults->getProperty(name);
         }
     }
 
@@ -195,41 +194,40 @@ std::string Properties::getProperty( const std::string& name,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Properties::setProperty( const std::string& name, const std::string& value ){
+std::string Properties::setProperty(const std::string& name, const std::string& value) {
 
     std::string oldValue;
+    synchronized(&(internal->properties)) {
 
-    synchronized( &( internal->properties ) ) {
-
-        if( internal->properties.containsKey( name ) ) {
-            oldValue = internal->properties.get( name );
+        if (internal->properties.containsKey(name)) {
+            oldValue = internal->properties.get(name);
         }
 
-        internal->properties.put( name, value );
+        internal->properties.put(name, value);
     }
 
     return oldValue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Properties::hasProperty( const std::string& name ) const {
+bool Properties::hasProperty(const std::string& name) const {
 
     synchronized( &( internal->properties ) ) {
-        return this->internal->properties.containsKey( name );
+        return this->internal->properties.containsKey(name);
     }
 
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Properties::remove( const std::string& name ){
+std::string Properties::remove(const std::string& name) {
 
     std::string oldValue;
 
     synchronized( &( internal->properties ) ) {
-        if( this->internal->properties.containsKey( name ) ) {
-            oldValue = this->internal->properties.get( name );
-            this->internal->properties.remove( name );
+        if (this->internal->properties.containsKey(name)) {
+            oldValue = this->internal->properties.get(name);
+            this->internal->properties.remove(name);
         }
     }
 
@@ -237,12 +235,12 @@ std::string Properties::remove( const std::string& name ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::pair< std::string, std::string > > Properties::toArray() const{
+std::vector<std::pair<std::string, std::string> > Properties::toArray() const {
 
-    std::vector< std::pair<std::string, std::string> > result;
+    std::vector<std::pair<std::string, std::string> > result;
 
     synchronized( &( internal->properties ) ) {
-        Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+        Pointer<Iterator<MapEntry<std::string, std::string> > > entries(
                 this->internal->properties.entrySet().iterator());
         while (entries->hasNext()) {
             MapEntry<std::string, std::string> entry = entries->next();
@@ -256,32 +254,32 @@ std::vector< std::pair< std::string, std::string > > Properties::toArray() const
 ////////////////////////////////////////////////////////////////////////////////
 void Properties::copy( const Properties& source ){
 
-    if( &source == this ) {
+    if (&source == this) {
         return;
     }
 
     synchronized( &( this->internal->properties ) ) {
 
         synchronized( &( source.internal->properties ) ) {
-            this->internal->properties.copy( source.internal->properties );
+            this->internal->properties.copy(source.internal->properties);
 
-            if( source.defaults.get() != NULL ) {
-                this->defaults.reset( source.defaults->clone() );
+            if (source.defaults.get() != NULL) {
+                this->defaults.reset(source.defaults->clone());
             }
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Properties* Properties::clone() const{
+Properties* Properties::clone() const {
 
     Properties* props = new Properties();
-    props->internal->properties.copy( this->internal->properties );
+    props->internal->properties.copy(this->internal->properties);
     return props;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::clear(){
+void Properties::clear() {
 
     synchronized( &( internal->properties ) ) {
         this->internal->properties.clear();
@@ -289,20 +287,20 @@ void Properties::clear(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Properties::equals( const Properties& source ) const {
-    return this->internal->properties.equals( source.internal->properties );
+bool Properties::equals(const Properties& source) const {
+    return this->internal->properties.equals(source.internal->properties);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Properties::toString() const {
 
     std::ostringstream stream;
-    std::map< std::string, std::string >::const_iterator iter;
+    std::map<std::string, std::string>::const_iterator iter;
 
     stream << "Begin Class decaf::util::Properties:" << std::endl;
 
-    synchronized( &( internal->properties ) ) {
-        Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+    synchronized(&(internal->properties)) {
+        Pointer<Iterator<MapEntry<std::string, std::string> > > entries(
                 this->internal->properties.entrySet().iterator());
         while (entries->hasNext()) {
             MapEntry<std::string, std::string> entry = entries->next();
@@ -318,19 +316,19 @@ std::string Properties::toString() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> Properties::propertyNames() const {
     StlMap<std::string, std::string> selectedProperties;
-    this->selectProperties( selectedProperties );
+    this->selectProperties(selectedProperties);
     return selectedProperties.keySet().toArray();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::selectProperties( StlMap<std::string, std::string>& selectProperties ) const {
+void Properties::selectProperties(StlMap<std::string, std::string>& selectProperties) const {
 
-    if( this->defaults != NULL ) {
-        this->defaults->selectProperties( selectProperties );
+    if (this->defaults != NULL) {
+        this->defaults->selectProperties(selectProperties);
     }
 
-    Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
-            this->internal->properties.entrySet().iterator());
+    Pointer<Iterator<MapEntry<std::string, std::string> > > entries(
+        this->internal->properties.entrySet().iterator());
     while (entries->hasNext()) {
         MapEntry<std::string, std::string> entry = entries->next();
         selectProperties.put(entry.getKey(), entry.getValue());
@@ -338,14 +336,13 @@ void Properties::selectProperties( StlMap<std::string, std::string>& selectPrope
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::load( decaf::io::InputStream* stream ) {
+void Properties::load(decaf::io::InputStream* stream) {
 
     try{
 
-        if( stream == NULL ) {
+        if (stream == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "The Stream instance passed was Null" );
+                __FILE__, __LINE__, "The Stream instance passed was Null");
         }
 
         int mode = PARSE_MODE_NONE;
@@ -355,19 +352,19 @@ void Properties::load( decaf::io::InputStream* stream ) {
         int keyLength = -1;
         int intVal;
         bool firstChar = true;
-        BufferedInputStream bis( stream );
+        BufferedInputStream bis(stream);
 
-        while(true) {
+        while (true) {
 
             intVal = bis.read();
 
-            if( intVal == -1 ) {
+            if (intVal == -1) {
                 break;
             }
 
-            nextChar = (char) ( intVal & 0xFF );
+            nextChar = (char) (intVal & 0xFF);
 
-            if( mode == PARSE_MODE_SLASH ) {
+            if (mode == PARSE_MODE_SLASH) {
 
                 mode = PARSE_MODE_NONE;
                 switch( nextChar ) {
@@ -399,16 +396,16 @@ void Properties::load( decaf::io::InputStream* stream ) {
                 switch( nextChar ) {
                     case '#':
                     case '!':
-                        if( firstChar ) {
-                            while( true ) {
+                        if (firstChar) {
+                            while (true) {
                                 intVal = bis.read();
-                                if( intVal == -1 ) {
+                                if (intVal == -1) {
                                     break;
                                 }
 
-                                nextChar = (char)( intVal & 0xFF );
+                                nextChar = (char) (intVal & 0xFF);
 
-                                if( nextChar == '\r' || nextChar == '\n' ) {
+                                if (nextChar == '\r' || nextChar == '\n') {
                                     break;
                                 }
                             }
@@ -416,23 +413,23 @@ void Properties::load( decaf::io::InputStream* stream ) {
                         }
                         break;
                     case '\n':
-                        if( mode == PARSE_MODE_CONTINUE) { // Part of a \r\n sequence
+                        if (mode == PARSE_MODE_CONTINUE) { // Part of a \r\n sequence
                             mode = PARSE_MODE_IGNORE; // Ignore whitespace on the next line
                             continue;
                         }
-                        // fall into the next case
+                        // Intentional fall into the next case
                     case '\r':
                         mode = PARSE_MODE_NONE;
                         firstChar = true;
-                        if( offset > 0 || ( offset == 0 && keyLength == 0 ) ) {
+                        if (offset > 0 || (offset == 0 && keyLength == 0)) {
 
-                            if( keyLength == -1 ) {
+                            if (keyLength == -1) {
                                 keyLength = offset;
                             }
-                            std::string temp( buf.begin(), buf.begin() + offset );
+                            std::string temp(buf.begin(), buf.begin() + offset);
 
-                            this->internal->properties.put( temp.substr( 0, keyLength ),
-                                                            temp.substr( keyLength ) );
+                            this->internal->properties.put(temp.substr(
+                                0, keyLength), temp.substr(keyLength));
                         }
 
                         keyLength = -1;
@@ -440,14 +437,14 @@ void Properties::load( decaf::io::InputStream* stream ) {
                         buf.clear();
                         continue;
                     case '\\':
-                        if( mode == PARSE_MODE_KEY_DONE ) {
+                        if (mode == PARSE_MODE_KEY_DONE) {
                             keyLength = offset;
                         }
                         mode = PARSE_MODE_SLASH;
                         continue;
                     case ':':
                     case '=':
-                        if( keyLength == -1 ) { // if parsing the key
+                        if (keyLength == -1) { // if parsing the key
                             mode = PARSE_MODE_NONE;
                             keyLength = offset;
                             continue;
@@ -455,87 +452,84 @@ void Properties::load( decaf::io::InputStream* stream ) {
                         break;
                 }
                 if( Character::isWhitespace( nextChar ) ) {
-                    if( mode == PARSE_MODE_CONTINUE ) {
+                    if (mode == PARSE_MODE_CONTINUE) {
                         mode = PARSE_MODE_IGNORE;
                     }
                     // if key length == 0 or value length == 0
-                    if( offset == 0 || offset == keyLength || mode == PARSE_MODE_IGNORE ) {
+                    if (offset == 0 || offset == keyLength || mode == PARSE_MODE_IGNORE) {
                         continue;
                     }
-                    if( keyLength == -1 ) { // if parsing the key
+                    if (keyLength == -1) { // if parsing the key
                         mode = PARSE_MODE_KEY_DONE;
                         continue;
                     }
                 }
 
-                if( mode == PARSE_MODE_IGNORE || mode == PARSE_MODE_CONTINUE ) {
+                if (mode == PARSE_MODE_IGNORE || mode == PARSE_MODE_CONTINUE) {
                     mode = PARSE_MODE_NONE;
                 }
             }
 
             firstChar = false;
-            if( mode == PARSE_MODE_KEY_DONE ) {
+            if (mode == PARSE_MODE_KEY_DONE) {
                 keyLength = offset;
                 mode = PARSE_MODE_NONE;
             }
 
             offset += 1;
-            buf.push_back( nextChar );
+            buf.push_back(nextChar);
         }
 
-        if( keyLength == -1 && offset > 0 ) {
+        if (keyLength == -1 && offset > 0) {
             keyLength = offset;
         }
 
-        if( keyLength >= 0 ) {
-            std::string temp( buf.begin(), buf.begin() + offset );
-            this->internal->properties.put( temp.substr( 0, keyLength ), temp.substr( keyLength ) );
+        if (keyLength >= 0) {
+            std::string temp(buf.begin(), buf.begin() + offset);
+            this->internal->properties.put(temp.substr(0, keyLength), temp.substr(keyLength));
         }
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IllegalArgumentException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::load( decaf::io::Reader* reader ) {
+void Properties::load(decaf::io::Reader* reader) {
 
-    try{
+    try {
 
-        if( reader == NULL ) {
+        if (reader == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "The Reader instance passed was Null" );
+                __FILE__, __LINE__, "The Reader instance passed was Null");
         }
 
         throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "Not yet Implemented." );
+            __FILE__, __LINE__, "Not yet Implemented.");
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IllegalArgumentException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(IllegalArgumentException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::store( decaf::io::OutputStream* out, const std::string& comments DECAF_UNUSED ) {
+void Properties::store(decaf::io::OutputStream* out, const std::string& comments DECAF_UNUSED) {
 
-    try{
+    try {
 
-        if( out == NULL ) {
+        if (out == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "The OutputStream instance passed was Null" );
+                __FILE__, __LINE__, "The OutputStream instance passed was Null");
         }
 
         std::ostringstream buffer;
         std::ostringstream writer;
 
-        if( comments != "" ) {
+        if (comments != "") {
             writer << "#";
             writer << comments;
             writer << std::endl;
@@ -545,49 +539,47 @@ void Properties::store( decaf::io::OutputStream* out, const std::string& comment
         writer << Date().toString();
         writer << std::endl;
 
-        Pointer< Iterator< MapEntry<std::string, std::string> > > entries(
+        Pointer<Iterator<MapEntry<std::string, std::string> > > entries(
                 this->internal->properties.entrySet().iterator());
         while (entries->hasNext()) {
             MapEntry<std::string, std::string> entry = entries->next();
 
-            dumpString( buffer, entry.getKey(), true );
+            dumpString(buffer, entry.getKey(), true);
             buffer << "=";
-            dumpString( buffer, entry.getValue(), false );
+            dumpString(buffer, entry.getValue(), false);
             buffer << std::endl;
 
             writer << buffer.str();
             buffer.str("");
         }
 
-        int length = (int)writer.str().length();
+        int length = (int) writer.str().length();
 
-        out->write( (const unsigned char*)writer.str().c_str(), length, 0, length );
+        out->write((const unsigned char*) writer.str().c_str(), length, 0, length);
         out->flush();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Properties::store( decaf::io::Writer* writer, const std::string& comments DECAF_UNUSED ) {
+void Properties::store(decaf::io::Writer* writer, const std::string& comments DECAF_UNUSED) {
 
-    try{
+    try {
 
-        if( writer == NULL ) {
+        if (writer == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__,
-                "The Writer instance passed was Null" );
+                __FILE__, __LINE__, "The Writer instance passed was Null");
         }
 
         throw UnsupportedOperationException(
-            __FILE__, __LINE__,
-            "Not yet Implemented." );
+            __FILE__, __LINE__, "Not yet Implemented.");
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_EXCEPTION_CONVERT( Exception, IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 

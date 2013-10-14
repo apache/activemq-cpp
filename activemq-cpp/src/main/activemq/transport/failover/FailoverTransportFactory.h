@@ -22,7 +22,6 @@
 
 #include <activemq/transport/AbstractTransportFactory.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
@@ -49,16 +48,6 @@ namespace failover {
 
     protected:
 
-        /**
-         * Creates a slimed down Transport instance which can be used in composite
-         * transport instances.
-         *
-         * @param location - URI location to connect to.
-         * @param properties - Properties to apply to the transport.
-         *
-         * @return Pointer to a new FailoverTransport instance.
-         * @throws ActiveMQexception if an error occurs
-         */
         virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
                                                      const decaf::util::Properties& properties);
 

@@ -55,6 +55,8 @@ cc_sources = \
     activemq/transport/IOTransportTest.cpp \
     activemq/transport/TransportRegistryTest.cpp \
     activemq/transport/correlator/ResponseCorrelatorTest.cpp \
+    activemq/transport/discovery/DiscoveryAgentRegistryTest.cpp \
+    activemq/transport/discovery/DiscoveryTransportFactoryTest.cpp \
     activemq/transport/failover/FailoverTransportTest.cpp \
     activemq/transport/inactivity/InactivityMonitorTest.cpp \
     activemq/transport/mock/MockTransportFactoryTest.cpp \
@@ -305,6 +307,8 @@ h_sources = \
     activemq/transport/IOTransportTest.h \
     activemq/transport/TransportRegistryTest.h \
     activemq/transport/correlator/ResponseCorrelatorTest.h \
+    activemq/transport/discovery/DiscoveryAgentRegistryTest.h \
+    activemq/transport/discovery/DiscoveryTransportFactoryTest.h \
     activemq/transport/failover/FailoverTransportTest.h \
     activemq/transport/inactivity/InactivityMonitorTest.h \
     activemq/transport/mock/MockTransportFactoryTest.h \

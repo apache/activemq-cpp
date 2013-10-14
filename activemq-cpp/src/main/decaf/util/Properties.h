@@ -50,7 +50,7 @@ namespace util{
      *
      * @since 1.0
      */
-    class DECAF_API Properties{
+    class DECAF_API Properties {
     private:
 
         PropertiesInternal* internal;
@@ -67,7 +67,7 @@ namespace util{
 
         Properties();
 
-        Properties( const Properties& src );
+        Properties(const Properties& src);
 
         virtual ~Properties();
 
@@ -79,7 +79,7 @@ namespace util{
          *
          * @return a reference to this List for use in chaining.
          */
-        Properties& operator= ( const Properties& src );
+        Properties& operator=(const Properties& src);
 
         /**
          * Returns true if the properties object is empty.
@@ -102,7 +102,7 @@ namespace util{
          * @return the value of the property with the given name, if it
          *         exists.  If it does not exist, returns NULL.
          */
-        const char* getProperty( const std::string& name ) const;
+        const char* getProperty(const std::string& name) const;
 
         /**
          * Looks up the value for the given property.
@@ -115,7 +115,7 @@ namespace util{
          * @return The value of the property specified by <code>name</code>, if it
          *         exists, otherwise the <code>defaultValue</code>.
          */
-        std::string getProperty( const std::string& name, const std::string& defaultValue ) const;
+        std::string getProperty(const std::string& name, const std::string& defaultValue) const;
 
         /**
          * Sets the value for a given property.  If the property already
@@ -128,7 +128,7 @@ namespace util{
          *
          * @returns the old value of the property or empty string if not set.
          */
-        std::string setProperty( const std::string& name, const std::string& value );
+        std::string setProperty(const std::string& name, const std::string& value);
 
         /**
          * Check to see if the Property exists in the set.
@@ -138,7 +138,7 @@ namespace util{
          *
          * @return true if property exists, false otherwise.
          */
-        bool hasProperty( const std::string& name ) const;
+        bool hasProperty(const std::string& name) const;
 
         /**
          * Removes the property with the given name.
@@ -148,7 +148,7 @@ namespace util{
          *
          * @returns the previous value of the property if set, or empty string.
          */
-        std::string remove( const std::string& name );
+        std::string remove(const std::string& name);
 
         /**
          * Returns an enumeration of all the keys in this property list, including distinct keys
@@ -166,16 +166,16 @@ namespace util{
          * @return list of pairs where the first is the name and the second
          *         is the value.
          */
-        std::vector< std::pair< std::string, std::string > > toArray() const;
+        std::vector<std::pair<std::string, std::string> > toArray() const;
 
         /**
          * Copies the contents of the given properties object to this one, if the
-         * given Properties instance in NULL then this List is not modified.
+         * given Properties instance in empty then this List is not modified.
          *
          * @param source
          *      The source properties object.
          */
-        void copy( const Properties& source );
+        void copy(const Properties& source);
 
         /**
          * Clones this object.
@@ -201,7 +201,7 @@ namespace util{
          *
          * @return true if the contents of the two Properties objects are the same.
          */
-        bool equals( const Properties& source ) const;
+        bool equals(const Properties& source) const;
 
         /**
          * Formats the contents of the Properties Object into a string that can be logged, etc.
@@ -224,7 +224,7 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::InputStream* stream );
+        void load(decaf::io::InputStream* stream);
 
         /**
          * Reads a property list (key and element pairs) from the input character stream in a
@@ -325,7 +325,7 @@ namespace util{
          * @throw IllegalArgumentException if malformed data is found while reading the properties.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void load( decaf::io::Reader* reader );
+        void load(decaf::io::Reader* reader);
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the
@@ -355,7 +355,7 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::OutputStream* out, const std::string& comment );
+        void store(decaf::io::OutputStream* out, const std::string& comment);
 
         /**
          * Writes this property list (key and element pairs) in this Properties table to the output
@@ -393,11 +393,11 @@ namespace util{
          * @throw IOException if there is an error while writing from the stream.
          * @throw NullPointerException if the passed stream is Null.
          */
-        void store( decaf::io::Writer* writer, const std::string& comments );
+        void store(decaf::io::Writer* writer, const std::string& comments);
 
     private:
 
-        void selectProperties( decaf::util::StlMap<std::string, std::string>& selectProperties ) const;
+        void selectProperties(decaf::util::StlMap<std::string, std::string>& selectProperties) const;
 
     };
 

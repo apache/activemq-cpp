@@ -27,28 +27,26 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ServiceStopper::ServiceStopper() : firstException(), hasException(false) {
-}
+ServiceStopper::ServiceStopper() : firstException(), hasException(false) {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ServiceStopper::~ServiceStopper() {
-}
+ServiceStopper::~ServiceStopper() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceStopper::stop(Service* service) {
 
-    if(service == NULL) {
+    if (service == NULL) {
         return;
     }
 
     try {
         service->stop();
-    } catch(Exception& ex) {
+    } catch (Exception& ex) {
         this->onException(service, ex);
-    } catch(std::exception& stdex) {
+    } catch (std::exception& stdex) {
         ActiveMQException wrapper(__FILE__, __LINE__, stdex.what());
         this->onException(service, wrapper);
-    } catch(...) {
+    } catch (...) {
         ActiveMQException wrapper(__FILE__, __LINE__, "Caught Unknown Exception");
         this->onException(service, wrapper);
     }
@@ -56,14 +54,14 @@ void ServiceStopper::stop(Service* service) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceStopper::throwFirstException() {
-    if(this->hasException) {
+    if (this->hasException) {
         throw this->firstException;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServiceStopper::onException(Service* service AMQCPP_UNUSED, Exception& ex) {
-    if(!this->hasException) {
+    if (!this->hasException) {
         this->firstException = ex;
         this->hasException = true;
     }

@@ -15,25 +15,28 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYTRANSPORTFACTORY_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/AbstractTransportFactory.h>
+#include <activemq/transport/Transport.h>
+#include <decaf/net/URI.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq {
 namespace transport {
-namespace tcp {
-
-    using decaf::lang::Pointer;
+namespace discovery {
 
     /**
-     * Factory Responsible for creating the TcpTransport.
+     * Creates an instance of a DiscoveryTransport.
+     *
+     * @since 3.9
      */
-    class AMQCPP_API TcpTransportFactory : public AbstractTransportFactory {
+    class AMQCPP_API DiscoveryTransportFactory : public AbstractTransportFactory {
     public:
 
-        virtual ~TcpTransportFactory() {}
+        virtual ~DiscoveryTransportFactory();
 
         virtual Pointer<Transport> create(const decaf::net::URI& location);
 
@@ -41,14 +44,10 @@ namespace tcp {
 
     protected:
 
-        virtual Pointer<Transport> doCreateComposite(const decaf::net::URI& location,
-                                                     const Pointer<wireformat::WireFormat> wireFormat,
-                                                     const decaf::util::Properties& properties);
-
-        virtual void doConfigureTransport(Pointer<Transport>, const decaf::util::Properties& properties);
+        virtual Pointer<Transport> doCreateTransport(const decaf::net::URI& location);
 
     };
 
 }}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_*/
+#endif /* _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYTRANSPORTFACTORY_H_ */

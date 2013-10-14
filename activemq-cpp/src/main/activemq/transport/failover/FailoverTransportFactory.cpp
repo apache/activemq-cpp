@@ -25,7 +25,6 @@
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
-#include <memory>
 
 using namespace activemq;
 using namespace activemq::util;

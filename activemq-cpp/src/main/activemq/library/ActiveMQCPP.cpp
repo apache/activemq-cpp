@@ -20,6 +20,7 @@
 #include <decaf/lang/Runtime.h>
 #include <activemq/wireformat/WireFormatRegistry.h>
 #include <activemq/transport/TransportRegistry.h>
+#include <activemq/transport/discovery/DiscoveryAgentRegistry.h>
 
 #include <activemq/util/IdGenerator.h>
 
@@ -38,6 +39,7 @@ using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::transport::mock;
 using namespace activemq::transport::failover;
+using namespace activemq::transport::discovery;
 using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,6 +81,7 @@ void ActiveMQCPP::shutdownLibrary() {
 
     WireFormatRegistry::shutdown();
     TransportRegistry::shutdown();
+    DiscoveryAgentRegistry::shutdown();
 
     // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
@@ -99,11 +102,14 @@ void ActiveMQCPP::registerWireFormats() {
 void ActiveMQCPP::registerTransports() {
 
     // Each of the internally implemented Transports is registered here
-    // with the Transport Registry
     TransportRegistry::initialize();
 
     TransportRegistry::getInstance().registerFactory("tcp", new TcpTransportFactory());
     TransportRegistry::getInstance().registerFactory("ssl", new SslTransportFactory());
     TransportRegistry::getInstance().registerFactory("mock", new MockTransportFactory());
     TransportRegistry::getInstance().registerFactory("failover", new FailoverTransportFactory());
+
+    // Each discovery agent implemented in this library must be registered here.
+    DiscoveryAgentRegistry::initialize();
+
 }

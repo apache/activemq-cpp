@@ -15,38 +15,33 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_UTIL_URISUPPORTTEST_H_
-#define _ACTIVEMQ_UTIL_URISUPPORTTEST_H_
+#ifndef _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYTRANSPORTFACTORYTEST_H_
+#define _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYTRANSPORTFACTORYTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-namespace activemq{
-namespace util{
+namespace activemq {
+namespace transport {
+namespace discovery {
 
-    class URISupportTest : public CppUnit::TestFixture {
+    class DiscoveryTransportFactoryTest : public CppUnit::TestFixture {
 
-       CPPUNIT_TEST_SUITE( URISupportTest );
-       CPPUNIT_TEST( test );
-       CPPUNIT_TEST( testURIParseEnv );
-       CPPUNIT_TEST( testParseComposite );
-       CPPUNIT_TEST( testApplyParameters );
-       CPPUNIT_TEST( testCreateWithQuery );
-       CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE( DiscoveryTransportFactoryTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        URISupportTest() {}
-        virtual ~URISupportTest() {}
+        DiscoveryTransportFactoryTest();
+        virtual ~DiscoveryTransportFactoryTest();
 
         void test();
-        void testURIParseEnv();
-        void testParseComposite();
-        void testApplyParameters();
-        void testCreateWithQuery();
+
+        virtual void setUp();
 
     };
 
-}}
+}}}
 
-#endif /*_ACTIVEMQ_UTIL_URISUPPORTTEST_H_*/
+#endif /* _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVERYTRANSPORTFACTORYTEST_H_ */

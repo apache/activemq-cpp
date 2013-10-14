@@ -29,6 +29,15 @@ using namespace activemq;
 using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    void verifyParams(const Properties& parameters) {
+        CPPUNIT_ASSERT(parameters.getProperty("proxyHost", "") == "localhost");
+        CPPUNIT_ASSERT(parameters.getProperty("proxyPort", "") == "80");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void URISupportTest::test() {
 
     string test = "?option1=test1&option2=test2";
@@ -208,5 +217,39 @@ void URISupportTest::testParseComposite() {
     CPPUNIT_ASSERT( data.getComponents().get(1).toString() == "part2://host" );
     CPPUNIT_ASSERT( data.getComponents().get(2).toString() == "part3://host" );
     CPPUNIT_ASSERT( data.getComponents().get(3).toString() == "part4://host?option=value" );
+}
 
+////////////////////////////////////////////////////////////////////////////////
+void URISupportTest::testCreateWithQuery() {
+
+    URI source("vm://localhost");
+    URI dest = URISupport::createURIWithQuery(source, "network=true&one=two");
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("correct param count", 2, URISupport::parseParameters(dest).size());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("same uri, host", source.getHost(), dest.getHost());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("same uri, scheme", source.getScheme(), dest.getScheme());
+    CPPUNIT_ASSERT_MESSAGE("same uri, ssp", dest.getQuery() != source.getQuery());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URISupportTest::testApplyParameters() {
+
+    URI uri("http://0.0.0.0:61616");
+    Properties parameters;
+    parameters.setProperty("t.proxyHost", "localhost");
+    parameters.setProperty("t.proxyPort", "80");
+
+    uri = URISupport::applyParameters(uri, parameters);
+    Properties appliedParameters = URISupport::parseParameters(uri);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("all params applied with no prefix", 2, appliedParameters.size());
+
+    // strip off params again
+    uri = URISupport::createURIWithQuery(uri, "");
+
+    uri = URISupport::applyParameters(uri, parameters, "joe");
+    appliedParameters = URISupport::parseParameters(uri);
+    CPPUNIT_ASSERT_MESSAGE("no params applied as none match joe", appliedParameters.isEmpty());
+
+    uri = URISupport::applyParameters(uri, parameters, "t.");
+    verifyParams(URISupport::parseParameters(uri));
 }

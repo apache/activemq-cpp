@@ -31,6 +31,16 @@ namespace util {
     public:
 
         /**
+         * Examine a URI and determine if it is a Composite type or not.
+         *
+         * @param uri
+         *      The URI that is to be examined.
+         *
+         * @return true if the given URI is a Composite type.
+         */
+        static bool isCompositeURI(const decaf::net::URI& uri);
+
+        /**
          * Parses the properties out of the provided Broker URI and sets
          * them in the passed Properties Object.
          * @param URI a Broker URI to parse
@@ -90,7 +100,73 @@ namespace util {
          */
         static std::string createQueryString(const Properties& options);
 
-    private:
+        /**
+         * Given a URI parse and extract any URI query options and return them as a Key / Value mapping.
+         *
+         * This method differs from the {@link parseQuery} method in that it handles composite URI
+         * types and will extract the URI options from the outermost composite URI.
+         *
+         * @param uri
+         *      The URI whose query should be extracted and processed.
+         *
+         * @return A Mapping of the URI options.
+         *
+         * @throws URISyntaxException if the passed in URI contains invalid elements.
+         */
+        static decaf::util::Properties parseParameters(const decaf::net::URI& uri);
+
+        /**
+         * Given a Key / Value mapping create and append a URI query value that represents the
+         * mapped entries, return the newly updated URI that contains the value of the given URI
+         * and the appended query value.
+         *
+         * @param uri
+         *      The source URI that will have the Map entries appended as a URI query value.
+         * @param queryParameters
+         *      The Key / Value mapping that will be transformed into a URI query string.
+         *
+         * @return A new URI value that combines the given URI and the constructed query string.
+         *
+         * @throws URISyntaxException if an invalid URI is created during this operation.
+         */
+        static decaf::net::URI applyParameters(const decaf::net::URI& uri, const decaf::util::Properties& queryParameters);
+
+        /**
+         * Given a Key / Value mapping create and append a URI query value that represents the mapped
+         * entries, return the newly updated URI that contains the value of the given URI and the
+         * appended query value.  Each entry in the query string is prefixed by the supplied
+         * optionPrefix string.
+         *
+         * @param uri
+         *      The source URI that will have the Map entries appended as a URI query value.
+         * @param queryParameters
+         *      The Key / Value mapping that will be transformed into a URI query string.
+         * @param optionPrefix
+         *      A string value that when not null or empty is used to prefix each query option key.
+         *
+         * @return A new URI value that combines the given URI and the constructed query string.
+         *
+         * @throws URISyntaxException if an invalid URI is created during this operation.
+         */
+        static decaf::net::URI applyParameters(const decaf::net::URI& uri,
+                                               const decaf::util::Properties& queryParameters,
+                                               const std::string& optionPrefix);
+
+        /**
+         * Creates a URI with the given query, removing an previous query value from the given URI.
+         *
+         * @param uri
+         *      The source URI whose existing query is replaced with the newly supplied one.
+         * @param query
+         *      The new URI query string that should be appended to the given URI.
+         *
+         * @return a new URI that is a combination of the original URI and the given query string.
+         *
+         * @throws URISyntaxException
+         */
+        static decaf::net::URI createURIWithQuery(const decaf::net::URI& uri, const std::string& query);
+
+    public:  // Utility methods used by this class.
 
         /**
          * Perform a parse on the given composite URI, placing the results in the passed
@@ -111,6 +187,17 @@ namespace util {
          * @param str - the set of Composite URIs
          */
         static decaf::util::LinkedList<std::string> splitComponents(const std::string& str);
+
+        /**
+         * Strip a URI of its scheme element.
+         *
+         * @param uri
+         *      The URI whose scheme value should be stripped.
+         *
+         * @return The stripped URI value.
+         * @throws URISyntaxException
+         */
+        static decaf::net::URI stripScheme(const decaf::net::URI& uri);
 
         /**
          * Given a string value and a prefix value, return a new string that has the prefix

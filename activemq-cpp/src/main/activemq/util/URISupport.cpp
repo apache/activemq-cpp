@@ -35,6 +35,16 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+bool URISupport::isCompositeURI(const URI& uri) {
+    std::string ssp = stripPrefix(uri.getRawSchemeSpecificPart(), "//");
+
+    if (ssp.find_first_of('(') == 0 && checkParenthesis(ssp)) {
+        return true;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void URISupport::parseURL(const std::string& URI, decaf::util::Properties& properties) {
 
     try {
@@ -347,4 +357,80 @@ std::string URISupport::stripPrefix(const std::string& value, const std::string&
     }
 
     return value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI URISupport::stripScheme(const URI& uri) {
+    return URI(stripPrefix(uri.getSchemeSpecificPart(), "//"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Properties URISupport::parseParameters(const URI& uri) {
+    if (!isCompositeURI(uri)) {
+        return uri.getQuery().empty() ? Properties() : parseQuery(stripPrefix(uri.getQuery(), "?"));
+    } else {
+        return URISupport::parseComposite(uri).getParameters();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI URISupport::applyParameters(const URI& uri, const Properties& queryParameters) {
+    return applyParameters(uri, queryParameters, "");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI URISupport::applyParameters(const URI& uri, const Properties& queryParameters, const std::string& optionPrefix) {
+    URI result;
+
+    if (!queryParameters.isEmpty()) {
+
+        std::string newQuery = uri.getRawQuery();
+
+        std::vector<std::string> keys = queryParameters.propertyNames();
+        std::vector<std::string>::iterator iter = keys.begin();
+
+        for (; iter != keys.end(); ++iter) {
+            std::string option = *iter;
+            if (option.find(optionPrefix) == 0) {
+                if (newQuery.length() != 0) {
+                    newQuery.append("&");
+                }
+
+                std::string newKey = option;
+                if (!optionPrefix.empty()) {
+                    newKey = option.substr(optionPrefix.length());
+                }
+
+                newQuery.append(newKey).append("=").append(queryParameters.getProperty(option));
+            }
+        }
+
+        result = createURIWithQuery(uri, newQuery);
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI URISupport::createURIWithQuery(const URI& uri, const std::string& query) {
+    std::string schemeSpecificPart = uri.getRawSchemeSpecificPart();
+
+    // strip existing query if any
+    std::size_t questionMark = schemeSpecificPart.find_last_of("?");
+
+    // make sure question mark is not within parentheses
+    std::size_t lastParend = schemeSpecificPart.find_last_of(")");
+    if (lastParend != std::string::npos && questionMark < lastParend) {
+        questionMark = std::string::npos;
+    }
+
+    if (questionMark != std::string::npos) {
+        schemeSpecificPart = schemeSpecificPart.substr(0, questionMark);
+    }
+
+    if (!query.empty()) {
+        schemeSpecificPart += "?" + query;
+    }
+
+    return URI(uri.getScheme(), schemeSpecificPart, uri.getFragment());
 }
