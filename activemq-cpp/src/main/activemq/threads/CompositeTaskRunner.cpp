@@ -31,18 +31,56 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CompositeTaskRunner::CompositeTaskRunner() :
-    tasks(), mutex(), thread(), threadTerminated(false), pending(false), shutDown(false) {
+namespace activemq {
+namespace threads {
 
-    this->thread.reset(new Thread(this, "ActiveMQ CompositeTaskRunner Thread"));
+    class CompositeTaskRunnerImpl {
+    private:
+
+        CompositeTaskRunnerImpl(const CompositeTaskRunnerImpl&);
+        CompositeTaskRunnerImpl& operator= (const CompositeTaskRunnerImpl&);
+
+    public:
+
+        decaf::util::LinkedList<CompositeTask*> tasks;
+        mutable decaf::util::concurrent::Mutex mutex;
+
+        decaf::lang::Pointer<decaf::lang::Thread> thread;
+
+        bool threadTerminated;
+        bool pending;
+        bool shutdown;
+
+    public:
+
+        CompositeTaskRunnerImpl() : tasks(),
+                                    mutex(),
+                                    thread(),
+                                    threadTerminated(false),
+                                    pending(false),
+                                    shutdown(false) {
+        }
+
+    };
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
+CompositeTaskRunner::CompositeTaskRunner() : impl(new CompositeTaskRunnerImpl) {
+    this->impl->thread.reset(new Thread(this, "ActiveMQ CompositeTaskRunner Thread"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 CompositeTaskRunner::~CompositeTaskRunner() {
     try {
-        this->shutdown();
-        this->thread->join();
-        this->thread.reset(NULL);
+        shutdown();
+        impl->thread->join();
+        impl->thread.reset(NULL);
+    }
+    AMQ_CATCHALL_NOTHROW()
+
+    try {
+        delete this->impl;
     }
     AMQ_CATCHALL_NOTHROW()
 }
@@ -50,9 +88,9 @@ CompositeTaskRunner::~CompositeTaskRunner() {
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunner::start() {
 
-    synchronized(&mutex) {
-        if (!shutDown && !this->thread->isAlive()) {
-            this->thread->start();
+    synchronized(&impl->mutex) {
+        if (!impl->shutdown && !this->impl->thread->isAlive()) {
+            this->impl->thread->start();
             this->wakeup();
         }
     }
@@ -63,8 +101,8 @@ bool CompositeTaskRunner::isStarted() const {
 
     bool result = false;
 
-    synchronized(&mutex) {
-        if (this->thread != NULL) {
+    synchronized(&impl->mutex) {
+        if (this->impl->thread != NULL && this->impl->thread->isAlive()) {
             result = true;
         }
     }
@@ -75,44 +113,44 @@ bool CompositeTaskRunner::isStarted() const {
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunner::shutdown(long long timeout) {
 
-    synchronized(&mutex) {
-        shutDown = true;
-        pending = true;
-        mutex.notifyAll();
+    synchronized(&impl->mutex) {
+        impl->shutdown = true;
+        impl->pending = true;
+        impl->mutex.notifyAll();
     }
 
     // Wait till the thread stops ( no need to wait if shutdown
     // is called from thread that is shutting down)
-    if (Thread::currentThread() != this->thread.get() && !threadTerminated) {
-        this->thread->join(timeout);
+    if (Thread::currentThread() != this->impl->thread.get() && !impl->threadTerminated) {
+        this->impl->thread->join(timeout);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunner::shutdown() {
 
-    synchronized(&mutex) {
-        shutDown = true;
-        pending = true;
-        mutex.notifyAll();
+    synchronized(&impl->mutex) {
+        impl->shutdown = true;
+        impl->pending = true;
+        impl->mutex.notifyAll();
     }
 
     // Wait till the thread stops ( no need to wait if shutdown
     // is called from thread that is shutting down)
-    if (Thread::currentThread() != this->thread.get() && !threadTerminated) {
-        this->thread->join();
+    if (Thread::currentThread() != this->impl->thread.get() && !impl->threadTerminated) {
+        impl->thread->join();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunner::wakeup() {
 
-    synchronized(&mutex) {
-        if (shutDown) {
+    synchronized(&impl->mutex) {
+        if (impl->shutdown) {
             return;
         }
-        pending = true;
-        mutex.notifyAll();
+        impl->pending = true;
+        impl->mutex.notifyAll();
     }
 }
 
@@ -122,36 +160,33 @@ void CompositeTaskRunner::run() {
     try {
 
         while (true) {
-
-            synchronized(&mutex) {
-                pending = false;
-                if (shutDown) {
+            synchronized(&impl->mutex) {
+                impl->pending = false;
+                if (impl->shutdown) {
                     return;
                 }
             }
 
             if (!this->iterate()) {
-
                 // wait to be notified.
-                synchronized(&mutex) {
-                    if (shutDown) {
+                synchronized(&impl->mutex) {
+                    if (impl->shutdown) {
                         return;
                     }
-                    while (!pending && !shutDown) {
-                        mutex.wait();
+                    while (!impl->pending && !impl->shutdown) {
+                        impl->mutex.wait();
                     }
                 }
             }
-
         }
     }
     AMQ_CATCHALL_NOTHROW()
 
     // Make sure we notify any waiting threads that thread
     // has terminated.
-    synchronized(&mutex) {
-        threadTerminated = true;
-        mutex.notifyAll();
+    synchronized(&impl->mutex) {
+        impl->threadTerminated = true;
+        impl->mutex.notifyAll();
     }
 }
 
@@ -159,9 +194,9 @@ void CompositeTaskRunner::run() {
 void CompositeTaskRunner::addTask(CompositeTask* task) {
 
     if (task != NULL) {
-        synchronized(&tasks) {
-            this->tasks.add(task);
-            this->wakeup();
+        synchronized(&impl->tasks) {
+            impl->tasks.add(task);
+            wakeup();
         }
     }
 }
@@ -170,9 +205,9 @@ void CompositeTaskRunner::addTask(CompositeTask* task) {
 void CompositeTaskRunner::removeTask(CompositeTask* task) {
 
     if (task != NULL) {
-        synchronized(&tasks) {
-            this->tasks.remove(task);
-            this->wakeup();
+        synchronized(&impl->tasks) {
+            impl->tasks.remove(task);
+            wakeup();
         }
     }
 }
@@ -180,20 +215,20 @@ void CompositeTaskRunner::removeTask(CompositeTask* task) {
 ////////////////////////////////////////////////////////////////////////////////
 bool CompositeTaskRunner::iterate() {
 
-    synchronized(&tasks) {
+    synchronized(&impl->tasks) {
 
-        for (int i = 0; i < tasks.size(); ++i) {
-            CompositeTask* task = tasks.pop();
+        for (int i = 0; i < impl->tasks.size(); ++i) {
+            CompositeTask* task = impl->tasks.pop();
 
             if (task->isPending()) {
                 task->iterate();
-                tasks.addLast(task);
+                impl->tasks.addLast(task);
 
                 // Always return true, so that we check again for any of
                 // the other tasks that might now be pending.
                 return true;
             } else {
-                tasks.addLast(task);
+                impl->tasks.addLast(task);
             }
         }
     }

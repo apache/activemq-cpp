@@ -30,30 +30,33 @@ using namespace activemq::threads;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-class CountingTask : public CompositeTask {
-private:
+namespace {
 
-    int count;
-    int goal;
-    std::string name;
+    class CountingTask : public CompositeTask {
+    private:
 
-public:
+        int count;
+        int goal;
+        std::string name;
 
-    CountingTask( const std::string& name, int goal ) : count(0), goal(goal), name(name) {}
+    public:
 
-    int getCount() const {
-        return count;
-    }
+        CountingTask(const std::string& name, int goal) : count(0), goal(goal), name(name) {}
 
-    virtual bool isPending() const {
-        return count != goal;
-    }
+        int getCount() const {
+            return count;
+        }
 
-    virtual bool iterate() {
-        return !( ++count == goal );
-    }
+        virtual bool isPending() const {
+            return count != goal;
+        }
 
-};
+        virtual bool iterate() {
+            return !( ++count == goal );
+        }
+
+    };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void CompositeTaskRunnerTest::test() {
@@ -62,29 +65,36 @@ void CompositeTaskRunnerTest::test() {
 
     CompositeTaskRunner runner;
 
-    CountingTask task1( "task1", 100);
-    CountingTask task2( "task2", 200);
+    CountingTask task1("task1", 100);
+    CountingTask task2("task2", 200);
 
-    runner.addTask( &task1 );
-    runner.addTask( &task2 );
+    runner.addTask(&task1);
+    runner.addTask(&task2);
 
     runner.start();
     runner.wakeup();
 
-    while( attempts++ != 10 ) {
+    while (attempts++ != 10) {
 
-        Thread::sleep( 1000 );
+        Thread::sleep(1000);
 
-        if( task1.getCount() == 100 && task2.getCount() == 200 ) {
+        if (task1.getCount() == 100 && task2.getCount() == 200) {
             break;
         }
     }
 
-    CPPUNIT_ASSERT( task1.getCount() == 100 );
-    CPPUNIT_ASSERT( task2.getCount() == 200 );
+    CPPUNIT_ASSERT(task1.getCount() == 100);
+    CPPUNIT_ASSERT(task2.getCount() == 200);
 
-    runner.removeTask( &task1 );
-    runner.removeTask( &task2 );
-
+    runner.removeTask(&task1);
+    runner.removeTask(&task2);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void CompositeTaskRunnerTest::testCreateButNotStarted() {
+    Pointer<CompositeTaskRunner> runner(new CompositeTaskRunner);
+    CPPUNIT_ASSERT(!runner->isStarted());
+    runner->start();
+    runner->shutdown();
+    runner.reset(NULL);
+}

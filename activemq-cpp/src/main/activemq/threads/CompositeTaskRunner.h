@@ -31,6 +31,8 @@
 namespace activemq {
 namespace threads {
 
+    class CompositeTaskRunnerImpl;
+
     /**
      * A Task Runner that can contain one or more CompositeTasks that are each checked
      * for pending work and run if any is present in the order that the tasks were added.
@@ -42,14 +44,7 @@ namespace threads {
                                            public decaf::lang::Runnable {
     private:
 
-        decaf::util::LinkedList<CompositeTask*> tasks;
-        mutable decaf::util::concurrent::Mutex mutex;
-
-        decaf::lang::Pointer<decaf::lang::Thread> thread;
-
-        bool threadTerminated;
-        bool pending;
-        bool shutDown;
+        CompositeTaskRunnerImpl* impl;
 
     private:
 

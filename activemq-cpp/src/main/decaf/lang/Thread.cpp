@@ -112,8 +112,8 @@ void Thread::initializeSelf(Runnable* task, const std::string& name, long long s
 
     std::string threadName = name;
 
-    if( threadName.empty() ) {
-        threadName = std::string( "Thread-" ) + Integer::toString( ++ThreadProperties::id );
+    if (threadName.empty()) {
+        threadName = std::string("Thread-") + Integer::toString(++ThreadProperties::id);
     } else {
         threadName = name;
     }
@@ -130,7 +130,7 @@ Thread::~Thread() {
         Threading::destroyThread(this->properties->handle);
         delete this->properties;
     }
-    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
 }
 

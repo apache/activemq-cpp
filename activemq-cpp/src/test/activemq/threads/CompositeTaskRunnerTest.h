@@ -28,6 +28,7 @@ namespace threads {
 
         CPPUNIT_TEST_SUITE( CompositeTaskRunnerTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testCreateButNotStarted );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,6 +37,7 @@ namespace threads {
         virtual ~CompositeTaskRunnerTest() {}
 
         void test();
+        void testCreateButNotStarted();
 
     };
 
