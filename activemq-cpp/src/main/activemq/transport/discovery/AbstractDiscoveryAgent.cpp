@@ -104,6 +104,25 @@ namespace discovery {
                                        reportAdvertizeFailed(true)
         {}
 
+        ~AbstractDiscoveryAgentImpl() {
+            if (started.compareAndSet(true, false)) {
+                if (worker == NULL) {
+                    worker->join(5000);
+
+                    if (!worker->isAlive()) {
+                        worker->interrupt();
+                        worker->join(1000);
+                    }
+
+                    worker.reset(NULL);
+                }
+
+                executor->shutdown();
+                executor->awaitTermination(1, TimeUnit::MINUTES);
+            }
+
+        }
+
         Executor& getExecutor() {
             if (executor == NULL) {
                 synchronized(&discoveredServicesLock) {
@@ -197,7 +216,7 @@ namespace discovery {
         ServiceAddedRunnable(AbstractDiscoveryAgent* agent, Pointer<DiscoveredBrokerData> event) :
             Runnable(), agent(agent), event(event) {
         }
-        virtual ~ServiceAddedRunnable();
+        virtual ~ServiceAddedRunnable() {}
 
         virtual void run() {
             DiscoveryListener* listener = agent->getDiscoveryListener();
@@ -217,7 +236,7 @@ namespace discovery {
 
         ServiceRemovedRunnable(AbstractDiscoveryAgent* agent, Pointer<DiscoveredBrokerData> event) :
             Runnable(), agent(agent), event(event) {}
-        virtual ~ServiceRemovedRunnable();
+        virtual ~ServiceRemovedRunnable() {}
 
         virtual void run() {
             DiscoveryListener* listener = agent->getDiscoveryListener();
@@ -239,6 +258,11 @@ AbstractDiscoveryAgent::~AbstractDiscoveryAgent() {
         delete this->impl;
     }
     DECAF_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool AbstractDiscoveryAgent::isStarted() const {
+    return impl->started.get();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -266,6 +290,7 @@ void AbstractDiscoveryAgent::stop() {
 
             if (!impl->worker->isAlive()) {
                 impl->worker->interrupt();
+                impl->worker->join(WORKER_KILL_TIME_SECONDS);
             }
 
             impl->worker.reset(NULL);
@@ -391,6 +416,16 @@ void AbstractDiscoveryAgent::setUseExponentialBackOff(bool useExponentialBackOff
 ////////////////////////////////////////////////////////////////////////////////
 bool AbstractDiscoveryAgent::isUseExponentialBackOff() const {
     return impl->useExponentialBackOff;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractDiscoveryAgent::setBackOffMultiplier(long long multiplier) {
+    impl->backOffMultiplier = multiplier;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long AbstractDiscoveryAgent::getBackOffMultiplier() const {
+    return impl->backOffMultiplier;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
