@@ -37,7 +37,7 @@ namespace discovery {
          * @param event
          *      A DiscoveryEvent that contains information on the newly discovered service.
          */
-        virtual void onServiceAdd(const activemq::commands::DiscoveryEvent& event) = 0;
+        virtual void onServiceAdd(const activemq::commands::DiscoveryEvent* event) = 0;
 
         /**
          * Called when an discovery agent determines that a service is no longer available.
@@ -45,7 +45,7 @@ namespace discovery {
          * @param event
          *      A DiscoveryEvent that contains information on the removed service.
          */
-        virtual void onServiceRemove(const activemq::commands::DiscoveryEvent& event) = 0;
+        virtual void onServiceRemove(const activemq::commands::DiscoveryEvent* event) = 0;
 
     };
 

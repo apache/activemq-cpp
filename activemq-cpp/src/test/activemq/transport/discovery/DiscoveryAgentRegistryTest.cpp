@@ -43,6 +43,7 @@ namespace {
         virtual void setDiscoveryListener(DiscoveryListener* listener) {}
         virtual void registerService(const std::string& name) {}
         virtual void serviceFailed(const activemq::commands::DiscoveryEvent& event) {}
+        virtual std::string toString() const { return "MockDiscoveryAgent"; }
     };
 
     class MockDiscoveryAgentFactory : public DiscoveryAgentFactory {

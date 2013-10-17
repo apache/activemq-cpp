@@ -31,5 +31,17 @@ DiscoveredBrokerData::DiscoveredBrokerData() : DiscoveryEvent(),
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+DiscoveredBrokerData::DiscoveredBrokerData(const std::string& brokerName, const std::string& service) :
+    DiscoveryEvent(),
+    lastHeartBeatTime(0),
+    nextRecoveryTime(0),
+    failureCount(0),
+    failed(false) {
+
+    setBrokerName(brokerName);
+    setServiceName(service);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 DiscoveredBrokerData::~DiscoveredBrokerData() {
 }

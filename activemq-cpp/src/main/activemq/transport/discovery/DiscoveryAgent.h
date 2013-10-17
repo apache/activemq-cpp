@@ -69,6 +69,13 @@ namespace discovery {
          */
         virtual void serviceFailed(const activemq::commands::DiscoveryEvent& event) = 0;
 
+        /**
+         * Returns a descriptive string that represents this discovery agent.
+         *
+         * @return a string that descibes this discovery agent.
+         */
+        virtual std::string toString() const = 0;
+
     };
 
 }}}

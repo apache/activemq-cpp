@@ -88,9 +88,9 @@ namespace discovery {
 
     public:
 
-        virtual void onServiceAdd(const activemq::commands::DiscoveryEvent& event);
+        virtual void onServiceAdd(const activemq::commands::DiscoveryEvent* event);
 
-        virtual void onServiceRemove(const activemq::commands::DiscoveryEvent& event);
+        virtual void onServiceRemove(const activemq::commands::DiscoveryEvent* event);
 
         virtual void transportInterrupted();
 

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVEREDBROKERDATA_H_
 #define _ACTIVEMQ_TRANSPORT_DISCOVERY_DISCOVEREDBROKERDATA_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/commands/DiscoveryEvent.h>
 
 namespace activemq {
@@ -30,7 +31,7 @@ namespace discovery {
      *
      * @since 3.9.0
      */
-    class DiscoveredBrokerData : public activemq::commands::DiscoveryEvent {
+    class AMQCPP_API DiscoveredBrokerData : public activemq::commands::DiscoveryEvent {
     private:
 
         long long lastHeartBeatTime;
@@ -41,6 +42,8 @@ namespace discovery {
     public:
 
         DiscoveredBrokerData();
+        DiscoveredBrokerData(const std::string& brokerName, const std::string& service);
+
         virtual ~DiscoveredBrokerData();
 
         /**

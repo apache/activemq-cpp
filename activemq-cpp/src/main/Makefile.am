@@ -155,6 +155,7 @@ cc_sources = \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
     activemq/transport/correlator/ResponseCorrelator.cpp \
+    activemq/transport/discovery/AbstractDiscoveryAgent.cpp \
     activemq/transport/discovery/DiscoveredBrokerData.cpp \
     activemq/transport/discovery/DiscoveryAgent.cpp \
     activemq/transport/discovery/DiscoveryAgentFactory.cpp \
@@ -811,6 +812,7 @@ h_sources = \
     activemq/transport/TransportListener.h \
     activemq/transport/TransportRegistry.h \
     activemq/transport/correlator/ResponseCorrelator.h \
+    activemq/transport/discovery/AbstractDiscoveryAgent.h \
     activemq/transport/discovery/DiscoveredBrokerData.h \
     activemq/transport/discovery/DiscoveryAgent.h \
     activemq/transport/discovery/DiscoveryAgentFactory.h \

@@ -35,7 +35,7 @@ namespace discovery {
      *
      * @since 3.9.0
      */
-    class DiscoveryAgentFactory {
+    class AMQCPP_API DiscoveryAgentFactory {
     public:
 
         virtual ~DiscoveryAgentFactory();

@@ -170,14 +170,14 @@ Properties DiscoveryTransport::getParameters() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DiscoveryTransport::onServiceAdd(const DiscoveryEvent& event) {
-    std::string url = event.getServiceName();
+void DiscoveryTransport::onServiceAdd(const DiscoveryEvent* event) {
+    std::string url = event->getServiceName();
     if (!url.empty()) {
         try {
             URI uri(url);
             uri = URISupport::applyParameters(uri, this->impl->parameters, DISCOVERED_OPTION_PREFIX);
             synchronized(&this->impl->lock) {
-                this->impl->serviceURIs.put(event.getServiceName(), uri);
+                this->impl->serviceURIs.put(event->getServiceName(), uri);
             }
             LinkedList<URI> uris;
             uris.add(uri);
@@ -188,11 +188,11 @@ void DiscoveryTransport::onServiceAdd(const DiscoveryEvent& event) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DiscoveryTransport::onServiceRemove(const DiscoveryEvent& event) {
+void DiscoveryTransport::onServiceRemove(const DiscoveryEvent* event) {
     try {
         URI uri;
         synchronized(&this->impl->lock) {
-            uri = this->impl->serviceURIs.get(event.getServiceName());
+            uri = this->impl->serviceURIs.get(event->getServiceName());
         }
         LinkedList<URI> uris;
         uris.add(uri);
