@@ -910,6 +910,16 @@ namespace util {
 
     public:
 
+        HashMap<K, V>& operator= (const Map<K, V>& other) {
+            this->copy(other);
+            return *this;
+        }
+
+        HashMap<K, V>& operator= (const HashMap<K, V>& other) {
+            this->copy(other);
+            return *this;
+        }
+
         bool operator==(const Map<K, V>& other) const {
             return this->equals(other);
         }

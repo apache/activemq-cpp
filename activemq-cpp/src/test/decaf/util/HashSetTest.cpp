@@ -48,6 +48,14 @@ namespace {
             hashSet.add(i);
         }
     }
+
+    HashSet<int> populateSetAndReturn(int count) {
+        HashSet<int> result;
+        for (int i = 0; i < count; ++i) {
+            result.add(i);
+        }
+        return result;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +123,23 @@ void HashSetTest::testConstructorCollection() {
 
     CPPUNIT_ASSERT_MESSAGE("HashSet created from collection incorrect size",
                            set.size() == intList.size() - 1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void HashSetTest::testCopyConstructor() {
+
+    HashSet<int> set1;
+    HashSet<int> set2;
+
+    populateSet(set1, 100);
+
+    set2 = populateSetAndReturn(100);
+
+    CPPUNIT_ASSERT(set1.size() == 100);
+    CPPUNIT_ASSERT(set2.size() == 100);
+
+    CPPUNIT_ASSERT(set1.equals(set2));
+    CPPUNIT_ASSERT(set2.equals(set1));
 }
 
 //////////////////////////////////////////////////////////////////////////////

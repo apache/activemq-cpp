@@ -45,6 +45,7 @@ Pointer<DiscoveryAgent> AbstractDiscoveryAgentFactory::createAgent(const URI& ag
 
         Pointer<AbstractDiscoveryAgent> agent = this->doCreateAgent();
 
+        agent->setDiscoveryURI(agentURI);
         Properties options = URISupport::parseParameters(agentURI);
         doConfigureAgent(agent, options);
 

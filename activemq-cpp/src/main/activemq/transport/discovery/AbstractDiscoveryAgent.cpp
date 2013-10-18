@@ -359,6 +359,16 @@ DiscoveryListener* AbstractDiscoveryAgent::getDiscoveryListener() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void AbstractDiscoveryAgent::setDiscoveryURI(const URI& discoveryURI) {
+    impl->discoveryUri = discoveryURI;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI AbstractDiscoveryAgent::getDiscoveryURI() const {
+    return impl->discoveryUri;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void AbstractDiscoveryAgent::setServiceName(const std::string& name) {
     impl->selfService = name;
 }

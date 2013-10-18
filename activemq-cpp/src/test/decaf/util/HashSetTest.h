@@ -31,6 +31,7 @@ namespace util {
         CPPUNIT_TEST( testConstructorI );
         CPPUNIT_TEST( testConstructorIF );
         CPPUNIT_TEST( testConstructorCollection );
+        CPPUNIT_TEST( testCopyConstructor );
         CPPUNIT_TEST( testAdd );
         CPPUNIT_TEST( testClear );
         CPPUNIT_TEST( testContains );
@@ -56,6 +57,7 @@ namespace util {
         void testConstructorI();
         void testConstructorIF();
         void testConstructorCollection();
+        void testCopyConstructor();
         void testAdd();
         void testClear();
         void testContains();

@@ -71,6 +71,9 @@ namespace discovery {
         virtual void setDiscoveryListener(DiscoveryListener* listener);
         virtual DiscoveryListener* getDiscoveryListener() const;
 
+        virtual void setDiscoveryURI(const decaf::net::URI& discoveryURI);
+        virtual decaf::net::URI getDiscoveryURI() const;
+
         /**
          * @returns true if this agent is currently started.
          */

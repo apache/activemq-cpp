@@ -37,6 +37,18 @@ namespace discovery {
         virtual ~DiscoveryAgent();
 
         /**
+         * Sets the URI that was used to create this discovery agent.  This URI can
+         * be used to configure the discovery agent.
+         */
+        virtual void setDiscoveryURI(const decaf::net::URI& discoveryURI) = 0;
+
+        /**
+         * Sets the URI that was used to create this discovery agent.  This URI can
+         * be used to configure the discovery agent.
+         */
+        virtual decaf::net::URI getDiscoveryURI() const = 0;
+
+        /**
          * Sets the discovery listener which will be notified on the add or remove of
          * a discovered service.
          *

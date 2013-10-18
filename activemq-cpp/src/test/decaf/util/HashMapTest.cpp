@@ -41,6 +41,14 @@ namespace {
             hashMap.put(i, Integer::toString(i));
         }
     }
+
+    HashMap<int, std::string> populateMapAndReturn() {
+        HashMap<int, std::string> hashMap;
+        for (int i = 0; i < MAP_SIZE; ++i) {
+            hashMap.put(i, Integer::toString(i));
+        }
+        return hashMap;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +130,22 @@ void HashMapTest::testConstructorMap() {
         CPPUNIT_ASSERT_MESSAGE("Failed to construct correct HashMap",
             myMap.get(counter) == hashMap.get(counter));
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void HashMapTest::testCopyConstructor() {
+
+    HashMap<int, std::string> map1;
+    HashMap<int, std::string> map2;
+
+    populateMap(map1);
+    map2 = populateMapAndReturn();
+
+    CPPUNIT_ASSERT(map1.size() == MAP_SIZE);
+    CPPUNIT_ASSERT(map2.size() == MAP_SIZE);
+
+    CPPUNIT_ASSERT(map1.equals(map2));
+    CPPUNIT_ASSERT(map2.equals(map1));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

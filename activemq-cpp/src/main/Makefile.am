@@ -164,6 +164,8 @@ cc_sources = \
     activemq/transport/discovery/DiscoveryListener.cpp \
     activemq/transport/discovery/DiscoveryTransport.cpp \
     activemq/transport/discovery/DiscoveryTransportFactory.cpp \
+    activemq/transport/discovery/http/HttpDiscoveryAgent.cpp \
+    activemq/transport/discovery/http/HttpDiscoveryAgentFactory.cpp \
     activemq/transport/failover/BackupTransport.cpp \
     activemq/transport/failover/BackupTransportPool.cpp \
     activemq/transport/failover/CloseTransportsTask.cpp \
@@ -822,6 +824,8 @@ h_sources = \
     activemq/transport/discovery/DiscoveryListener.h \
     activemq/transport/discovery/DiscoveryTransport.h \
     activemq/transport/discovery/DiscoveryTransportFactory.h \
+    activemq/transport/discovery/http/HttpDiscoveryAgent.h \
+    activemq/transport/discovery/http/HttpDiscoveryAgentFactory.h \
     activemq/transport/failover/BackupTransport.h \
     activemq/transport/failover/BackupTransportPool.h \
     activemq/transport/failover/CloseTransportsTask.h \

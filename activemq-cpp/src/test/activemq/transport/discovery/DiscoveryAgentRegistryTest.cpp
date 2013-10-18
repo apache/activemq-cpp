@@ -44,6 +44,8 @@ namespace {
         virtual void registerService(const std::string& name) {}
         virtual void serviceFailed(const activemq::commands::DiscoveryEvent& event) {}
         virtual std::string toString() const { return "MockDiscoveryAgent"; }
+        virtual URI getDiscoveryURI() const { return URI(); }
+        virtual void setDiscoveryURI(const URI& discoveryURI) {}
     };
 
     class MockDiscoveryAgentFactory : public DiscoveryAgentFactory {
