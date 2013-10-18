@@ -122,6 +122,26 @@ namespace util {
             }
         }
 
+        /**
+         * Constructs a new set containing the elements in the specified HashSet.
+         *
+         * The HashMap is created with default load factor (0.75) and an initial capacity
+         * sufficient to contain the elements in the specified collection.
+         *
+         * @param collection
+         *      The collection of elements to add to this HashSet.
+         */
+        HashSet(const HashSet<E>& collection) : AbstractSet<E>(), backingMap() {
+
+            this->backingMap = new HashMap<E, Set<E>*, HASHCODE>(
+                (collection.size() < 6 ? 11 : collection.size() * 2));
+
+            decaf::lang::Pointer<Iterator<E> > iter(collection.iterator());
+            while (iter->hasNext()) {
+                this->add(iter->next());
+            }
+        }
+
         virtual ~HashSet() {
             try {
                 delete this->backingMap;

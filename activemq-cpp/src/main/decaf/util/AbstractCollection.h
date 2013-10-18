@@ -64,6 +64,22 @@ namespace util {
 
         AbstractCollection() : Collection<E>(), mutex() {}
 
+        /**
+         * Copy Constructor, copy element from the source collection to this
+         * collection after clearing any element stored in this collection.
+         *
+         * @param collection - the collection to copy
+         */
+        AbstractCollection(const AbstractCollection& other) : Collection<E>(), mutex() {
+            if (other.isEmpty()) {
+                return;
+            }
+            std::auto_ptr<Iterator<E> > iter(other.iterator());
+            while (iter->hasNext()) {
+                this->add(iter->next());
+            }
+        }
+
         virtual ~AbstractCollection() {}
 
         /**
