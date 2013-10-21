@@ -502,8 +502,11 @@ cc_sources = \
     decaf/net/URI.cpp \
     decaf/net/URISyntaxException.cpp \
     decaf/net/URL.cpp \
+    decaf/net/URLConnection.cpp \
     decaf/net/URLDecoder.cpp \
     decaf/net/URLEncoder.cpp \
+    decaf/net/URLStreamHandler.cpp \
+    decaf/net/URLStreamHandlerFactory.cpp \
     decaf/net/UnknownHostException.cpp \
     decaf/net/UnknownServiceException.cpp \
     decaf/net/ssl/SSLContext.cpp \
@@ -1173,8 +1176,11 @@ h_sources = \
     decaf/net/URI.h \
     decaf/net/URISyntaxException.h \
     decaf/net/URL.h \
+    decaf/net/URLConnection.h \
     decaf/net/URLDecoder.h \
     decaf/net/URLEncoder.h \
+    decaf/net/URLStreamHandler.h \
+    decaf/net/URLStreamHandlerFactory.h \
     decaf/net/UnknownHostException.h \
     decaf/net/UnknownServiceException.h \
     decaf/net/ssl/SSLContext.h \
