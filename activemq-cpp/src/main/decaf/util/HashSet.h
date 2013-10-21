@@ -131,7 +131,7 @@ namespace util {
          * @param collection
          *      The collection of elements to add to this HashSet.
          */
-        HashSet(const HashSet<E>& collection) : AbstractSet<E>(), backingMap() {
+        HashSet(const HashSet& collection) : AbstractSet<E>(), backingMap() {
 
             this->backingMap = new HashMap<E, Set<E>*, HASHCODE>(
                 (collection.size() < 6 ? 11 : collection.size() * 2));
