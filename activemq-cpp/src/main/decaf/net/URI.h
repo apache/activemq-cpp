@@ -27,13 +27,13 @@
 #include <decaf/internal/net/URIType.h>
 #include <string>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace net {
 
     /**
      * This class represents an instance of a URI as defined by RFC 2396.
      */
-    class DECAF_API URI : public lang::Comparable<URI> {
+    class DECAF_API URI: public lang::Comparable<URI> {
     private:
 
         // The structure that holds the parsed URI data.
@@ -62,7 +62,7 @@ namespace net{
          *
          * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const URI& uri );
+        URI(const URI& uri);
 
         /**
          * Constructs a URI from the given string.
@@ -71,7 +71,7 @@ namespace net{
          *
          * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& uri );
+        URI(const std::string& uri);
 
         /**
          * Constructs a URI from the given components.
@@ -82,7 +82,7 @@ namespace net{
          *
          * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& scheme, const std::string& ssp, const std::string& fragment );
+        URI(const std::string& scheme, const std::string& ssp, const std::string& fragment);
 
         /**
          * Constructs a URI from the given components.
@@ -97,10 +97,8 @@ namespace net{
          *
          * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& scheme, const std::string& userInfo,
-             const std::string& host, int port,
-             const std::string& path, const std::string& query,
-             const std::string& fragment );
+        URI(const std::string& scheme, const std::string& userInfo, const std::string& host, int port,
+            const std::string& path, const std::string& query, const std::string& fragment);
 
         /**
          * Constructs a URI from the given components.
@@ -111,8 +109,8 @@ namespace net{
          *
          * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& scheme, const std::string& host,
-             const std::string& path, const std::string& fragment );
+        URI(const std::string& scheme, const std::string& host,
+            const std::string& path, const std::string& fragment);
 
         /**
          * Constructs a URI from the given components.
@@ -124,9 +122,9 @@ namespace net{
          *
          * @throws URISyntaxException if the URI passed is malformed.
          */
-        URI( const std::string& scheme, const std::string& authority,
-             const std::string& path, const std::string& query,
-             const std::string& fragment );
+        URI(const std::string& scheme, const std::string& authority,
+            const std::string& path, const std::string& query,
+            const std::string& fragment);
 
         virtual ~URI() {}
 
@@ -137,19 +135,19 @@ namespace net{
          * @param value - the value to compare to this one.
          * @returns zero if equal minus one if less than and one if greater than.
          */
-        virtual int compareTo( const URI& value ) const;
+        virtual int compareTo(const URI& value) const;
 
         /**
          * @return true if this value is considered equal to the passed value.
          */
-        virtual bool equals( const URI& value ) const;
+        virtual bool equals(const URI& value) const;
 
         /**
          * Compares equality between this object and the one passed.
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const URI& value ) const;
+        virtual bool operator==(const URI& value) const;
 
         /**
          * Compares this object to another and returns true if this object
@@ -157,7 +155,7 @@ namespace net{
          * @param value - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const URI& value ) const;
+        virtual bool operator<(const URI& value) const;
 
         /**
          * @returns the decoded authority component of this URI.
@@ -339,7 +337,7 @@ namespace net{
          * @param uri - The URI to be relativized against this URI
          * @returns The resulting URI
          */
-        URI relativize( const URI& uri ) const;
+        URI relativize(const URI& uri) const;
 
         /**
          * Constructs a new URI by parsing the given string and then resolving it
@@ -351,7 +349,7 @@ namespace net{
          * @returns The resulting URI
          * @throws IllegalArgumentException - If the given string violates RFC 2396
          */
-        URI resolve( const std::string& str ) const;
+        URI resolve(const std::string& str) const;
 
         /**
          * Resolves the given URI against this URI.
@@ -389,7 +387,7 @@ namespace net{
          * @param uri - The URI to be resolved against this URI
          * @returns The resulting URI
          */
-        URI resolve( const URI& uri ) const;
+        URI resolve(const URI& uri) const;
 
         /**
          * Returns the content of this URI as a string.
@@ -417,7 +415,8 @@ namespace net{
          */
         URL toURL() const;
 
-    public:   // Static Methods
+    public:
+        // Static Methods
 
         /**
          * Creates a URI by parsing the given string.
@@ -429,7 +428,7 @@ namespace net{
          *
          * @throws IllegalArgumentException
          */
-        static URI create( const std::string uri );
+        static URI create(const std::string uri);
 
     private:
 
@@ -441,7 +440,7 @@ namespace net{
          * @param forceServer - should a server authority be enforced.
          * @throws URISyntaxException if an error occurs.
          */
-        void parseURI( const std::string& uri, bool forceServer );
+        void parseURI(const std::string& uri, bool forceServer);
 
         /*
          * Quote illegal chars for each component, but not the others
@@ -450,8 +449,7 @@ namespace net{
          * @param legalset the legal character set allowed in the component strng
          * @return the converted string
          */
-        std::string quoteComponent( const std::string& component,
-                                    const std::string& legalset );
+        std::string quoteComponent(const std::string& component, const std::string& legalset);
 
         /*
          * Encode Unicode chars that are not part of US-ASCII char set into the
@@ -462,7 +460,7 @@ namespace net{
          * @param src the string to be encoded
          * @return the converted string
          */
-        std::string encodeOthers( const std::string& src ) const;
+        std::string encodeOthers(const std::string& src) const;
 
         /**
          * Decode an encoded URI String.
@@ -470,7 +468,7 @@ namespace net{
          * @param src - the encoded string
          * @return the unencoded string version of src.
          */
-        std::string decode( const std::string& src ) const;
+        std::string decode(const std::string& src) const;
 
         /**
          * Compare the Two Hexadecimal encoded strings and return if they are equal.
@@ -478,8 +476,7 @@ namespace net{
          * @param first - First String to compare.
          * @param second - The second string to compare.
          */
-        bool equalsHexCaseInsensitive( const std::string& first,
-                                       const std::string& second ) const;
+        bool equalsHexCaseInsensitive(const std::string& first, const std::string& second) const;
 
         /*
          * Takes a string that may contain hex sequences like %F1 or %2b and
@@ -487,14 +484,14 @@ namespace net{
          *
          * @param s - String to convert the hex in.
          */
-        std::string convertHexToLowerCase( const std::string& s ) const;
+        std::string convertHexToLowerCase(const std::string& s) const;
 
         /*
          * Normalize path, and return the resulting string.
          *
          * @param path - the path value to normalize.
          */
-        std::string normalize( const std::string& path ) const;
+        std::string normalize(const std::string& path) const;
 
         /**
          * Helper method used to re-calculate the scheme specific part of the
