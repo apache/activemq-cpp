@@ -37,8 +37,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompFrame::StompFrame() :
-        command(), properties(), body() {
+StompFrame::StompFrame() : command(), properties(), body() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -296,7 +295,7 @@ void StompFrame::readBody(decaf::io::DataInputStream* in) {
             this->body.resize((std::size_t) content_length);
 
             // Read the Content Length now
-            in->readFully(&body[0], body.size());
+            in->readFully(&body[0], (int) body.size());
 
             // Content Length read, now pop the end terminator off (\0\n).
             if (in->readByte() != '\0') {
