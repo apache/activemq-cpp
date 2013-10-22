@@ -690,25 +690,21 @@ void FailoverTransport::restoreTransport(const Pointer<Transport> transport) {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::handleTransportFailure(const decaf::lang::Exception& error) {
 
-    Pointer<Transport> transport;
     synchronized(&this->impl->reconnectMutex) {
+
+        Pointer<Transport> transport;
         this->impl->connectedTransport.swap(transport);
-    }
 
-    if (transport != NULL) {
+        if (transport != NULL) {
 
-        if (this->impl->disposedListener != NULL) {
-            transport->setTransportListener(this->impl->disposedListener.get());
-        }
+            if (this->impl->disposedListener != NULL) {
+                transport->setTransportListener(this->impl->disposedListener.get());
+            }
 
-        // Hand off to the close task so it gets done in a different thread.
-        this->impl->closeTask->add(transport);
+            // Hand off to the close task so it gets done in a different thread.
+            this->impl->closeTask->add(transport);
 
-        bool reconnectOk = false;
-
-        synchronized(&this->impl->reconnectMutex) {
-
-            reconnectOk = this->impl->canReconnect();
+            bool reconnectOk = this->impl->canReconnect();
             URI failedUri = *this->impl->connectedTransportURI;
 
             this->impl->initialized = false;
