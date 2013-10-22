@@ -15,21 +15,11 @@
  * limitations under the License.
  */
 
-#include "URL.h"
+#include <decaf/net/FileNameMap.h>
 
-using namespace std;
 using namespace decaf;
 using namespace decaf::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-URL::URL( const std::string& url DECAF_UNUSED ) {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string URL::toString() const {
-    return "";
+FileNameMap::~FileNameMap() {
 }

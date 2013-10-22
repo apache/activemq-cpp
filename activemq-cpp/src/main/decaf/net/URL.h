@@ -110,6 +110,8 @@ namespace net{
         URL( const std::string& url );
         virtual ~URL() {}
 
+        virtual std::string toString() const;
+
     };
 
 }}

@@ -478,8 +478,11 @@ cc_sources = \
     decaf/lang/exceptions/UnsupportedOperationException.cpp \
     decaf/net/BindException.cpp \
     decaf/net/ConnectException.cpp \
+    decaf/net/ContentHandlerFactory.cpp \
     decaf/net/DatagramPacket.cpp \
+    decaf/net/FileNameMap.cpp \
     decaf/net/HttpRetryException.cpp \
+    decaf/net/HttpURLConnection.cpp \
     decaf/net/Inet4Address.cpp \
     decaf/net/Inet6Address.cpp \
     decaf/net/InetAddress.cpp \
@@ -1152,8 +1155,11 @@ h_sources = \
     decaf/lang/exceptions/UnsupportedOperationException.h \
     decaf/net/BindException.h \
     decaf/net/ConnectException.h \
+    decaf/net/ContentHandlerFactory.h \
     decaf/net/DatagramPacket.h \
+    decaf/net/FileNameMap.h \
     decaf/net/HttpRetryException.h \
+    decaf/net/HttpURLConnection.h \
     decaf/net/Inet4Address.h \
     decaf/net/Inet6Address.h \
     decaf/net/InetAddress.h \
