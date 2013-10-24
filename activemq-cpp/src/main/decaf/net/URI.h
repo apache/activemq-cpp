@@ -23,12 +23,13 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/net/URISyntaxException.h>
 #include <decaf/net/MalformedURLException.h>
-#include <decaf/net/URL.h>
 #include <decaf/internal/net/URIType.h>
 #include <string>
 
 namespace decaf {
 namespace net {
+
+    class URL;
 
     /**
      * This class represents an instance of a URI as defined by RFC 2396.
@@ -205,6 +206,7 @@ namespace net {
          * escaped, and other categories. If the authority is server-based then
          * it is further constrained to have valid user-information, host, and
          * port components.
+         *
          * @returns the raw authority component of the URI
          */
         std::string getRawAuthority() const;
@@ -214,6 +216,7 @@ namespace net {
          *
          * The fragment component of a URI, if defined, only contains legal URI
          * characters.
+         *
          * @returns the raw fragment component of this URI
          */
         std::string getRawFragment() const;
@@ -224,13 +227,16 @@ namespace net {
          * The path component of a URI, if defined, only contains the slash
          * character ('/'), the commercial-at character ('@'), and characters
          * in the unreserved, punct, escaped, and other categories.
+         *
          * @returns the raw path component of this URI
          */
         std::string getRawPath() const;
 
         /**
          * Returns the raw query component of this URI.
+         *
          * The query component of a URI, if defined, only contains legal URI characters.
+         *
          * @returns the raw query component of the URI.
          */
         std::string getRawQuery() const;
@@ -238,7 +244,9 @@ namespace net {
         /**
          * Returns the raw scheme-specific part of this URI. The scheme-specific
          * part is never undefined, though it may be empty.
+         *
          * The scheme-specific part of a URI only contains legal URI characters.
+         *
          * @returns the raw scheme special part of the uri
          */
         std::string getRawSchemeSpecificPart() const;
@@ -248,6 +256,7 @@ namespace net {
          * The string returned by this method is equal to that returned by the
          * getRawSchemeSpecificPart method except that all sequences of escaped
          * octets are decoded.
+         *
          * @returns the raw scheme specific part of the uri.
          */
         std::string getSchemeSpecificPart() const;
@@ -256,6 +265,7 @@ namespace net {
          * Returns the raw user-information component of this URI.
          * The user-information component of a URI, if defined, only contains
          * characters in the unreserved, punct, escaped, and other categories.
+         *
          * @returns the raw user-information component of the URI
          */
         std::string getRawUserInfo() const;
@@ -263,6 +273,7 @@ namespace net {
         /**
          * Tells whether or not this URI is absolute.  A URI is absolute if,
          * and only if, it has a scheme component.
+         *
          * @returns true if, and only if, this URI is absolute
          */
         bool isAbsolute() const;
@@ -272,6 +283,7 @@ namespace net {
          * if, it is absolute and its scheme-specific part does not begin with a
          * slash character ('/'). An opaque URI has a scheme, a scheme-specific
          * part, and possibly a fragment; all other components are undefined.
+         *
          * @returns true if, and only if, this URI is opaque
          */
         bool isOpaque() const;
@@ -298,6 +310,7 @@ namespace net {
          * normalized path will begin with a "." segment if one was inserted by step
          * 3 above. Otherwise, a normalized path will not contain any "." or ".."
          * segments.
+         *
          * @returns A URI equivalent to this URI, but whose path is in normal form
          */
         URI normalize() const;
@@ -314,10 +327,12 @@ namespace net {
          * Otherwise this method attempts once more to parse the authority component
          * into user-information, host, and port components, and throws an exception
          * describing why the authority component could not be parsed in that way.
+         *
          * @returns A URI whose authority field has been parsed as a server-based
-         * authority
-         * @throws URISyntaxException - If the authority component of this URI is
-         * defined but cannot be parsed as a server-based authority.
+         *          authority
+         *
+         * @throws URISyntaxException If the authority component of this URI is
+         *         defined but cannot be parsed as a server-based authority.
          */
         URI parseServerAuthority() const;
 
@@ -334,7 +349,9 @@ namespace net {
          *     component computed by removing this URI's path from the beginning of
          *     the given URI's path.
          *
-         * @param uri - The URI to be relativized against this URI
+         * @param uri
+         *      The URI to be relativized against this URI
+         *
          * @returns The resulting URI
          */
         URI relativize(const URI& uri) const;
@@ -345,8 +362,12 @@ namespace net {
          *
          * This convenience method works as if invoking it were equivalent to
          * evaluating the expression resolve( URI::create( str ) ).
-         * @param str - The string to be parsed into a URI
+         *
+         * @param str
+         *      The string to be parsed into a URI
+         *
          * @returns The resulting URI
+         *
          * @throws IllegalArgumentException - If the given string violates RFC 2396
          */
         URI resolve(const std::string& str) const;
@@ -384,7 +405,10 @@ namespace net {
          *
          * The result of this method is absolute if, and only if, either this URI is
          * absolute or the given URI is absolute.
-         * @param uri - The URI to be resolved against this URI
+         *
+         * @param uri
+         *      The URI to be resolved against this URI
+         *
          * @returns The resulting URI
          */
         URI resolve(const URI& uri) const;
@@ -398,6 +422,7 @@ namespace net {
          * Otherwise this URI was created by normalization, resolution, or
          * relativization, and so a string is constructed from this URI's components
          * according to the rules specified in RFC 2396, section 5.2, step 7.
+         *
          * @returns the string form of this URI
          */
         std::string toString() const;
@@ -408,15 +433,16 @@ namespace net {
          * This convenience method works as if invoking it were equivalent to
          * evaluating the expression new URL(this.toString()) after first checking
          * that this URI is absolute.
+         *
          * @returns A URL constructed from this URI
+         *
          * @throws IllegalArgumentException - If this URL is not absolute
          * @throws MalformedURLException - If a protocol handler for the URL could not
-         * be found, or if some other error occurred while constructing the URL
+         *         be found, or if some other error occurred while constructing the URL
          */
         URL toURL() const;
 
-    public:
-        // Static Methods
+    public: // Static Methods
 
         /**
          * Creates a URI by parsing the given string.

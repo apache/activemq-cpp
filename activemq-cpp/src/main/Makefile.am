@@ -351,6 +351,8 @@ cc_sources = \
     decaf/internal/net/SocketFileDescriptor.cpp \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
+    decaf/internal/net/URIType.cpp \
+    decaf/internal/net/URLType.cpp \
     decaf/internal/net/ssl/DefaultSSLContext.cpp \
     decaf/internal/net/ssl/DefaultSSLServerSocketFactory.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
@@ -475,6 +477,8 @@ cc_sources = \
     decaf/lang/exceptions/NumberFormatException.cpp \
     decaf/lang/exceptions/OutOfMemoryError.cpp \
     decaf/lang/exceptions/RuntimeException.cpp \
+    decaf/lang/exceptions/SecurityException.cpp \
+    decaf/lang/exceptions/StringIndexOutOfBoundsException.cpp \
     decaf/lang/exceptions/UnsupportedOperationException.cpp \
     decaf/net/BindException.cpp \
     decaf/net/ConnectException.cpp \
@@ -491,6 +495,7 @@ cc_sources = \
     decaf/net/NoRouteToHostException.cpp \
     decaf/net/PortUnreachableException.cpp \
     decaf/net/ProtocolException.cpp \
+    decaf/net/Proxy.cpp \
     decaf/net/ServerSocket.cpp \
     decaf/net/ServerSocketFactory.cpp \
     decaf/net/Socket.cpp \
@@ -1020,6 +1025,7 @@ h_sources = \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
+    decaf/internal/net/URLType.h \
     decaf/internal/net/ssl/DefaultSSLContext.h \
     decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
@@ -1152,6 +1158,8 @@ h_sources = \
     decaf/lang/exceptions/NumberFormatException.h \
     decaf/lang/exceptions/OutOfMemoryError.h \
     decaf/lang/exceptions/RuntimeException.h \
+    decaf/lang/exceptions/SecurityException.h \
+    decaf/lang/exceptions/StringIndexOutOfBoundsException.h \
     decaf/lang/exceptions/UnsupportedOperationException.h \
     decaf/net/BindException.h \
     decaf/net/ConnectException.h \
@@ -1168,6 +1176,7 @@ h_sources = \
     decaf/net/NoRouteToHostException.h \
     decaf/net/PortUnreachableException.h \
     decaf/net/ProtocolException.h \
+    decaf/net/Proxy.h \
     decaf/net/ServerSocket.h \
     decaf/net/ServerSocketFactory.h \
     decaf/net/Socket.h \

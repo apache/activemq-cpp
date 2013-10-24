@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_LANG_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_
-#define _DECAF_LANG_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_
+#ifndef _DECAF_LANG_EXCEPTIONS_STRINGINDEXOUTOFBOUNDSEXCEPTION_H_
+#define _DECAF_LANG_EXCEPTIONS_STRINGINDEXOUTOFBOUNDSEXCEPTION_H_
 
-#include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf {
 namespace lang {
@@ -29,13 +29,22 @@ namespace exceptions {
      *
      * @since 1.0
      */
-    class DECAF_API InvalidStateException : public Exception {
+    class DECAF_API StringIndexOutOfBoundsException : public IndexOutOfBoundsException {
     public:
 
         /**
          * Default Constructor
          */
-        InvalidStateException();
+        StringIndexOutOfBoundsException();
+
+        /**
+         * Create a new StringIndexOutOfBoundsException with the given index value
+         * to use to create the error message.
+         *
+         * @param index
+         *      The given string index that was out of bounds.
+         */
+        StringIndexOutOfBoundsException(int index);
 
         /**
          * Conversion Constructor from some other Exception
@@ -43,7 +52,7 @@ namespace exceptions {
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        InvalidStateException(const Exception& ex);
+        StringIndexOutOfBoundsException(const Exception& ex);
 
         /**
          * Copy Constructor
@@ -51,7 +60,7 @@ namespace exceptions {
          * @param ex
          *      The Exception whose data is to be copied into this one.
          */
-        InvalidStateException(const InvalidStateException& ex);
+        StringIndexOutOfBoundsException(const StringIndexOutOfBoundsException& ex);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -69,7 +78,7 @@ namespace exceptions {
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        InvalidStateException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
+        StringIndexOutOfBoundsException(const char* file, const int lineNumber, const std::exception* cause, const char* msg, ...);
 
         /**
          * Constructor
@@ -78,7 +87,7 @@ namespace exceptions {
          *      Pointer to the exception that caused this one to be thrown, the
          *      object is cloned caller retains ownership.
          */
-        InvalidStateException(const std::exception* cause);
+        StringIndexOutOfBoundsException(const std::exception* cause);
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -94,7 +103,21 @@ namespace exceptions {
          * @param ...
          *      list of primitives that are formatted into the message
          */
-        InvalidStateException(const char* file, const int lineNumber, const char* msg, ...);
+        StringIndexOutOfBoundsException(const char* file, const int lineNumber, const char* msg, ...);
+
+        /**
+         * Constructor - Initializes the file name and line number where
+         * this message occurred.  Sets the message to report, using the
+         * given index.
+         *
+         * @param file
+         *      The file name where exception occurs
+         * @param lineNumber
+         *      The line number where the exception occurred.
+         * @param index
+         *      The string index that was out of bounds.
+         */
+        StringIndexOutOfBoundsException(const char* file, const int lineNumber, int index);
 
         /**
          * Clones this exception.  This is useful for cases where you need
@@ -103,14 +126,14 @@ namespace exceptions {
          *
          * @return an new Exception instance that is a copy of this one.
          */
-        virtual InvalidStateException* clone() const {
-            return new InvalidStateException(*this);
+        virtual StringIndexOutOfBoundsException* clone() const {
+            return new StringIndexOutOfBoundsException(*this);
         }
 
-        virtual ~InvalidStateException() throw();
+        virtual ~StringIndexOutOfBoundsException() throw();
 
     };
 
 }}}
 
-#endif /*_DECAF_LANG_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_*/
+#endif /*_DECAF_LANG_EXCEPTIONS_STRINGINDEXOUTOFBOUNDSEXCEPTION_H_*/

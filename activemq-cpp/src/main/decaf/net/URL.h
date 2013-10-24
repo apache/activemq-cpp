@@ -19,10 +19,19 @@
 #define _DECAF_NET_URL_H_
 
 #include <decaf/util/Config.h>
+
+#include <decaf/io/InputStream.h>
 #include <string>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace net {
+
+    class URI;
+    class URLImpl;
+    class URLStreamHandler;
+    class URLStreamHandlerFactory;
+    class URLConnection;
+    class Proxy;
 
     /**
      * Class URL represents a Uniform Resource Locator, a pointer to a "resource"
@@ -104,13 +113,407 @@ namespace net{
      * encoding, which is not the same as the encoding scheme defined in RFC2396.
      */
     class DECAF_API URL {
+    private:
+
+        URLImpl* impl;
+
     public:
 
-        URL();
-        URL( const std::string& url );
-        virtual ~URL() {}
+        /**
+         * Creates a URL object from the String representation.
+         *
+         * This constructor is equivalent to a call to the two-argument constructor with
+         * a empty first argument.
+         *
+         * @param spec
+         *      the String to parse as a URL.
+         *
+         * @throws MalformedURLException If the string specifies an unknown protocol.
+         */
+        URL(const std::string& url);
 
-        virtual std::string toString() const;
+        /**
+         * Creates a URL by parsing the given spec within a specified context. The new URL is
+         * created from the given context URL and the spec argument as described in RFC2396
+         * "Uniform Resource Identifiers : Generic * Syntax" :
+         *
+         *     <scheme>://<authority><path>?<query>#<fragment>
+         *
+         * The reference is parsed into the scheme, authority, path, query and fragment parts.
+         * If the path component is empty and the scheme, authority, and query components are
+         * undefined, then the new URL is a reference to the current document. Otherwise, the
+         * fragment and query parts present in the spec are used in the new URL.
+         *
+         * If the scheme component is defined in the given spec and does not match the scheme
+         * of the context, then the new URL is created as an absolute URL based on the spec alone.
+         * Otherwise the scheme component is inherited from the context URL.
+         *
+         * If the authority component is present in the spec then the spec is treated as absolute
+         * and the spec authority and path will replace the context authority and path. If the
+         * authority component is absent in the spec then the authority of the new URL will be
+         * inherited from the context.
+         *
+         * If the spec's path component begins with a slash character "/" then the path is treated
+         * as absolute and the spec path replaces the context path.
+         *
+         * Otherwise, the path is treated as a relative path and is appended to the context path,
+         * as described in RFC2396. Also, in this case, the path is canonicalized through the
+         * removal of directory changes made by occurrences of ".." and ".".
+         *
+         * For a more detailed description of URL parsing, refer to RFC2396.
+         *
+         * @param context
+         *      the URL which is used as the context.
+         * @param spec
+         *      the URL string representation which has to be parsed.
+         *
+         * @throws MalformedURLException
+         *      if the given string spec could not be parsed as a URL or an invalid
+         *      protocol has been found.
+         */
+        URL(const URL& context, const std::string& spec);
+
+        /**
+         * Creates a URL object from the specified protocol, host, port number, file, and
+         * handler. Specifying a port number of -1 indicates that the URL should use the
+         * default port for the protocol. Specifying a handler of null indicates that the
+         * URL should use a default stream handler for the protocol, as outlined for:
+         *
+         *    URL(const std::string&, const std::string&, int, const std::string&)
+         *
+         * If a URLStreamHandler instance is provided then this class will take ownership
+         * of the object and delete at a later time.
+         *
+         * @param protocol
+         *      the name of the protocol to use.
+         * @param host
+         *      the name of the host.
+         * @param port
+         *      the port number on the host.
+         * @param file
+         *      the file on the host
+         * @param handler
+         *      the stream handler for the URL.
+         *
+         * @throws MalformedURLException if an unknown protocol is specified.
+         */
+        URL(const std::string& protocol, const std::string& host, int port,
+            const std::string& file, URLStreamHandler* handler);
+
+        /**
+         * Creates a URL from the specified protocol name, host name, and file name. The default
+         * port for the specified protocol is used.
+         *
+         * This method is equivalent to calling the four-argument constructor with the arguments
+         * being protocol, host, -1, and file. No validation of the inputs is performed by this
+         * constructor.
+         *
+         * @param protocol
+         *      the name of the protocol to use.
+         * @param host
+         *      the name of the host.
+         * @param port
+         *      the port number on the host.
+         * @param file
+         *      the file on the host
+         *
+         * @throws MalformedURLException if an unknown protocol is specified.
+         */
+        URL(const std::string& protocol, const std::string& host, const std::string& file);
+
+        /**
+         * Creates a new URL instance using the given arguments. The URL uses the
+         * specified port instead of the default port for the given protocol.
+         *
+         * @param protocol
+         *      the name of the protocol to use.
+         * @param host
+         *      the name of the host.
+         * @param port
+         *      the specific port number of the URL. Value of -1 represents the
+         *      default port of the protocol.
+         * @param file
+         *      the name of the resource.
+         *
+         * @throws MalformedURLException
+         *      if the combination of all arguments do not represent a valid
+         *      URL or the protocol is invalid.
+         */
+        URL(const std::string& protocol, const std::string& host, int port, const std::string& file);
+
+        /**
+         * Creates a URL by parsing the given spec with the specified handler within a
+         * specified context. If the handler is NULL, the parsing occurs as with the two
+         * argument constructor.
+         *
+         * If a stream handler instance is passed then this object takes ownership of it
+         * and will destroy the resources when no longer needed.
+         *
+         * @param context
+         *      the URL which is used as the context.
+         * @param spec
+         *      the URL string representation which has to be parsed.
+         * @param handler
+         *      the stream handler for the URL.
+         *
+         * @throws MalformedURLException if an unknown protocol is specified.
+         */
+        URL(const URL& context, const std::string& spec, URLStreamHandler* streamHandler);
+
+        virtual ~URL();
+
+    public:
+
+        /**
+         * Compares this URL for equality with another URL.
+         *
+         * Two URL objects are equal if they have the same protocol, reference equivalent
+         * hosts, have the same port number on the host, and the same file and fragment
+         * of the file.
+         *
+         * Two hosts are considered equivalent if both host names can be resolved into the
+         * same IP addresses; else if either host name can't be resolved, the host names
+         * must be equal without regard to case; or both host names equal to empty string.
+         *
+         * Since hosts comparison requires name resolution, this operation is a blocking operation.
+         *
+         * @returns true if this URL is considered equal to the given URL instance.
+         */
+        bool equals(const URL& other) const;
+
+        /**
+         * Gets the authority part of this URL.
+         *
+         * @returns the authority part of this URL.
+         */
+        std::string getAuthority() const;
+
+        /**
+         * Gets the default port number of the protocol associated with this URL. If the URL
+         * scheme or the URLStreamHandler for the URL do not define a default port number, then
+         * -1 is returned.
+         *
+         * @returns the default port for the given scheme.
+         */
+        int getDefaultPort() const;
+
+        /**
+         * Gets the file name of this URL. The returned file portion will be the same as getPath(),
+         * plus the concatenation of the value of getQuery(), if any. If there is no query portion,
+         * this method and getPath() will return identical results.
+         *
+         * @returns the file name associated with this URL.
+         */
+        std::string getFile() const;
+
+        /**
+         * Gets the host name of this URL, if applicable. The format of the host conforms to
+         * RFC 2732, i.e. for a literal IPv6 address, this method will return the IPv6 address
+         * enclosed in square brackets ('[' and ']').
+         *
+         * @returns the host name for this URL.
+         */
+        std::string getHost() const;
+
+        /**
+         * Gets the path part of this URL.
+         *
+         * @returns the path part of this URL.
+         */
+        std::string getPath() const;
+
+        /**
+         * Gets the user Info part of this URL.
+         *
+         * @returns the user info part of this URL.
+         */
+        std::string getUserInfo() const;
+
+        /**
+         * Gets the port of this URL.
+         *
+         * @returns the port of this URL or -1 if not set.
+         */
+        int getPort() const;
+
+        /**
+         * Gets the protocol of this URL.
+         *
+         * @returns the path part of this URL.
+         */
+        std::string getProtocol() const;
+
+        /**
+         * Gets the query part of this URL.
+         *
+         * @returns the query part of this URL or empty string if not set.
+         */
+        std::string getQuery() const;
+
+        /**
+         * Gets the anchor or "reference" portion of this URL.
+         *
+         * @returns the anchor or "reference" portion of this URL.
+         */
+        std::string getRef() const;
+
+        /**
+         * Creates an integer hash code for this URL which is used in hash based collections.
+         *
+         * The hash code is based upon all the URL components relevant for URL comparison which
+         * means that the host resolution may cause this operation to block.
+         *
+         * @returns the integer has code for this URL.
+         */
+        int hashCode() const;
+
+        /**
+         * Returns a URLConnection object that represents a connection to the remote object
+         * referred to by the URL.
+         *
+         * A new connection is opened every time by calling the openConnection method of the
+         * protocol handler for this URL.
+         *
+         * If for the URL's protocol (such as HTTP), there exists a public, specialized
+         * URLConnection subclass belonging to one of the following packages or one of their
+         * subpackages: java.lang, java.io, java.util, java.net, the connection returned will
+         * be of that subclass. For example, for HTTP an HttpURLConnection will be returned,
+         * and for JAR a JarURLConnection will be returned.
+         *
+         * @returns a new URLConnection instance for this URL.
+         *
+         * @throws IOException if an error occurs while opening the connection.
+         */
+        URLConnection* openConnection();
+
+        /**
+         * Same basic functionality as openConnection() is provided here, except that the connection
+         * will be made through the specified proxy; Protocol handlers that do not support proxing
+         * will ignore the proxy parameter and make a normal connection.
+         *
+         * @param proxy
+         *      The proxy instance to use to make the connection.
+         *
+         * @returns a new URLConnection instance for this URL.
+         *
+         * @throws IOException if an error occurs while opening the connection.
+         * @throws IllegalArgumentException if proxy is null, or proxy has the wrong type.
+         * @throws UnsupportedOperationException if this method is not supported.
+         */
+        URLConnection* openConnection(const Proxy* proxy);
+
+        /**
+         * Shortcut method to opens a connection to this URL and fetch an InputStream
+         * for reading from that connection.
+         *
+         * @returns an InputStream that reads from this URL's location.
+         *
+         * @throws IOException if an error occurs.
+         */
+        decaf::io::InputStream* openStream();
+
+        /**
+         * Compares this URL to the other ignoring the fragment portion to determine if both
+         * reference the same remote object.
+         *
+         * @returns true if both URL's reference the same external object.
+         */
+        bool sameFile(const URL& other) const;
+
+        /**
+         * Constructs a string representation of this URL, by calling the toExternalForm
+         * method of the stream protocol handler for this object.
+         *
+         * @returns the string representation of this URL.
+         */
+        std::string toExternalForm() const;
+
+        /**
+         * Calls toExternalForm to create a string representation of this URL.
+         *
+         * @returns the string representation of this URL.
+         */
+        std::string toString() const;
+
+        /**
+         * Returns a URI instance that is the equivalent of this URL.
+         *
+         * @returns the URI that is the equivalent of this URL.
+         */
+        URI toURI() const;
+
+    public:
+
+        /**
+         * Sets an application's URLStreamHandlerFactory. This method can be called at most once.
+         *
+         * The URLStreamHandlerFactory instance is used to construct a stream protocol handler
+         * from a protocol name.  The provided factory becomes the property of this runtime and
+         * will be deleted at shutdown.
+         *
+         * @param factory
+         *      the desired factory.
+         *
+         * @throws Exception if there is already a set factory.
+         */
+        static void setURLStreamHandlerFactory(URLStreamHandlerFactory* factory);
+
+    private:
+
+        /**
+         * Sets the fields of the URL. This is not a public method so that only URLStreamHandlers
+         * can modify URL fields. URLs are otherwise constant.
+         *
+         * @param protocol
+         *      the name of the protocol to use.
+         * @param host
+         *      the name of the host.
+         * @param port
+         *      the specific port number of the URL. Value of -1 represents the
+         *      default port of the protocol.
+         * @param file
+         *      the file value.
+         * @param ref
+         *      the internal reference in the URL
+         */
+        void set(const std::string& protocol, const std::string& host, int port,
+                 const std::string& file, const std::string& ref);
+
+        /**
+         * Sets the fields of the URL. This is not a public method so that only URLStreamHandlers
+         * can modify URL fields. URLs are otherwise constant.
+         *
+         * @param protocol
+         *      the name of the protocol to use.
+         * @param host
+         *      the name of the host.
+         * @param port
+         *      the specific port number of the URL. Value of -1 represents the
+         *      default port of the protocol.
+         * @param authority
+         *      the authority value.
+         * @param userInfo
+         *      the user info value.
+         * @param path
+         *      the path value.
+         * @param query
+         *      the query value.
+         * @param ref
+         *      the internal reference in the URL
+         */
+        void set(const std::string& protocol, const std::string& host, int port,
+                 const std::string& authority, const std::string& userInfo,
+                 const std::string& path, const std::string& query, const std::string& ref);
+
+        /**
+         * Returns the URLStreamHandler configured for this URL, used to validate that
+         * the operations performed by a protocol handler are only done on its own URL.
+         */
+        URLStreamHandler* getURLStreamHandler() const;
+
+    private:
+
+        friend class URLStreamHandler;
 
     };
 

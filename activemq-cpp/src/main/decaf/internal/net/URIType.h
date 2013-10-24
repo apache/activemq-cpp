@@ -45,42 +45,14 @@ namespace net {
         bool absolute;
         bool serverAuthority;
         bool valid;
+        int hashCode;
 
     public:
 
-        URIType( const std::string& source ) : source( source ),
-                                               scheme(),
-                                               schemeSpecificPart(),
-                                               authority(),
-                                               userinfo(),
-                                               host(),
-                                               port( -1 ),
-                                               path(),
-                                               query(),
-                                               fragment(),
-                                               opaque( false ),
-                                               absolute( false ),
-                                               serverAuthority( false ),
-                                               valid( false ) {
-        }
+        URIType();
+        URIType(const std::string& source);
 
-        URIType() : source(),
-                    scheme(),
-                    schemeSpecificPart(),
-                    authority(),
-                    userinfo(),
-                    host(),
-                    port( -1 ),
-                    path(),
-                    query(),
-                    fragment(),
-                    opaque( false ),
-                    absolute( false ),
-                    serverAuthority( false ),
-                    valid( false ) {
-        }
-
-        virtual ~URIType() {}
+        virtual ~URIType();
 
         /**
          * Gets the source URI string that was parsed to obtain this URIType
@@ -96,7 +68,7 @@ namespace net {
          * instance and the resulting data,
          * @param source - the source URI string
          */
-        void setSource( const std::string& source ) {
+        void setSource(const std::string& source) {
             this->source = source;
         }
 
@@ -112,7 +84,7 @@ namespace net {
          * Sets the Scheme of the URI, e.g. scheme ("http"/"ftp"/...).
          * @param scheme - scheme part string.
          */
-        void setScheme( const std::string& scheme ) {
+        void setScheme(const std::string& scheme) {
             this->scheme = scheme;
         }
 
@@ -128,7 +100,7 @@ namespace net {
          * Sets the Scheme Specific Part of the URI.
          * @param schemeSpecificPart - scheme specific part string.
          */
-        void setSchemeSpecificPart( const std::string& schemeSpecificPart ) {
+        void setSchemeSpecificPart(const std::string& schemeSpecificPart) {
             this->schemeSpecificPart = schemeSpecificPart;
         }
 
@@ -144,7 +116,7 @@ namespace net {
          * Sets the Authority of the URI.
          * @param authority Authority part string.
          */
-        void setAuthority( const std::string& authority ) {
+        void setAuthority(const std::string& authority) {
             this->authority = authority;
         }
 
@@ -162,7 +134,7 @@ namespace net {
          * http://user:passwd@host:port/
          * @param userinfo - user info part string.
          */
-        void setUserInfo( const std::string& userinfo ) {
+        void setUserInfo(const std::string& userinfo) {
             this->userinfo = userinfo;
         }
 
@@ -178,7 +150,7 @@ namespace net {
          * Sets the Host name part of the URI.
          * @param host - Host name part string.
          */
-        void setHost( const std::string& host ) {
+        void setHost(const std::string& host) {
             this->host = host;
         }
 
@@ -194,7 +166,7 @@ namespace net {
          * Sets the port part of the URI.
          * @param port - port part string, -1 if not set.
          */
-        void setPort( int port ) {
+        void setPort(int port) {
             this->port = port;
         }
 
@@ -210,7 +182,7 @@ namespace net {
          * Sets the Path part of the URI.
          * @param path - Path part string.
          */
-        void setPath( const std::string& path ) {
+        void setPath(const std::string& path) {
             this->path = path;
         }
 
@@ -226,7 +198,7 @@ namespace net {
          * Sets the Query part of the URI.
          * @param query - Query part string.
          */
-        void setQuery( const std::string& query ) {
+        void setQuery(const std::string& query) {
             this->query = query;
         }
 
@@ -242,7 +214,7 @@ namespace net {
          * Sets the Fragment part of the URI.
          * @param fragment - Fragment part string.
          */
-        void setFragment( const std::string& fragment ) {
+        void setFragment(const std::string& fragment) {
             this->fragment = fragment;
         }
 
@@ -258,7 +230,7 @@ namespace net {
          * Sets if the URI is Opaque.
          * @param opaque true if opaque.
          */
-        void setOpaque( bool opaque ) {
+        void setOpaque(bool opaque) {
             this->opaque = opaque;
         }
 
@@ -274,7 +246,7 @@ namespace net {
          * Sets if the URI is Absolute.
          * @param absolute - true if Absolute.
          */
-        void setAbsolute( bool absolute ) {
+        void setAbsolute(bool absolute) {
             this->absolute = absolute;
         }
 
@@ -290,7 +262,7 @@ namespace net {
          * Sets if the URI is a Server Authority.
          * @param serverAuthority - true if Server Authority.
          */
-        void setServerAuthority( bool serverAuthority ) {
+        void setServerAuthority(bool serverAuthority) {
             this->serverAuthority = serverAuthority;
         }
 
@@ -308,10 +280,28 @@ namespace net {
          * parsed and all relevant data fields have been set.
          * @param valid - true if the URIType contains valid data.
          */
-        void setValid( bool valid ) {
+        void setValid(bool valid) {
             this->valid = valid;
         }
 
+        /**
+         * Gets the computed hashCode for this URIType or return -1 if non is set
+         *
+         * @returns the hash code for this URIType instance or -1 if not set.
+         */
+        int getHashCode() const {
+            return this->hashCode;
+        }
+
+        /**
+         * Sets the hash code for this URIType instance.
+         *
+         * @param hashCode
+         *      The new hash code that's been computed for this URIType instance.
+         */
+        void setHashCode(int hashCode) {
+            this->hashCode = hashCode;
+        }
     };
 
 }}}

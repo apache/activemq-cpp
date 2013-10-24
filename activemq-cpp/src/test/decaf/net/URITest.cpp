@@ -18,6 +18,7 @@
 #include "URITest.h"
 
 #include <decaf/net/URI.h>
+#include <decaf/net/URL.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Boolean.h>
 

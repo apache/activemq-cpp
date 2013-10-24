@@ -19,6 +19,7 @@
 
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Character.h>
+#include <decaf/net/URL.h>
 #include <decaf/internal/net/URIHelper.h>
 #include <decaf/internal/util/StringUtils.h>
 #include <decaf/internal/net/URIEncoderDecoder.h>

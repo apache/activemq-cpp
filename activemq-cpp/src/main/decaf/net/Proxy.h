@@ -15,42 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_URLSTREAMHANDLERFACTORY_H_
-#define _DECAF_NET_URLSTREAMHANDLERFACTORY_H_
+#ifndef _DECAF_NET_PROXY_H_
+#define _DECAF_NET_PROXY_H_
 
 #include <decaf/util/Config.h>
-
-#include <string>
 
 namespace decaf {
 namespace net {
 
-    class URLStreamHandler;
-
     /**
-     * Defines a factory which creates an URLStreamHandler for a specified
-     * protocol. It is used by the class URL.
-     *
      * @since 1.0
      */
-    class URLStreamHandlerFactory {
+    class Proxy {
     public:
 
-        virtual ~URLStreamHandlerFactory();
-
-        /**
-         * Creates a new {@code URLStreamHandler} instance for the given {@code
-         * protocol}.
-         *
-         * @param protocol
-         *      the protocol for which a handler is needed.
-         *
-         * @return pointer to the created handler.
-         */
-        virtual URLStreamHandler* createURLStreamHandler(const std::string& protocol) = 0;
+        virtual ~Proxy();
 
     };
 
 }}
 
-#endif /* _DECAF_NET_URLSTREAMHANDLERFACTORY_H_ */
+#endif /* _DECAF_NET_PROXY_H_ */

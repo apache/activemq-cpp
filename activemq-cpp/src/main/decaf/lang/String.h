@@ -35,12 +35,12 @@ namespace lang {
      *
      * @since 1.0
      */
-    class DECAF_API String : public CharSequence {
+    class DECAF_API String: public CharSequence {
     private:
 
         Contents* contents;
 
-    public:  // Constructors
+    public:
 
         /**
          * Creates a new empty String object.
@@ -53,7 +53,7 @@ namespace lang {
          * @param source
          *      The string to copy into this new String object.
          */
-        String( const String& source );
+        String(const String& source);
 
         /**
          * Create a new String object that represents the given STL string
@@ -61,7 +61,7 @@ namespace lang {
          * @param source
          *      The string to copy into this new String object.
          */
-        String( const std::string& source );
+        String(const std::string& source);
 
         /**
          * Create a new String object that represents the given array of characters.  The method
@@ -77,7 +77,7 @@ namespace lang {
          * @throws NullPointerException if the character array parameter is NULL.
          * @throws IndexOutOfBoundsException if the size parameter is negative.
          */
-        String( const char* array, int size );
+        String(const char* array, int size);
 
         /**
          * Create a new String object that represents the given array of characters.  The method
@@ -98,24 +98,31 @@ namespace lang {
          * @throws IndexOutOfBoundsException if the size, offset or length parameter is negative
          *         or if the length to copy is greater than the span of size - offset.
          */
-        String( const char* array, int size, int offset, int length );
+        String(const char* array, int size, int offset, int length);
 
         virtual ~String();
 
     public:
 
         // TODO
-        String& operator= ( const String& );
-        String& operator= ( const std::string& );
+        String& operator=(const String&);
+        String& operator=(const std::string&);
 
-    public:  // String API
+    public:
 
         /**
          * @returns true if the length of this String is zero.
          */
         bool isEmpty() const;
 
-    public:  // CharSequence Implementation
+        /**
+         * Returns a copy of the string, with leading and trailing whitespace omitted.
+         *
+         * @returns a copy of the string, with leading and trailing whitespace omitted.
+         */
+        String trim() const;
+
+    public:
 
         /**
          * {@inheritDoc}
@@ -125,19 +132,19 @@ namespace lang {
         /**
          * {@inheritDoc}
          */
-        virtual char charAt( int index ) const;
+        virtual char charAt(int index) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual CharSequence* subSequence( int start, int end ) const;
+        virtual CharSequence* subSequence(int start, int end) const;
 
         /**
          * {@inheritDoc}
          */
         virtual std::string toString() const;
 
-    public:  // Static methods.
+    public:
 
         /**
          * Returns a String that represents the value of the given boolean value.
