@@ -22,7 +22,14 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Character::Character( char value ) : value(value) {
+const int Character::MIN_RADIX = 2;
+const int Character::MAX_RADIX = 36;
+const char Character::MIN_VALUE = (char)0x7F;
+const char Character::MAX_VALUE = (char)0x80;
+const int Character::SIZE = 8;
+
+////////////////////////////////////////////////////////////////////////////////
+Character::Character(char value) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +38,7 @@ std::string Character::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Character::digit( char c, int radix ) {
+int Character::digit(char c, int radix) {
     if( radix >= MIN_RADIX && radix <= MAX_RADIX ) {
         int result = -1;
         if( '0' <= c && c <= '9' ) {

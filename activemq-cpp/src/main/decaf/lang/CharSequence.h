@@ -54,7 +54,7 @@ namespace lang {
          *
          * @throws IndexOutOfBoundsException if index is > than length() or negative
          */
-        virtual char charAt( int index ) const = 0;
+        virtual char charAt(int index) const = 0;
 
         /**
          * Returns a new CharSequence that is a subsequence of this sequence. The
@@ -71,10 +71,10 @@ namespace lang {
          *
          * @throws IndexOutOfBoundsException if start or end > length() or start or end are negative.
          */
-        virtual CharSequence* subSequence( int start, int end ) const = 0;
+        virtual CharSequence* subSequence(int start, int end) const = 0;
 
         /**
-         * @returns the string representation of this CharSequence
+         * @returns the String representation of this CharSequence
          */
         virtual std::string toString() const = 0;
 
