@@ -19,6 +19,7 @@
 #define _DECAF_NET_URL_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/lang/String.h>
 
 #include <decaf/io/InputStream.h>
 #include <string>
@@ -286,7 +287,7 @@ namespace net {
          *
          * @returns the authority part of this URL.
          */
-        std::string getAuthority() const;
+        decaf::lang::String getAuthority() const;
 
         /**
          * Gets the default port number of the protocol associated with this URL. If the URL
@@ -304,7 +305,7 @@ namespace net {
          *
          * @returns the file name associated with this URL.
          */
-        std::string getFile() const;
+        decaf::lang::String getFile() const;
 
         /**
          * Gets the host name of this URL, if applicable. The format of the host conforms to
@@ -313,21 +314,21 @@ namespace net {
          *
          * @returns the host name for this URL.
          */
-        std::string getHost() const;
+        decaf::lang::String getHost() const;
 
         /**
          * Gets the path part of this URL.
          *
          * @returns the path part of this URL.
          */
-        std::string getPath() const;
+        decaf::lang::String getPath() const;
 
         /**
          * Gets the user Info part of this URL.
          *
          * @returns the user info part of this URL.
          */
-        std::string getUserInfo() const;
+        decaf::lang::String getUserInfo() const;
 
         /**
          * Gets the port of this URL.
@@ -341,21 +342,21 @@ namespace net {
          *
          * @returns the path part of this URL.
          */
-        std::string getProtocol() const;
+        decaf::lang::String getProtocol() const;
 
         /**
          * Gets the query part of this URL.
          *
          * @returns the query part of this URL or empty string if not set.
          */
-        std::string getQuery() const;
+        decaf::lang::String getQuery() const;
 
         /**
          * Gets the anchor or "reference" portion of this URL.
          *
          * @returns the anchor or "reference" portion of this URL.
          */
-        std::string getRef() const;
+        decaf::lang::String getRef() const;
 
         /**
          * Creates an integer hash code for this URL which is used in hash based collections.
@@ -426,7 +427,7 @@ namespace net {
          *
          * @returns the string representation of this URL.
          */
-        std::string toExternalForm() const;
+        decaf::lang::String toExternalForm() const;
 
         /**
          * Calls toExternalForm to create a string representation of this URL.
@@ -476,8 +477,8 @@ namespace net {
          * @param ref
          *      the internal reference in the URL
          */
-        void set(const std::string& protocol, const std::string& host, int port,
-                 const std::string& file, const std::string& ref);
+        void set(const decaf::lang::String& protocol, const decaf::lang::String& host, int port,
+                 const decaf::lang::String& file, const decaf::lang::String& ref);
 
         /**
          * Sets the fields of the URL. This is not a public method so that only URLStreamHandlers
@@ -501,9 +502,10 @@ namespace net {
          * @param ref
          *      the internal reference in the URL
          */
-        void set(const std::string& protocol, const std::string& host, int port,
-                 const std::string& authority, const std::string& userInfo,
-                 const std::string& path, const std::string& query, const std::string& ref);
+        void set(const decaf::lang::String& protocol, const decaf::lang::String& host, int port,
+                 const decaf::lang::String& authority, const decaf::lang::String& userInfo,
+                 const decaf::lang::String& path, const decaf::lang::String& query,
+                 const decaf::lang::String& ref);
 
         /**
          * Returns the URLStreamHandler configured for this URL, used to validate that
@@ -512,6 +514,11 @@ namespace net {
         URLStreamHandler* getURLStreamHandler() const;
 
     private:
+
+        void initialize(const URL* context, const decaf::lang::String& theSpec, URLStreamHandler* handler);
+        void initialize(const decaf::lang::String& protocol, const decaf::lang::String& host, int port,
+                        const decaf::lang::String& file, URLStreamHandler* handler);
+
 
         friend class URLStreamHandler;
 

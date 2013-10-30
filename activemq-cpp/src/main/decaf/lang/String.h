@@ -24,6 +24,7 @@
 #include <decaf/lang/Comparable.h>
 
 #include <string>
+#include <ostream>
 
 namespace decaf {
 namespace lang {
@@ -64,6 +65,18 @@ namespace lang {
         String(const std::string& source);
 
         /**
+         * Create a new String object that represents the given array of characters, the C string
+         * must be null terminated in order for a proper size calculation to work.  If the string
+         * is not properly terminated than this method can overrun the array and cause a fault.
+         *
+         * @param array
+         *      The character buffer to copy into this new String object.
+         *
+         * @throws NullPointerException if the character array parameter is NULL.
+         */
+        String(const char* array);
+
+        /**
          * Create a new String object that represents the given array of characters.  The method
          * takes the size of the array as a parameter to allow for strings that are not NULL
          * terminated, the caller can pass strlen(array) in the case where the array is properly
@@ -78,6 +91,24 @@ namespace lang {
          * @throws IndexOutOfBoundsException if the size parameter is negative.
          */
         String(const char* array, int size);
+
+        /**
+         * Create a new String object that represents the given array of characters, the C string
+         * must be null terminated in order for a proper size calculation to work.  If the string
+         * is not properly terminated than this method can overrun the array and cause a fault.
+         *
+         * @param array
+         *      The character buffer to copy into this new String object.
+         * @param offset
+         *      The position to start copying from in the given buffer.
+         * @param length
+         *      The number of bytes to copy from the given buffer starting from the offset.
+         *
+         * @throws NullPointerException if the character array parameter is NULL.
+         * @throws IndexOutOfBoundsException if the size, offset or length parameter is negative
+         *         or if the length to copy is greater than the span of size - offset.
+         */
+        String(const char* array, int offset, int length);
 
         /**
          * Create a new String object that represents the given array of characters.  The method
@@ -104,16 +135,736 @@ namespace lang {
 
     public:
 
-        // TODO
-        String& operator=(const String&);
-        String& operator=(const std::string&);
+        /**
+         * Assignment from another String instance.  The internal contents of this string now
+         * reference the same contents as the provided String.  The original contents of this
+         * String are not altered in other String instances that reference it.
+         *
+         * @param other
+         *      The other String to assign to this instance.
+         *
+         * @returns a reference to this string with the new contents.
+         */
+        String& operator= (const String& other);
+
+        /**
+         * Assignment from another std::string instance.  The internal contents of this string now
+         * reference a copy of the contents as the provided std::string.  The original contents of
+         * this String are not altered in other String instances that reference it.
+         *
+         * @param other
+         *      The other std::string to assign to this instance.
+         *
+         * @returns a reference to this string with the new contents.
+         */
+        String& operator= (const std::string& other);
+
+        /**
+         * Assignment from another C string instance.  The internal contents of this string now
+         * reference a copy of the contents as the provided C string.  The original contents of
+         * this String are not altered in other String instances that reference it.
+         *
+         * @param other
+         *      The other C string to assign to this instance.
+         *
+         * @returns a reference to this string with the new contents.
+         */
+        String& operator= (const char* other);
+
+        /**
+         * Comparison operators for the various string types that uses the equals method
+         * to determine equality.
+         *
+         * @param other
+         *      The string value to compare to this one.
+         *
+         * @returns true if the other string is equal to this one, false otherwise.
+         */
+        bool operator==(const char* other) const;
+        bool operator==(const String& other) const;
+        bool operator==(const std::string& other) const;
+
+        /**
+         * Comparison operators for the various string types that uses the equals method
+         * to determine equality.
+         *
+         * @param other
+         *      The string value to compare to this one.
+         *
+         * @returns true if the other string is not equal to this one, false otherwise.
+         */
+        bool operator!=(const char* other) const;
+        bool operator!=(const String& other) const;
+        bool operator!=(const std::string& other) const;
+
+        /**
+         * Comparison operators for the various string types that uses the compareTo method
+         * to determine the string are lexicographically equal or not.
+         *
+         * @param other
+         *      The string value to compare to this one.
+         *
+         * @returns true if this string is lexicographically less than the other string.
+         */
+        bool operator< (const char* other) const;
+        bool operator< (const String& other) const;
+        bool operator< (const std::string& other) const;
+
+        /**
+         * Concatenation operators for the various string types.  The value of this string
+         * and the given string are concatenated and returned in a new String instance.
+         *
+         * @param other
+         *      The string whose value is to be concatenated with this one.
+         *
+         * @returns a new String instance that is the concatenation of the two strings.
+         */
+        String operator+ (const String& other) const;
+        String operator+ (const std::string& other) const;
+        String operator+ (const char* other) const;
+
+    private:
+
+        // TODO - String is not always NULL terminated at the moment.
+
+        /**
+         * Returns a const char* value to allow easier coexistence with standard c++
+         * string operations.  The value returned will be NULL if the String is empty.
+         *
+         * @returns a const char* value for this String or NULL if empty.
+         */
+        const char* c_str() const;
 
     public:
+
+        /**
+         * Compares two strings lexicographically. The comparison is based on the value
+         * of each character in the strings. The character sequence represented by this
+         * String is compared lexicographically to the character sequence represented by
+         * the provided string. The result is a negative number if this String
+         * lexicographically precedes the argument string. The result is a positive value
+         * if this String lexicographically follows the argument string. The result is
+         * zero if the strings are equal; compareTo returns 0 exactly when the equals
+         * method would return true.
+         *
+         * @param string
+         *      the string to compare.
+         *
+         * @return 0 if the strings are equal, a negative integer if this string is
+         *         before the specified string, or a positive integer if this string
+         *         is after the specified string.
+         */
+        int compareTo(const String& string) const;
+
+        /**
+         * Compares two strings lexicographically. The comparison is based on the value
+         * of each character in the strings. The character sequence represented by this
+         * String is compared lexicographically to the character sequence represented by
+         * the provided string. The result is a negative number if this String
+         * lexicographically precedes the argument string. The result is a positive value
+         * if this String lexicographically follows the argument string. The result is
+         * zero if the strings are equal; compareTo returns 0 exactly when the equals
+         * method would return true.
+         *
+         * @param string
+         *      the STL string to compare.
+         *
+         * @return 0 if the strings are equal, a negative integer if this string is
+         *         before the specified string, or a positive integer if this string
+         *         is after the specified string.
+         */
+        int compareTo(const std::string& string) const;
+
+        /**
+         * Compares two strings lexicographically. The comparison is based on the value
+         * of each character in the strings. The character sequence represented by this
+         * String is compared lexicographically to the character sequence represented by
+         * the provided string. The result is a negative number if this String
+         * lexicographically precedes the argument string. The result is a positive value
+         * if this String lexicographically follows the argument string. The result is
+         * zero if the strings are equal; compareTo returns 0 exactly when the equals
+         * method would return true.
+         *
+         * @param string
+         *      the C string to compare.
+         *
+         * @return 0 if the strings are equal, a negative integer if this string is
+         *         before the specified string, or a positive integer if this string
+         *         is after the specified string.
+         *
+         * @throws NullPointerException if the passed in C String value is NULL.
+         */
+        int compareTo(const char* string) const;
+
+        /**
+         * Compares two strings lexicographically, ignoring case differences. This method
+         * returns an integer whose sign is that of calling compareTo with normalized
+         * versions of the strings where case differences have been eliminated by calling
+         * Character::toLowerCase() on each character.
+         *
+         * @param string
+         *      the string to compare.
+         *
+         * @return 0 if the strings are equal, a negative integer if this string is
+         *         before the specified string, or a positive integer if this string
+         *         is after the specified string.
+         */
+        int compareToIgnoreCase(const String& string) const;
+
+        /**
+         * Compares two strings lexicographically, ignoring case differences. This method
+         * returns an integer whose sign is that of calling compareTo with normalized
+         * versions of the strings where case differences have been eliminated by calling
+         * Character::toLowerCase() on each character.
+         *
+         * @param string
+         *      the STL string to compare.
+         *
+         * @return 0 if the strings are equal, a negative integer if this string is
+         *         before the specified string, or a positive integer if this string
+         *         is after the specified string.
+         */
+        int compareToIgnoreCase(const std::string& string) const;
+
+        /**
+         * Compares two strings lexicographically, ignoring case differences. This method
+         * returns an integer whose sign is that of calling compareTo with normalized
+         * versions of the strings where case differences have been eliminated by calling
+         * Character::toLowerCase() on each character.
+         *
+         * @param string
+         *      the C string to compare.
+         *
+         * @return 0 if the strings are equal, a negative integer if this string is
+         *         before the specified string, or a positive integer if this string
+         *         is after the specified string.
+         *
+         * @throws NullPointerException if the passed in C String value is NULL.
+         */
+        int compareToIgnoreCase(const char* string) const;
+
+        /**
+         * Concatenates this string and the specified string.
+         *
+         * @param string
+         *      the string to concatenate onto this String
+         *
+         * @return a new string which is the concatenation of this string and the
+         *         specified string.
+         */
+        String concat(const String& string) const;
+
+        /**
+         * Concatenates this string and the specified std::string.
+         *
+         * @param string
+         *      the STL string to concatenate onto this String
+         *
+         * @return a new string which is the concatenation of this string and the
+         *         specified string.
+         */
+        String concat(const std::string& string) const;
+
+        /**
+         * Concatenates this string and the specified C string.
+         *
+         * @param string
+         *      the C string to concatenate onto this String
+         *
+         * @return a new string which is the concatenation of this string and the
+         *         specified string.
+         */
+        String concat(const char* string) const;
+
+        /**
+         * Determines if this String contains the sequence of characters in the String
+         * passed in.
+         *
+         * @param string
+         *      the String value to search for.
+         *
+         * @return true if the sequence of characters are contained in this String,
+         *         otherwise returns false.
+         */
+        bool contains(const String& string) const;
+
+        /**
+         * Determines if this String contains the sequence of characters in the std::string
+         * passed in.
+         *
+         * @param string
+         *      the STL String value to search for.
+         *
+         * @return true if the sequence of characters are contained in this String,
+         *         otherwise returns false.
+         */
+        bool contains(const std::string& string) const;
+
+        /**
+         * Determines if this String contains the sequence of characters in the C String
+         * passed in.  If the value given is null the method always returns false.
+         *
+         * @param string
+         *      the C String value to search for.
+         *
+         * @return true if the sequence of characters are contained in this String,
+         *         otherwise returns false.
+         */
+        bool contains(const char* string) const;
+
+        /**
+         * Compares the specified string to this string to determine if the
+         * specified string is a suffix.
+         *
+         * @param suffix
+         *            the suffix to look for.
+         *
+         * @return true if the specified string is a suffix of this string, false otherwise.
+         */
+        bool endsWith(const String& suffix) const;
+
+        /**
+         * Returns true if this String is equal to the given String instance.
+         *
+         * @param other
+         *      A String instance to compare to this string.
+         *
+         * @returns true if this String is equal to the given String instance.
+         */
+        bool equals(const String& other) const;
+
+        /**
+         * Returns true if this String is equal to the given std::string instance.
+         *
+         * @param other
+         *      A standard string instance to compare to this String.
+         *
+         * @returns true if this String is equal to the given std::string instance.
+         */
+        bool equals(const std::string& other) const;
+
+        /**
+         * Returns true if this String is equal to the given C string instance.  This method
+         * treats the NULL pointer case as equivalent to the empty string case and returns
+         * true if this String instance is also empty.
+         *
+         * @param other
+         *      A C string instance to compare to this String.
+         *
+         * @returns true if this String is equal to the given C string instance.
+         */
+        bool equals(const char* other) const;
+
+        /**
+         * Compares the specified string to this string ignoring the case of the
+         * characters and returns true if they are equal.
+         *
+         * @param string
+         *      the string to compare.
+         *
+         * @return true if the specified string is equal to this string, false otherwise.
+         */
+        bool equalsIgnoreCase(const String& string) const;
+
+        /**
+         * Compares the specified std::string to this String ignoring the case of the
+         * characters and returns true if they are equal.
+         *
+         * @param string
+         *      the std::string to compare.
+         *
+         * @return true if the specified string is equal to this String, false otherwise.
+         */
+        bool equalsIgnoreCase(const std::string& string) const;
+
+        /**
+         * Compares the specified C string to this string ignoring the case of the
+         * characters and returns true if they are equal.
+         *
+         * @param string
+         *      the C string to compare.
+         *
+         * @return true if the specified C string is equal to this string, false otherwise.
+         */
+        bool equalsIgnoreCase(const char* string) const;
+
+        /**
+         * Returns a hash code for this String instance, the hash code for an empty
+         * String will always be zero.
+         *
+         * @returns a hash code for this String instance.
+         */
+        int hashCode() const;
+
+        /**
+         * Searches in this string for the first index of the specified character.
+         * The search for the character starts at the beginning and moves towards
+         * the end of this string.
+         *
+         * @param c
+         *      the character to find.
+         *
+         * @return the index in this string of the specified character, -1 if the
+         *         character isn't found.
+         */
+        int indexOf(char value) const;
+
+        /**
+         * Searches in this string for the index of the specified character. The
+         * search for the character starts at the specified offset and moves towards
+         * the end of this string.
+         *
+         * If the start value given is less than zero the search starts at the beginning
+         * of the string.  If the start value is greater than the length of the string
+         * minus one is returned.
+         *
+         * @param value
+         *      the character to find.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index in this string of the specified character, -1 if the
+         *         character isn't found.
+         */
+        int indexOf(char value, int start) const;
+
+        /**
+         * Searches in this string for the first index of the specified string. The
+         * search for the string starts at the beginning and moves towards the end
+         * of this string.
+         *
+         * @param string
+         *      the string to find within this String.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int indexOf(const String& string) const;
+
+        /**
+         * Searches in this string for the index of the specified string. The search
+         * for the string starts at the specified offset and moves towards the end
+         * of this string.
+         *
+         * @param subString
+         *      the string to find within this String.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int indexOf(const String& subString, int start) const;
+
+        /**
+         * Searches in this String for the first index of the specified std::string. The
+         * search for the string starts at the beginning and moves towards the end
+         * of this string.
+         *
+         * @param string
+         *      the STL string to find within this String.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int indexOf(const std::string& string) const;
+
+        /**
+         * Searches in this string for the index of the specified std::string. The search
+         * for the string starts at the specified offset and moves towards the end
+         * of this string.
+         *
+         * @param subString
+         *      the STL string to find within this String.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int indexOf(const std::string& subString, int start) const;
+
+        /**
+         * Searches in this String for the first index of the specified C string. The
+         * search for the string starts at the beginning and moves towards the end
+         * of this string.  If the given string pointer is NULL this method returns -1.
+         *
+         * @param string
+         *      the C string to find within this String.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int indexOf(const char* string) const;
+
+        /**
+         * Searches in this string for the index of the specified C string. The search
+         * for the string starts at the specified offset and moves towards the end
+         * of this string.  If the given string pointer is NULL this method returns -1.
+         *
+         * @param subString
+         *      the C string to find within this String.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int indexOf(const char* subString, int start) const;
 
         /**
          * @returns true if the length of this String is zero.
          */
         bool isEmpty() const;
+
+        /**
+         * Searches in this string for the last index of the specified character.
+         * The search for the character starts at the end and moves towards the
+         * beginning of this string.
+         *
+         * @param value
+         *      the character to find.
+         *
+         * @return the index in this string of the specified character, -1 if the
+         *         character isn't found.
+         */
+        int lastIndexOf(char value) const;
+
+        /**
+         * Searches in this string for the index of the specified character. The
+         * search for the character starts at the specified offset and moves towards
+         * the beginning of this string.
+         *
+         * @param value
+         *      the character to find.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index in this string of the specified character, -1 if the
+         *         character isn't found.
+         */
+        int lastIndexOf(char value, int start) const;
+
+        /**
+         * Searches in this string for the last index of the specified string. The
+         * search for the string starts at the end and moves towards the beginning
+         * of this string.
+         *
+         * @param string
+         *      the string to find.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int lastIndexOf(const String& string) const;
+
+        /**
+         * Searches in this string for the index of the specified string. The search
+         * for the string starts at the specified offset and moves towards the
+         * beginning of this string.
+         *
+         * @param subString
+         *      the string to find.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string , -1 if the specified string is not a substring.
+         */
+        int lastIndexOf(const String& subString, int start) const;
+
+        /**
+         * Searches in this string for the last index of the specified std::string. The
+         * search for the string starts at the end and moves towards the beginning
+         * of this string.
+         *
+         * @param string
+         *      the STL string to find.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int lastIndexOf(const std::string& string) const;
+
+        /**
+         * Searches in this string for the index of the specified std::string. The search
+         * for the string starts at the specified offset and moves towards the
+         * beginning of this string.
+         *
+         * @param subString
+         *      the STL string to find.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string , -1 if the specified string is not a substring.
+         */
+        int lastIndexOf(const std::string& subString, int start) const;
+
+        /**
+         * Searches in this string for the last index of the specified C string. The
+         * search for the string starts at the end and moves towards the beginning
+         * of this string.
+         *
+         * @param string
+         *      the C string to find.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if the specified string is not a substring.
+         */
+        int lastIndexOf(const char* string) const;
+
+        /**
+         * Searches in this string for the index of the specified C string. The search
+         * for the string starts at the specified offset and moves towards the
+         * beginning of this string.
+         *
+         * @param subString
+         *      the C string to find.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string , -1 if the specified string is not a substring.
+         */
+        int lastIndexOf(const char* subString, int start) const;
+
+        /**
+         * Compares the specified string to this string and compares the specified
+         * range of characters to determine if they are the same.  The method returns
+         * false is any of the index values are negative or result in a span that would
+         * exceed the length of either string.
+         *
+         * @param thisStart
+         *      the starting offset in this string.
+         * @param string
+         *      the string to compare.
+         * @param start
+         *      the starting offset in the specified string.
+         * @param length
+         *      the number of characters to compare.
+         *
+         * @return true if the ranges of characters are equal, false otherwise
+         */
+        bool regionMatches(int thisStart, const String& string, int start, int length) const;
+
+        /**
+         * Compares the specified string to this string and compares the specified
+         * range of characters to determine if they are the same. When ignoreCase is
+         * true, the case of the characters is ignored during the comparison.
+         *
+         * @param ignoreCase
+         *      specifies if case should be ignored.
+         * @param thisStart
+         *      the starting offset in this string.
+         * @param string
+         *      the string to compare.
+         * @param start
+         *      the starting offset in the specified string.
+         * @param length
+         *      the number of characters to compare.
+         *
+         * @return true if the ranges of characters are equal, false otherwise.
+         */
+        bool regionMatches(bool ignoreCase, int thisStart, const String& string, int start, int length) const;
+
+        /**
+         * Copies this string replacing occurrences of the specified character with
+         * another character.
+         *
+         * @param oldChar
+         *      the character to replace.
+         * @param newChar
+         *      the replacement character.
+         *
+         * @return a new string with occurrences of oldChar replaced by newChar.
+         */
+        String replace(char oldChar, char newChar) const;
+
+        /**
+         * Compares the specified string to this string to determine if the specified
+         * string is a prefix.  If the prefix string is empty or is equal to this String
+         * than true is returned.
+         *
+         * @param prefix
+         *      the string to look for.
+         *
+         * @return if the specified string is a prefix of this string, false otherwise
+         */
+        bool startsWith(const String& prefix) const;
+
+        /**
+         * Compares the specified string to this string, starting at the specified
+         * offset, to determine if the specified string is a prefix.
+         *
+         * @param prefix
+         *      the string to look for.
+         * @param start
+         *      the starting offset.
+         *
+         * @return true if the specified string occurs in this string at the specified
+         *         offset, false otherwise.
+         */
+        bool startsWith(const String& prefix, int start) const;
+
+        /**
+         * Copies a range of characters into a new string starting from the given offset and
+         * extending to the end of this String.
+         *
+         * @param start
+         *      the offset of the first character.
+         *
+         * @return a new string containing the characters from start to the end of the string.
+         *
+         * @throws IndexOutOfBoundsException if start < 0 or start > length().
+         */
+        String substring(int start) const;
+
+        /**
+         * Copies a range of characters into a new string.  The length of the returned String
+         * is end - start meaning that the characters in the new string include only start to
+         * end - 1.
+         *
+         * @param start
+         *      the offset of the first character. (inclusive)
+         * @param end
+         *      the offset one past the last character. (exclusive)
+         *
+         * @return a new string containing the characters from start to end - 1.
+         *
+         * @throws IndexOutOfBoundsException if start < 0, start > end or end > length().
+         */
+        String substring(int start, int end) const;
+
+        /**
+         * Copies the characters in this string to a newly allocated character array.  The
+         * returned array is the property of the caller and must be deleted by them.  If the
+         * String is empty then a NULL is returned.
+         *
+         * The array returned is not guaranteed to be null terminated as the array is
+         * sized according to the result of calling length().
+         *
+         * @return a character array containing the characters of this string.
+         */
+        char* toCharArray() const;
+
+        /**
+         * Converts the characters in this string to lower case.  The resulting value
+         * is returned in a new String instance and this one is left unchanged.
+         *
+         * @return a new string containing the lower case characters equivalent to
+         *         the characters in this string.
+         */
+        String toLowerCase() const;
+
+        /**
+         * Converts the characters in this string to upper case.  The resulting value
+         * is returned in a new String instance and this one is left unchanged.
+         *
+         * @return a new string containing the upper case characters equivalent to
+         *         the characters in this string.
+         */
+        String toUpperCase() const;
 
         /**
          * Returns a copy of the string, with leading and trailing whitespace omitted.
@@ -145,6 +896,48 @@ namespace lang {
         virtual std::string toString() const;
 
     public:
+
+        /**
+         * Creates a new string containing the characters in the specified character
+         * array. Modifying the character array after creating the string has no
+         * effect on the string.
+         *
+         * @param data
+         *      the array of characters.
+         *
+         * @return the new string.
+         *
+         * @throws NullPointerException if the C string pointer is NULL
+         */
+        static String copyValueOf(const char* data);
+
+        /**
+         * Creates a new string containing the specified characters in the character
+         * array. Modifying the character array after creating the string has no
+         * effect on the string.
+         *
+         * @param data
+         *      the array of characters.
+         * @param start
+         *      the starting offset in the character array.
+         * @param length
+         *      the number of characters to use.
+         *
+         * @return the new string.
+         *
+         * @throws NullPointerException if the C string is NULL
+         * @throws IndexOutOfBoundsException
+         *         if length < 0, start < 0 or start + length > the C string's length.
+         */
+        static String copyValueOf(char* data, int start, int length);
+
+        /**
+         * Given a C String pointer return true if the value is either NULL or the
+         * string contained is empty.
+         *
+         * @returns true if the C string is either a NULL or an Empty string.
+         */
+        static bool isNullOrEmpty(const char*);
 
         /**
          * Returns a String that represents the value of the given boolean value.
@@ -216,7 +1009,14 @@ namespace lang {
          */
         static String valueOf(long long value);
 
+    private:
+
+        String(Contents* content);
+        String(int offset, int length, Contents* content);
+
     };
+
+    std::ostream& operator<<(std::ostream &out, const String& target);
 
 }}
 

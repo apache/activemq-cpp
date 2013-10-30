@@ -323,7 +323,7 @@ namespace net {
          * @return the string representation of this URLConnection instance.
          */
         virtual std::string toString() const {
-            return "URLConnection:" + url.toString();
+            return std::string("URLConnection:") + url.toString();
         }
 
         /**

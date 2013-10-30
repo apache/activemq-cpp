@@ -18,8 +18,8 @@
 #ifndef _DECAF_INTERNAL_NET_URLTYPE_H_
 #define _DECAF_INTERNAL_NET_URLTYPE_H_
 
-#include <string>
 #include <decaf/util/Config.h>
+#include <decaf/lang/String.h>
 
 namespace decaf {
 namespace internal {
@@ -31,15 +31,15 @@ namespace net {
     class DECAF_API URLType {
     private:
 
-        std::string file;
-        std::string protocol;
-        std::string host;
+        decaf::lang::String file;
+        decaf::lang::String protocol;
+        decaf::lang::String host;
         int port;
-        std::string authority;
-        std::string userInfo;
-        std::string path;
-        std::string query;
-        std::string ref;
+        decaf::lang::String authority;
+        decaf::lang::String userInfo;
+        decaf::lang::String path;
+        decaf::lang::String query;
+        decaf::lang::String ref;
         int hashCode;
 
     public:
@@ -52,7 +52,7 @@ namespace net {
          * Gets the File of the URL.
          * @return File part string.
          */
-        std::string getFile() const {
+        decaf::lang::String getFile() const {
             return file;
         }
 
@@ -60,7 +60,7 @@ namespace net {
          * Sets the File of the URL.
          * @param File Authority part string.
          */
-        void setFile(const std::string& file) {
+        void setFile(const decaf::lang::String& file) {
             this->file = file;
         }
 
@@ -68,7 +68,7 @@ namespace net {
          * Gets the protocol of the URL, e.g. protocol ("http"/"ftp"/...).
          * @return protocol part string.
          */
-        std::string getProtocol() const {
+        decaf::lang::String getProtocol() const {
             return protocol;
         }
 
@@ -76,7 +76,7 @@ namespace net {
          * Sets the protocol of the URL, e.g. protocol ("http"/"ftp"/...).
          * @param protocol - protocol part string.
          */
-        void setProtocol(const std::string& protocol) {
+        void setProtocol(const decaf::lang::String& protocol) {
             this->protocol = protocol;
         }
 
@@ -84,7 +84,7 @@ namespace net {
          * Gets the Authority of the URL.
          * @return Authority part string.
          */
-        std::string getAuthority() const {
+        decaf::lang::String getAuthority() const {
             return authority;
         }
 
@@ -92,7 +92,7 @@ namespace net {
          * Sets the Authority of the URL.
          * @param authority Authority part string.
          */
-        void setAuthority(const std::string& authority) {
+        void setAuthority(const decaf::lang::String& authority) {
             this->authority = authority;
         }
 
@@ -101,7 +101,7 @@ namespace net {
          * http://user:passwd@host:port/
          * @return user info part string.
          */
-        std::string getUserInfo() const {
+        decaf::lang::String getUserInfo() const {
             return userInfo;
         }
 
@@ -111,7 +111,7 @@ namespace net {
          *
          * @param userInfo - user info part string.
          */
-        void setUserInfo(const std::string& userInfo) {
+        void setUserInfo(const decaf::lang::String& userInfo) {
             this->userInfo = userInfo;
         }
 
@@ -119,7 +119,7 @@ namespace net {
          * Gets the Host name part of the URL.
          * @return Host name part string.
          */
-        std::string getHost() const {
+        decaf::lang::String getHost() const {
             return host;
         }
 
@@ -127,7 +127,7 @@ namespace net {
          * Sets the Host name part of the URL.
          * @param host - Host name part string.
          */
-        void setHost(const std::string& host) {
+        void setHost(const decaf::lang::String& host) {
             this->host = host;
         }
 
@@ -151,7 +151,7 @@ namespace net {
          * Gets the Path part of the URL.
          * @return Path part string.
          */
-        std::string getPath() const {
+        decaf::lang::String getPath() const {
             return path;
         }
 
@@ -159,7 +159,7 @@ namespace net {
          * Sets the Path part of the URL.
          * @param path - Path part string.
          */
-        void setPath(const std::string& path) {
+        void setPath(const decaf::lang::String& path) {
             this->path = path;
         }
 
@@ -167,7 +167,7 @@ namespace net {
          * Gets the Query part of the URL.
          * @return Query part string.
          */
-        std::string getQuery() const {
+        decaf::lang::String getQuery() const {
             return query;
         }
 
@@ -175,7 +175,7 @@ namespace net {
          * Sets the Query part of the URL.
          * @param query - Query part string.
          */
-        void setQuery(const std::string& query) {
+        void setQuery(const decaf::lang::String& query) {
             this->query = query;
         }
 
@@ -183,7 +183,7 @@ namespace net {
          * Gets the Ref part of the URL.
          * @return Ref part string.
          */
-        std::string getRef() const {
+        decaf::lang::String getRef() const {
             return ref;
         }
 
@@ -191,7 +191,7 @@ namespace net {
          * Sets the Ref part of the URL.
          * @param ref - Ref part string.
          */
-        void setRef(const std::string& ref) {
+        void setRef(const decaf::lang::String& ref) {
             this->ref = ref;
         }
 

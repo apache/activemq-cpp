@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 
+#include <decaf/lang/String.h>
 #include <decaf/net/InetAddress.h>
 #include <decaf/net/URL.h>
 
@@ -42,11 +43,6 @@ namespace net {
      * @since 1.0
      */
     class DECAF_API URLStreamHandler {
-    private:
-
-        URLStreamHandler(const URLStreamHandler&);
-        URLStreamHandler& operator= (const URLStreamHandler&);
-
     public:
 
         virtual ~URLStreamHandler();
@@ -181,7 +177,7 @@ namespace net {
          * @param limit
          *      the string position to stop parsing.
          */
-        virtual void parseURL(URL& url, const std::string& spec, int start, int limit);
+        virtual void parseURL(URL& url, const decaf::lang::String& spec, int start, int limit);
 
         /**
          * Sets the fields of the URL  This method is only intended to be used by subclasses of
@@ -207,9 +203,11 @@ namespace net {
          *
          * @throws SecurityException if the protocol handler of the URL is not this instance.
          */
-        void setURL(URL& url, const std::string& protocol, const std::string& host, int port,
-                    const std::string& authority, const std::string& userInfo,
-                    const std::string& path, const std::string& query, const std::string& ref);
+        void setURL(URL& url,
+                    const decaf::lang::String& protocol, const decaf::lang::String& host, int port,
+                    const decaf::lang::String& authority, const decaf::lang::String& userInfo,
+                    const decaf::lang::String& path, const decaf::lang::String& query,
+                    const decaf::lang::String& ref);
 
     private:
 

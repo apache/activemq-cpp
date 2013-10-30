@@ -39,6 +39,19 @@ namespace util {
         virtual ~StringUtils() {}
 
         /**
+         * Returns the length of the given C string.
+         *
+         * @param string
+         *      The C style string to check.
+         *
+         * @returns the length of the string if the size is < Integer::MAX_VALUE.
+         *
+         * @throws RuntimeException if the length becomes larger than
+         *         the max value of an int.
+         */
+        static int stringLength(const char* string);
+
+        /**
          * Perform a comparison between two strings using natural ordering and ignoring case.
          *
          * @param left

@@ -352,7 +352,9 @@ cc_sources = \
     decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/internal/net/URIHelper.cpp \
     decaf/internal/net/URIType.cpp \
+    decaf/internal/net/URLStreamHandlerManager.cpp \
     decaf/internal/net/URLType.cpp \
+    decaf/internal/net/http/HttpHandler.cpp \
     decaf/internal/net/ssl/DefaultSSLContext.cpp \
     decaf/internal/net/ssl/DefaultSSLServerSocketFactory.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
@@ -463,6 +465,7 @@ cc_sources = \
     decaf/lang/ThreadLocal.cpp \
     decaf/lang/Throwable.cpp \
     decaf/lang/Types.cpp \
+    decaf/lang/exceptions/ArrayIndexOutOfBoundsException.cpp \
     decaf/lang/exceptions/ClassCastException.cpp \
     decaf/lang/exceptions/CloneNotSupportedException.cpp \
     decaf/lang/exceptions/IllegalArgumentException.cpp \
@@ -1025,7 +1028,9 @@ h_sources = \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
     decaf/internal/net/URIType.h \
+    decaf/internal/net/URLStreamHandlerManager.h \
     decaf/internal/net/URLType.h \
+    decaf/internal/net/http/HttpHandler.h \
     decaf/internal/net/ssl/DefaultSSLContext.h \
     decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.h \
@@ -1143,6 +1148,7 @@ h_sources = \
     decaf/lang/ThreadLocal.h \
     decaf/lang/Throwable.h \
     decaf/lang/Types.h \
+    decaf/lang/exceptions/ArrayIndexOutOfBoundsException.h \
     decaf/lang/exceptions/ClassCastException.h \
     decaf/lang/exceptions/CloneNotSupportedException.h \
     decaf/lang/exceptions/ExceptionDefines.h \
