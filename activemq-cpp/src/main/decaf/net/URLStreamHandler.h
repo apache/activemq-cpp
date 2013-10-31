@@ -135,7 +135,7 @@ namespace net {
          *
          * @returns string form of the provided URL.
          */
-        virtual std::string toExternalForm(const URL& url) const;
+        virtual decaf::lang::String toExternalForm(const URL& url) const;
 
         /**
          * Attempts to get the IP address of the host.  Based on DNS errors or other conditions

@@ -106,33 +106,33 @@ namespace net {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL(const std::string& url) : impl(new URLImpl) {
+URL::URL(const String& url) : impl(new URLImpl) {
     initialize(NULL, url, NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL(const URL& context, const std::string& spec) : impl(new URLImpl) {
+URL::URL(const URL& context, const String& spec) : impl(new URLImpl) {
     initialize(&context, spec, NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL(const URL& context, const std::string& spec, URLStreamHandler* streamHandler) : impl(new URLImpl) {
+URL::URL(const URL& context, const String& spec, URLStreamHandler* streamHandler) : impl(new URLImpl) {
     initialize(&context, spec, streamHandler);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL(const std::string& protocol, const std::string& host, int port,
-         const std::string& file, URLStreamHandler* handler) : impl(new URLImpl) {
+URL::URL(const String& protocol, const String& host, int port,
+         const String& file, URLStreamHandler* handler) : impl(new URLImpl) {
     initialize(protocol, host, port, file, handler);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL(const std::string& protocol, const std::string& host, const std::string& file) : impl(new URLImpl) {
+URL::URL(const String& protocol, const String& host, const String& file) : impl(new URLImpl) {
     initialize(protocol, host, -1, file, NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-URL::URL(const std::string& protocol, const std::string& host, int port, const std::string& file) : impl() {
+URL::URL(const String& protocol, const String& host, int port, const String& file) : impl(new URLImpl) {
     initialize(protocol, host, port, file, NULL);
 }
 
@@ -289,7 +289,7 @@ void URL::initialize(const String& protocol, const String& host, int port,
         impl->setupStreamHandler();
         if (impl->streamHandler == NULL) {
             throw MalformedURLException(
-            __FILE__, __LINE__, (std::string("Unknown protocol: ") + protocol.toString()).c_str());
+                __FILE__, __LINE__, (std::string("Unknown protocol: ") + protocol.toString()).c_str());
         }
     } else {
         impl->streamHandler.reset(handler);
@@ -387,6 +387,15 @@ URLConnection* URL::openConnection(const Proxy* proxy) {
 ////////////////////////////////////////////////////////////////////////////////
 InputStream* URL::openStream() {
     return NULL;  // TODO figure out Connection lifetime
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool URL::sameFile(const URL& other) const {
+    if (impl->streamHandler == NULL) {
+        throw MalformedURLException(
+            __FILE__, __LINE__, (std::string("Unknown protocol: ") + getProtocol().toString()).c_str());
+    }
+    return impl->streamHandler->sameFile(*this, other);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

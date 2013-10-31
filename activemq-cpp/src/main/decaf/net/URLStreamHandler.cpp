@@ -98,14 +98,14 @@ bool URLStreamHandler::equals(const URL& source, const URL& other) const {
     String s1 = source.getRef();
     String s2 = other.getRef();
 
-    if (s1.isEmpty() || s1 != s2) {
+    if (s1 != s2) {
         return false;
     }
 
     s1 = source.getQuery();
     s2 = other.getQuery();
 
-    return s1.isEmpty() && s1 != s2;
+    return s1 == s2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,13 +119,13 @@ bool URLStreamHandler::sameFile(const URL& source, const URL& other) const {
     String s1 = source.getProtocol();
     String s2 = other.getProtocol();
 
-    if (s1.isEmpty() || s1 != s2) {
+    if (s1 != s2) {
         return false;
     }
 
     s1 = source.getFile();
     s2 = other.getFile();
-    if (s1.isEmpty() || s1 != s2) {
+    if (s1 != s2) {
         return false;
     }
 
@@ -167,7 +167,7 @@ bool URLStreamHandler::hostsEqual(const URL& source, const URL& other) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URLStreamHandler::toExternalForm(const URL& url) const {
+String URLStreamHandler::toExternalForm(const URL& url) const {
     std::string answer;
     answer.append(url.getProtocol().toString());
     answer.append(":");
@@ -189,7 +189,7 @@ std::string URLStreamHandler::toExternalForm(const URL& url) const {
         answer.append(ref.toString());
     }
 
-    return answer;
+    return String(answer);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,6 +230,7 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
     String parseString = spec.substring(start, limit);
     limit -= start;
     int fileIdx = 0;
+    bool fileIsRelative = false;
 
     // Default is to use info from context
     String host = url.getHost();
@@ -257,6 +258,7 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
             fileIdx = limit;
             // Use default
             file = "";
+            fileIsRelative = true;
         }
         int hostEnd = fileIdx;
         if (refIdx != -1 && refIdx < fileIdx) {
@@ -330,8 +332,8 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
         if (fileIdx < limit && parseString.charAt(fileIdx) == '/') {
             file = parseString.substring(fileIdx, fileEnd);
         } else if (fileEnd > fileIdx) {
-            if (file.equals("")) {
-                file = "/"; //$NON-NLS-1$
+            if (file.equals("") && fileIsRelative) {
+                file = "/";
             } else if (file.startsWith("/")) {
                 canonicalize = true;
             }

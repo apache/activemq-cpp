@@ -15,38 +15,34 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_URLTEST_H_
-#define _DECAF_NET_URLTEST_H_
+#ifndef _DECAF_INTERNAL_NET_FILE_FILEHANDLER_H_
+#define _DECAF_INTERNAL_NET_FILE_FILEHANDLER_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
+#include <decaf/util/Config.h>
+
+#include <decaf/net/URLStreamHandler.h>
 
 namespace decaf {
+namespace internal {
 namespace net {
+namespace file {
 
-    class URLTest : public CppUnit::TestFixture {
+    class DECAF_API FileHandler : public decaf::net::URLStreamHandler {
+    public:
 
-        CPPUNIT_TEST_SUITE( URLTest );
-        CPPUNIT_TEST( testConstructor1 );
-        CPPUNIT_TEST( testConstructor2 );
-        CPPUNIT_TEST( testConstructor3 );
-        CPPUNIT_TEST( testEquals );
-        CPPUNIT_TEST( testSameFile );
-        CPPUNIT_TEST_SUITE_END();
+        virtual ~FileHandler();
 
     public:
 
-        URLTest();
-        virtual ~URLTest();
+        virtual decaf::net::URLConnection* openConnection(const decaf::net::URL& url);
 
-        void testConstructor1();
-        void testConstructor2();
-        void testConstructor3();
-        void testEquals();
-        void testSameFile();
+        virtual decaf::net::URLConnection* openConnection(const decaf::net::URL& url,
+                                                          const decaf::net::Proxy* proxy);
+
+        virtual int getDefaultPort() const;
 
     };
 
-}}
+}}}}
 
-#endif /* _DECAF_NET_URLTEST_H_ */
+#endif /* _DECAF_INTERNAL_NET_FILE_FILEHANDLER_H_ */

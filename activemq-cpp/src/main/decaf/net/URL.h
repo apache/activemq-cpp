@@ -112,6 +112,8 @@ namespace net {
      *
      * The URLEncoder and URLDecoder classes can also be used, but only for HTML form
      * encoding, which is not the same as the encoding scheme defined in RFC2396.
+     *
+     * @since 1.0
      */
     class DECAF_API URL {
     private:
@@ -131,7 +133,7 @@ namespace net {
          *
          * @throws MalformedURLException If the string specifies an unknown protocol.
          */
-        URL(const std::string& url);
+        URL(const decaf::lang::String& url);
 
         /**
          * Creates a URL by parsing the given spec within a specified context. The new URL is
@@ -172,7 +174,7 @@ namespace net {
          *      if the given string spec could not be parsed as a URL or an invalid
          *      protocol has been found.
          */
-        URL(const URL& context, const std::string& spec);
+        URL(const URL& context, const decaf::lang::String& spec);
 
         /**
          * Creates a URL object from the specified protocol, host, port number, file, and
@@ -180,7 +182,7 @@ namespace net {
          * default port for the protocol. Specifying a handler of null indicates that the
          * URL should use a default stream handler for the protocol, as outlined for:
          *
-         *    URL(const std::string&, const std::string&, int, const std::string&)
+         *    URL(const String&, const String&, int, const String&)
          *
          * If a URLStreamHandler instance is provided then this class will take ownership
          * of the object and delete at a later time.
@@ -198,8 +200,8 @@ namespace net {
          *
          * @throws MalformedURLException if an unknown protocol is specified.
          */
-        URL(const std::string& protocol, const std::string& host, int port,
-            const std::string& file, URLStreamHandler* handler);
+        URL(const decaf::lang::String& protocol, const decaf::lang::String& host, int port,
+            const decaf::lang::String& file, URLStreamHandler* handler);
 
         /**
          * Creates a URL from the specified protocol name, host name, and file name. The default
@@ -220,7 +222,7 @@ namespace net {
          *
          * @throws MalformedURLException if an unknown protocol is specified.
          */
-        URL(const std::string& protocol, const std::string& host, const std::string& file);
+        URL(const decaf::lang::String& protocol, const decaf::lang::String& host, const decaf::lang::String& file);
 
         /**
          * Creates a new URL instance using the given arguments. The URL uses the
@@ -240,7 +242,7 @@ namespace net {
          *      if the combination of all arguments do not represent a valid
          *      URL or the protocol is invalid.
          */
-        URL(const std::string& protocol, const std::string& host, int port, const std::string& file);
+        URL(const decaf::lang::String& protocol, const decaf::lang::String& host, int port, const decaf::lang::String& file);
 
         /**
          * Creates a URL by parsing the given spec with the specified handler within a
@@ -259,7 +261,7 @@ namespace net {
          *
          * @throws MalformedURLException if an unknown protocol is specified.
          */
-        URL(const URL& context, const std::string& spec, URLStreamHandler* streamHandler);
+        URL(const URL& context, const decaf::lang::String& spec, URLStreamHandler* streamHandler);
 
         virtual ~URL();
 

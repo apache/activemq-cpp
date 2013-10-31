@@ -25,11 +25,13 @@
 #include <decaf/internal/net/Network.h>
 
 #include <decaf/internal/net/http/HttpHandler.h>
+#include <decaf/internal/net/file/FileHandler.h>
 
 using namespace decaf;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 using namespace decaf::internal::net::http;
+using namespace decaf::internal::net::file;
 using namespace decaf::net;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
@@ -154,6 +156,8 @@ URLStreamHandler* URLStreamHandlerManager::getURLStreamHandler(const decaf::lang
         // No one else has provided a handler, so try our internal one.
         if (protocol.equalsIgnoreCase("http")) {
             return new HttpHandler;
+        } else if (protocol.equalsIgnoreCase("file")) {
+            return new FileHandler;
         }
 
         // TODO we should cache the stream handlers and return the cached version
