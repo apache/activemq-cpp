@@ -585,3 +585,34 @@ void URLTest::testFileEqualsWithEmptyHost() {
     URL b("file:/a/");
     CPPUNIT_ASSERT(a.equals(b));
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testOmittedHost() {
+    URL url("http:///path");
+    CPPUNIT_ASSERT_EQUAL(String(""), url.getHost());
+    CPPUNIT_ASSERT_EQUAL(String("/path"), url.getFile());
+    CPPUNIT_ASSERT_EQUAL(String("/path"), url.getPath());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testNoHost() {
+    URL url("http:/path");
+    CPPUNIT_ASSERT_EQUAL(String("http"), url.getProtocol());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getAuthority());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getUserInfo());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getHost());
+    CPPUNIT_ASSERT_EQUAL(-1, url.getPort());
+    CPPUNIT_ASSERT_EQUAL(80, url.getDefaultPort());
+    CPPUNIT_ASSERT_EQUAL(String("/path"), url.getFile());
+    CPPUNIT_ASSERT_EQUAL(String("/path"), url.getPath());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getQuery());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getRef());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testNoPath() {
+    URL url("http://host");
+    CPPUNIT_ASSERT_EQUAL(String("host"), url.getHost());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getFile());
+    CPPUNIT_ASSERT_EQUAL(String(), url.getPath());
+}

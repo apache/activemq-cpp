@@ -46,6 +46,8 @@ namespace net {
         CPPUNIT_TEST( testURLStreamHandlerParseURL );
         CPPUNIT_TEST( testUrlParts );
         CPPUNIT_TEST( testFileEqualsWithEmptyHost );
+        CPPUNIT_TEST( testNoHost );
+        CPPUNIT_TEST( testNoPath );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -72,6 +74,9 @@ namespace net {
         void testURLStreamHandlerParseURL();
         void testUrlParts();
         void testFileEqualsWithEmptyHost();
+        void testOmittedHost();
+        void testNoHost();
+        void testNoPath();
 
     };
 
