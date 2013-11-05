@@ -24,6 +24,7 @@
 #include <decaf/internal/util/StringUtils.h>
 #include <decaf/net/UnknownHostException.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/internal/net/URLUtils.h>
 
 using namespace decaf;
 using namespace decaf::net;
@@ -31,58 +32,26 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
 using namespace decaf::internal::util;
+using namespace decaf::internal::net;
+
+////////////////////////////////////////////////////////////////////////////////
+URLStreamHandler::~URLStreamHandler() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace {
 
-    /**
-     * File based URL instance with an empty host value are always considered
-     * to have a host value of "localhost".
-     */
-    String getHost(const URL& url) {
-        String host = url.getHost();
-        if (url.getProtocol().equals("file") && host.isEmpty()) {
-            return "localhost";
-        }
-        return host;
-    }
+    String relativePath(const String& base, const String& path) {
 
-    /**
-     * Canonicalize the path, i.e. remove ".." and "." occurrences.
-     *
-     * @param path the path to be canonicalized
-     *
-     * @return the canonicalized path
-     */
-    String canonicalizePath(const String& original) {
-        String path = original;
-        int dirIndex;
-
-        while ((dirIndex = path.indexOf("/./")) >= 0) {
-            path = path.substring(0, dirIndex + 1) + path.substring(dirIndex + 3);
+        if (path.startsWith("/")) {
+            return URLUtils::canonicalizePath(path, true);
+        } else if (base != "") {
+            String combined = base.substring(0, base.lastIndexOf('/') + 1) + path;
+            return URLUtils::canonicalizePath(combined, true);
+        } else {
+            return path;
         }
-
-        if (path.endsWith("/.")) {
-            path = path.substring(0, path.length() - 1);
-        }
-
-        while ((dirIndex = path.indexOf("/../")) >= 0) {
-            if (dirIndex != 0) {
-                path = path.substring(0, path.lastIndexOf('/', dirIndex - 1)) + path.substring(dirIndex + 3);
-            } else {
-                path = path.substring(dirIndex + 3);
-            }
-        }
-
-        if (path.endsWith("/..") && path.length() > 3) {
-            path = path.substring(0, path.lastIndexOf('/', path.length() - 4) + 1);
-        }
-        return path;
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-URLStreamHandler::~URLStreamHandler() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 URLConnection* URLStreamHandler::openConnection(const URL& url DECAF_UNUSED, const Proxy* proxy DECAF_UNUSED) {
@@ -157,8 +126,8 @@ bool URLStreamHandler::hostsEqual(const URL& source, const URL& other) const {
 //    }
 
     // Compare by name.
-    String host1 = getHost(source);
-    String host2 = getHost(other);
+    String host1 = URLUtils::getHost(source);
+    String host2 = URLUtils::getHost(other);
     if (host1.isEmpty() && host2.isEmpty()) {
         return true;
     }
@@ -216,13 +185,12 @@ int URLStreamHandler::getDefaultPort() const {
 void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int limit) {
 
     if (limit < start || limit < 0) {
-        if (((limit <= Integer::MIN_VALUE + 1) && (start >= spec.length() || start < 0)) ||
+        if ((limit <= Integer::MIN_VALUE + 1 && (start >= spec.length() || start < 0)) ||
             (spec.startsWith("//", start) && spec.indexOf('/', start + 2) == -1)) {
-
             throw StringIndexOutOfBoundsException(__FILE__, __LINE__, limit);
         }
         if (this != url.getURLStreamHandler()) {
-            throw new SecurityException();
+            throw SecurityException(__FILE__, __LINE__, "Only the URL's stream handler can modify");
         }
         return;
     }
@@ -230,7 +198,6 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
     String parseString = spec.substring(start, limit);
     limit -= start;
     int fileIdx = 0;
-    bool fileIsRelative = false;
 
     // Default is to use info from context
     String host = url.getHost();
@@ -258,7 +225,6 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
             fileIdx = limit;
             // Use default
             file = "";
-            fileIsRelative = true;
         }
         int hostEnd = fileIdx;
         if (refIdx != -1 && refIdx < fileIdx) {
@@ -272,9 +238,10 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
         }
 
         portIdx = parseString.indexOf(':', userIdx == -1 ? hostIdx : userIdx);
-        int endOfIPv6Addr = parseString.indexOf(']');
+        // TODO could add this to string and return -1
+        int endOfIPv6Addr = URLUtils::findFirstOf(parseString, "]", hostIdx, fileIdx);
         // if there are square braces, ie. IPv6 address, use last ':'
-        if (endOfIPv6Addr != -1) {
+        if (endOfIPv6Addr != fileIdx) {
             try {
                 if (parseString.length() > endOfIPv6Addr + 1) {
                     char c = parseString.charAt(endOfIPv6Addr + 1);
@@ -307,6 +274,7 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
     if (refIdx > -1) {
         ref = parseString.substring(refIdx + 1, limit);
     }
+
     int fileEnd = (refIdx == -1 ? limit : refIdx);
 
     int queryIdx = parseString.lastIndexOf('?', fileEnd);
@@ -332,7 +300,7 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
         if (fileIdx < limit && parseString.charAt(fileIdx) == '/') {
             file = parseString.substring(fileIdx, fileEnd);
         } else if (fileEnd > fileIdx) {
-            if (file.equals("") && fileIsRelative) {
+            if (file.equals("") && !host.equals("")) {
                 file = "/";
             } else if (file.startsWith("/")) {
                 canonicalize = true;
@@ -341,15 +309,14 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
             if (last == 0) {
                 file = parseString.substring(fileIdx, fileEnd);
             } else {
-                file = file.substring(0, last)
-                        + parseString.substring(fileIdx, fileEnd);
+                file = file.substring(0, last) + parseString.substring(fileIdx, fileEnd);
             }
         }
     }
 
     if (canonicalize) {
         // modify file if there's any relative referencing
-        file = canonicalizePath(file);
+        file = URLUtils::canonicalizePath(file, false);
     }
 
     setURL(url, url.getProtocol(), host, port, authority, userInfo, file, query, ref);

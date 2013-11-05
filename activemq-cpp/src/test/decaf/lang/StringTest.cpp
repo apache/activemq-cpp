@@ -36,7 +36,7 @@ StringTest::~StringTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StringTest::testDEfaultConstructor() {
+void StringTest::testDefaultConstructor() {
     String test;
     CPPUNIT_ASSERT_MESSAGE("Default string should equal empty", test == "");
 
@@ -64,6 +64,126 @@ void StringTest::testConstructorStdString() {
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should have thrown an IndexOutOfBoundsException",
         test.charAt(5),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testConstructorCString() {
+
+    const char* cstring("ABCDE");
+
+    String test(cstring);
+
+    CPPUNIT_ASSERT(test.length() == 5);
+    CPPUNIT_ASSERT(test.isEmpty() == false);
+
+    CPPUNIT_ASSERT_MESSAGE("String and C string should be equal", test == cstring);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        test.charAt(5),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testConstructorCStringWithSize() {
+
+    const char* cstring("ABCDEF");
+    const char* expected("ABCDE");
+
+    String test(cstring, 5);
+
+    CPPUNIT_ASSERT(test.length() == 5);
+    CPPUNIT_ASSERT(test.isEmpty() == false);
+
+    CPPUNIT_ASSERT_MESSAGE("String and C string should be equal", test == expected);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        test.charAt(5),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an NullPointerException",
+        String((const char*)NULL, 10),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String(cstring, -1),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testConstructorCStringOffsetAndLength() {
+
+    const char* cstring("1ABCDEF");
+    const char* expected("ABCDE");
+
+    String test(cstring, 1, 5);
+
+    CPPUNIT_ASSERT(test.length() == 5);
+    CPPUNIT_ASSERT(test.isEmpty() == false);
+
+    CPPUNIT_ASSERT_MESSAGE("String and C string should be equal", test == expected);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        test.charAt(5),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an NullPointerException",
+        String((const char*)NULL, 1, 20),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String(cstring, -1, 5),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String(cstring, 1, -5),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testConstructorCStringSizeOffsetAndLength() {
+
+    const char* cstring("1ABCDEF");
+    const char* expected("ABCDE");
+
+    String test(cstring, 7, 1, 5);
+
+    CPPUNIT_ASSERT(test.length() == 5);
+    CPPUNIT_ASSERT(test.isEmpty() == false);
+
+    CPPUNIT_ASSERT_MESSAGE("String and C string should be equal", test == expected);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        test.charAt(5),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an NullPointerException",
+        String((const char*)NULL, 7, 1, 4),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String(cstring, -1, 0, 5),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String(cstring, 7, -1, 5),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String(cstring, 7, 1, -5),
         IndexOutOfBoundsException);
 }
 
@@ -102,6 +222,10 @@ void StringTest::testAssignmentString() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE("String assignment failed", input, String("HelloWorld"));
     transient = world;
     CPPUNIT_ASSERT_EQUAL_MESSAGE("String assignment failed", transient, world);
+
+    String toEmpty("ABCDEF");
+    toEmpty = String("");
+    CPPUNIT_ASSERT_MESSAGE("String did not get set to empty", toEmpty.isEmpty());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +245,10 @@ void StringTest::testAssignmentStdString() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE("String assignment failed", input, String("HelloWorld"));
     transient = world;
     CPPUNIT_ASSERT_MESSAGE("String assignment failed", transient.equals(world));
+
+    String toEmpty("ABCDEF");
+    toEmpty = std::string("");
+    CPPUNIT_ASSERT_MESSAGE("String did not get set to empty", toEmpty.isEmpty());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,6 +268,10 @@ void StringTest::testAssignmentCString() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE("String assignment failed", input, String("HelloWorld"));
     transient = world;
     CPPUNIT_ASSERT_MESSAGE("String assignment failed", transient.equals(world));
+
+    String toEmpty("ABCDEF");
+    toEmpty = "";
+    CPPUNIT_ASSERT_MESSAGE("String did not get set to empty", toEmpty.isEmpty());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -280,6 +412,27 @@ void StringTest::testToCharArray() {
     }
 
     delete [] result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testCStr() {
+
+    String input("ABCDE");
+    const char* result = input.c_str();
+
+    for (int i = 0; i < input.length(); i++) {
+        CPPUNIT_ASSERT_MESSAGE("Returned incorrect char aray", input.charAt(i) == result[i]);
+    }
+
+    std::string empty("");
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Invalid string returned", empty, std::string(String().c_str()));
+
+    const String hw("HelloWorld");
+    String substr = hw.substring(5);
+    String world = "World";
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Invalid string returned", world, substr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -495,6 +648,8 @@ void StringTest::testToLowerCase() {
 
     String lower = "helloworld";
     String upper = "HELLOWORLD";
+
+    upper.toLowerCase();
 
     CPPUNIT_ASSERT_MESSAGE("toLowerCase case conversion did not succeed",
                            upper.toLowerCase().equals(lower));

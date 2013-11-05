@@ -45,17 +45,31 @@ namespace lang {
     class Contents {
     public:
 
-        ArrayPointer<unsigned char> value;
+        ArrayPointer<char> value;
         int length;
         int offset;
-
         int hashCode;
 
     public:
 
+        /**
+         * Contents as empty string.
+         */
         Contents() : value(), length(0), offset(0), hashCode(0) {}
-        Contents(int length) : value(length), length(length), offset(0), hashCode(0) {}
-        Contents(int offset, int length, ArrayPointer<unsigned char> value) :
+
+        /**
+         * Contents created with the given length, the array is length + 1 to add the
+         * null terminating character.
+         */
+        Contents(int length) : value(length + 1), length(length), offset(0), hashCode(0) {
+            value[length] = 0;  // Null terminated
+        }
+
+        /**
+         * Contents is a view of some other String which can either be all or a
+         * window allowing for substring methods to not need to copy the contents.
+         */
+        Contents(int offset, int length, ArrayPointer<char> value) :
             value(value), length(length), offset(offset), hashCode(0) {}
     };
 
@@ -63,7 +77,7 @@ namespace lang {
 
 ////////////////////////////////////////////////////////////////////////////////
 String::String(Contents* content) :
-    contents(new Contents(0, content->value.length(), content->value)) {
+    contents(new Contents(0, content->length, content->value)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +90,20 @@ String::String() : contents(new Contents()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+String::String(const char value, int count) : contents() {
+
+    if (count < 0) {
+        throw IndexOutOfBoundsException(
+            __FILE__, __LINE__, "count parameter out of Bounds: %d.", count);
+    }
+
+    contents = new Contents(count);
+    for (int i = 0; i < count; ++i) {
+        contents->value[i] = value;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 String::String(const String& source) : contents(new Contents(*source.contents)) {
 }
 
@@ -83,11 +111,11 @@ String::String(const String& source) : contents(new Contents(*source.contents)) 
 String::String(const std::string& source) : contents(new Contents((int)source.length())) {
 
     // load the passed string into the contents value.
-    System::arraycopy((unsigned char*)source.c_str(), 0, contents->value.get(), 0, source.length());
+    System::arraycopy(source.c_str(), 0, contents->value.get(), 0, source.length());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String(const char* array) : contents(new Contents) {
+String::String(const char* array) : contents() {
 
     if (array == NULL) {
         throw NullPointerException(
@@ -97,16 +125,15 @@ String::String(const char* array) : contents(new Contents) {
     int size = StringUtils::stringLength(array);
 
     if (size > 0) {
-
-        this->contents->value = ArrayPointer<unsigned char>(size);
-        this->contents->length = size;
-
-        System::arraycopy((unsigned char*) array, 0, contents->value.get(), 0, size);
+        this->contents = new Contents(size);
+        System::arraycopy(array, 0, contents->value.get(), 0, size);
+    } else {
+        this->contents = new Contents();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String(const char* array, int size) : contents(new Contents) {
+String::String(const char* array, int size) : contents() {
 
     if (size < 0) {
         throw IndexOutOfBoundsException(
@@ -119,16 +146,15 @@ String::String(const char* array, int size) : contents(new Contents) {
     }
 
     if (size > 0) {
-
-        this->contents->value = ArrayPointer<unsigned char>(size);
-        this->contents->length = size;
-
-        System::arraycopy((unsigned char*) array, 0, contents->value.get(), 0, size);
+        this->contents = new Contents(size);
+        System::arraycopy(array, 0, contents->value.get(), 0, size);
+    } else {
+        this->contents = new Contents();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String(const char* array, int offset, int length) : contents(new Contents) {
+String::String(const char* array, int offset, int length) : contents() {
 
     int size = StringUtils::stringLength(array);
 
@@ -147,17 +173,16 @@ String::String(const char* array, int offset, int length) : contents(new Content
             __FILE__, __LINE__, "Buffer pointer passed was NULL.");
     }
 
-    if (size > 0) {
-
-        this->contents->value = ArrayPointer<unsigned char>(length);
-        this->contents->length = length;
-
-        System::arraycopy((unsigned char*) array, offset, contents->value.get(), 0, length);
+    if (size > 0 && length > 0) {
+        this->contents = new Contents(length);
+        System::arraycopy(array, offset, contents->value.get(), 0, length);
+    } else {
+        this->contents = new Contents();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String(const char* array, int size, int offset, int length) : contents(new Contents) {
+String::String(const char* array, int size, int offset, int length) : contents() {
 
     if (size < 0) {
         throw IndexOutOfBoundsException(
@@ -179,12 +204,11 @@ String::String(const char* array, int size, int offset, int length) : contents(n
             __FILE__, __LINE__, "Buffer pointer passed was NULL.");
     }
 
-    if (size > 0) {
-
-        this->contents->value = ArrayPointer<unsigned char>(length);
-        this->contents->length = length;
-
-        System::arraycopy((unsigned char*) array, offset, contents->value.get(), 0, length);
+    if (size > 0 && length > 0) {
+        this->contents = new Contents(length);
+        System::arraycopy(array, offset, contents->value.get(), 0, length);
+    } else {
+        this->contents = new Contents();
     }
 }
 
@@ -210,14 +234,14 @@ String& String::operator= (const String& other) {
 ////////////////////////////////////////////////////////////////////////////////
 String& String::operator= (const std::string& other) {
 
+    delete contents;
+
     if (!other.empty()) {
         int length = (int) other.length();
-
-        contents->value = ArrayPointer<unsigned char>(length);
-        contents->length = length;
-        contents->hashCode = 0;
-
-        System::arraycopy((unsigned char*)other.c_str(), 0, contents->value.get(), 0, length);
+        contents = new Contents(length);
+        System::arraycopy(other.c_str(), 0, contents->value.get(), 0, length);
+    } else {
+        contents = new Contents();
     }
 
     return *this;
@@ -231,12 +255,12 @@ String& String::operator= (const char* other) {
     }
 
     int length = StringUtils::stringLength(other);
+    delete contents;
     if (length > 0) {
-        contents->value = ArrayPointer<unsigned char>(length);
-        contents->length = length;
-        contents->hashCode = 0;
-
-        System::arraycopy((unsigned char*)other, 0, contents->value.get(), 0, length);
+        contents = new Contents(length);
+        System::arraycopy(other, 0, contents->value.get(), 0, length);
+    } else {
+        contents = new Contents();
     }
 
     return *this;
@@ -306,11 +330,11 @@ String String::operator+ (const char* other) const {
 const char* String::c_str() const {
 
     if (contents->length == 0) {
-        return NULL;
+        return "";
     }
 
-    if (contents->offset == 0 && contents->length == contents->value.length()) {
-        return (const char*) contents->value.get();
+    if (contents->length == contents->value.length() - 1) {
+        return (const char*) (contents->value.get() + contents->offset);
     }
 
     throw UnsupportedOperationException(__FILE__, __LINE__, "Not yet implemented for offset values");
@@ -527,8 +551,7 @@ String String::concat(const std::string& string) const {
                           buffer.value.get(), 0, contents->length);
     }
 
-    System::arraycopy((const unsigned char*) string.c_str(),
-                      0, buffer.value.get(), contents->length, string.length());
+    System::arraycopy(string.c_str(), 0, buffer.value.get(), contents->length, string.length());
 
     return String(&buffer);
 }
@@ -553,8 +576,7 @@ String String::concat(const char* string) const {
                           buffer.value.get(), 0, contents->length);
     }
 
-    System::arraycopy((const unsigned char*) string, 0,
-                      buffer.value.get(), contents->length, length);
+    System::arraycopy(string, 0, buffer.value.get(), contents->length, length);
 
     return String(&buffer);
 }
@@ -667,7 +689,7 @@ bool String::equalsIgnoreCase(const String& string) const {
     int end = contents->offset + contents->length;
 
     char c1, c2;
-    ArrayPointer<unsigned char> target = string.contents->value;
+    ArrayPointer<char> target = string.contents->value;
 
     while (offsetThis < end) {
         if ((c1 = contents->value[offsetThis++]) != (c2 = target[offsetOther++])) {
@@ -804,7 +826,7 @@ int String::indexOf(const String& subString, int start) const {
             return -1;
         }
 
-        unsigned char* target = subString.contents->value.get();
+        char* target = subString.contents->value.get();
         int subOffset = subString.contents->offset;
 
         char firstChar = target[subOffset];
@@ -961,7 +983,7 @@ int String::lastIndexOf(const String& subString, int start) const {
             }
 
             // count and subCount are both >= 1
-            unsigned char* target = subString.contents->value.get();
+            char* target = subString.contents->value.get();
             int subOffset = subString.contents->offset;
             char firstChar = target[subOffset];
             int end = subOffset + subCount;
@@ -1267,8 +1289,12 @@ String String::toUpperCase() const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string String::toString() const {
 
-    if (this->contents->value == NULL) {
+    if (this->contents == NULL) {
         return "null";
+    }
+
+    if (this->contents->length == 0) {
+        return "";
     }
 
     return std::string((const char*) contents->value.get() + contents->offset, this->length());
@@ -1344,7 +1370,7 @@ namespace lang {
     std::ostream& operator<<(std::ostream &out, const String& target) {
 
         if (target.isEmpty()) {
-            out << "NULL";
+            out << "";
         }
 
         for (int i = 0; i < target.length(); ++i) {

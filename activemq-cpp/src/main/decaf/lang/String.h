@@ -44,9 +44,24 @@ namespace lang {
     public:
 
         /**
-         * Creates a new empty String object.
+         * Creates a new empty String object.  This value is equivalent to
+         * calling String("") and all methods will behave as if the string is
+         * an empty string.
          */
         String();
+
+        /**
+         * Create a new String instance that contains N copies of the given character
+         * value.
+         *
+         * @param value
+         *      The character to fill this String with.
+         * @param count
+         *      The number of copies of the character to fill.
+         *
+         * @throws IndexOutOfBoundsException if the count parameter is negative.
+         */
+        String(const char value, int count);
 
         /**
          * Create a new String object that represents the given STL string
@@ -223,15 +238,11 @@ namespace lang {
         String operator+ (const std::string& other) const;
         String operator+ (const char* other) const;
 
-    private:
-
-        // TODO - String is not always NULL terminated at the moment.
-
         /**
          * Returns a const char* value to allow easier coexistence with standard c++
-         * string operations.  The value returned will be NULL if the String is empty.
+         * string operations..
          *
-         * @returns a const char* value for this String or NULL if empty.
+         * @returns a const char* value for this String.
          */
         const char* c_str() const;
 

@@ -21,12 +21,43 @@
 #include <decaf/net/URL.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Boolean.h>
+#include <decaf/net/URLStreamHandler.h>
+#include <decaf/net/URLStreamHandlerFactory.h>
+#include <decaf/lang/exceptions/SecurityException.h>
+#include <decaf/lang/exceptions/StringIndexOutOfBoundsException.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class MyURLStreamHandler : public URLStreamHandler {
+    protected:
+
+        virtual URLConnection* openConnection(const URL& url) {
+            return NULL;
+        }
+
+    public:
+
+        void parse(URL& url, const String& spec, int start, int end) {
+            parseURL(url, spec, start, end);
+        }
+    };
+
+    class MyURLStreamHandlerFactory : public URLStreamHandlerFactory {
+    public:
+
+        virtual URLStreamHandler* createURLStreamHandler(const std::string& protocol) {
+            return new MyURLStreamHandler();
+        }
+    };
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 URLTest::URLTest() {
@@ -67,11 +98,11 @@ void URLTest::testConstructor1() {
 
     // test for no port
     URL d("file://www.yahoo3.com/dir1/dir2/test.cgi#anchor1");
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("u2a returns a wrong protocol", String("file"), d.getProtocol());
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("u2a returns a wrong host", String("www.yahoo3.com"), d.getHost());
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("u2a returns a wrong port", -1, d.getPort());
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("u2a returns a wrong file", String("/dir1/dir2/test.cgi"), d.getFile());
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("u2a returns a wrong anchor", String("anchor1"), d.getRef());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("d returns a wrong protocol", String("file"), d.getProtocol());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("d returns a wrong host", String("www.yahoo3.com"), d.getHost());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("d returns a wrong port", -1, d.getPort());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("d returns a wrong file", String("/dir1/dir2/test.cgi"), d.getFile());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("d returns a wrong anchor", String("anchor1"), d.getRef());
 
     // test for no file, no port
     URL e("http://www.yahoo4.com/");
@@ -237,6 +268,53 @@ void URLTest::testConstructor3() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void URLTest::testConstructor4() {
+
+    URL context("http://www.yahoo.com");
+
+    // basic ones
+    URL a(context, "file.java", new MyURLStreamHandler);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("1 returns a wrong protocol", String("http"), a.getProtocol());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("1 returns a wrong host", String("www.yahoo.com"), a.getHost());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("1 returns a wrong port", -1, a.getPort());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("1 returns a wrong file", String("/file.java"), a.getFile());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("1 returns a wrong anchor", String(), a.getRef());
+
+    URL b(context, "systemresource:/+/FILE0/test.java", new MyURLStreamHandler);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("2 returns a wrong protocol", String("systemresource"), b.getProtocol());
+    CPPUNIT_ASSERT_MESSAGE("2 returns a wrong host", b.getHost().equals(""));
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("2 returns a wrong port", -1, b.getPort());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("2 returns a wrong file", String("/+/FILE0/test.java"), b.getFile());
+    CPPUNIT_ASSERT_MESSAGE("2 returns a wrong anchor", b.getRef().equals(""));
+
+    URL c(context, "dir1/dir2/../file.java", NULL);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("3 returns a wrong protocol", String("http"), c.getProtocol());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("3 returns a wrong host", String("www.yahoo.com"), c.getHost());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("3 returns a wrong port", -1, c.getPort());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("3 returns a wrong file", String("/dir1/dir2/../file.java"), c.getFile());
+    CPPUNIT_ASSERT_MESSAGE("3 returns a wrong anchor", c.getRef().equals(""));
+
+    // test for question mark processing
+    URL d("http://www.foo.com/d0/d1/d2/cgi-bin?foo=bar/baz");
+
+    // test for relative file and out of bound "/../" processing
+    URL e(d, "../dir1/dir2/../file.java", new MyURLStreamHandler);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("A) returns a wrong file: ", String("/d0/d1/dir1/file.java"), e.getFile());
+
+    // test for absolute and relative file processing
+    URL f(d, "/../dir1/dir2/../file.java", NULL);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("B) returns a wrong file", String("/../dir1/dir2/../file.java"), f.getFile());
+
+    CPPUNIT_ASSERT_NO_THROW(URL("http://www.ibm.com"));
+
+    URL test("http://www.ibm.com");
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an MalformedURLException",
+        URL(test, String()),
+        MalformedURLException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void URLTest::testEquals() {
 
     URL u("http://www.apache.org:8080/dir::23??????????test.html");
@@ -288,4 +366,222 @@ void URLTest::testSameFile() {
 //    URL k("ftp:///anyfile");
 //    URL l("ftp://localhost/anyfile");
 //    CPPUNIT_ASSERT(!k.sameFile(l));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testToString() {
+
+    URL a("http://www.yahoo2.com:9999");
+    URL b("http://www.yahoo1.com:8080/dir1/dir2/test.cgi?point1.html#anchor1");
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("a) Does not return the right url string",
+        std::string("http://www.yahoo1.com:8080/dir1/dir2/test.cgi?point1.html#anchor1"), b.toString());
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("b) Does not return the right url string",
+                                 std::string("http://www.yahoo2.com:9999"), a.toString());
+
+    CPPUNIT_ASSERT_MESSAGE("c) Does not return the right url string",
+                           a.equals(URL(a.toString())));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testToExternalForm() {
+    URL b("http://www.yahoo2.com:9999");
+    URL a("http://www.yahoo1.com:8080/dir1/dir2/test.cgi?point1.html#anchor1");
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("a) Does not return the right url string",
+        String("http://www.yahoo1.com:8080/dir1/dir2/test.cgi?point1.html#anchor1"), a.toExternalForm());
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("b) Does not return the right url string",
+                                 String("http://www.yahoo2.com:9999"), b.toExternalForm());
+
+    CPPUNIT_ASSERT_MESSAGE("c) Does not return the right url string",
+                           a.equals(URL(a.toExternalForm())));
+
+    URL c("http:index");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("2 wrong external form", String("http:index"), c.toExternalForm());
+
+    URL d("http", "", "index");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("2 wrong external form", String("http:index"), d.toExternalForm());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetFile() {
+
+    URL a("http", "www.yahoo.com:8080", 1233, "test/!@$%^&*/test.html#foo");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("returns a wrong file", String("test/!@$%^&*/test.html"), a.getFile());
+    URL b("http", "www.yahoo.com:8080", 1233, "");
+    CPPUNIT_ASSERT_MESSAGE("returns a wrong file", b.getFile().equals(""));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetHost() {
+
+    String ipv6Host = "FEDC:BA98:7654:3210:FEDC:BA98:7654:3210";
+    URL url("http", ipv6Host, -1, "myfile");
+    CPPUNIT_ASSERT_EQUAL((String("[") + ipv6Host + "]"), url.getHost());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetPort() {
+    URL a("http://member12.c++.com:9999");
+    CPPUNIT_ASSERT_MESSAGE("return wrong port number", a.getPort() == 9999);
+    URL b("http://member12.c++.com:9999/");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("return wrong port number", 9999, b.getPort());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetDefaultPort() {
+    URL a("http://member12.c++.com:9999");
+    CPPUNIT_ASSERT_EQUAL(80, a.getDefaultPort());
+
+    URL b("http://www.google.com:80/example?language[id]=2");
+    CPPUNIT_ASSERT_EQUAL(String("www.google.com"), b.getHost());
+    CPPUNIT_ASSERT_EQUAL(80, b.getPort());
+
+    // TODO
+//    URL b("ftp://member12.c++.com:9999/");
+//    CPPUNIT_ASSERT_EQUAL(21, b.getDefaultPort());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetProtocol() {
+    URL a("http://www.yahoo2.com:9999");
+    CPPUNIT_ASSERT_MESSAGE("u returns a wrong protocol: ", a.getProtocol().equals("http"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetRef() {
+    URL b("http://www.yahoo2.com:9999");
+    URL a("http://www.yahoo1.com:8080/dir1/dir2/test.cgi?point1.html#anchor1");
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("returns a wrong anchor1", String("anchor1"), a.getRef());
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("returns a wrong anchor2", String(), b.getRef() );
+    URL c("http://www.yahoo2.com#ref");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("returns a wrong anchor3", String("ref"), c.getRef());
+    URL d("http://www.yahoo2.com/file#ref1#ref2");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("returns a wrong anchor4", String("ref1#ref2"), d.getRef());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testGetAuthority() {
+
+    URL a("http", "hostname", 80, "/java?q1#ref");
+    CPPUNIT_ASSERT_EQUAL(String("hostname:80"), a.getAuthority());
+    CPPUNIT_ASSERT_EQUAL(String("hostname"), a.getHost());
+    CPPUNIT_ASSERT_EQUAL(String(), a.getUserInfo());
+    CPPUNIT_ASSERT_EQUAL(String("/java?q1"), a.getFile());
+    CPPUNIT_ASSERT_EQUAL(String("/java"), a.getPath());
+    CPPUNIT_ASSERT_EQUAL(String("q1"), a.getQuery());
+    CPPUNIT_ASSERT_EQUAL(String("ref"), a.getRef());
+
+    URL b("http", "u:p@home", 80, "/java?q1#ref");
+    CPPUNIT_ASSERT_EQUAL(String("[u:p@home]:80"), b.getAuthority());
+    CPPUNIT_ASSERT_EQUAL(String("[u:p@home]"), b.getHost());
+    CPPUNIT_ASSERT_EQUAL(String(""), b.getUserInfo());
+    CPPUNIT_ASSERT_EQUAL(String("/java?q1"), b.getFile());
+    CPPUNIT_ASSERT_EQUAL(String("/java"), b.getPath());
+    CPPUNIT_ASSERT_EQUAL(String("q1"), b.getQuery());
+    CPPUNIT_ASSERT_EQUAL(String("ref"), b.getRef());
+
+    URL c("http", "home", -1, "/java");
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong authority2", String("home"), c.getAuthority());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong userInfo2", String(), c.getUserInfo());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong host2", String("home"), c.getHost());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong file2", String("/java"), c.getFile());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong path2", String("/java"), c.getPath());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong query2", String(), c.getQuery());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("wrong ref2", String(), c.getRef());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testToURI() {
+    URL a("http://www.apache.org");
+    URI uri = a.toURI();
+    CPPUNIT_ASSERT(a.equals(uri.toURL()));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testURLStreamHandlerParseURL() {
+
+    URL url("http://localhost");
+    MyURLStreamHandler handler;
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "//", 0, Integer::MIN_VALUE),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "1234//", 4, Integer::MIN_VALUE),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "1", -1, 0),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an SecurityException",
+        handler.parse(url, "1", 3, 2),
+        SecurityException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an SecurityException",
+        handler.parse(url, "11", 1, Integer::MIN_VALUE),
+        SecurityException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "any", 10, Integer::MIN_VALUE),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "any", 10, Integer::MIN_VALUE+1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "any", Integer::MIN_VALUE, Integer::MIN_VALUE),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "any", Integer::MIN_VALUE, 2),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an StringIndexOutOfBoundsException",
+        handler.parse(url, "any", -1, 2),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an SecurityException",
+        handler.parse(url, "any", -1, -1),
+        SecurityException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testUrlParts() {
+    URL url("http://username:password@host:8080/directory/file?query#ref");
+    CPPUNIT_ASSERT_EQUAL(String("http"), url.getProtocol());
+    CPPUNIT_ASSERT_EQUAL(String("username:password@host:8080"), url.getAuthority());
+    CPPUNIT_ASSERT_EQUAL(String("username:password"), url.getUserInfo());
+    CPPUNIT_ASSERT_EQUAL(String("host"), url.getHost());
+    CPPUNIT_ASSERT_EQUAL(8080, url.getPort());
+    CPPUNIT_ASSERT_EQUAL(80, url.getDefaultPort());
+    CPPUNIT_ASSERT_EQUAL(String("/directory/file?query"), url.getFile());
+    CPPUNIT_ASSERT_EQUAL(String("/directory/file"), url.getPath());
+    CPPUNIT_ASSERT_EQUAL(String("query"), url.getQuery());
+    CPPUNIT_ASSERT_EQUAL(String("ref"), url.getRef());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URLTest::testFileEqualsWithEmptyHost() {
+    URL a("file", "", -1, "/a/");
+    URL b("file:/a/");
+    CPPUNIT_ASSERT(a.equals(b));
 }

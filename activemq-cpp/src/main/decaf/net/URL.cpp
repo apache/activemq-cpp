@@ -27,6 +27,7 @@
 #include <decaf/net/MalformedURLException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/internal/net/URLType.h>
+#include <decaf/internal/net/URLUtils.h>
 #include <decaf/util/HashMap.h>
 #include <decaf/util/concurrent/Mutex.h>
 
@@ -138,6 +139,7 @@ URL::URL(const String& protocol, const String& host, int port, const String& fil
 
 ////////////////////////////////////////////////////////////////////////////////
 void URL::initialize(const URL* context, const String& theSpec, URLStreamHandler* handler) {
+
     if (handler != NULL) {
         impl->streamHandler.reset(handler);
     }
@@ -160,15 +162,18 @@ void URL::initialize(const URL* context, const String& theSpec, URLStreamHandler
             // According to RFC 2396 scheme part should match the following expression:
             // alpha *( alpha | digit | "+" | "-" | "." )
             char c = protocol.charAt(0);
-            bool valid = ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
-            for (int i = 1; valid && (i < protocol.length()); i++) {
+            bool valid = true;
+//            bool valid = ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
+//            for (int i = 1; valid && (i < protocol.length()); i++) {
+            for (int i = 0; valid && (i < protocol.length()); i++) {
                 c = protocol.charAt(i);
-                valid = ('a' <= c && c <= 'z') ||
-                        ('A' <= c && c <= 'Z') ||
-                        ('0' <= c && c <= '9') ||
-                        (c == '+') ||
-                        (c == '-') ||
-                        (c == '.');
+                valid = URLUtils::isValidSchemeChar(i, c);
+//                valid = ('a' <= c && c <= 'z') ||
+//                        ('A' <= c && c <= 'Z') ||
+//                        ('0' <= c && c <= '9') ||
+//                        (c == '+') ||
+//                        (c == '-') ||
+//                        (c == '.');
             }
             if (!valid) {
                 impl->url.setProtocol(String());

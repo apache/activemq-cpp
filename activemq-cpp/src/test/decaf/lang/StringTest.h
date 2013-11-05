@@ -27,7 +27,11 @@ namespace lang {
     class StringTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( StringTest );
-        CPPUNIT_TEST( testDEfaultConstructor );
+        CPPUNIT_TEST( testDefaultConstructor );
+        CPPUNIT_TEST( testConstructorCString );
+        CPPUNIT_TEST( testConstructorCStringWithSize );
+        CPPUNIT_TEST( testConstructorCStringOffsetAndLength );
+        CPPUNIT_TEST( testConstructorCStringSizeOffsetAndLength );
         CPPUNIT_TEST( testConstructorStdString );
         CPPUNIT_TEST( testConstructorString );
         CPPUNIT_TEST( testAssignmentString );
@@ -40,6 +44,7 @@ namespace lang {
         CPPUNIT_TEST( testTrim );
         CPPUNIT_TEST( testToString );
         CPPUNIT_TEST( testToCharArray );
+        CPPUNIT_TEST( testCStr );
         CPPUNIT_TEST( testRegionMatches );
         CPPUNIT_TEST( testRegionMatchesCaseSensitive );
         CPPUNIT_TEST( testStartsWith );
@@ -96,7 +101,11 @@ namespace lang {
         StringTest();
         virtual ~StringTest();
 
-        void testDEfaultConstructor();
+        void testDefaultConstructor();
+        void testConstructorCString();
+        void testConstructorCStringWithSize();
+        void testConstructorCStringOffsetAndLength();
+        void testConstructorCStringSizeOffsetAndLength();
         void testConstructorStdString();
         void testConstructorString();
         void testAssignmentString();
@@ -109,6 +118,7 @@ namespace lang {
         void testTrim();
         void testToString();
         void testToCharArray();
+        void testCStr();
         void testRegionMatches();
         void testRegionMatchesCaseSensitive();
         void testStartsWith();
