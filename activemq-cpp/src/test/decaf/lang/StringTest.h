@@ -38,6 +38,7 @@ namespace lang {
         CPPUNIT_TEST( testAssignmentStdString );
         CPPUNIT_TEST( testAssignmentCString );
         CPPUNIT_TEST( testHashCode );
+        CPPUNIT_TEST( testIsEmpty );
         CPPUNIT_TEST( testSubstring1 );
         CPPUNIT_TEST( testSubstring2 );
         CPPUNIT_TEST( testSubstringExceptions );
@@ -112,6 +113,7 @@ namespace lang {
         void testAssignmentStdString();
         void testAssignmentCString();
         void testHashCode();
+        void testIsEmpty();
         void testSubstring1();
         void testSubstring2();
         void testSubstringExceptions();

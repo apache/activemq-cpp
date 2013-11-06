@@ -144,80 +144,32 @@ void URL::initialize(const URL* context, const String& theSpec, URLStreamHandler
         impl->streamHandler.reset(handler);
     }
 
-    if (theSpec.isEmpty()) {
-        throw MalformedURLException(__FILE__, __LINE__, "spec was NULL");
-    }
     String spec = theSpec.trim();  // trim
 
     // The spec includes a protocol if it includes a colon character
-    // before the first occurrence of a slash character. Note that,
-    // "protocol" is the field which holds this URLs protocol.
-    int index = spec.indexOf(':');
-    String protocol;
-    int startIPv6Addr = spec.indexOf('[');
-    if (index >= 0) {
-        if ((startIPv6Addr == -1) || (index < startIPv6Addr)) {
-            protocol = spec.substring(0, index);
-            impl->url.setProtocol(protocol);
-            // According to RFC 2396 scheme part should match the following expression:
-            // alpha *( alpha | digit | "+" | "-" | "." )
-            char c = protocol.charAt(0);
-            bool valid = true;
-//            bool valid = ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
-//            for (int i = 1; valid && (i < protocol.length()); i++) {
-            for (int i = 0; valid && (i < protocol.length()); i++) {
-                c = protocol.charAt(i);
-                valid = URLUtils::isValidSchemeChar(i, c);
-//                valid = ('a' <= c && c <= 'z') ||
-//                        ('A' <= c && c <= 'Z') ||
-//                        ('0' <= c && c <= '9') ||
-//                        (c == '+') ||
-//                        (c == '-') ||
-//                        (c == '.');
-            }
-            if (!valid) {
-                impl->url.setProtocol(String());
-                index = -1;
-            } else {
-                // Ignore case in protocol names.
-                // Scheme is defined by ASCII characters.
-                impl->url.setProtocol(protocol.toLowerCase());
-            }
-        }
+    // before the first occurrence of a slash character.
+    String protocol = URLUtils::getSchemePrefix(spec);
+    impl->url.setProtocol(protocol);
+    int schemeSpecificPartStart = !protocol.isEmpty() ? (protocol.length() + 1) : 0;
+
+    // If the context URL has a different protocol, discard it because we can't use it.
+    if (!protocol.isEmpty() && context != NULL && !protocol.equals(context->getProtocol())) {
+        context = NULL;
     }
 
-    if (!impl->url.getProtocol().isEmpty()) {
-        // If the context was specified, and it had the same protocol
-        // as the spec, then fill in the receiver's slots from the values
-        // in the context but still allow them to be over-ridden later
-        // by the values in the spec.
-        if (context != NULL && protocol.equals(context->getProtocol())) {
-            String cPath = context->getPath();
-            if (cPath.startsWith("/")) {
-                set(protocol, context->getHost(), context->getPort(),
-                    context->getAuthority(), context->getUserInfo(), cPath,
-                    context->getQuery(), String());
-            }
-            if (impl->streamHandler == NULL) {
-                impl->streamHandler = context->impl->streamHandler;
-            }
-        }
-    } else {
-        // If the spec did not include a protocol, then the context
-        // *must* be specified. Fill in the receiver's slots from the
-        // values in the context, but still allow them to be over-ridden
-        // by the values in the ("relative") spec.
-        if (context == NULL) {
-            throw MalformedURLException(
-                __FILE__, __LINE__,
-                (std::string("Protocol not found: ") + spec.toString()).c_str());
-        }
+    // Inherit from the context URL if it exists.
+    if (context != NULL) {
         set(context->getProtocol(), context->getHost(), context->getPort(),
-            context->getAuthority(), context->getUserInfo(),
-            context->getPath(), context->getQuery(), String());
+            context->getAuthority(), context->getUserInfo(), context->getPath(),
+            context->getQuery(), String());
+
         if (impl->streamHandler == NULL) {
             impl->streamHandler = context->impl->streamHandler;
         }
+    } else if (protocol.isEmpty()) {
+        throw MalformedURLException(
+            __FILE__, __LINE__,
+            (std::string("Protocol not found: ") + spec.toString()).c_str());
     }
 
     // If the stream handler has not been determined, set it
@@ -231,16 +183,10 @@ void URL::initialize(const URL* context, const String& theSpec, URLStreamHandler
         }
     }
 
-    // Let the handler parse the URL. If the handler throws
-    // any exception, throw MalformedURLException instead.
-    //
-    // Note: We want "index" to be the index of the start of the scheme
-    // specific part of the URL. At this point, it will be either
-    // -1 or the index of the colon after the protocol, so we
-    // increment it to point at either character 0 or the character
-    // after the colon.
+    // Let the handler parse the URL. If the handler throws any exception, then
+    // throw MalformedURLException instead.
     try {
-        impl->streamHandler->parseURL(*this, spec, ++index, (int) spec.length());
+        impl->streamHandler->parseURL(*this, spec, schemeSpecificPartStart, spec.length());
     } catch (Exception& e) {
         throw MalformedURLException(__FILE__, __LINE__, e.getMessage().c_str());
     }
@@ -259,6 +205,11 @@ void URL::initialize(const String& protocol, const String& host, int port,
         throw MalformedURLException(__FILE__, __LINE__, "Port out of range: %d", port);
     }
 
+    if (protocol.isEmpty()) {
+        throw NullPointerException(
+        __FILE__, __LINE__, "Unknown protocol: %s", "NULL");
+    }
+
     String theHost;
 
     if (host.indexOf(":") != -1 && host.charAt(0) != '[') {
@@ -267,24 +218,20 @@ void URL::initialize(const String& protocol, const String& host, int port,
         theHost = host;
     }
 
-    if (protocol.isEmpty()) {
-        throw NullPointerException(
-        __FILE__, __LINE__, "Unknown protocol: %s", "NULL");
-    }
-
     impl->url.setProtocol(protocol);
     impl->url.setHost(theHost);
     impl->url.setPort(port);
 
+    String theFile = URLUtils::authoritySafePath(theHost, file);
+
     // Set the fields from the arguments. Handle the case where the
     // passed in "file" includes both a file and a reference part.
-    int index = -1;
-    index = file.indexOf("#", file.lastIndexOf("/"));
-    if (index >= 0) {
-        impl->url.setFile(file.substring(0, index));
-        impl->url.setRef(file.substring(index + 1));
+    int hash = theFile.indexOf("#");
+    if (hash >= 0) {
+        impl->url.setFile(theFile.substring(0, hash));
+        impl->url.setRef(theFile.substring(hash + 1));
     } else {
-        impl->url.setFile(file);
+        impl->url.setFile(theFile);
     }
     impl->fixURL(false);
 

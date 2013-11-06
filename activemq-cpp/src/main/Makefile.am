@@ -357,6 +357,7 @@ cc_sources = \
     decaf/internal/net/URLUtils.cpp \
     decaf/internal/net/file/FileHandler.cpp \
     decaf/internal/net/http/HttpHandler.cpp \
+    decaf/internal/net/https/HttpsHandler.cpp \
     decaf/internal/net/ssl/DefaultSSLContext.cpp \
     decaf/internal/net/ssl/DefaultSSLServerSocketFactory.cpp \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.cpp \
@@ -1035,6 +1036,7 @@ h_sources = \
     decaf/internal/net/URLUtils.h \
     decaf/internal/net/file/FileHandler.h \
     decaf/internal/net/http/HttpHandler.h \
+    decaf/internal/net/https/HttpsHandler.h \
     decaf/internal/net/ssl/DefaultSSLContext.h \
     decaf/internal/net/ssl/DefaultSSLServerSocketFactory.h \
     decaf/internal/net/ssl/DefaultSSLSocketFactory.h \

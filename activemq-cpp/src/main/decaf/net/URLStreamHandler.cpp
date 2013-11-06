@@ -195,131 +195,102 @@ void URLStreamHandler::parseURL(URL& url, const String& spec, int start, int lim
         return;
     }
 
-    String parseString = spec.substring(start, limit);
-    limit -= start;
-    int fileIdx = 0;
+    int fileStart;
+    String authority;
+    String userInfo;
+    String host;
+    int port = -1;
+    String path;
+    String query;
+    String ref;
 
-    // Default is to use info from context
-    String host = url.getHost();
-    int port = url.getPort();
-    String ref = url.getRef();
-    String file = url.getPath();
-    String query = url.getQuery();
-    String authority = url.getAuthority();
-    String userInfo = url.getUserInfo();
+    if (spec.regionMatches(start, "//", 0, 2)) {
+        // Parse the authority from the spec.
+        int authorityStart = start + 2;
+        fileStart = URLUtils::findFirstOf(spec, "/?#", authorityStart, limit);
+        authority = spec.substring(authorityStart, fileStart);
 
-    int refIdx = parseString.indexOf('#', 0);
-    if (parseString.startsWith("//") && !parseString.startsWith("////")) {
-        int hostIdx = 2;
-        int portIdx = -1;
-
-        port = -1;
-        fileIdx = parseString.indexOf('/', hostIdx);
-        int questionMarkIndex = parseString.indexOf('?', hostIdx);
-
-        if ((questionMarkIndex != -1) && ((fileIdx == -1) || (fileIdx > questionMarkIndex))) {
-            fileIdx = questionMarkIndex;
-        }
-
-        if (fileIdx == -1) {
-            fileIdx = limit;
-            // Use default
-            file = "";
-        }
-        int hostEnd = fileIdx;
-        if (refIdx != -1 && refIdx < fileIdx) {
-            hostEnd = refIdx;
-        }
-        int userIdx = parseString.lastIndexOf('@', hostEnd);
-        authority = parseString.substring(hostIdx, hostEnd);
-        if (userIdx > -1) {
-            userInfo = parseString.substring(hostIdx, userIdx);
-            hostIdx = userIdx + 1;
-        }
-
-        portIdx = parseString.indexOf(':', userIdx == -1 ? hostIdx : userIdx);
-        // TODO could add this to string and return -1
-        int endOfIPv6Addr = URLUtils::findFirstOf(parseString, "]", hostIdx, fileIdx);
-        // if there are square braces, ie. IPv6 address, use last ':'
-        if (endOfIPv6Addr != fileIdx) {
-            try {
-                if (parseString.length() > endOfIPv6Addr + 1) {
-                    char c = parseString.charAt(endOfIPv6Addr + 1);
-                    if (c == ':') {
-                        portIdx = endOfIPv6Addr + 1;
-                    } else {
-                        portIdx = -1;
-                    }
-                } else {
-                    portIdx = -1;
-                }
-            } catch (Exception& e) {
-                // Ignored
-            }
-        }
-
-        if (portIdx == -1 || portIdx > fileIdx) {
-            host = parseString.substring(hostIdx, hostEnd);
+        int userInfoEnd = URLUtils::findFirstOf(spec, "@", authorityStart, fileStart);
+        int hostStart;
+        if (userInfoEnd != fileStart) {
+            userInfo = spec.substring(authorityStart, userInfoEnd);
+            hostStart = userInfoEnd + 1;
         } else {
-            host = parseString.substring(hostIdx, portIdx);
-            String portString = parseString.substring(portIdx + 1, hostEnd);
-            if (portString.length() == 0) {
-                port = -1;
-            } else {
-                port = Integer::parseInt(portString.toString());
+            userInfo = "";
+            hostStart = authorityStart;
+        }
+
+        /*
+         * Extract the host and port. The host may be an IPv6 address with
+         * colons like "[::1]", in which case we look for the port delimiter
+         * colon after the ']' character.
+         */
+        int colonSearchFrom = hostStart;
+        int ipv6End = URLUtils::findFirstOf(spec, "]", hostStart, fileStart);
+        if (ipv6End != fileStart) {
+            if (URLUtils::findFirstOf(spec, ":", hostStart, ipv6End) == ipv6End) {
+                throw IllegalArgumentException(__FILE__, __LINE__,
+                    (std::string("Expected an IPv6 address: ") +
+                     spec.substring(hostStart, ipv6End + 1).toString()).c_str());
+            }
+            colonSearchFrom = ipv6End;
+        }
+        int hostEnd = URLUtils::findFirstOf(spec, ":", colonSearchFrom, fileStart);
+        host = spec.substring(hostStart, hostEnd);
+        int portStart = hostEnd + 1;
+        if (portStart < fileStart) {
+            port = Integer::parseInt(spec.substring(portStart, fileStart).toString());
+            if (port < 0) {
+                throw IllegalArgumentException(__FILE__, __LINE__, "port < 0: %d", port);
             }
         }
-    }
-
-    if (refIdx > -1) {
-        ref = parseString.substring(refIdx + 1, limit);
-    }
-
-    int fileEnd = (refIdx == -1 ? limit : refIdx);
-
-    int queryIdx = parseString.lastIndexOf('?', fileEnd);
-    bool canonicalize = false;
-    if (queryIdx > -1) {
-        query = parseString.substring(queryIdx + 1, fileEnd);
-        if (queryIdx == 0) {
-            if (file.equals("")) {
-                file = "/";
-            } else if (file.startsWith("/")) {
-                canonicalize = true;
-            }
-            int last = file.lastIndexOf('/') + 1;
-            file = file.substring(0, last);
-        }
-        fileEnd = queryIdx;
-    } else if (refIdx != 0) {
-        // Don't inherit query unless only the ref is changed
+        path = "";
         query = "";
+        ref = "";
+    } else {
+        // Get the authority from the context URL.
+        fileStart = start;
+        authority = url.getAuthority();
+        userInfo = url.getUserInfo();
+        host = url.getHost();
+        port = url.getPort();
+        path = url.getPath();
+        query = url.getQuery();
+        ref = url.getRef();
     }
 
-    if (fileIdx > -1) {
-        if (fileIdx < limit && parseString.charAt(fileIdx) == '/') {
-            file = parseString.substring(fileIdx, fileEnd);
-        } else if (fileEnd > fileIdx) {
-            if (file.equals("") && !host.equals("")) {
-                file = "/";
-            } else if (file.startsWith("/")) {
-                canonicalize = true;
-            }
-            int last = file.lastIndexOf('/') + 1;
-            if (last == 0) {
-                file = parseString.substring(fileIdx, fileEnd);
-            } else {
-                file = file.substring(0, last) + parseString.substring(fileIdx, fileEnd);
-            }
+    /*
+     * Extract the path, query and fragment. Each part has its own leading
+     * delimiter character. The query can contain slashes and the fragment
+     * can contain slashes and question marks.
+     *    / path ? query # fragment
+     */
+    int pos = fileStart;
+    while (pos < limit) {
+        int nextPos;
+        switch (spec.charAt(pos)) {
+        case '#':
+            nextPos = limit;
+            ref = spec.substring(pos + 1, nextPos);
+            break;
+        case '?':
+            nextPos = URLUtils::findFirstOf(spec, "#", pos, limit);
+            query = spec.substring(pos + 1, nextPos);
+            ref = "";
+            break;
+        default:
+            nextPos = URLUtils::findFirstOf(spec, "?#", pos, limit);
+            path = relativePath(path, spec.substring(pos, nextPos));
+            query = "";
+            ref = "";
+            break;
         }
+        pos = nextPos;
     }
 
-    if (canonicalize) {
-        // modify file if there's any relative referencing
-        file = URLUtils::canonicalizePath(file, false);
-    }
+    path = URLUtils::authoritySafePath(authority, path);
 
-    setURL(url, url.getProtocol(), host, port, authority, userInfo, file, query, ref);
+    setURL(url, url.getProtocol(), host, port, authority, userInfo, path, query, ref);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -275,6 +275,27 @@ void StringTest::testAssignmentCString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StringTest::testIsEmpty() {
+
+    String hw("HelloWorld");
+    CPPUNIT_ASSERT_MESSAGE("String should not be empty", !hw.isEmpty());
+
+    String empty;
+    CPPUNIT_ASSERT_MESSAGE("String should be empty", empty.isEmpty());
+
+    hw = String("");
+    CPPUNIT_ASSERT_MESSAGE("String should be empty", hw.isEmpty());
+    hw = "A";
+    CPPUNIT_ASSERT_MESSAGE("String should not be empty", !hw.isEmpty());
+    hw = std::string("");
+    CPPUNIT_ASSERT_MESSAGE("String should be empty", hw.isEmpty());
+    hw = "A";
+    CPPUNIT_ASSERT_MESSAGE("String should not be empty", !hw.isEmpty());
+    hw = "";
+    CPPUNIT_ASSERT_MESSAGE("String should be empty", hw.isEmpty());
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StringTest::testHashCode() {
 
     String hw("HelloWorld");

@@ -93,7 +93,7 @@ String::String() : contents(new Contents()) {
 String::String(const char value, int count) : contents() {
 
     if (count < 0) {
-        throw IndexOutOfBoundsException(
+        throw StringIndexOutOfBoundsException(
             __FILE__, __LINE__, "count parameter out of Bounds: %d.", count);
     }
 
@@ -136,7 +136,7 @@ String::String(const char* array) : contents() {
 String::String(const char* array, int size) : contents() {
 
     if (size < 0) {
-        throw IndexOutOfBoundsException(
+        throw StringIndexOutOfBoundsException(
             __FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
     }
 
@@ -159,12 +159,12 @@ String::String(const char* array, int offset, int length) : contents() {
     int size = StringUtils::stringLength(array);
 
     if (offset > size || offset < 0) {
-        throw IndexOutOfBoundsException(
+        throw StringIndexOutOfBoundsException(
             __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
     }
 
     if (length < 0 || length > size - offset) {
-        throw IndexOutOfBoundsException(
+        throw StringIndexOutOfBoundsException(
             __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
     }
 
@@ -190,12 +190,12 @@ String::String(const char* array, int size, int offset, int length) : contents()
     }
 
     if (offset > size || offset < 0) {
-        throw IndexOutOfBoundsException(
+        throw StringIndexOutOfBoundsException(
             __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
     }
 
     if (length < 0 || length > size - offset) {
-        throw IndexOutOfBoundsException(
+        throw StringIndexOutOfBoundsException(
             __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
     }
 
@@ -346,14 +346,14 @@ char String::charAt(int index) const {
     try {
 
         if (index < 0 || index >= this->length()) {
-            throw IndexOutOfBoundsException(
+            throw StringIndexOutOfBoundsException(
                 __FILE__, __LINE__, "Index given is out of bounds: %d.", index);
         }
 
         return this->contents->value[this->contents->offset + index];
     }
-    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
-    DECAF_CATCHALL_THROW(IndexOutOfBoundsException)
+    DECAF_CATCH_RETHROW(StringIndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(StringIndexOutOfBoundsException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1238,12 +1238,12 @@ CharSequence* String::subSequence(int start DECAF_UNUSED, int end DECAF_UNUSED) 
     try {
 
         if (start > end) {
-            throw IndexOutOfBoundsException(
+            throw StringIndexOutOfBoundsException(
                 __FILE__, __LINE__, "Start index is greater than end index.");
         }
 
         if (end - start > this->length()) {
-            throw IndexOutOfBoundsException(
+            throw StringIndexOutOfBoundsException(
                 __FILE__, __LINE__, "Requested Range is greater than the String length.");
         }
 
