@@ -337,7 +337,16 @@ const char* String::c_str() const {
         return (const char*) (contents->value.get() + contents->offset);
     }
 
-    throw UnsupportedOperationException(__FILE__, __LINE__, "Not yet implemented for offset values");
+    Contents* newContents = new Contents(contents->length);
+
+    System::arraycopy(contents->value.get(), contents->offset,
+                      newContents->value.get(), 0, contents->length);
+
+    Contents* oldContents = this->contents;
+    this->contents = newContents;
+    delete oldContents;
+
+    return contents->value.get();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,6 +363,22 @@ char String::charAt(int index) const {
     }
     DECAF_CATCH_RETHROW(StringIndexOutOfBoundsException)
     DECAF_CATCHALL_THROW(StringIndexOutOfBoundsException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String String::compact() const {
+
+    // Empty String.
+    if (contents->value.length() == 0) {
+        return *this;
+    }
+
+    // Don't do anything if the string is already compact.
+    if (contents->value.length() > this->contents->length + 1) {
+        return String(contents->value.get(), contents->offset, contents->length);
+    }
+
+    return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -265,8 +265,8 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
 //#include <decaf/lang/ArrayPointerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ArrayPointerTest );
-//#include <decaf/lang/StringTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringTest );
+#include <decaf/lang/StringTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringTest );
 //
 //#include <decaf/net/InetAddressTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::InetAddressTest );
@@ -282,8 +282,8 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
 //#include <decaf/net/URITest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
-#include <decaf/net/URLTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLTest );
+//#include <decaf/net/URLTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLTest );
 //#include <decaf/net/URISyntaxExceptionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URISyntaxExceptionTest );
 //#include <decaf/net/URLEncoderTest.h>

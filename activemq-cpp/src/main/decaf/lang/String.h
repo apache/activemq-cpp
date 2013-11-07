@@ -32,14 +32,30 @@ namespace lang {
     class Contents;
 
     /**
-     * The String class represents an immutable sequence of chars.
+     * An immutable sequence of characters.
+     *
+     * This class is implemented using a char[]. The length of the array may exceed
+     * the length of the string. For example, the string "Hello" may be backed by
+     * the array {@code ['H', 'e', 'l', 'l', 'o', 'W'. 'o', 'r', 'l', 'd']} with
+     * offset 0 and length 5.
+     *
+     * Multiple strings can share the same char[] because strings are immutable.
+     *
+     * The substring method always returns a string that shares the backing array of
+     * its source string. Generally this is an optimization: fewer character arrays
+     * need to be allocated, and less copying is necessary. But this can also lead
+     * to unwanted heap retention. Taking a short substring of long string means that
+     * the long shared char[] won't be garbage until both strings are destroyed. This
+     * typically happens when parsing small substrings out of a large input. To avoid
+     * this where necessary, call the compact method which allocates a new array that
+     * is just big enough to store the String's content.
      *
      * @since 1.0
      */
     class DECAF_API String: public CharSequence {
     private:
 
-        Contents* contents;
+        mutable Contents* contents;
 
     public:
 
@@ -240,13 +256,31 @@ namespace lang {
 
         /**
          * Returns a const char* value to allow easier coexistence with standard c++
-         * string operations..
+         * string operations.
+         *
+         * This method can result in a compaction of the String's backing store into a
+         * new character array in order to return a pointer value that is guaranteed to
+         * be NULL terminated.
          *
          * @returns a const char* value for this String.
          */
         const char* c_str() const;
 
     public:
+
+        /**
+         * If the String instance is holding a reference to a character array that is larger
+         * than the string's view of the backing store a new array is allocated and the
+         * characters from the substring this String represents are copied to the new backing
+         * store and returned in the resulting String object.
+         *
+         * This can free up heap memory when a String is holding a large array but only
+         * viewing a small portion of it and the original source String is no longer also
+         * maintaining a reference to the backing store.
+         *
+         * @returns a new String instance with a compacted backing store.
+         */
+        String compact() const;
 
         /**
          * Compares two strings lexicographically. The comparison is based on the value

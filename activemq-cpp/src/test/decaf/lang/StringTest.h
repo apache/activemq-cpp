@@ -34,9 +34,11 @@ namespace lang {
         CPPUNIT_TEST( testConstructorCStringSizeOffsetAndLength );
         CPPUNIT_TEST( testConstructorStdString );
         CPPUNIT_TEST( testConstructorString );
+        CPPUNIT_TEST( testConstructorCharFill );
         CPPUNIT_TEST( testAssignmentString );
         CPPUNIT_TEST( testAssignmentStdString );
         CPPUNIT_TEST( testAssignmentCString );
+        CPPUNIT_TEST( testCompact );
         CPPUNIT_TEST( testHashCode );
         CPPUNIT_TEST( testIsEmpty );
         CPPUNIT_TEST( testSubstring1 );
@@ -109,9 +111,11 @@ namespace lang {
         void testConstructorCStringSizeOffsetAndLength();
         void testConstructorStdString();
         void testConstructorString();
+        void testConstructorCharFill();
         void testAssignmentString();
         void testAssignmentStdString();
         void testAssignmentCString();
+        void testCompact();
         void testHashCode();
         void testIsEmpty();
         void testSubstring1();

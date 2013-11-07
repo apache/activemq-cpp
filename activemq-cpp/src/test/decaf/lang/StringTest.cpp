@@ -83,6 +83,11 @@ void StringTest::testConstructorCString() {
         "Should have thrown an IndexOutOfBoundsException",
         test.charAt(5),
         IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an NullPointerException",
+        String((const char*)NULL),
+        NullPointerException);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,6 +211,22 @@ void StringTest::testConstructorString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StringTest::testConstructorCharFill() {
+
+    String expected("AAAAA");
+    String input('A', 5);
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("String fill failed", expected, input);
+
+    CPPUNIT_ASSERT_MESSAGE("String should be empty", String('A', 0).isEmpty());
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown an IndexOutOfBoundsException",
+        String('A', -1),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StringTest::testAssignmentString() {
 
     String transient;
@@ -272,6 +293,26 @@ void StringTest::testAssignmentCString() {
     String toEmpty("ABCDEF");
     toEmpty = "";
     CPPUNIT_ASSERT_MESSAGE("String did not get set to empty", toEmpty.isEmpty());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testCompact() {
+
+    const String input("HelloWorld");
+    const String expected("World");
+
+    CPPUNIT_ASSERT_MESSAGE("Incorrect substring returned", expected.equals(input.substring(5)));
+    CPPUNIT_ASSERT_MESSAGE("not identical", expected.substring(0) == expected);
+
+    String subStr = input.substring(5);
+    CPPUNIT_ASSERT_MESSAGE("wrong length returned.", subStr.length() == 5);
+    String compacted = subStr.compact();
+    CPPUNIT_ASSERT_MESSAGE("wrong length returned.", compacted.length() == 5);
+    CPPUNIT_ASSERT_MESSAGE("Incorrect compacted string returned", expected.equals(compacted));
+
+    String empty;
+    empty = empty.compact();
+    CPPUNIT_ASSERT_MESSAGE("wrong length returned.", empty.isEmpty());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -453,15 +494,22 @@ void StringTest::testCStr() {
     String substr = hw.substring(5);
     String world = "World";
 
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Invalid string returned", world, substr);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Invalid string returned",
+                                 std::string(world.c_str()), std::string(substr.c_str()));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StringTest::testEndsWith() {
     const String input("HelloWorld");
 
-    CPPUNIT_ASSERT_MESSAGE("Failed to find ending string", input.endsWith("ld"));
-    CPPUNIT_ASSERT_MESSAGE("Failed to not find ending string", !input.endsWith("lo"));
+    CPPUNIT_ASSERT_MESSAGE("Failed to find ending String", input.endsWith(String("ld")));
+    CPPUNIT_ASSERT_MESSAGE("Failed to not find ending String", !input.endsWith(String("lo")));
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to find ending std::string", input.endsWith(std::string("ld")));
+    CPPUNIT_ASSERT_MESSAGE("Failed to not find ending std::string", !input.endsWith(std::string("lo")));
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to find ending C string", input.endsWith("ld"));
+    CPPUNIT_ASSERT_MESSAGE("Failed to not find ending C string", !input.endsWith("lo"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -605,6 +653,8 @@ void StringTest::testLastIndexOfString() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect index", 5, input.lastIndexOf(String("World")));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Found String outside of index",
                                  -1, input.lastIndexOf(String("HeKKKKKKKK")));
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect index", input.length(), input.lastIndexOf(String()));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
