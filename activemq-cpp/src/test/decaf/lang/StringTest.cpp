@@ -540,6 +540,46 @@ void StringTest::testEqualsIgnoreCaseStdString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StringTest::testFindFirstOf() {
+
+    const String input("HelloWorld");
+
+    CPPUNIT_ASSERT_EQUAL(0, input.findFirstOf("H"));
+    CPPUNIT_ASSERT_EQUAL(-1, input.findFirstOf("z"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testFindFirstOf2() {
+
+    const String input("HelloWorld");
+
+    CPPUNIT_ASSERT_EQUAL(0, input.findFirstOf("H", 0));
+    CPPUNIT_ASSERT_EQUAL(0, input.findFirstOf("H", -1));
+    CPPUNIT_ASSERT_EQUAL(-1, input.findFirstOf("H", 1));
+    CPPUNIT_ASSERT_EQUAL(-1, input.findFirstOf("H", 25));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testFindFirstNotOf() {
+
+    const String input("HelloWorld");
+
+    CPPUNIT_ASSERT_EQUAL(1, input.findFirstNotOf("H"));
+    CPPUNIT_ASSERT_EQUAL(0, input.findFirstNotOf("z"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testFindFirstNotOf2() {
+
+    const String input("HelloWorld");
+
+    CPPUNIT_ASSERT_EQUAL(5, input.findFirstNotOf("Hello", 5));
+    CPPUNIT_ASSERT_EQUAL(0, input.findFirstNotOf("z", -1));
+    CPPUNIT_ASSERT_EQUAL(1, input.findFirstNotOf("H", 1));
+    CPPUNIT_ASSERT_EQUAL(-1, input.findFirstNotOf("H", 25));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StringTest::testIndexOfChar() {
     const String input("HelloWorld");
 

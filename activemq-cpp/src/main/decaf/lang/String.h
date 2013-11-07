@@ -534,6 +534,62 @@ namespace lang {
         bool equalsIgnoreCase(const char* string) const;
 
         /**
+         * Searches in this string for the first index of any character in the specified
+         * String. The search for the matching characters starts at the beginning and moves
+         * towards the end of this string.
+         *
+         * @param string
+         *      the characters to find the first of within this String.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if none of the characters in the String exist in this String.
+         */
+        int findFirstOf(const String& chars) const;
+
+        /**
+         * Searches in this string for the first index of any character in the specified
+         * String. The search for the matching characters starts at the given index and moves
+         * towards the end of this string.
+         *
+         * @param chars
+         *      the characters to find the first of within this String.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character of the specified string in this
+         *         string, -1 if none of the characters in the String exist in this String.
+         */
+        int findFirstOf(const String& chars, int start) const;
+
+        /**
+         * Searches in this string for the first index of any character that is not in the
+         * specified String. The search for the non-matching characters starts at the beginning
+         * and moves towards the end of this string.
+         *
+         * @param chars
+         *      the characters to find the first non-matching index of within this String.
+         *
+         * @return the index of the first character not in the specified string in this
+         *         string, -1 if all of the characters in the given String exist in this String.
+         */
+        int findFirstNotOf(const String& chars) const;
+
+        /**
+         * Searches in this string for the first index of any character that is not in the
+         * specified String. The search for the non-matching characters starts at the given index
+         * and moves towards the end of this string.
+         *
+         * @param chars
+         *      the characters to find the first non-matching index of within this String.
+         * @param start
+         *      the starting offset.
+         *
+         * @return the index of the first character not in the specified string in this
+         *         string, -1 if all of the characters in the given String exist in this String.
+         */
+        int findFirstNotOf(const String& chars, int start) const;
+
+        /**
          * Returns a hash code for this String instance, the hash code for an empty
          * String will always be zero.
          *

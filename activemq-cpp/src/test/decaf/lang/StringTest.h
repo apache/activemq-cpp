@@ -97,6 +97,10 @@ namespace lang {
         CPPUNIT_TEST( testOperatorPlusString );
         CPPUNIT_TEST( testOperatorPlusStdString );
         CPPUNIT_TEST( testOperatorPlusCString );
+        CPPUNIT_TEST( testFindFirstOf );
+        CPPUNIT_TEST( testFindFirstOf2 );
+        CPPUNIT_TEST( testFindFirstNotOf );
+        CPPUNIT_TEST( testFindFirstNotOf2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -137,6 +141,10 @@ namespace lang {
         void testIndexOfChar2();
         void testIndexOfString();
         void testIndexOfString2();
+        void testFindFirstOf();
+        void testFindFirstOf2();
+        void testFindFirstNotOf();
+        void testFindFirstNotOf2();
         void testIndexOfStdString();
         void testIndexOfStdString2();
         void testIndexOfCString();

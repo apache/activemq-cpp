@@ -785,6 +785,50 @@ bool String::equalsIgnoreCase(const char* string) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int String::findFirstOf(const String& chars) const {
+    return findFirstOf(chars, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int String::findFirstOf(const String& chars, int start) const {
+    if (start < contents->length) {
+        if (start < 0) {
+            start = 0;
+        }
+
+        for (int i = contents->offset + start; i < contents->offset + contents->length; i++) {
+            char c = contents->value[i];
+            if (chars.indexOf(c) != -1) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int String::findFirstNotOf(const String& chars) const {
+    return findFirstNotOf(chars, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int String::findFirstNotOf(const String& chars, int start) const {
+    if (start < contents->length) {
+        if (start < 0) {
+            start = 0;
+        }
+
+        for (int i = contents->offset + start; i < contents->offset + contents->length; i++) {
+            char c = contents->value[i];
+            if (chars.indexOf(c) == -1) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int String::hashCode() const {
 
     if (contents->hashCode == 0) {
