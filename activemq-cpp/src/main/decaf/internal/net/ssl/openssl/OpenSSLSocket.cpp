@@ -19,6 +19,7 @@
 
 #ifdef HAVE_OPENSSL
     #include <openssl/ssl.h>
+    #include <openssl/tls1.h>
     #include <openssl/x509.h>
     #include <openssl/x509v3.h>
     #include <openssl/bio.h>
