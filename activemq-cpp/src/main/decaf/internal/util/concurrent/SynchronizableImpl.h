@@ -34,9 +34,9 @@ namespace concurrent {
      * @since 1.0
      */
     class DECAF_API SynchronizableImpl : public decaf::util::concurrent::Synchronizable {
-    private:
+    protected:
 
-        decaf::util::concurrent::Mutex mutex;
+        mutable decaf::util::concurrent::Mutex mutex;
 
     public:
 

@@ -182,6 +182,8 @@ cc_sources = \
     decaf/lang/MathTest.cpp \
     decaf/lang/PointerTest.cpp \
     decaf/lang/ShortTest.cpp \
+    decaf/lang/StringBufferTest.cpp \
+    decaf/lang/StringBuilderTest.cpp \
     decaf/lang/StringTest.cpp \
     decaf/lang/SystemTest.cpp \
     decaf/lang/ThreadLocalTest.cpp \
@@ -437,6 +439,8 @@ h_sources = \
     decaf/lang/MathTest.h \
     decaf/lang/PointerTest.h \
     decaf/lang/ShortTest.h \
+    decaf/lang/StringBufferTest.h \
+    decaf/lang/StringBuilderTest.h \
     decaf/lang/StringTest.h \
     decaf/lang/SystemTest.h \
     decaf/lang/ThreadLocalTest.h \

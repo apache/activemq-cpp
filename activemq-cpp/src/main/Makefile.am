@@ -444,6 +444,7 @@ cc_sources = \
     decaf/io/UTFDataFormatException.cpp \
     decaf/io/UnsupportedEncodingException.cpp \
     decaf/io/Writer.cpp \
+    decaf/lang/AbstractStringBuilder.cpp \
     decaf/lang/Appendable.cpp \
     decaf/lang/Boolean.cpp \
     decaf/lang/Byte.cpp \
@@ -462,6 +463,8 @@ cc_sources = \
     decaf/lang/Runtime.cpp \
     decaf/lang/Short.cpp \
     decaf/lang/String.cpp \
+    decaf/lang/StringBuffer.cpp \
+    decaf/lang/StringBuilder.cpp \
     decaf/lang/System.cpp \
     decaf/lang/Thread.cpp \
     decaf/lang/ThreadGroup.cpp \
@@ -1127,6 +1130,7 @@ h_sources = \
     decaf/io/UTFDataFormatException.h \
     decaf/io/UnsupportedEncodingException.h \
     decaf/io/Writer.h \
+    decaf/lang/AbstractStringBuilder.h \
     decaf/lang/Appendable.h \
     decaf/lang/ArrayPointer.h \
     decaf/lang/Boolean.h \
@@ -1148,6 +1152,8 @@ h_sources = \
     decaf/lang/Runtime.h \
     decaf/lang/Short.h \
     decaf/lang/String.h \
+    decaf/lang/StringBuffer.h \
+    decaf/lang/StringBuilder.h \
     decaf/lang/System.h \
     decaf/lang/Thread.h \
     decaf/lang/ThreadGroup.h \

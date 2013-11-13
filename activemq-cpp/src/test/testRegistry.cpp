@@ -267,6 +267,10 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ArrayPointerTest );
 #include <decaf/lang/StringTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringTest );
+#include <decaf/lang/StringBuilderTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringBuilderTest );
+#include <decaf/lang/StringBufferTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringBufferTest );
 //
 //#include <decaf/net/InetAddressTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::InetAddressTest );
