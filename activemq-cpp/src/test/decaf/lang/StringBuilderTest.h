@@ -51,6 +51,11 @@ namespace lang {
         CPPUNIT_TEST( testDeleteRange );
         CPPUNIT_TEST( testDeleteCharAt );
         CPPUNIT_TEST( testEnsureCapacity );
+        CPPUNIT_TEST( testGetChars );
+        CPPUNIT_TEST( testIndexOfString );
+        CPPUNIT_TEST( testIndexOfStringInt );
+        CPPUNIT_TEST( testLastIndexOfString );
+        CPPUNIT_TEST( testLastIndexOfStringInt );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -81,6 +86,11 @@ namespace lang {
         void testDeleteRange();
         void testDeleteCharAt();
         void testEnsureCapacity();
+        void testGetChars();
+        void testIndexOfString();
+        void testIndexOfStringInt();
+        void testLastIndexOfString();
+        void testLastIndexOfStringInt();
 
     };
 

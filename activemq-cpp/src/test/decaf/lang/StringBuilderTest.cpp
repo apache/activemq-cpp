@@ -29,9 +29,11 @@
 #include <decaf/lang/exceptions/NegativeArraySizeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/StringIndexOutOfBoundsException.h>
+#include <decaf/util/Arrays.h>
 
 using namespace std;
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -502,4 +504,141 @@ void StringBuilderTest::testEnsureCapacity() {
     CPPUNIT_ASSERT_EQUAL(26, sb.capacity());
     sb.ensureCapacity(55);
     CPPUNIT_ASSERT_EQUAL(55, sb.capacity());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testGetChars() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    char* dst = new char[10];
+    sb.getChars(0, 10, dst, 10, 0);
+    for (int i = 0; i < 10; ++i) {
+        CPPUNIT_ASSERT_EQUAL(dst[i], fixture.charAt(i));
+    }
+
+    Arrays::fill(dst, 10, '\0');
+    sb.getChars(0, 5, dst, 10, 0);
+    char* fixtureChars = new char[10];
+    for (int i = 0; i < 5; ++i) {
+        CPPUNIT_ASSERT_EQUAL(dst[i], fixture.charAt(i));
+    }
+
+    // TODO String needs getChars
+//    fixture.getChars(0, 5, fixtureChars, 0);
+//    assertTrue(Arrays.equals(fixtureChars, dst));
+//
+//    Arrays.fill(dst, '\0');
+//    Arrays.fill(fixtureChars, '\0');
+//    sb.getChars(0, 5, dst, 5);
+//    fixture.getChars(0, 5, fixtureChars, 5);
+//    assertTrue(Arrays.equals(fixtureChars, dst));
+//
+//    Arrays.fill(dst, '\0');
+//    Arrays.fill(fixtureChars, '\0');
+//    sb.getChars(5, 10, dst, 1);
+//    fixture.getChars(5, 10, fixtureChars, 1);
+//    assertTrue(Arrays.equals(fixtureChars, dst));
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.getChars(0, 10, dst, -1, 0),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        sb.getChars(0, 10, (char*) NULL, 10, 0),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.getChars(-1, 10, dst, 10, 0),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.getChars(0, 10, dst, 10, -1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.getChars(5, 4, dst, 10, 0),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.getChars(0, 11, dst, 10, 0),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.getChars(0, 10, dst, 10, 5),
+        StringIndexOutOfBoundsException);
+
+    delete [] dst;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testIndexOfString() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+
+    CPPUNIT_ASSERT_EQUAL(0, sb.indexOf("0"));
+    CPPUNIT_ASSERT_EQUAL(0, sb.indexOf("012"));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.indexOf("02"));
+    CPPUNIT_ASSERT_EQUAL(8, sb.indexOf("89"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testIndexOfStringInt() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    CPPUNIT_ASSERT_EQUAL(0, sb.indexOf("0"));
+    CPPUNIT_ASSERT_EQUAL(0, sb.indexOf("012"));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.indexOf("02"));
+    CPPUNIT_ASSERT_EQUAL(8, sb.indexOf("89"));
+
+    CPPUNIT_ASSERT_EQUAL(0, sb.indexOf("0", 0));
+    CPPUNIT_ASSERT_EQUAL(0, sb.indexOf("012", 0));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.indexOf("02", 0));
+    CPPUNIT_ASSERT_EQUAL(8, sb.indexOf("89", 0));
+
+    CPPUNIT_ASSERT_EQUAL(-1, sb.indexOf("0", 5));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.indexOf("012", 5));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.indexOf("02", 0));
+    CPPUNIT_ASSERT_EQUAL(8, sb.indexOf("89", 5));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testLastIndexOfString() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("0"));
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("012"));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("02"));
+    CPPUNIT_ASSERT_EQUAL(8, sb.lastIndexOf("89"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testLastIndexOfStringInt() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("0"));
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("012"));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("02"));
+    CPPUNIT_ASSERT_EQUAL(8, sb.lastIndexOf("89"));
+
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("0", 0));
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("012", 0));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("02", 0));
+    CPPUNIT_ASSERT_EQUAL(8, sb.lastIndexOf("89", 10));
+
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("0", 5));
+    CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("012", 5));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("02", 0));
+    CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("89", 5));
 }

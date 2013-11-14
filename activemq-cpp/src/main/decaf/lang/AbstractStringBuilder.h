@@ -79,7 +79,7 @@ namespace lang {
          *
          * @throws IndexOutOfBoundsException if index < 0 or index >= length().
          */
-        char charAt(int index) const;
+        virtual char charAt(int index) const;
 
         /**
          * Ensures that the capacity is at least equal to the specified min value. If
@@ -94,6 +94,78 @@ namespace lang {
          *      The minimum capacity to ensure exists in this buffer.
          */
         virtual void ensureCapacity(int minCapacity);
+
+        /**
+         * Copies characters from this character buffer into the given character array.
+         *
+         * @param start
+         *      The index in this buffer to start the copy from
+         * @param end
+         *      The index in this buffer where the copy ends.
+         * @param dest
+         *      The destination character array where the values are copied.
+         * @param destSize
+         *      The size of the destination array.
+         * @param destStart
+         *      The index in the destination array to start the copy at.
+         *
+         * @throws NullPointerException if the dst pointer is NULL
+         * @throws IndexOutOfBoundsException if:
+         *      start or end is negative
+         *      dstSize or dstStart is negative
+         *      start is greater than end
+         *      dstStart is greater than dstSize
+         *      dstStart + (end - start) is greater than the dstSize
+         */
+        virtual void getChars(int start, int end, char* dst, int dstSize, int dstStart) const;
+
+        /**
+         * Search for the index within this string of the first occurrence of the specified substring.
+         *
+         * @param value
+         *      The String to locate within this string buffer.
+         *
+         * @returns the index of the specified substring within this string buffer or -1 if not found.
+         */
+        virtual int indexOf(const String& value) const;
+
+        /**
+         * Search for the index within this string of the first occurrence of the specified substring
+         * starting at the given position and moving towards the end of this String.
+         *
+         * @param value
+         *      The String to locate within this string buffer.
+         * @param start
+         *      The index to start the search from.
+         *
+         * @returns the index of the specified substring within this string buffer or -1 if not found.
+         */
+        virtual int indexOf(const String& value, int start) const;
+
+        /**
+         * Search for the last index within this string where the given substring can be found.
+         *
+         * @param value
+         *      The String to locate within this string buffer.
+         *
+         * @returns the last index of the specified substring within this string buffer or -1
+         *          if not found.
+         */
+        virtual int lastIndexOf(const String& value) const;
+
+        /**
+         * Search for the last index within this string where the given substring can be found
+         * starting from the specified index and moving towards the beginning of the string.
+         *
+         * @param value
+         *      The String to locate within this string buffer.
+         * @param start
+         *      The index to start the search from.
+         *
+         * @returns the last index of the specified substring within this string buffer or -1
+         *          if not found.
+         */
+        virtual int lastIndexOf(const String& value, int start) const;
 
         /**
          * Returns the current length of the String that has been built.

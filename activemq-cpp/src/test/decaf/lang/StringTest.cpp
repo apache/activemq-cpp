@@ -22,8 +22,11 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/StringIndexOutOfBoundsException.h>
 
+#include <decaf/util/Arrays.h>
+
 using namespace std;
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -1071,4 +1074,57 @@ void StringTest::testOperatorPlusCString() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed operator+ ", hello, hello + "");
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed operator+ ", String(""), String("") + "");
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed operator+ ", String(""), String("") + NULL);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testGetChars() {
+
+    String hello("Hello World");
+    char* buffer = new char[10];
+    Arrays::fill(buffer, 10, '\0');
+
+    hello.getChars(0, 5, buffer, 10, 0);
+    CPPUNIT_ASSERT_EQUAL(String("Hello"), String(buffer));
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(-1, 1, buffer, 10, 0),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(1, -1, buffer, 10, 0),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(0, 1, buffer, 10, -1),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(1, 1, buffer, -1, 0),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        hello.getChars(0, 2, (char*) NULL, 10, 0),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(15, 1, buffer, 10, 0),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(0, 12, buffer, 10, 0),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        hello.getChars(2, 10, buffer, 10, 4),
+        IndexOutOfBoundsException);
+
+    delete [] buffer;
 }

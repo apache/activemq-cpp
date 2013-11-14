@@ -829,6 +829,34 @@ int String::findFirstNotOf(const String& chars, int start) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void String::getChars(int srcBegin, int srcEnd, char* dest, int destSize, int destBegin) const {
+
+    if (srcBegin < 0 || srcBegin > srcEnd || srcEnd >= contents->length) {
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
+            "Invalid start or end parameters: %d, %d", srcBegin, srcEnd);
+    }
+
+    if (destSize < 0 || destBegin < 0 || (destBegin + (srcEnd - srcBegin)) > destSize) {
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
+            "Invalid destination size or offset parameters: %d, %d", destSize, destBegin);
+    }
+
+    if (dest == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Destination pointer was Null");
+    }
+
+    // Note: last character not copied!
+    System::arraycopy(contents->value.get(), srcBegin + contents->offset,
+                      dest, destBegin, srcEnd - srcBegin);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void String::getChars(int start, int end, char* buffer, int index) const {
+    // NOTE last character not copied!
+    System::arraycopy(contents->value.get(), start + contents->offset, buffer, index, end - start);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int String::hashCode() const {
 
     if (contents->hashCode == 0) {

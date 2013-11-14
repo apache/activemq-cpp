@@ -30,6 +30,7 @@ namespace decaf {
 namespace lang {
 
     class Contents;
+    class AbstractStringBuilder;
 
     /**
      * An immutable sequence of characters.
@@ -590,6 +591,30 @@ namespace lang {
         int findFirstNotOf(const String& chars, int start) const;
 
         /**
+         * Copies characters from this String into the destination char array, starting from
+         * the given index.
+         *
+         * @param srcBegin
+         *      Starting index in this String for the copy operation.
+         * @param srcEnd
+         *      The index at which the copy ends, this value is not copied.
+         * @param dest
+         *      The destination character array to copy the data to.
+         * @param destSize
+         *      The size of the destination array.
+         * @param destBegin
+         *      The offset into the destination array to start copying to.
+         *
+         * @throws IndexOutOfBoundsException if any of the following conditions are met:
+         *           srcBegin or srcEnd are negative.
+         *           srcBegin is greater than src end.
+         *           srcEnd is greater than the length()
+         *           destSize or destBegin are negative.
+         *           destBegin + (srcEnd - srcBegin) is greater than destSize.
+         */
+        void getChars(int srcBegin, int srcEnd, char* dest, int destSize, int destBegin) const;
+
+        /**
          * Returns a hash code for this String instance, the hash code for an empty
          * String will always be zero.
          *
@@ -1112,9 +1137,17 @@ namespace lang {
 
     private:
 
+        /**
+         * Version of getChars without bounds checks, for use by other classes
+         * within the java.lang package only.  The caller is responsible for
+         * ensuring that start >= 0 && start <= end && end <= count.
+         */
+        void getChars(int start, int end, char* buffer, int index) const;
+
         String(Contents* content);
         String(int offset, int length, Contents* content);
 
+        friend class AbstractStringBuilder;
     };
 
     std::ostream& operator<<(std::ostream &out, const String& target);

@@ -86,6 +86,28 @@ namespace lang {
                 enlargeBuffer(newLength);
             }
         }
+
+        void move(int size, int index) {
+            int newCount;
+            if (value.length() - length - 1 >= size) {
+                if (!shared) {
+                    // index == count case is no-op
+                    System::arraycopy(value.get(), index, value.get(), index + size, length - index);
+                    return;
+                }
+                newCount = value.length();
+            } else {
+                newCount = Math::max(length + size, value.length() * 2 + 3);
+            }
+
+            ArrayPointer<char> newData(newCount);
+            System::arraycopy(value.get(), 0, newData.get(), 0, index);
+            // index == count case is no-op
+            System::arraycopy(value.get(), index, newData.get(), index + size, length - index);
+            value = newData;
+            shared = false;
+        }
+
     };
 
 }}
@@ -363,6 +385,126 @@ void AbstractStringBuilder::ensureCapacity(int minCapacity) {
     if (minCapacity > impl->value.length() - 1) {
         impl->enlargeBuffer(minCapacity);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::getChars(int start, int end, char* dest, int destSize, int destStart) const {
+
+    if (start > impl->length || end > impl->length || start > end) {
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
+            "Invalid range: %d : %d", start, end);
+    }
+
+    if (destSize < 0) {
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Destination size cannot be negative");
+    }
+
+    if (destStart < 0) {
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Destination start index cannot be negative");
+    }
+
+    if ((destStart + (end - start)) > destSize) {
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
+            "Destination array[%d] is not large enough for given copy size: %d", destSize, end - start);
+    }
+
+    if (dest == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "Destination array is null");
+    }
+
+    System::arraycopy(impl->value.get(), start, dest, destStart, end - start);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int AbstractStringBuilder::indexOf(const String& value) const {
+    return indexOf(value, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int AbstractStringBuilder::indexOf(const String& value, int start) const {
+    if (start < 0) {
+        start = 0;
+    }
+    int subCount = value.length();
+    if (subCount > 0) {
+        if (subCount + start > impl->length) {
+            return -1;
+        }
+
+        char firstChar = value.charAt(0);
+        while (true) {
+            int i = start;
+            bool found = false;
+            for (; i < impl->length; i++) {
+                if (impl->value[i] == firstChar) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found || subCount + i > impl->length) {
+                return -1; // handles subCount > count || start >= count
+            }
+
+            int o1 = i;
+            int o2 = 0;
+
+            while (++o2 < subCount && impl->value[++o1] == value.charAt(o2)) {
+                // Intentionally empty
+            }
+            if (o2 == subCount) {
+                return i;
+            }
+            start = i + 1;
+        }
+    }
+    return (start < impl->length || start == 0) ? start : impl->length;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int AbstractStringBuilder::lastIndexOf(const String& value) const {
+    return lastIndexOf(value, impl->length);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int AbstractStringBuilder::lastIndexOf(const String& value, int start) const {
+    int subCount = value.length();
+    if (subCount <= impl->length && start >= 0) {
+        if (subCount > 0) {
+            if (start > impl->length - subCount) {
+                start = impl->length - subCount; // count and subCount are both >= 1
+            }
+
+            char firstChar = value.charAt(0);
+            while (true) {
+                int i = start;
+                bool found = false;
+                for (; i >= 0; --i) {
+                    if (impl->value[i] == firstChar) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return -1;
+                }
+
+                int o1 = i;
+                int o2 = 0;
+
+                while (++o2 < subCount && impl->value[++o1] == value.charAt(o2)) {
+                    // Intentionally empty
+                }
+                if (o2 == subCount) {
+                    return i;
+                }
+                start = i - 1;
+            }
+        }
+
+        return start < impl->length ? start : impl->length;
+    }
+
+    return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
