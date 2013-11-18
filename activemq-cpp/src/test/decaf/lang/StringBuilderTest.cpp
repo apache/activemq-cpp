@@ -25,6 +25,7 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Float.h>
 #include <decaf/lang/Double.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/lang/exceptions/NegativeArraySizeException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -330,13 +331,12 @@ void StringBuilderTest::testAppendString() {
 ////////////////////////////////////////////////////////////////////////////////
 void StringBuilderTest::testAppendStringBuffer() {
 
-    // TODO
-//    StringBuilder sb;
-//    sb.append(StringBuffer("ab"));
-//    CPPUNIT_ASSERT_EQUAL(String("ab"), sb.toString());
-//    sb.setLength(0);
-//    sb.append(StringBuffer("cd"));
-//    CPPUNIT_ASSERT_EQUAL(String("cd"), sb.toString());
+    StringBuilder sb;
+    sb.append(StringBuffer("ab"));
+    CPPUNIT_ASSERT_EQUAL(String("ab"), sb.toString());
+    sb.setLength(0);
+    sb.append(StringBuffer("cd"));
+    CPPUNIT_ASSERT_EQUAL(String("cd"), sb.toString());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -576,6 +576,7 @@ void StringBuilderTest::testGetChars() {
         StringIndexOutOfBoundsException);
 
     delete [] dst;
+    delete [] fixtureChars;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -641,4 +642,788 @@ void StringBuilderTest::testLastIndexOfStringInt() {
     CPPUNIT_ASSERT_EQUAL(0, sb.lastIndexOf("012", 5));
     CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("02", 0));
     CPPUNIT_ASSERT_EQUAL(-1, sb.lastIndexOf("89", 5));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    void reverseTest(const String& org, const String& rev, const String& back) {
+
+        // create non-shared StringBuilder
+        StringBuilder sb1(org);
+        sb1.reverse();
+        String reversed = sb1.toString();
+        CPPUNIT_ASSERT_EQUAL(rev, reversed);
+
+        // create non-shared StringBuilder
+        StringBuilder sb2(reversed);
+        sb2.reverse();
+        reversed = sb2.toString();
+        CPPUNIT_ASSERT_EQUAL(back, reversed);
+
+        // test algorithm when StringBuilder is shared
+        StringBuilder sb3(org);
+        String copy = sb3.toString();
+        CPPUNIT_ASSERT_EQUAL(org, copy);
+        sb3.reverse();
+        reversed = sb3.toString();
+        CPPUNIT_ASSERT_EQUAL(rev, reversed);
+        StringBuilder sb4(reversed);
+        copy = sb4.toString();
+        CPPUNIT_ASSERT_EQUAL(rev, copy);
+        sb4.reverse();
+        reversed = sb4.toString();
+        CPPUNIT_ASSERT_EQUAL(back, reversed);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testReverse() {
+
+    String fixture = "0123456789";
+    StringBuilder sb1(fixture);
+    sb1.reverse();
+    CPPUNIT_ASSERT_EQUAL(String("9876543210"), sb1.toString());
+
+    StringBuilder sb("012345678");
+    sb.reverse();
+    CPPUNIT_ASSERT_EQUAL(String("876543210"), sb.toString());
+    sb.setLength(1);
+    sb.reverse();
+    CPPUNIT_ASSERT_EQUAL(String("8"), sb.toString());
+    sb.setLength(0);
+    sb.reverse();
+    CPPUNIT_ASSERT_EQUAL(String(""), sb.toString());
+
+    String str;
+    str = "a";
+    reverseTest(str, str, str);
+
+    str = "ab";
+    reverseTest(str, "ba", str);
+
+    str = "abcdef";
+    reverseTest(str, "fedcba", str);
+
+    str = "abcdefg";
+    reverseTest(str, "gfedcba", str);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testSubSequence() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    Pointer<CharSequence> ss(sb.subSequence(0, 5));
+    CPPUNIT_ASSERT_EQUAL(std::string("01234"), ss->toString());
+
+    ss.reset(sb.subSequence(0, 0));
+    CPPUNIT_ASSERT_EQUAL(std::string(""), ss->toString());
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.subSequence(-1, 1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.subSequence(0, fixture.length() + 1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.subSequence(0, -1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.subSequence(3, 2),
+        StringIndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testSubstringInt() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    String ss = sb.substring(0);
+    CPPUNIT_ASSERT_EQUAL(fixture, ss);
+
+    ss = sb.substring(10);
+    CPPUNIT_ASSERT_EQUAL(String(""), ss);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(-1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(fixture.length() + 1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(0, -1),
+        StringIndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testSubstringIntInt() {
+
+    String fixture = "0123456789";
+    StringBuilder sb(fixture);
+    String ss = sb.substring(0, 5);
+    CPPUNIT_ASSERT_EQUAL(String("01234"), ss);
+
+    ss = sb.substring(0, 0);
+    CPPUNIT_ASSERT_EQUAL(String(), ss);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(-1, 1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(0, fixture.length() + 1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(0, -1),
+        StringIndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a StringIndexOutOfBoundsException",
+        sb.substring(3, 2),
+        StringIndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertChar() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, 'a');
+    CPPUNIT_ASSERT_EQUAL(String("a0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, 'b');
+    CPPUNIT_ASSERT_EQUAL(String("b0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, 'b');
+    CPPUNIT_ASSERT_EQUAL(String("00b00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, 'b');
+    CPPUNIT_ASSERT_EQUAL(String("0000b"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, 'a'),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, 'a'),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertBoolean() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, true);
+    CPPUNIT_ASSERT_EQUAL(String("true0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(8, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, false);
+    CPPUNIT_ASSERT_EQUAL(String("false0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(9, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, false);
+    CPPUNIT_ASSERT_EQUAL(String("00false00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(9, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, false);
+    CPPUNIT_ASSERT_EQUAL(String("0000false"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(9, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, false),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, false),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertCharArray() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, "ab");
+    CPPUNIT_ASSERT_EQUAL(String("ab0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, "ab");
+    CPPUNIT_ASSERT_EQUAL(String("00ab00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, "ab");
+    CPPUNIT_ASSERT_EQUAL(String("0000ab"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        sb.insert(0, (const char*) NULL),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, "Test"),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, "Test"),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertCharArrayWithOffset() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, "ab", 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("ab0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, "ab", 0, 1);
+    CPPUNIT_ASSERT_EQUAL(String("a0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, "ab", 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("00ab00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, "ab", 0, 1);
+    CPPUNIT_ASSERT_EQUAL(String("00a00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, "ab", 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("0000ab"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, "ab", 0, 1);
+    CPPUNIT_ASSERT_EQUAL(String("0000a"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        sb.insert(0, (const char*) NULL, 0, 2),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, "ab", 0, 2),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, "ab", 0, 2),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(4, "ab", 0, -1),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(4, "ab", -1, 2),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(4, "ab", 0, 3),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertString() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, String("fixture"));
+    CPPUNIT_ASSERT_EQUAL(String("fixture0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(11, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, String("fixture"));
+    CPPUNIT_ASSERT_EQUAL(String("00fixture00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(11, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, String("fixture"));
+    CPPUNIT_ASSERT_EQUAL(String("0000fixture"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(11, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, String("fixture")),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, String("fixture")),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertStdString() {
+
+    std::string fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, std::string("fixture"));
+    CPPUNIT_ASSERT_EQUAL(String("fixture0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(11, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, std::string("fixture"));
+    CPPUNIT_ASSERT_EQUAL(String("00fixture00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(11, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, std::string("fixture"));
+    CPPUNIT_ASSERT_EQUAL(String("0000fixture"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(11, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, std::string("fixture")),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, std::string("fixture")),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertCharSequence() {
+
+    String fixture = "0000";
+    String ab("ab");
+    StringBuilder sb(fixture);
+    sb.insert(0, &ab);
+    CPPUNIT_ASSERT_EQUAL(String("ab0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, &ab);
+    CPPUNIT_ASSERT_EQUAL(String("00ab00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, &ab);
+    CPPUNIT_ASSERT_EQUAL(String("0000ab"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, (CharSequence*) NULL);
+    CPPUNIT_ASSERT_EQUAL(String("0000null"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(8, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, &ab),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, &ab),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertCharSequenceIntInt() {
+
+    String fixture = "0000";
+    String ab("ab");
+    StringBuilder sb(fixture);
+    sb.insert(0, &ab, 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("ab0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, &ab, 0, 1);
+    CPPUNIT_ASSERT_EQUAL(String("a0000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, &ab, 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("00ab00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, &ab, 0, 1);
+    CPPUNIT_ASSERT_EQUAL(String("00a00"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, &ab, 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("0000ab"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, &ab, 0, 1);
+    CPPUNIT_ASSERT_EQUAL(String("0000a"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, (CharSequence*) NULL, 0, 2);
+    CPPUNIT_ASSERT_EQUAL(String("0000nu"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, &ab, 0, 2),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, &ab, 0, 2),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, &ab, -1, 2),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, &ab, 0, -1),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, &ab, 0, 3),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertDouble() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, -1.1);
+    CPPUNIT_ASSERT_EQUAL(String("-1.10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(8, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, 0.1);
+    CPPUNIT_ASSERT_EQUAL(String("0.10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(7, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, 1.1);
+    CPPUNIT_ASSERT_EQUAL(String("001.100"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(7, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, 2.1);
+    CPPUNIT_ASSERT_EQUAL(String("00002.1"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(7, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, 1.0),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, 1.0),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertFloat() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, -1.1f);
+    CPPUNIT_ASSERT_EQUAL(String("-1.10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(8, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, 0.1f);
+    CPPUNIT_ASSERT_EQUAL(String("0.10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(7, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, 1.1f);
+    CPPUNIT_ASSERT_EQUAL(String("001.100"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(7, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, 2.1f);
+    CPPUNIT_ASSERT_EQUAL(String("00002.1"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(7, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, 1.0f),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, 1.0f),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertShort() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, (short) -1);
+    CPPUNIT_ASSERT_EQUAL(String("-10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, (short) 0);
+    CPPUNIT_ASSERT_EQUAL(String("00000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, (short) 1);
+    CPPUNIT_ASSERT_EQUAL(String("00100"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, (short) 2);
+    CPPUNIT_ASSERT_EQUAL(String("00002"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, (short) 1),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, (short) 1),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertInt() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, -1);
+    CPPUNIT_ASSERT_EQUAL(String("-10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, 0);
+    CPPUNIT_ASSERT_EQUAL(String("00000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, 1);
+    CPPUNIT_ASSERT_EQUAL(String("00100"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, 2);
+    CPPUNIT_ASSERT_EQUAL(String("00002"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, 1),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, 1),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertLong() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.insert(0, -1LL);
+    CPPUNIT_ASSERT_EQUAL(String("-10000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(0, 0LL);
+    CPPUNIT_ASSERT_EQUAL(String("00000"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(2, 1LL);
+    CPPUNIT_ASSERT_EQUAL(String("00100"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.insert(4, 2LL);
+    CPPUNIT_ASSERT_EQUAL(String("00002"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, 1LL),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, 1LL),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertRawPointer() {
+
+    String fixture = "0000";
+    MyObject obj;
+    StringBuilder sb;
+    sb.insert(0, &obj);
+    CPPUNIT_ASSERT_EQUAL(String("MyObject"), sb.toString());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, 1LL),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, 1LL),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testInsertPointer() {
+
+    String fixture = "0000";
+    Pointer<MyObject> obj(new MyObject);
+    StringBuilder sb;
+    sb.insert(0, obj);
+    CPPUNIT_ASSERT_EQUAL(String("MyObject"), sb.toString());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(-1, obj),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.insert(5, obj),
+        IndexOutOfBoundsException);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringBuilderTest::testReplace() {
+
+    String fixture = "0000";
+    StringBuilder sb(fixture);
+    sb.replace(1, 3, "11");
+    CPPUNIT_ASSERT_EQUAL(String("0110"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(4, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.replace(1, 2, "11");
+    CPPUNIT_ASSERT_EQUAL(String("01100"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(5, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.replace(4, 5, "11");
+    CPPUNIT_ASSERT_EQUAL(String("000011"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+    sb.replace(4, 6, "11");
+    CPPUNIT_ASSERT_EQUAL(String("000011"), sb.toString());
+    CPPUNIT_ASSERT_EQUAL(6, sb.length());
+    sb.setLength(0);
+    sb.append(fixture);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        sb.replace(1, 2, (const char*) NULL),
+        NullPointerException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.replace(-1, 2, "11"),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.replace(5, 2, "11"),
+        IndexOutOfBoundsException);
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a IndexOutOfBoundsException",
+        sb.replace(3, 2, "11"),
+        IndexOutOfBoundsException);
+
+    StringBuilder buffer("1234567");
+    buffer.replace(2, 6, "XXX");
+    CPPUNIT_ASSERT_EQUAL(String("12XXX7"), buffer.toString());
 }

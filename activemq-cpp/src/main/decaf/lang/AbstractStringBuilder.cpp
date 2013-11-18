@@ -91,7 +91,7 @@ namespace lang {
             int newCount;
             if (value.length() - length - 1 >= size) {
                 if (!shared) {
-                    // index == count case is no-op
+                    // index == impl->length case is no-op
                     System::arraycopy(value.get(), index, value.get(), index + size, length - index);
                     return;
                 }
@@ -102,12 +102,35 @@ namespace lang {
 
             ArrayPointer<char> newData(newCount);
             System::arraycopy(value.get(), 0, newData.get(), 0, index);
-            // index == count case is no-op
+            // index == impl->length case is no-op
             System::arraycopy(value.get(), index, newData.get(), index + size, length - index);
             value = newData;
             shared = false;
         }
 
+        void fixReversedMultibyte(char* string DECAF_UNUSED, int length DECAF_UNUSED) {
+
+            // TODO fix UTF-8 code points that were revered.
+//            char* left;
+//            char* right;
+//            char* right2;
+//            char temp;
+//
+//            // then scan all bytes and reverse each multibyte character
+//            for (scanl = scanr = str; temp = *scanr++;) {
+//                if ( (temp & 0x80) == 0) // ASCII char
+//                    scanl= scanr;
+//                else if ( (temp & 0xc0) == 0xc0 ) { // start of multibyte
+//                    scanr2= scanr;
+//                    switch (scanr - scanl) {
+//                        case 4: temp= *scanl, *scanl++= *--scanr, *scanr= temp; // fallthrough
+//                        case 3: // fallthrough
+//                        case 2: temp= *scanl, *scanl++= *--scanr, *scanr= temp;
+//                    }
+//                    scanr = scanl = scanr2;
+//                }
+//            }
+        }
     };
 
 }}
@@ -273,7 +296,7 @@ void AbstractStringBuilder::doAppend(const CharSequence* value, int start, int e
     int arrayLength = value->length();
 
     if ((start | end) < 0 || start > end || end > arrayLength) {
-        throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Invalid offset or length value given.");
+        throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Invalid start or end value given.");
     }
 
     int length = end - start;
@@ -308,25 +331,23 @@ void AbstractStringBuilder::doAppend(const String& value) {
     int length = value.length();
     int newLength = impl->length + length;
     impl->ensureCapacity(newLength);
-
-    for (int i = 0; i < length; ++i) {
-        impl->value[impl->length++] = value.charAt(i);
-    }
-
-    // TODO direct access: string._getChars(0, length, value, count);
-    // impl->length = newLength;
+    value.getChars(0, length, impl->value.get(), impl->length);
+    impl->length = newLength;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AbstractStringBuilder::doAppend(const AbstractStringBuilder& value) {
 
+    if (value.length() > 0) {
+        doAppend(value.impl->value.get(), 0, value.impl->length);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AbstractStringBuilder::doDeleteRange(int start, int end) {
 
     // This method is specified not to throw if the end index is >= length(), as
-    // long as it's >= start. This means we have to clamp it to count here.
+    // long as it's >= start. This means we have to clamp it to impl->length here.
     if (end > impl->length) {
         end = impl->length;
     }
@@ -335,7 +356,7 @@ void AbstractStringBuilder::doDeleteRange(int start, int end) {
         throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Invalid start index: %d", start);
     }
 
-    // This method is defined to throw only if start > count and start == count is a NO-OP
+    // This method is defined to throw only if start > impl->length and start == impl->length is a NO-OP
     // Since 'end' is already a clamped value, that case is handled here.
     if (end == start) {
         return;
@@ -364,6 +385,238 @@ void AbstractStringBuilder::doDeleteCharAt(int index) {
     }
 
     doDeleteRange(index, index + 1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, char value) {
+    if (index < 0 || index > impl->length) {
+        throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Given index is invalid: %d", index);
+    }
+
+    impl->move(1, index);
+    impl->value[index] = value;
+    impl->length++;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, const char* value) {
+
+    if (index < 0 || index > impl->length) {
+        throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Given index is invalid: %d", index);
+    }
+
+    if (value == NULL) {
+        throw NullPointerException(__FILE__, __LINE__, "C String pointer was NULL");
+    }
+
+    int arrayLength = StringUtils::stringLength(value);
+
+    if (arrayLength != 0) {
+        impl->move(arrayLength, index);
+        System::arraycopy(value, 0, impl->value.get(), index, arrayLength);
+        impl->length += arrayLength;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, const String& value) {
+
+    if (index < 0 || index > impl->length) {
+        throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Given index is invalid: %d", index);
+    }
+
+    int stringLength = value.length();
+
+    if (stringLength != 0) {
+        impl->move(stringLength, index);
+        value.getChars(0, stringLength, impl->value.get(), index);
+        impl->length += stringLength;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, const std::string& value) {
+
+    if (index < 0 || index > impl->length) {
+        throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Given index is invalid: %d", index);
+    }
+
+    int stringLength = (int) value.length();
+
+    if (stringLength != 0) {
+        impl->move(stringLength, index);
+
+        for (int i = 0; i < stringLength; ++i) {
+            impl->value[index++] = value.at(i);
+        }
+
+        impl->length += stringLength;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, const char* value, int offset, int length) {
+
+    if (index >= 0 && index <= impl->length) {
+
+        if (value == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "C string pointer was NULL");
+        }
+
+        int arrayLength = StringUtils::stringLength(value);
+
+        // start + length could overflow, start/length maybe MaxInt
+        if (offset >= 0 && length >= 0 && length <= arrayLength - offset) {
+            if (length != 0) {
+                impl->move(length, index);
+                System::arraycopy(value, offset, impl->value.get(), index, length);
+                impl->length += length;
+            }
+            return;
+        }
+
+        throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
+                "Invalid string offsets, offset=%d length=%d but C string length=%d",
+                offset, length, arrayLength);
+    }
+
+    throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Index value given was invalid: %d", index);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, const CharSequence* value) {
+
+    if (index >= 0 && index <= impl->length) {
+
+        if (value == NULL) {
+            throw NullPointerException(__FILE__, __LINE__, "CharSequence pointer was NULL");
+        }
+
+        doInsert(index, value->toString());
+        return;
+    }
+
+    throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Index value given was invalid: %d", index);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doInsert(int index, const CharSequence* value, int start, int end) {
+
+    if (value == NULL) {
+        String nullString("null");
+        doInsert(index, nullString.c_str(), start, end - start);
+        return;
+    }
+
+    if (index >= 0 && index <= impl->length) {
+
+        int arrayLength = value->length();
+
+        if ((start | end) < 0 || start > end || end > arrayLength) {
+            throw ArrayIndexOutOfBoundsException(__FILE__, __LINE__, "Invalid start or end value given.");
+        }
+
+        int length = end - start;
+
+        if (length == 0) {
+            return;
+        }
+
+        impl->move(length, index);
+
+        for (int i = start; i < end; ++i) {
+            impl->value[index++] = value->charAt(i);
+        }
+
+        impl->length += length;
+        return;
+    }
+
+    throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Index value given was invalid: %d", index);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doReplace(int start, int end, const String& value) {
+
+    if (start >= 0) {
+        if (end > impl->length) {
+            end = impl->length;
+        }
+        if (end > start) {
+            int stringLength = value.length();
+            int diff = end - start - stringLength;
+            if (diff > 0) { // replacing with fewer characters
+                if (!impl->shared) {
+                    // index == impl->length case is no-op
+                    System::arraycopy(impl->value.get(), end, impl->value.get(),
+                                      start + stringLength, impl->length - end);
+                } else {
+                    ArrayPointer<char> newData(impl->value.length());
+                    System::arraycopy(impl->value.get(), 0, newData.get(), 0, start);
+                    // index == impl->length case is no-op
+                    System::arraycopy(impl->value.get(), end, newData.get(),
+                                      start + stringLength, impl->length - end);
+                    impl->value = newData;
+                    impl->shared = false;
+                }
+            } else if (diff < 0) {
+                // replacing with more characters...need some room
+                impl->move(-diff, end);
+            } else if (impl->shared) {
+                impl->value = impl->value.clone();
+                impl->shared = false;
+            }
+
+            value.getChars(0, stringLength, impl->value.get(), start);
+            impl->length -= diff;
+            return;
+        }
+
+        if (start == end) {
+            doInsert(start, value);
+            return;
+        }
+    }
+
+    throw StringIndexOutOfBoundsException(__FILE__, __LINE__, "Index value given was invalid: %d", start);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AbstractStringBuilder::doReverse() {
+
+    if (impl->length < 2) {
+        return;
+    }
+
+    if (!impl->shared) {
+
+        char* original = impl->value.get();
+        char* left;
+        char* right;
+        char temp;
+
+        // Reverse from shared buffer to newly allocated buffer.
+        for (left = original, right = original + impl->length; left < right;) {
+            temp = *left;
+            *(left++) = *(--right),
+            *right = temp;
+        }
+
+        impl->fixReversedMultibyte(original, impl->length);
+
+    } else {
+
+        // Reverse from shared buffer to newly allocated buffer.
+        ArrayPointer<char> newData(impl->value.length());
+        for (int i = 0; i < impl->length; i++) {
+            newData[impl->length - i] = impl->value[i];
+        }
+
+        impl->fixReversedMultibyte(newData.get(), impl->length);
+
+        impl->value = newData;
+        impl->shared = false;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -442,7 +695,7 @@ int AbstractStringBuilder::indexOf(const String& value, int start) const {
                 }
             }
             if (!found || subCount + i > impl->length) {
-                return -1; // handles subCount > count || start >= count
+                return -1; // handles subCount > impl->length || start >= impl->length
             }
 
             int o1 = i;
@@ -471,7 +724,7 @@ int AbstractStringBuilder::lastIndexOf(const String& value, int start) const {
     if (subCount <= impl->length && start >= 0) {
         if (subCount > 0) {
             if (start > impl->length - subCount) {
-                start = impl->length - subCount; // count and subCount are both >= 1
+                start = impl->length - subCount; // impl->length and subCount are both >= 1
             }
 
             char firstChar = value.charAt(0);
@@ -524,9 +777,7 @@ void AbstractStringBuilder::setCharAt(int index, char value) {
     }
 
     if (impl->shared) {
-        ArrayPointer<char> newValue(impl->value.length());
-        System::arraycopy(impl->value.get(), 0, newValue.get(), 0, impl->length);
-        impl->value = newValue;
+        impl->value = impl->value.clone();
         impl->shared = false;
     }
 
@@ -558,7 +809,53 @@ void AbstractStringBuilder::setLength(int length) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+String AbstractStringBuilder::substring(int start) const {
+
+    if (start >= 0 && start <= impl->length) {
+        if (start == impl->length) {
+            return "";
+        }
+
+        // Remove String sharing for more performance
+        return String(impl->value.get(), start, impl->length - start);
+    }
+    throw StringIndexOutOfBoundsException(__FILE__, __LINE__, start);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+String AbstractStringBuilder::substring(int start, int end) const {
+
+    if (start >= 0 && start <= end && end <= impl->length) {
+        if (start == end) {
+            return "";
+        }
+
+        // Remove String sharing for more performance
+        return String(impl->value.get(), start, end - start);
+    }
+
+    throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
+        "Start [%d] or end [%d] index value are invalid.", start, end);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+CharSequence* AbstractStringBuilder::subSequence(int start, int end) const {
+    return new String(substring(start, end));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 String AbstractStringBuilder::toString() const {
+
+    if (impl->length == 0) {
+        return "";
+    }
+
+    int wasted = impl->value.length() - 1 - impl->length;
+    if (wasted >= 256 || (wasted >= INITIAL_CAPACITY && wasted >= (impl->length >> 1))) {
+        return String(impl->value.get(), 0, impl->length);
+    }
+
+    impl->shared = true;
 
     // TODO optimize so that internal data can be shared with the returned String
     //      and discarded only after a new mutating method call is made.

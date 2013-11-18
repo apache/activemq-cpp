@@ -201,6 +201,58 @@ namespace lang {
         virtual void setCharAt(int index, char value);
 
         /**
+         * Returns a new String that contains a subset of the characters currently contained
+         * in this character buffer. The substring starts at the specified index and extends
+         * to the end of this character buffer.
+         *
+         * @param start
+         *      The starting index of the substring to create.
+         *
+         * @returns a new String that is a subset of this character buffer.
+         *
+         * @throws StringIndexOutOfBoundsException
+         *      if start is less than zero, or greater than the length of this buffer.
+         */
+        virtual String substring(int start) const;
+
+        /**
+         * Returns a new String that contains a subset of the characters currently contained
+         * in this character buffer. The substring starts at the specified index and extends
+         * to the given end index.
+         *
+         * @param start
+         *      The starting index of the substring to create. (inclusive)
+         * @param end
+         *      The ending index of the substring to create. (exclusive)
+         *
+         * @returns a new String that is a subset of this character buffer.
+         *
+         * @throws StringIndexOutOfBoundsException
+         *      if start or end is less than zero, or end is greater than the length of this buffer
+         *      or start is greater than end.
+         */
+        virtual String substring(int start, int end) const;
+
+        /**
+         * Creates and returns a new CharSequence object that is a subset of the characters
+         * contained in this character buffer.  This method behaves the same as the two parameter
+         * substring method except that it returns a pointer value instead of a String, this
+         * allows for subclasses to implement CharSequence.
+         *
+         * @param start
+         *      The starting index of the substring to create. (inclusive)
+         * @param end
+         *      The ending index of the substring to create. (exclusive)
+         *
+         * @returns a new CharSequence pointer that is a subset of this character buffer.
+         *
+         * @throws StringIndexOutOfBoundsException
+         *      if start or end is less than zero, or end is greater than the length of this buffer
+         *      or start is greater than end.
+         */
+        virtual CharSequence* subSequence(int start, int end) const;
+
+        /**
          * Returns a String that represents the contents of this buffer.  Any changes
          * made to this buffer after calling this method will not be reflected in the
          * String value that is returned.
@@ -243,7 +295,7 @@ namespace lang {
 
         /**
          * Appends the given C string to this buffer starting at the given offset and
-         * ending after the length number of characters has been appened.
+         * ending after the length number of characters has been appended.
          *
          * @param value
          *      The C string value to be appended into this buffer.
@@ -270,7 +322,7 @@ namespace lang {
 
         /**
          * Appends the given CharSequence to this buffer starting at the given offset and
-         * ending after the length number of characters has been appened.
+         * ending after the length number of characters has been appended.
          *
          * @param value
          *      The CharSequence value to be appended into this buffer.
@@ -326,6 +378,121 @@ namespace lang {
          *      The index of the character to delete.
          */
         void doDeleteCharAt(int index);
+
+        /**
+         * Inserts a single char value at the given index
+         *
+         * @param index
+         *      The index to insert the char at
+         * @param value
+         *      The char value to insert.
+         */
+        void doInsert(int index, char value);
+
+        /**
+         * Inserts a C string value at the given index.
+         *
+         * @param index
+         *      The index to insert the C string at
+         * @param value
+         *      The char value to insert.
+         */
+        void doInsert(int index, const char* value);
+
+        /**
+         * Inserts a String value at the given index.
+         *
+         * @param index
+         *      The index to insert the String at
+         * @param value
+         *      The char value to insert.
+         */
+        void doInsert(int index, const String& value);
+
+        /**
+         * Inserts a std::string value at the given index.
+         *
+         * @param index
+         *      The index to insert the std::string at
+         * @param value
+         *      The char value to insert.
+         */
+        void doInsert(int index, const std::string& value);
+
+        /**
+         * Inserts the given C string at the given index in this buffer starting at the
+         * given offset and ending after the length number of characters has been appended.
+         *
+         * @param index
+         *      The index in this buffer to start inserting the C string.
+         * @param value
+         *      The C string value to be appended into this buffer.
+         * @param offset
+         *      The starting position into the C string array.
+         * @param length
+         *      The number of characters to copy from the given array.
+         *
+         * @throws NullPointerException if the pointer is NULL.
+         * @throws IndexOutOfBoundsException if index, offset or length is negative or the value
+         *         of offset + length is greater than the strings length.
+         */
+        void doInsert(int index, const char* value, int offset, int length);
+
+        /**
+         * Inserts the given CharSequence at the given index in this buffer.
+         *
+         * @param index
+         *      The index in this buffer to start inserting the CharSequence.
+         * @param value
+         *      The CharSequence value to be appended into this buffer.
+         *
+         * @throws NullPointerException if the pointer is NULL.
+         * @throws IndexOutOfBoundsException if index is negative or greater than length().
+         */
+        void doInsert(int index, const CharSequence* value);
+
+        /**
+         * Inserts the given CharSequence at the given index in this buffer starting at the
+         * given index and ending at the specified end index.
+         *
+         * If the CharSequence pointer is NULL the string "null" is inserted.
+         *
+         * @param index
+         *      The index in this buffer to start inserting the CharSequence.
+         * @param value
+         *      The CharSequence value to be appended into this buffer.
+         * @param start
+         *      The starting index into the CharSequence.
+         * @param end
+         *      The end index in the CharSequence to be inserted into this Buffer.
+         *
+         * @throws IndexOutOfBoundsException if index, start or end is negative or the value
+         *         of start < end or the end index is greater than the sequence length.
+         */
+        void doInsert(int index, const CharSequence* value, int start, int end);
+
+        /**
+         * Replace some number of characters in this Buffer with the value given.
+         *
+         * The characters replaced start at the given index and end at the given end value
+         * (exclusive).  If the replacement string value is longer the internal buffer is
+         * lengthened to accommodate the new value.
+         *
+         * @param start
+         *      The starting index to replace in the buffer (inclusive).
+         * @param end
+         *      The ending index of the replacement operation (exclusive).
+         * @param value
+         *      The new string value to replace the older value.
+         *
+         * @throws IndexOutOfBoundsException if start is negative, greater than end or greater than length().
+         */
+        void doReplace(int start, int end, const String& value);
+
+        /**
+         * Reverses the characters contained in this character buffer.
+         */
+        void doReverse();
 
     };
 

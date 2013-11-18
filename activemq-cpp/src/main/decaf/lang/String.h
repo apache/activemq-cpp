@@ -22,6 +22,7 @@
 
 #include <decaf/lang/CharSequence.h>
 #include <decaf/lang/Comparable.h>
+#include <decaf/lang/ArrayPointer.h>
 
 #include <string>
 #include <ostream>
@@ -1145,7 +1146,7 @@ namespace lang {
         void getChars(int start, int end, char* buffer, int index) const;
 
         String(Contents* content);
-        String(int offset, int length, Contents* content);
+        String(int offset, int length, const ArrayPointer<char> content);
 
         friend class AbstractStringBuilder;
     };

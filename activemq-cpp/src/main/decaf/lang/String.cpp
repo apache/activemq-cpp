@@ -81,8 +81,8 @@ String::String(Contents* content) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-String::String(int offset, int length, Contents* content) :
-    contents(new Contents(offset, length, content->value)) {
+String::String(int offset, int length, const ArrayPointer<char> content) :
+    contents(new Contents(offset, length, content)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -831,7 +831,7 @@ int String::findFirstNotOf(const String& chars, int start) const {
 ////////////////////////////////////////////////////////////////////////////////
 void String::getChars(int srcBegin, int srcEnd, char* dest, int destSize, int destBegin) const {
 
-    if (srcBegin < 0 || srcBegin > srcEnd || srcEnd >= contents->length) {
+    if (srcBegin < 0 || srcBegin > srcEnd || srcEnd > contents->length) {
         throw StringIndexOutOfBoundsException(__FILE__, __LINE__,
             "Invalid start or end parameters: %d, %d", srcBegin, srcEnd);
     }
@@ -1304,7 +1304,7 @@ String String::substring(int start) const {
     }
 
     if (0 <= start && start <= contents->length) {
-        return String(contents->offset + start, contents->length - start, contents);
+        return String(contents->offset + start, contents->length - start, contents->value);
     }
 
     throw StringIndexOutOfBoundsException(__FILE__, __LINE__, start);
@@ -1326,7 +1326,7 @@ String String::substring(int start, int end) const {
     }
 
     // NOTE last character not copied!
-    return String(contents->offset + start, end - start, contents);
+    return String(contents->offset + start, end - start, contents->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1417,7 +1417,7 @@ String String::trim() const {
         return *this;
     }
 
-    return String(start, end - start + 1, contents);
+    return String(start, end - start + 1, contents->value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -56,6 +56,26 @@ namespace lang {
         CPPUNIT_TEST( testIndexOfStringInt );
         CPPUNIT_TEST( testLastIndexOfString );
         CPPUNIT_TEST( testLastIndexOfStringInt );
+        CPPUNIT_TEST( testReverse );
+        CPPUNIT_TEST( testSubSequence );
+        CPPUNIT_TEST( testSubstringInt );
+        CPPUNIT_TEST( testSubstringIntInt );
+        CPPUNIT_TEST( testInsertChar );
+        CPPUNIT_TEST( testInsertBoolean );
+        CPPUNIT_TEST( testInsertCharArray );
+        CPPUNIT_TEST( testInsertCharArrayWithOffset );
+        CPPUNIT_TEST( testInsertString );
+        CPPUNIT_TEST( testInsertStdString );
+        CPPUNIT_TEST( testInsertCharSequence );
+        CPPUNIT_TEST( testInsertCharSequenceIntInt );
+        CPPUNIT_TEST( testInsertShort );
+        CPPUNIT_TEST( testInsertInt );
+        CPPUNIT_TEST( testInsertLong );
+        CPPUNIT_TEST( testInsertFloat );
+        CPPUNIT_TEST( testInsertDouble );
+        CPPUNIT_TEST( testInsertPointer );
+        CPPUNIT_TEST( testInsertRawPointer );
+        CPPUNIT_TEST( testReplace );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -91,6 +111,26 @@ namespace lang {
         void testIndexOfStringInt();
         void testLastIndexOfString();
         void testLastIndexOfStringInt();
+        void testReverse();
+        void testSubSequence();
+        void testSubstringInt();
+        void testSubstringIntInt();
+        void testInsertChar();
+        void testInsertBoolean();
+        void testInsertCharArray();
+        void testInsertCharArrayWithOffset();
+        void testInsertString();
+        void testInsertStdString();
+        void testInsertCharSequence();
+        void testInsertCharSequenceIntInt();
+        void testInsertShort();
+        void testInsertInt();
+        void testInsertLong();
+        void testInsertFloat();
+        void testInsertDouble();
+        void testInsertPointer();
+        void testInsertRawPointer();
+        void testReplace();
 
     };
 

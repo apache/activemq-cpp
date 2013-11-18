@@ -134,7 +134,7 @@ StringBuilder& StringBuilder::append(const String& value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 StringBuilder& StringBuilder::append(const StringBuffer& value) {
-    // TODO doAppend(value);
+    doAppend(value);
     return *this;
 }
 
@@ -147,5 +147,101 @@ StringBuilder& StringBuilder::deleteRange(int start, int end) {
 ////////////////////////////////////////////////////////////////////////////////
 StringBuilder& StringBuilder::deleteCharAt(int index) {
     doDeleteCharAt(index);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, char value) {
+    doInsert(index, value);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, bool value) {
+    doInsert(index, (value ? "true" : "false"));
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, short value) {
+    doInsert(index, Short::toString(value));
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, int value) {
+    doInsert(index, Integer::toString(value));
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, long long value) {
+    doInsert(index, Long::toString(value));
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, float value) {
+    doInsert(index, Float::toString(value));
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, double value) {
+    doInsert(index, Double::toString(value));
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, const char* value) {
+    doInsert(index, value);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, const String& value) {
+    doInsert(index, value);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, const std::string& value) {
+    doInsert(index, value);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, const char* value, int offset, int length) {
+    doInsert(index, value, offset, length);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, const CharSequence* value) {
+
+    if (value == NULL) {
+        doAppendNull();
+    } else {
+        doInsert(index, value);
+    }
+
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::insert(int index, const CharSequence* value, int offset, int length) {
+    doInsert(index, value, offset, length);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::replace(int start, int end, const String& value) {
+    doReplace(start, end, value);
+    return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StringBuilder& StringBuilder::reverse() {
+    doReverse();
     return *this;
 }
