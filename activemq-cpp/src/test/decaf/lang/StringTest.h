@@ -53,6 +53,9 @@ namespace lang {
         CPPUNIT_TEST( testStartsWith );
         CPPUNIT_TEST( testStartsWithI );
         CPPUNIT_TEST( testEndsWith );
+        CPPUNIT_TEST( testEquals );
+        CPPUNIT_TEST( testEqualsCString );
+        CPPUNIT_TEST( testEqualsStdString );
         CPPUNIT_TEST( testEqualsIgnoreCase );
         CPPUNIT_TEST( testEqualsIgnoreCaseCString );
         CPPUNIT_TEST( testEqualsIgnoreCaseStdString );
@@ -91,6 +94,12 @@ namespace lang {
         CPPUNIT_TEST( testOperatorEqualsString );
         CPPUNIT_TEST( testOperatorEqualsStdString );
         CPPUNIT_TEST( testOperatorEqualsCString );
+        CPPUNIT_TEST( testOperatorLessString );
+        CPPUNIT_TEST( testOperatorLessStdString );
+        CPPUNIT_TEST( testOperatorLessCString );
+        CPPUNIT_TEST( testOperatorGreaterString );
+        CPPUNIT_TEST( testOperatorGreaterStdString );
+        CPPUNIT_TEST( testOperatorGreaterCString );
         CPPUNIT_TEST( testOperatorNotEqualsString );
         CPPUNIT_TEST( testOperatorNotEqualsStdString );
         CPPUNIT_TEST( testOperatorNotEqualsCString );
@@ -135,6 +144,9 @@ namespace lang {
         void testStartsWith();
         void testStartsWithI();
         void testEndsWith();
+        void testEquals();
+        void testEqualsCString();
+        void testEqualsStdString();
         void testEqualsIgnoreCase();
         void testEqualsIgnoreCaseCString();
         void testEqualsIgnoreCaseStdString();
@@ -183,6 +195,9 @@ namespace lang {
         void testOperatorLessString();
         void testOperatorLessStdString();
         void testOperatorLessCString();
+        void testOperatorGreaterString();
+        void testOperatorGreaterStdString();
+        void testOperatorGreaterCString();
         void testOperatorPlusString();
         void testOperatorPlusStdString();
         void testOperatorPlusCString();

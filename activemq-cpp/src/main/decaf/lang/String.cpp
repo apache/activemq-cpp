@@ -312,6 +312,51 @@ bool String::operator< (const char* other) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool String::operator<=(const String& other) const {
+    return this->compareTo(other) <= 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator<=(const std::string& other) const {
+    return this->compareTo(other) <= 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator<=(const char* other) const {
+    return this->compareTo(other) <= 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator> (const String& other) const {
+    return this->compareTo(other) > 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator> (const std::string& other) const {
+    return this->compareTo(other) > 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator> (const char* other) const {
+    return this->compareTo(other) > 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator>=(const String& other) const {
+    return this->compareTo(other) >= 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator>=(const std::string& other) const {
+    return this->compareTo(other) >= 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool String::operator>=(const char* other) const {
+    return this->compareTo(other) >= 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 String String::operator+ (const String& other) const {
     return this->concat(other);
 }
@@ -1475,6 +1520,54 @@ namespace lang {
         }
 
         return out;
+    }
+
+    bool operator==(const std::string& left, const String& right) {
+        return right.equals(left);
+    }
+
+    bool operator==(const char* left, const String& right) {
+        return right.equals(left);
+    }
+
+    bool operator!=(const std::string& left, const String& right) {
+        return !right.equals(left);
+    }
+
+    bool operator!=(const char* left, const String& right) {
+        return !right.equals(left);
+    }
+
+    bool operator< (const std::string& left, const String& right) {
+        return right.compareTo(left) > 0;
+    }
+
+    bool operator< (const char* left, const String& right) {
+        return right.compareTo(left) > 0;
+    }
+
+    bool operator<=(const std::string& left, const String& right) {
+        return right.compareTo(left) >= 0;
+    }
+
+    bool operator<=(const char* left, const String& right) {
+        return right.compareTo(left) >= 0;
+    }
+
+    bool operator> (const std::string& left, const String& right) {
+        return right.compareTo(left) < 0;
+    }
+
+    bool operator> (const char* left, const String& right) {
+        return right.compareTo(left) < 0;
+    }
+
+    bool operator>=(const std::string& left, const String& right) {
+        return right.compareTo(left) <= 0;
+    }
+
+    bool operator>=(const char* left, const String& right) {
+        return right.compareTo(left) <= 0;
     }
 
 }}

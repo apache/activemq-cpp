@@ -516,6 +516,40 @@ void StringTest::testEndsWith() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StringTest::testEquals() {
+
+    String lower = "helloworld";
+    String lower2 = "helloworld";
+    String upper = "HELLOWORLD";
+
+    CPPUNIT_ASSERT_MESSAGE("lc version returned equal to uc", !lower.equals(upper));
+    CPPUNIT_ASSERT_MESSAGE("lc version returned unequal to lc", lower.equals(lower));
+    CPPUNIT_ASSERT_MESSAGE("lc version returned unequal to lc", lower.equals(lower2));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testEqualsCString() {
+
+    String lower = "helloworld";
+    const char* lower2 = "helloworld";
+    const char* upper = "HELLOWORLD";
+
+    CPPUNIT_ASSERT_MESSAGE("lc version returned equal to uc", !lower.equals(upper));
+    CPPUNIT_ASSERT_MESSAGE("lc version returned unequal to lc", lower.equals(lower2));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testEqualsStdString() {
+
+    String lower = "helloworld";
+    std::string lower2 = "helloworld";
+    std::string upper = "HELLOWORLD";
+
+    CPPUNIT_ASSERT_MESSAGE("lc version returned equal to uc", !lower.equals(upper));
+    CPPUNIT_ASSERT_MESSAGE("lc version returned unequal to lc", lower.equals(lower2));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StringTest::testEqualsIgnoreCase() {
 
     String lower = "helloworld";
@@ -968,6 +1002,9 @@ void StringTest::testOperatorEqualsStdString() {
 
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", input == std::string("HelloWorld"));
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(input == std::string("HolloWorld")));
+
+    // Test comparison with lhs as std::string
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", std::string("HelloWorld") == input);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -978,6 +1015,9 @@ void StringTest::testOperatorEqualsCString() {
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", input == "HelloWorld");
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(input == "HolloWorld"));
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(input == NULL));
+
+    // Test comparison with lhs as C String
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", "HelloWorld" == input);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1026,6 +1066,10 @@ void StringTest::testOperatorLessStdString() {
 
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", upper < lower);
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(upper < std::string("HELLOWORLD")));
+
+    // test lhs as std::string
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", std::string("aaab") < String("aaac"));
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", std::string("aaab") <= String("aaab"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1036,7 +1080,58 @@ void StringTest::testOperatorLessCString() {
 
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", upper < lower);
     CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(upper < "HELLOWORLD"));
-    CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(upper < NULL));
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        upper < NULL,
+        NullPointerException);
+
+    // test lhs as std::string
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", "aaab" < String("aaac"));
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", "aaab" <= String("aaab"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testOperatorGreaterString() {
+
+    String upper = "HELLOWORLD";
+    String lower = "helloworld";
+
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", lower > upper);
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(upper > upper));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testOperatorGreaterStdString() {
+
+    std::string upper = "HELLOWORLD";
+    String lower = "helloworld";
+
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", lower > upper);
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(lower > std::string("helloworld")));
+
+    // test lhs as std::string
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", std::string("aaac") > String("aaab"));
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", std::string("aaac") >= String("aaac"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StringTest::testOperatorGreaterCString() {
+
+    String lower = "helloworld";
+    const char* upper = "HELLOWORLD";
+
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", lower > upper);
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", !(lower > "helloworld"));
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should have thrown a NullPointerException",
+        lower < NULL,
+        NullPointerException);
+
+    // test lhs as C string
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", "aaac" > String("aaab"));
+    CPPUNIT_ASSERT_MESSAGE("Failed comparison", "aaac" >= String("aaac"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

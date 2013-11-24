@@ -232,7 +232,7 @@ namespace lang {
 
         /**
          * Comparison operators for the various string types that uses the compareTo method
-         * to determine the string are lexicographically equal or not.
+         * to determine if the string is lexicographically less than the other.
          *
          * @param other
          *      The string value to compare to this one.
@@ -242,6 +242,45 @@ namespace lang {
         bool operator< (const char* other) const;
         bool operator< (const String& other) const;
         bool operator< (const std::string& other) const;
+
+        /**
+         * Comparison operators for the various string types that uses the compareTo method
+         * to determine if the string is lexicographically less than or equal to the other.
+         *
+         * @param other
+         *      The string value to compare to this one.
+         *
+         * @returns true if this string is lexicographically less than or equal to the other string.
+         */
+        bool operator<=(const char* other) const;
+        bool operator<=(const String& other) const;
+        bool operator<=(const std::string& other) const;
+
+        /**
+         * Comparison operators for the various string types that uses the compareTo method
+         * to determine if the string is lexicographically greater than the other.
+         *
+         * @param other
+         *      The string value to compare to this one.
+         *
+         * @returns true if this string is lexicographically greater than the other string.
+         */
+        bool operator> (const char* other) const;
+        bool operator> (const String& other) const;
+        bool operator> (const std::string& other) const;
+
+        /**
+         * Comparison operators for the various string types that uses the compareTo method
+         * to determine if the string is lexicographically greater than or equal to the other.
+         *
+         * @param other
+         *      The string value to compare to this one.
+         *
+         * @returns true if this string is lexicographically greater than the other string.
+         */
+        bool operator>=(const char* other) const;
+        bool operator>=(const String& other) const;
+        bool operator>=(const std::string& other) const;
 
         /**
          * Concatenation operators for the various string types.  The value of this string
@@ -1152,6 +1191,19 @@ namespace lang {
     };
 
     std::ostream& operator<<(std::ostream &out, const String& target);
+
+    bool operator==(const std::string& left, const String& right);
+    bool operator==(const char* left, const String& right);
+    bool operator!=(const std::string& left, const String& right);
+    bool operator!=(const char* left, const String& right);
+    bool operator<=(const std::string& left, const String& right);
+    bool operator<=(const char* left, const String& right);
+    bool operator>=(const std::string& left, const String& right);
+    bool operator>=(const char* left, const String& right);
+    bool operator< (const std::string& left, const String& right);
+    bool operator< (const char* left, const String& right);
+    bool operator> (const std::string& left, const String& right);
+    bool operator> (const char* left, const String& right);
 
 }}
 
