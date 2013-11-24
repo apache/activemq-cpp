@@ -110,6 +110,8 @@ void ActiveMQCPP::registerTransports() {
 
     TransportRegistry::getInstance().registerFactory("tcp", new TcpTransportFactory());
     TransportRegistry::getInstance().registerFactory("ssl", new SslTransportFactory());
+    TransportRegistry::getInstance().registerFactory("nio", new TcpTransportFactory());
+    TransportRegistry::getInstance().registerFactory("nio+ssl", new SslTransportFactory());
     TransportRegistry::getInstance().registerFactory("mock", new MockTransportFactory());
     TransportRegistry::getInstance().registerFactory("failover", new FailoverTransportFactory());
     TransportRegistry::getInstance().registerFactory("discovery", new DiscoveryTransportFactory());
