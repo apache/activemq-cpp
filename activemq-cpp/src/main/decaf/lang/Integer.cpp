@@ -33,32 +33,36 @@ const int Integer::MAX_VALUE = (int)0x7FFFFFFF;
 const int Integer::MIN_VALUE = (int)0x80000000;
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( int value ) :value(value) {
+Integer::Integer(int value) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( const std::string& value ) : value() {
-    this->value = parseInt( value );
+Integer::Integer(const std::string& value) : value() {
+    this->value = parseInt(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::compareTo( const Integer& i ) const {
+int Integer::compareTo(const Integer& i) const {
     return this->value < i.value ? -1 : this->value == i.value ? 0 : 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::compareTo( const int& i ) const {
+int Integer::compareTo(const int& i) const {
     return this->value < i ? -1 : this->value == i ? 0 : 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::bitCount( int value ) {
+Integer::~Integer() {
+}
 
-    if( value == 0 ) {
+////////////////////////////////////////////////////////////////////////////////
+int Integer::bitCount(int value) {
+
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
+    unsigned int uvalue = (unsigned int) value;
 
     // 32-bit recursive reduction using SWAR...
     // but first step is mapping 2-bit values
@@ -68,17 +72,17 @@ int Integer::bitCount( int value ) {
     uvalue = (((uvalue >> 4) + uvalue) & 0x0F0F0F0F);
     uvalue += (uvalue >> 8);
     uvalue += (uvalue >> 16);
-    return(uvalue & 0x0000003F);
+    return (uvalue & 0x0000003F);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::reverseBytes( int value ) {
+int Integer::reverseBytes(int value) {
 
-    if( value == 0 ) {
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
+    unsigned int uvalue = (unsigned int) value;
 
     unsigned int b3 = uvalue >> 24;
     unsigned int b2 = (uvalue >> 8) & 0xFF00;
@@ -88,13 +92,13 @@ int Integer::reverseBytes( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::reverse( int value ) {
+int Integer::reverse(int value) {
 
-    if( value == 0 ) {
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
+    unsigned int uvalue = (unsigned int) value;
 
     uvalue = (((uvalue & 0xAAAAAAAA) >> 1) | ((uvalue & 0x55555555) << 1));
     uvalue = (((uvalue & 0xCCCCCCCC) >> 2) | ((uvalue & 0x33333333) << 2));
@@ -105,33 +109,33 @@ int Integer::reverse( int value ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Integer::toString() const {
-    return Integer::toString( this->value, 10 );
+    return Integer::toString(this->value, 10);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Integer::toString( int value ) {
-    return Integer::toString( value, 10 );
+std::string Integer::toString(int value) {
+    return Integer::toString(value, 10);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Integer::toString( int value, int radix ) {
+std::string Integer::toString(int value, int radix) {
 
-    if( radix < Character::MIN_RADIX || radix > Character::MAX_RADIX ) {
+    if (radix < Character::MIN_RADIX || radix > Character::MAX_RADIX) {
         radix = 10;
     }
 
-    if( value == 0 ) {
+    if (value == 0) {
         return "0";
     }
 
     int count = 2, j = value;
     bool negative = value < 0;
-    if( !negative ) {
+    if (!negative) {
         count = 1;
         j = -value;
     }
 
-    while( (value /= radix) != 0 ) {
+    while ((value /= radix) != 0) {
         count++;
     }
 
@@ -141,37 +145,37 @@ std::string Integer::toString( int value, int radix ) {
     char* buffer = new char[length + 1];
 
     do {
-        int ch = 0 - ( j % radix );
-        if( ch > 9 ) {
+        int ch = 0 - (j % radix);
+        if (ch > 9) {
             ch = ch - 10 + 'a';
         } else {
             ch += '0';
         }
-        buffer[--count] = (char)ch;
-    } while( (j /= radix) != 0 );
+        buffer[--count] = (char) ch;
+    } while ((j /= radix) != 0);
 
-    if( negative ) {
+    if (negative) {
         buffer[0] = '-';
     }
 
     // Ensure there's a null
     buffer[length] = 0;
-    std::string result( &buffer[0] );
-    delete [] buffer;
+    std::string result(&buffer[0]);
+    delete[] buffer;
 
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Integer::toBinaryString( int value ) {
+std::string Integer::toBinaryString(int value) {
 
     int count = 1;
     int j = value;
 
-    if( value < 0 ) {
+    if (value < 0) {
         count = 32;
     } else {
-        while ( (j >>= 1) != 0) {
+        while ((j >>= 1) != 0) {
             count++;
         }
     }
@@ -182,28 +186,28 @@ std::string Integer::toBinaryString( int value ) {
     char* buffer = new char[length + 1];
 
     do {
-        buffer[--count] = (char)( (value & 1) + '0' );
+        buffer[--count] = (char) ((value & 1) + '0');
         value >>= 1;
-    } while( count > 0 );
+    } while (count > 0);
 
     // Ensure there's a null
     buffer[length] = 0;
-    std::string result( &buffer[0] );
-    delete [] buffer;
+    std::string result(&buffer[0]);
+    delete[] buffer;
 
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Integer::toOctalString( int value ) {
+std::string Integer::toOctalString(int value) {
 
     int count = 1, j = value;
     unsigned int uvalue = (unsigned int) value;
 
-    if( value < 0 ) {
+    if (value < 0) {
         count = 11;  // (8 * sizeof(value) + 2) / 3;
     } else {
-        while ( (j >>= 3) != 0 ) {
+        while ((j >>= 3) != 0) {
             count++;
         }
     }
@@ -214,28 +218,28 @@ std::string Integer::toOctalString( int value ) {
     char* buffer = new char[length + 1];
 
     do {
-        buffer[--count] = (char)( (uvalue & 7) + '0' );
+        buffer[--count] = (char) ((uvalue & 7) + '0');
         uvalue >>= 3;
-    } while( count > 0 );
+    } while (count > 0);
 
     // Ensure there's a null
     buffer[length] = 0;
-    std::string result( &buffer[0] );
-    delete [] buffer;
+    std::string result(&buffer[0]);
+    delete[] buffer;
 
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Integer::toHexString( int value ) {
+std::string Integer::toHexString(int value) {
 
     int count = 1;
     int j = value;
 
-    if( value < 0 ) {
+    if (value < 0) {
         count = 8;
     } else {
-        while( (j >>= 4) != 0 ) {
+        while ((j >>= 4) != 0) {
             count++;
         }
     }
@@ -247,32 +251,32 @@ std::string Integer::toHexString( int value ) {
 
     do {
         int t = value & 15;
-        if( t > 9 ) {
+        if (t > 9) {
             t = t - 10 + 'a';
         } else {
             t += '0';
         }
-        buffer[--count] = (char)t;
+        buffer[--count] = (char) t;
         value >>= 4;
-    } while( count > 0 );
+    } while (count > 0);
 
     // Ensure there's a null
     buffer[length] = 0;
-    std::string result( &buffer[0] );
-    delete [] buffer;
+    std::string result(&buffer[0]);
+    delete[] buffer;
 
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parseInt( const std::string& value ) {
-    return Integer::parseInt( value, 10 );
+int Integer::parseInt(const String& value) {
+    return Integer::parseInt(value, 10);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parseInt( const std::string& value, int radix ) {
+int Integer::parseInt(const String& value, int radix) {
 
-    if( radix < Character::MIN_RADIX ||
+    if (radix < Character::MIN_RADIX ||
         radix > Character::MAX_RADIX ) {
         throw NumberFormatException(
             __FILE__, __LINE__,
@@ -280,63 +284,61 @@ int Integer::parseInt( const std::string& value, int radix ) {
     }
 
     int length = (int)value.length(), i = 0;
-    if( length == 0 ) {
+    if (length == 0) {
         throw NumberFormatException(
             __FILE__, __LINE__,
             "Integer:decode - Invalid: zero length string");
     }
 
-    bool negative = value[i] == '-';
-    if( negative && ++i == length ) {
+    bool negative = value.charAt(i) == '-';
+    if (negative && ++i == length) {
         throw NumberFormatException(
             __FILE__, __LINE__,
             "Integer:decode - Invalid only a minus sign given");
     }
 
-    return Integer::parse( value, i, radix, negative );
+    return Integer::parse(value, i, radix, negative);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer Integer::valueOf( const std::string& value ) {
-
-    return Integer( Integer::parseInt( value ) );
+Integer Integer::valueOf(const String& value) {
+    return Integer(Integer::parseInt(value));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer Integer::valueOf( const std::string& value, int radix ) {
-
-    return Integer( Integer::parseInt( value, radix ) );
+Integer Integer::valueOf(const String& value, int radix) {
+    return Integer(Integer::parseInt(value, radix));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer Integer::decode( const std::string& value ) {
+Integer Integer::decode(const String& value) {
 
-    int length = (int)value.length(), i = 0;
-    if( length == 0 ) {
+    int length = (int) value.length(), i = 0;
+    if (length == 0) {
         throw NumberFormatException(
             __FILE__, __LINE__,
             "Integer:decode - Invalid zero size string");
     }
 
-    char firstDigit = value[i];
+    char firstDigit = value.charAt(i);
     bool negative = firstDigit == '-';
-    if( negative ) {
-        if( length == 1 ) {
+    if (negative) {
+        if (length == 1) {
             throw NumberFormatException(
                 __FILE__, __LINE__,
                 "Integer:decode - Invalid zero string, minus only");
         }
 
-        firstDigit = value[++i];
+        firstDigit = value.charAt(++i);
     }
 
     int base = 10;
-    if( firstDigit == '0' ) {
-        if( ++i == length ) {
-            return valueOf( 0 );
+    if (firstDigit == '0') {
+        if (++i == length) {
+            return valueOf(0);
         }
 
-        if( ( firstDigit = value[i] ) == 'x' || firstDigit == 'X' ) {
+        if ((firstDigit = value.charAt(i)) == 'x' || firstDigit == 'X') {
             if( i == length ) {
                 throw NumberFormatException(
                     __FILE__, __LINE__,
@@ -347,8 +349,8 @@ Integer Integer::decode( const std::string& value ) {
         } else {
             base = 8;
         }
-    } else if( firstDigit == '#' ) {
-        if( i == length ) {
+    } else if (firstDigit == '#') {
+        if (i == length) {
             throw NumberFormatException(
                 __FILE__, __LINE__,
                 "Integer:decode - Invalid zero string, minus only");
@@ -357,120 +359,116 @@ Integer Integer::decode( const std::string& value ) {
         base = 16;
     }
 
-    int result = parse( value, i, base, negative );
-    return valueOf( result );
+    int result = parse(value, i, base, negative);
+    return valueOf(result);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parse( const std::string& value, int offset, int radix, bool negative ) {
+int Integer::parse(const String& value, int offset, int radix, bool negative) {
 
     int max = Integer::MIN_VALUE / radix;
-    int result = 0, length = (int)value.size();
+    int result = 0, length = (int) value.length();
 
-    while( offset < length ) {
-        int digit = Character::digit( value[offset++], radix );
-        if( digit == -1 ) {
+    while (offset < length) {
+        int digit = Character::digit(value.charAt(offset++), radix);
+        if (digit == -1) {
             throw NumberFormatException(
                 __FILE__, __LINE__,
-                "Integer::parse - number string is invalid: ",
-                value.c_str() );
+                "Integer::parse - number string is invalid: ", value.c_str());
         }
-        if( max > result ) {
+        if (max > result) {
             throw NumberFormatException(
                 __FILE__, __LINE__,
-                "Integer::parse - number string is invalid: ",
-                value.c_str() );
+                "Integer::parse - number string is invalid: ", value.c_str());
         }
         int next = result * radix - digit;
-        if( next > result ) {
+        if (next > result) {
             throw NumberFormatException(
                 __FILE__, __LINE__,
-                "Integer::parse - number string is invalid: ",
-                value.c_str() );
+                "Integer::parse - number string is invalid: ", value.c_str());
         }
         result = next;
     }
-    if( !negative ) {
+    if (!negative) {
         result = -result;
-        if( result < 0 ) {
+        if (result < 0) {
             throw NumberFormatException(
                 __FILE__, __LINE__,
-                "Integer::parse - number string is invalid: ",
-                value.c_str() );
+                "Integer::parse - number string is invalid: ", value.c_str());
         }
     }
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::highestOneBit( int value ) {
+int Integer::highestOneBit(int value) {
 
-    if( value == 0 ) {
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
+    unsigned int uvalue = (unsigned int) value;
 
     uvalue |= (uvalue >> 1);
     uvalue |= (uvalue >> 2);
     uvalue |= (uvalue >> 4);
     uvalue |= (uvalue >> 8);
     uvalue |= (uvalue >> 16);
-    return ( uvalue & ~(uvalue >> 1));
+    return (uvalue & ~(uvalue >> 1));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::lowestOneBit( int value ) {
-    if( value == 0 ) {
+int Integer::lowestOneBit(int value) {
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
-    return ( uvalue & (-uvalue) );
+    unsigned int uvalue = (unsigned int) value;
+    return (uvalue & (-uvalue));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::numberOfLeadingZeros( int value ) {
+int Integer::numberOfLeadingZeros(int value) {
 
-    if( value == 0 ) {
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
+    unsigned int uvalue = (unsigned int) value;
 
     value |= value >> 1;
     value |= value >> 2;
     value |= value >> 4;
     value |= value >> 8;
     value |= value >> 16;
-    return Integer::bitCount( ~uvalue );
+    return Integer::bitCount(~uvalue);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::numberOfTrailingZeros( int value ) {
-    if( value == 0 ) {
+int Integer::numberOfTrailingZeros(int value) {
+    if (value == 0) {
         return 0;
     }
 
-    unsigned int uvalue = (unsigned int)value;
-    return bitCount( (uvalue & -uvalue) - 1 );
+    unsigned int uvalue = (unsigned int) value;
+    return bitCount((uvalue & -uvalue) - 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::rotateLeft( int value, int distance ) {
-    unsigned int i = (unsigned int)value;
+int Integer::rotateLeft(int value, int distance) {
+    unsigned int i = (unsigned int) value;
     int j = distance & 0x1F;
-    return ( i << j ) | ( i >> (-j & 0x1F ) );
+    return (i << j) | (i >> (-j & 0x1F));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::rotateRight( int value, int distance ) {
-    unsigned int i = (unsigned int)value;
+int Integer::rotateRight(int value, int distance) {
+    unsigned int i = (unsigned int) value;
     int j = distance & 0x1F;
-    return ( i >> j ) | ( i << (-j & 0x1F ) );
+    return (i >> j) | (i << (-j & 0x1F));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::signum( int value ) {
-    return ( value == 0 ? 0 : ( value < 0 ? -1 : 1 ) );
+int Integer::signum(int value) {
+    return (value == 0 ? 0 : (value < 0 ? -1 : 1));
 }

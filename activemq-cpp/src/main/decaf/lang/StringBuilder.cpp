@@ -235,6 +235,11 @@ StringBuilder& StringBuilder::insert(int index, const CharSequence* value, int o
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int StringBuilder::length() const {
+    return AbstractStringBuilder::length();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 StringBuilder& StringBuilder::replace(int start, int end, const String& value) {
     doReplace(start, end, value);
     return *this;

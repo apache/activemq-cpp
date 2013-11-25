@@ -54,7 +54,8 @@ namespace lang {
      *
      * @since 1.0
      */
-    class DECAF_API StringBuffer : public AbstractStringBuilder {
+    class DECAF_API StringBuffer : public AbstractStringBuilder,
+                                   public Appendable {
     public:
 
         /**

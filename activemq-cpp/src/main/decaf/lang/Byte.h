@@ -20,12 +20,13 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Number.h>
+#include <decaf/lang/String.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 #include <string>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class DECAF_API Byte : public Number,
                            public Comparable<Byte>,
@@ -60,7 +61,7 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not a valid byte.
          */
-        Byte(const std::string& value);
+        Byte(const String& value);
 
         virtual ~Byte() {}
 
@@ -193,7 +194,7 @@ namespace lang{
             return (long long) this->value;
         }
 
-    public: // statics
+    public:
 
         /**
          * @returns a string representing the primitive value as Base 10
@@ -211,11 +212,15 @@ namespace lang{
          * NumberFormatException will be thrown. The result is negated if first
          * character of the specified String is the minus sign. No whitespace
          * characters are permitted in the string.
-         * @param value - The string to decode
+         *
+         * @param value
+         *      The string to decode
+         *
          * @returns a Byte object containing the decoded value
+         *
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Byte decode(const std::string& value);
+        static Byte decode(const String& value);
 
         /**
          * Parses the string argument as a signed unsigned char in the radix specified by
@@ -235,14 +240,17 @@ namespace lang{
          *    that the string is longer than length 1.
          *  * The value represented by the string is not a value of type unsigned char.
          *
-         * @param s - the String containing the unsigned char to be parsed
-         * @param radix - the radix to be used while parsing s
+         * @param s
+         *      The String containing the unsigned char to be parsed
+         * @param radix
+         *      The radix to be used while parsing s
+         *
          * @return the unsigned char represented by the string argument in the
          * 	       specified radix.
          * @throws NumberFormatException - If String does not contain a parsable
          *         unsigned char.
          */
-        static unsigned char parseByte(const std::string& s, int radix);
+        static unsigned char parseByte(const String& s, int radix);
 
         /**
          * Parses the string argument as a signed decimal unsigned char. The
@@ -250,16 +258,23 @@ namespace lang{
          * first character may be an ASCII minus sign '-' to indicate a
          * negative value. The resulting unsigned char value is returned, exactly as
          * if the argument and the radix 10 were given as arguments to the
-         * parseByte( const std::string, int ) method.
-         * @param s - String to convert to a unsigned char
+         * parseByte(const String, int) method.
+         *
+         * @param s
+         *      String to convert to a unsigned char
+         *
          * @returns the converted unsigned char value
+         *
          * @throws NumberFormatException if the string is not a unsigned char.
          */
-        static unsigned char parseByte(const std::string& s);
+        static unsigned char parseByte(const String& s);
 
         /**
          * Returns a Character instance representing the specified char value.
-         * @param value - the primitive char to wrap.
+         *
+         * @param value
+         *      The primitive char to wrap.
+         *
          * @returns a new Character instance that wraps this value.
          */
         static Byte valueOf(unsigned char value) {
@@ -272,11 +287,14 @@ namespace lang{
          * exactly as if the argument were given to the parseByte( std::string )
          * method. The result is a Byte object that represents the unsigned char value
          * specified by the string.
-         * @param value - std::string to parse as base 10
+         *
+         * @param value
+         *      String to parse as base 10
+         *
          * @return new Byte Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal unsigned char.
          */
-        static Byte valueOf(const std::string& value);
+        static Byte valueOf(const String& value);
 
         /**
          * Returns a Byte object holding the value extracted from the specified
@@ -286,12 +304,16 @@ namespace lang{
          * were given to the parseByte( std::string, int ) method. The result is a
          * Byte object that represents the unsigned char value specified by the
          * string.
-         * @param value - std::string to parse as base ( radix )
-         * @param radix - base of the string to parse.
+         * @param value
+         *      String to parse as base ( radix )
+         * @param radix
+         *      Base of the string to parse.
+         *
          * @return new Byte Object wrapping the primitive
+         *
          * @throws NumberFormatException if the string is not a valid unsigned char.
          */
-        static Byte valueOf(const std::string& value, int radix);
+        static Byte valueOf(const String& value, int radix);
 
     };
 

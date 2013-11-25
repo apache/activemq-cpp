@@ -29,63 +29,62 @@ const unsigned char Byte::MAX_VALUE = 0x80;
 const int Byte::SIZE = 8;
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( unsigned char value ) : value(value) {
+Byte::Byte(unsigned char value) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( const std::string& value ) : value(0) {
-    this->value = parseByte( value );
+Byte::Byte(const String& value) : value(0) {
+    this->value = parseByte(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Byte::toString() const {
-    return Integer::toString( value );
+    return Integer::toString(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Byte::toString( unsigned char value ) {
-    return Integer::toString( value );
+std::string Byte::toString(unsigned char value) {
+    return Integer::toString(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Byte::parseByte( const std::string& s, int radix ) {
+unsigned char Byte::parseByte(const String& s, int radix) {
 
-    int intValue = Integer::parseInt( s, radix );
-    unsigned char result = (unsigned char)intValue;
-    if( result != intValue ) {
+    int intValue = Integer::parseInt(s, radix);
+    unsigned char result = (unsigned char) intValue;
+    if (result != intValue) {
         throw NumberFormatException(
-            __FILE__, __LINE__,
-            "Byte::parseByte - Not a valid unsigned char encoded string.");
+            __FILE__, __LINE__, "Byte::parseByte - Not a valid unsigned char encoded string.");
     }
 
     return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Byte::parseByte( const std::string& s ) {
-    return parseByte( s, 10 );
+unsigned char Byte::parseByte(const String& s) {
+    return parseByte(s, 10);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::decode( const std::string& value ) {
+Byte Byte::decode(const String& value) {
 
-    int intValue = Integer::decode( value ).intValue();
-    unsigned char result = (unsigned char)intValue;
-    if( result != intValue ) {
+    int intValue = Integer::decode(value).intValue();
+    unsigned char result = (unsigned char) intValue;
+    if (result != intValue) {
         throw NumberFormatException(
             __FILE__, __LINE__,
             "Byte::decode - Not a valid unsigned char encoded string.");
     }
 
-    return Byte( result );
+    return Byte(result);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::valueOf( const std::string& value ) {
-    return Byte( parseByte( value, 10 ) );
+Byte Byte::valueOf(const String& value) {
+    return Byte(parseByte(value, 10));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte Byte::valueOf( const std::string& value, int radix ) {
-    return Byte( parseByte( value, radix ) );
+Byte Byte::valueOf(const String& value, int radix) {
+    return Byte(parseByte(value, radix));
 }

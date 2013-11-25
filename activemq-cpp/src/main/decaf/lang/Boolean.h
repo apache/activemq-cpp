@@ -19,6 +19,7 @@
 #define _DECAF_LANG_BOOLEAN_H_
 
 #include <string>
+#include <decaf/lang/String.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/util/Config.h>
 
@@ -54,7 +55,7 @@ namespace lang{
         /**
          * @param value - String value to convert to a boolean.
          */
-        Boolean(const std::string& value);
+        Boolean(const String& value);
 
         virtual ~Boolean() {}
 
@@ -135,7 +136,6 @@ namespace lang{
         }
 
     public:
-        // Statics
 
         /**
          * @param value
@@ -151,7 +151,7 @@ namespace lang{
          *
          * @returns a Boolean instance of the string value
          */
-        static Boolean valueOf(const std::string& value);
+        static Boolean valueOf(const String& value);
 
         /**
          * Parses the String passed and extracts an bool.
@@ -160,7 +160,7 @@ namespace lang{
          *      The std::string value to parse
          * @return bool value
          */
-        static bool parseBoolean(const std::string& value);
+        static bool parseBoolean(const String& value);
 
         /**
          * Converts the bool to a String representation.

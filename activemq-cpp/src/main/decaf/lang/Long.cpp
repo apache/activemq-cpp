@@ -32,8 +32,12 @@ Long::Long(long long value) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long::Long(const std::string& value) : value(0) {
+Long::Long(const String& value) : value(0) {
     this->value = parseLong(value);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Long::~Long() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,20 +70,20 @@ int Long::bitCount(long long value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long Long::decode(const std::string& value) {
+Long Long::decode(const String& value) {
 
     int length = (int) value.length(), i = 0;
     if (length == 0) {
         throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::decode - Zero length string given.");
     }
 
-    char firstDigit = value[i];
+    char firstDigit = value.charAt(i);
     bool negative = firstDigit == '-';
     if (negative) {
         if (length == 1) {
             throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::decode - Invalid length string given.", value.c_str());
         }
-        firstDigit = value[++i];
+        firstDigit = value.charAt(++i);
     }
 
     int base = 10;
@@ -87,7 +91,7 @@ Long Long::decode(const std::string& value) {
         if (++i == length) {
             return valueOf(0LL);
         }
-        if ((firstDigit = value[i]) == 'x' || firstDigit == 'X') {
+        if ((firstDigit = value.charAt(i)) == 'x' || firstDigit == 'X') {
             if (i == length) {
                 throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::decode - Invalid length string given.", value.c_str());
             }
@@ -165,13 +169,12 @@ int Long::numberOfTrailingZeros(long long value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Long::parseLong(const std::string& value) {
-
+long long Long::parseLong(const String& value) {
     return Long::parseLong(value, 10);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Long::parseLong(const std::string& value, int radix) {
+long long Long::parseLong(const String& value, int radix) {
 
     if (radix < Character::MIN_RADIX || radix > Character::MAX_RADIX) {
         throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - Given Radix is out of range.");
@@ -184,7 +187,7 @@ long long Long::parseLong(const std::string& value, int radix) {
         throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - Zero length string is illegal.");
     }
 
-    bool negative = value[i] == '-';
+    bool negative = value.charAt(i) == '-';
     if (negative && ++i == length) {
         throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - Only a minus given, string is invalid.");
     }
@@ -193,27 +196,30 @@ long long Long::parseLong(const std::string& value, int radix) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long Long::parse(const std::string& value, int offset, int radix, bool negative) {
+long long Long::parse(const String& value, int offset, int radix, bool negative) {
 
     long long max = Long::MIN_VALUE / radix;
     long long result = 0;
     long long length = value.length();
 
     while (offset < length) {
-        int digit = Character::digit(value[offset++], radix);
+        int digit = Character::digit(value.charAt(offset++), radix);
 
         if (digit == -1) {
-            throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - String contains no digit characters.");
+            throw exceptions::NumberFormatException(__FILE__, __LINE__,
+                "Long::parseLong - String contains no digit characters.");
         }
 
         if (max > result) {
-            throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - Parsed value greater than max for radix.");
+            throw exceptions::NumberFormatException(__FILE__, __LINE__,
+                "Long::parseLong - Parsed value greater than max for radix.");
         }
 
         long long next = result * radix - digit;
 
         if (next > result) {
-            throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - Only a minus given, string is invalid.");
+            throw exceptions::NumberFormatException(__FILE__, __LINE__,
+                "Long::parseLong - Only a minus given, string is invalid.");
         }
 
         result = next;
@@ -222,7 +228,8 @@ long long Long::parse(const std::string& value, int offset, int radix, bool nega
     if (!negative) {
         result = -result;
         if (result < 0) {
-            throw exceptions::NumberFormatException(__FILE__, __LINE__, "Long::parseLong - Value less than zero, but no minus sign.");
+            throw exceptions::NumberFormatException(__FILE__, __LINE__,
+                "Long::parseLong - Value less than zero, but no minus sign.");
         }
     }
 
@@ -450,11 +457,11 @@ std::string Long::toHexString(long long value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long Long::valueOf(const std::string& value) {
+Long Long::valueOf(const String& value) {
     return Long(Long::parseLong(value));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long Long::valueOf(const std::string& value, int radix) {
+Long Long::valueOf(const String& value, int radix) {
     return Long(Long::parseLong(value, radix));
 }

@@ -458,6 +458,7 @@ cc_sources = \
     decaf/lang/Iterable.cpp \
     decaf/lang/Long.cpp \
     decaf/lang/Math.cpp \
+    decaf/lang/Number.cpp \
     decaf/lang/Readable.cpp \
     decaf/lang/Runnable.cpp \
     decaf/lang/Runtime.cpp \

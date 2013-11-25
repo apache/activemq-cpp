@@ -35,7 +35,7 @@ namespace lang{
     class DECAF_API Number {
     public:
 
-        virtual ~Number() {}
+        virtual ~Number();
 
         /**
          * Answers the byte value which the receiver represents

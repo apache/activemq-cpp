@@ -19,13 +19,14 @@
 #define _DECAF_LANG_SHORT_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/lang/String.h>
 #include <decaf/lang/Number.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 #include <string>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class DECAF_API Short : public Number,
                             public Comparable<Short>,
@@ -51,7 +52,7 @@ namespace lang{
         /**
          * @param value - short to wrap
          */
-        Short( short value );
+        Short(short value);
 
         /**
          * @param value
@@ -59,9 +60,9 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not well formed number value.
          */
-        Short( const std::string& value );
+        Short(const String& value);
 
-        virtual ~Short() {}
+        virtual ~Short();
 
         /**
          * Compares this Short instance with another.
@@ -71,12 +72,12 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Short& s ) const;
+        virtual int compareTo(const Short& s) const;
 
         /**
          * @returns true if the two Short Objects have the same value.
          */
-        bool equals( const Short& s ) const {
+        bool equals(const Short& s) const {
             return this->value == s.value;
         }
 
@@ -85,7 +86,7 @@ namespace lang{
          * @param s - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Short& s ) const {
+        virtual bool operator==(const Short& s) const {
             return this->value == s.value;
         }
 
@@ -95,7 +96,7 @@ namespace lang{
          * @param s - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Short& s ) const {
+        virtual bool operator<(const Short& s) const {
             return this->value < s.value;
         }
 
@@ -107,12 +108,12 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const short& s ) const;
+        virtual int compareTo(const short& s) const;
 
         /**
          * @returns true if the two Short Objects have the same value.
          */
-        bool equals( const short& s ) const {
+        bool equals(const short& s) const {
             return this->value == s;
         }
 
@@ -121,7 +122,7 @@ namespace lang{
          * @param s - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const short& s ) const {
+        virtual bool operator==(const short& s) const {
             return this->value == s;
         }
 
@@ -131,7 +132,7 @@ namespace lang{
          * @param s - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const short& s ) const {
+        virtual bool operator<(const short& s) const {
             return this->value < s;
         }
 
@@ -145,7 +146,7 @@ namespace lang{
          * @return double the value of the receiver.
          */
         virtual double doubleValue() const {
-            return (double)this->value;
+            return (double) this->value;
         }
 
         /**
@@ -153,7 +154,7 @@ namespace lang{
          * @return float the value of the receiver.
          */
         virtual float floatValue() const {
-            return (float)this->value;
+            return (float) this->value;
         }
 
         /**
@@ -161,7 +162,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual unsigned char byteValue() const {
-            return (unsigned char)this->value;
+            return (unsigned char) this->value;
         }
 
         /**
@@ -177,7 +178,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual int intValue() const {
-            return (int)this->value;
+            return (int) this->value;
         }
 
         /**
@@ -185,15 +186,15 @@ namespace lang{
          * @return long the value of the receiver.
          */
         virtual long long longValue() const {
-            return (long long)this->value;
+            return (long long) this->value;
         }
 
-    public:   // statics
+    public:
 
         /**
          * @returns a string representing the primitive value as Base 10
          */
-        static std::string toString( short value );
+        static std::string toString(short value);
 
         /**
          * Decodes a String into a Short. Accepts decimal, hexadecimal, and octal
@@ -210,7 +211,7 @@ namespace lang{
          * @returns a Short object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Short decode( const std::string& value );
+        static Short decode(const String& value);
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -218,7 +219,7 @@ namespace lang{
          * @param value - the short whose bytes we are to reverse
          * @return the reversed short.
          */
-        static short reverseBytes( short value );
+        static short reverseBytes(short value);
 
         /**
          * Parses the string argument as a signed short in the radix specified by
@@ -238,12 +239,16 @@ namespace lang{
          *    provided that the string is longer than length 1.
          *  * The value represented by the string is not a value of type short.
          *
-         * @param s - the String containing the short representation to be parsed
-         * @param radix - the radix to be used while parsing s
+         * @param s
+         *      The String containing the short representation to be parsed
+         * @param radix
+         *      The radix to be used while parsing the string.
+         *
          * @return the short represented by the string argument in the specified radix.
+         *
          * @throws NumberFormatException - If String does not contain a parsable short.
          */
-        static short parseShort( const std::string& s, int radix );
+        static short parseShort(const String& s, int radix);
 
         /**
          * Parses the string argument as a signed decimal short. The characters
@@ -253,18 +258,21 @@ namespace lang{
          * radix 10 were given as arguments to the parseShort( const std::string, int )
          * method.
          *
-         * @param s - String to convert to a short
+         * @param s
+         *      String to convert to a short
+         *
          * @returns the converted short value
+         *
          * @throws NumberFormatException if the string is not a short.
          */
-        static short parseShort( const std::string& s );
+        static short parseShort(const String& s);
 
         /**
          * Returns a Short instance representing the specified short value.
          * @param value - the short to wrap
          * @return the new Short object wrapping value.
          */
-        static Short valueOf( short value );
+        static Short valueOf(short value);
 
         /**
          * Returns a Short object holding the value given by the specified std::string.
@@ -272,11 +280,15 @@ namespace lang{
          * exactly as if the argument were given to the parseShort( std::string )
          * method. The result is a Short object that represents the short value
          * specified by the string.
-         * @param value - std::string to parse as base 10
+         *
+         * @param value
+         *      String to parse as base 10
+         *
          * @return new Short Object wrapping the primitive
+         *
          * @throws NumberFormatException if the string is not a decimal short.
          */
-        static Short valueOf( const std::string& value );
+        static Short valueOf(const String& value);
 
         /**
          * Returns a Short object holding the value extracted from the specified
@@ -285,12 +297,17 @@ namespace lang{
          * radix specified by the second argument, exactly as if the argument were
          * given to the parseShort( std::string, int ) method. The result is a
          * Short object that represents the short value specified by the string.
-         * @param value - std::string to parse as base ( radix )
-         * @param radix - base of the string to parse.
+         *
+         * @param value
+         *      String to parse as base ( radix )
+         * @param radix
+         *      Base of the string to parse.
+         *
          * @return new Short Object wrapping the primitive
+         *
          * @throws NumberFormatException if the string is not a valid short.
          */
-        static Short valueOf( const std::string& value, int radix );
+        static Short valueOf(const String& value, int radix);
 
     };
 

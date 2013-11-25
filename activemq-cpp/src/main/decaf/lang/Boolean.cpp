@@ -34,7 +34,7 @@ Boolean::Boolean(bool value) : value(value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean::Boolean(const std::string& value) : value(false) {
+Boolean::Boolean(const String& value) : value(false) {
     this->value = parseBoolean(value);
 }
 
@@ -86,7 +86,7 @@ std::string Boolean::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Boolean Boolean::valueOf(const std::string& value) {
+Boolean Boolean::valueOf(const String& value) {
     return Boolean(value);
 }
 
@@ -96,7 +96,7 @@ Boolean Boolean::valueOf(bool value) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::parseBoolean(const std::string& value) {
+bool Boolean::parseBoolean(const String& value) {
     return StringUtils::compareIgnoreCase(value.c_str(), "true") == 0;
 }
 

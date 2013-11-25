@@ -234,37 +234,37 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::OutputStreamWriterTest );
 //#include <decaf/io/InputStreamReaderTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::InputStreamReaderTest );
-//
-//#include <decaf/lang/MathTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::MathTest );
-//#include <decaf/lang/ByteTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ByteTest );
-//#include <decaf/lang/CharacterTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::CharacterTest );
-//#include <decaf/lang/BooleanTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::BooleanTest );
-//#include <decaf/lang/ShortTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ShortTest );
-//#include <decaf/lang/IntegerTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::IntegerTest );
-//#include <decaf/lang/LongTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::LongTest );
-//#include <decaf/lang/FloatTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::FloatTest );
-//#include <decaf/lang/DoubleTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::DoubleTest );
-//#include <decaf/lang/ExceptionTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
+
+#include <decaf/lang/MathTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::MathTest );
+#include <decaf/lang/ByteTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ByteTest );
+#include <decaf/lang/CharacterTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::CharacterTest );
+#include <decaf/lang/BooleanTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::BooleanTest );
+#include <decaf/lang/ShortTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ShortTest );
+#include <decaf/lang/IntegerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::IntegerTest );
+#include <decaf/lang/LongTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::LongTest );
+#include <decaf/lang/FloatTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::FloatTest );
+#include <decaf/lang/DoubleTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::DoubleTest );
+#include <decaf/lang/ExceptionTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
 //#include <decaf/lang/ThreadTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
 //#include <decaf/lang/ThreadLocalTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadLocalTest );
-//#include <decaf/lang/SystemTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
-//#include <decaf/lang/PointerTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
-//#include <decaf/lang/ArrayPointerTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ArrayPointerTest );
+#include <decaf/lang/SystemTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
+#include <decaf/lang/PointerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
+#include <decaf/lang/ArrayPointerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ArrayPointerTest );
 #include <decaf/lang/StringTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::StringTest );
 #include <decaf/lang/StringBuilderTest.h>

@@ -19,12 +19,13 @@
 #define _DECAF_LANG_LONG_H_
 
 #include <decaf/lang/Number.h>
+#include <decaf/lang/String.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 #include <string>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class DECAF_API Long : public Number,
                            public Comparable<Long>,
@@ -62,10 +63,9 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not a a valid 64bit long.
          */
-        Long(const std::string& value);
+        Long(const String& value);
 
-        virtual ~Long() {
-        }
+        virtual ~Long();
 
         /**
          * Compares this Long instance with another.
@@ -221,7 +221,7 @@ namespace lang{
          * @returns a Long object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
-        static Long decode(const std::string& value);
+        static Long decode(const String& value);
 
         /**
          * Returns an long long value with at most a single one-bit, in the position
@@ -291,7 +291,7 @@ namespace lang{
          * @return long long value
          * @throws NumberFormatException on invalid string value
          */
-        static long long parseLong(const std::string& value);
+        static long long parseLong(const String& value);
 
         /**
          * Returns a Long object holding the value extracted from the specified
@@ -305,7 +305,7 @@ namespace lang{
          * @return long long value
          * @throws NumberFormatException on invalid string value
          */
-        static long long parseLong(const std::string& value, int radix);
+        static long long parseLong(const String& value, int radix);
 
         /**
          * Returns the value obtained by reversing the order of the bytes in the
@@ -473,31 +473,38 @@ namespace lang{
          * Returns a Long object holding the value given by the specified
          * std::string.  The argument is interpreted as representing a signed
          * decimal long long, exactly as if the argument were given to the
-         * parseLong( std::string ) method. The result is a Integer object that
+         * parseLong( String ) method. The result is a Integer object that
          * represents the long long value specified by the string.
-         * @param value - std::string to parse as base 10
+         *
+         * @param value
+         *      String to parse as base 10
+         *
          * @return new Long Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal long long.
          */
-        static Long valueOf(const std::string& value);
+        static Long valueOf(const String& value);
 
         /**
          * Returns a Long object holding the value extracted from the specified
          * std::string when parsed with the radix given by the second argument.
          * The first argument is interpreted as representing a signed long long in the
          * radix specified by the second argument, exactly as if the argument were
-         * given to the parseLong( std::string, int ) method. The result is a
+         * given to the parseLong(String, int) method. The result is a
          * Long object that represents the long long value specified by the string.
-         * @param value - std::string to parse as base ( radix )
-         * @param radix - base of the string to parse.
+         *
+         * @param value
+         *      String to parse as base ( radix )
+         * @param radix
+         *      base of the string to parse.
+         *
          * @return new Long Object wrapping the primitive
          * @throws NumberFormatException if the string is not a valid long long.
          */
-        static Long valueOf(const std::string& value, int radix);
+        static Long valueOf(const String& value, int radix);
 
     private:
 
-        static long long parse(const std::string& value, int offset, int radix, bool negative);
+        static long long parse(const String& value, int offset, int radix, bool negative);
 
     };
 

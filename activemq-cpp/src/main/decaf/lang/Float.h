@@ -20,12 +20,13 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Number.h>
+#include <decaf/lang/String.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 #include <string>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class DECAF_API Float : public Number,
                             public Comparable<Float>,
@@ -59,17 +60,17 @@ namespace lang{
         /**
          * @param value - the primitive type to wrap
          */
-        Float( float value );
+        Float(float value);
 
         /**
          * @param value - the primitive type to wrap
          */
-        Float( double value );
+        Float(double value);
 
         /**
          * @param value - the string to convert to a primitive type to wrap
          */
-        Float( const std::string& value );
+        Float(const String& value);
 
         virtual ~Float() {}
 
@@ -81,13 +82,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Float& f ) const;
+        virtual int compareTo(const Float& f) const;
 
         /**
          * @param f - the Float object to compare against.
          * @returns true if the two Float Objects have the same value.
          */
-        bool equals( const Float& f ) const {
+        bool equals(const Float& f) const {
             return this->value == f.value;
         }
 
@@ -96,7 +97,7 @@ namespace lang{
          * @param f - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Float& f ) const {
+        virtual bool operator==(const Float& f) const {
             return this->value == f.value;
         }
 
@@ -106,7 +107,7 @@ namespace lang{
          * @param f - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Float& f ) const {
+        virtual bool operator<(const Float& f) const {
             return this->value < f.value;
         }
 
@@ -118,13 +119,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const float& f ) const;
+        virtual int compareTo(const float& f) const;
 
         /**
          * @param f - the Float object to compare against.
          * @returns true if the two Float Objects have the same value.
          */
-        bool equals( const float& f ) const {
+        bool equals(const float& f) const {
             return this->value == f;
         }
 
@@ -133,7 +134,7 @@ namespace lang{
          * @param f - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const float& f ) const {
+        virtual bool operator==(const float& f) const {
             return this->value == f;
         }
 
@@ -143,7 +144,7 @@ namespace lang{
          * @param f - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const float& f ) const {
+        virtual bool operator<(const float& f) const {
             return this->value < f;
         }
 
@@ -157,7 +158,7 @@ namespace lang{
          * @return double the value of the receiver.
          */
         virtual double doubleValue() const {
-            return (double)this->value;
+            return (double) this->value;
         }
 
         /**
@@ -173,7 +174,7 @@ namespace lang{
          * @return byte the value of the receiver.
          */
         virtual unsigned char byteValue() const {
-            return (unsigned char)this->value;
+            return (unsigned char) this->value;
         }
 
         /**
@@ -181,7 +182,7 @@ namespace lang{
          * @return short the value of the receiver.
          */
         virtual short shortValue() const {
-            return (short)this->value;
+            return (short) this->value;
         }
 
         /**
@@ -189,7 +190,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual int intValue() const {
-            return (int)this->value;
+            return (int) this->value;
         }
 
         /**
@@ -197,7 +198,7 @@ namespace lang{
          * @return long the value of the receiver.
          */
         virtual long long longValue() const {
-            return (long long)this->value;
+            return (long long) this->value;
         }
 
         /**
@@ -210,7 +211,8 @@ namespace lang{
          */
         bool isNaN() const;
 
-    public:   // Statics
+    public:
+        // Statics
 
         /**
          * Compares the two specified double values. The sign of the integer value
@@ -222,7 +224,7 @@ namespace lang{
          * 0 if f1 is numerically less than f2; and a value greater than 0  if f1 is
          * numerically greater than f2.
          */
-        static int compare( float f1, float f2 );
+        static int compare(float f1, float f2);
 
         /**
          * Returns a representation of the specified floating-point value according
@@ -245,7 +247,7 @@ namespace lang{
          * @param value - the float to convert to int bits
          * @returns the int that holds the float's value
          */
-        static int floatToIntBits( float value );
+        static int floatToIntBits(float value);
 
         /**
          * Returns a representation of the specified floating-point value according
@@ -272,7 +274,7 @@ namespace lang{
          *      The float to convert to a raw int.
          * @returns the raw int value of the float
          */
-        static int floatToRawIntBits( float value );
+        static int floatToRawIntBits(float value);
 
         /**
          * Returns the float value corresponding to a given bit representation. The
@@ -291,28 +293,36 @@ namespace lang{
          * @param bits - the bits of the float encoded as a float
          * @return a new float created from the int bits.
          */
-        static float intBitsToFloat( int bits );
+        static float intBitsToFloat(int bits);
 
         /**
          * @param value - The float to check.
          * @returns true if the float is equal to infinity.
          */
-        static bool isInfinite( float value );
+        static bool isInfinite(float value);
 
         /**
-         * @param value - The float to check.
+         * Checks and returns whether the given float is equal to NaN.
+         *
+         * @param value
+         *      The float to check.
+         *
          * @returns true if the float is equal to NaN.
          */
-        static bool isNaN( float value );
+        static bool isNaN(float value);
 
         /**
          * Returns a new float initialized to the value represented by the
          * specified string, as performed by the valueOf method of class Float.
-         * @param value - the string to parse
+         *
+         * @param value
+         *      The string to parse.
+         *
          * @returns a float parsed from the string
-         * @throw NumberFormatException
+         *
+         * @throw NumberFormatException if an error occurs parsing the String.
          */
-        static float parseFloat( const std::string& value );
+        static float parseFloat(const String& value);
 
         /**
          * Returns a hexadecimal string representation of the float argument. All
@@ -348,7 +358,7 @@ namespace lang{
          * @param value - The float to convert to a string
          * @returns the Hex formatted float string.
          */
-        static std::string toHexString( float value );
+        static std::string toHexString(float value);
 
         /**
          * Returns a string representation of the float  argument. All characters
@@ -378,17 +388,20 @@ namespace lang{
          *    representing the fractional part of a, followed by the letter 'E',
          *    followed by a representation of n as a decimal integer, as produced
          *    by the method Integer.toString(int).
-         * @param value - The float to convert to a string
+         *
+         * @param value
+         *      The float to convert to a string
+         *
          * @returns the formatted float string.
          */
-        static std::string toString( float value );
+        static std::string toString(float value);
 
         /**
          * Returns a Float instance representing the specified float value.
          * @param value - float to wrap
          * @returns new Float instance wrapping the primitive value
          */
-        static Float valueOf( float value );
+        static Float valueOf(float value);
 
         /**
          * Returns a Float instance that wraps a primitive float which is parsed
@@ -398,13 +411,13 @@ namespace lang{
          * @returns a new Float instance wrapping the float parsed from value
          * @throws NumberFormatException on error.
          */
-        static Float valueOf( const std::string& value );
+        static Float valueOf(const String& value);
 
     private:
 
-        static const unsigned int SINGLE_EXPONENT_MASK = 0x7F800000;
-        static const unsigned int SINGLE_MANTISSA_MASK = 0x007FFFFF;
-        static const unsigned int SINGLE_NAN_BITS = (SINGLE_EXPONENT_MASK | 0x00400000);
+        static const unsigned int SINGLE_EXPONENT_MASK;
+        static const unsigned int SINGLE_MANTISSA_MASK;
+        static const unsigned int SINGLE_NAN_BITS;
 
     };
 

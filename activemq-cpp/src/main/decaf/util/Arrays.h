@@ -53,20 +53,20 @@ namespace util {
          * @throws IllegalArgumentException if the size parameter is negative, or the start
          *         index is greater than the end index.
          */
-        template< typename E>
-        static void fill( E* array, int size, const E& value ) {
+        template<typename E>
+        static void fill(E* array, int size, const E& value) {
 
-            if( array == NULL ) {
+            if (array == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__, "Array pointer given was NULL." );
+                    __FILE__, __LINE__, "Array pointer given was NULL.");
             }
 
-            if( size < 0 ) {
+            if (size < 0) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__, "Array size value given was negative." );
+                    __FILE__, __LINE__, "Array size value given was negative.");
             }
 
-            for( int i = 0; i < size; ++i ) {
+            for (int i = 0; i < size; ++i) {
                 array[i] = value;
             }
         }
@@ -92,29 +92,29 @@ namespace util {
          *         is greater than the size parameter.
          */
         template< typename E>
-        static void fill( E* array, int size, int start, int end, const E& value ) {
+        static void fill(E* array, int size, int start, int end, const E& value) {
 
-            if( array == NULL ) {
+            if (array == NULL) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__, "Array pointer given was NULL." );
             }
 
-            if( size < 0 ) {
+            if (size < 0) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__, "Array size value given was negative." );
             }
 
-            if( start > end ) {
+            if (start > end) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__, "The start index was greater than the end index." );
             }
 
-            if( start < 0 || end > size ) {
+            if (start < 0 || end > size) {
                 throw decaf::lang::exceptions::IndexOutOfBoundsException(
                     __FILE__, __LINE__, "The start index {%d} end index {%d} range is invalid.", start, end );
             }
 
-            for( int i = start; i < end; ++i ) {
+            for (int i = start; i < end; ++i) {
                 array[i] = value;
             }
         }

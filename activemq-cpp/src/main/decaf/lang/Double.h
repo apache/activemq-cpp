@@ -21,11 +21,12 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/Number.h>
+#include <decaf/lang/String.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 #include <string>
 
-namespace decaf{
-namespace lang{
+namespace decaf {
+namespace lang {
 
     class DECAF_API Double : public Number,
                              public Comparable<Double>,
@@ -62,7 +63,7 @@ namespace lang{
          * @param value
          *      The primitive type to wrap.
          */
-        Double( double value );
+        Double(double value);
 
         /**
          * Constructs a new Double and attempts to convert the given string to a double
@@ -74,7 +75,7 @@ namespace lang{
          *
          * @throws NumberFormatException if the string is not a a valid double.
          */
-        Double( const std::string& value );
+        Double(const String& value);
 
         virtual ~Double() {}
 
@@ -86,13 +87,13 @@ namespace lang{
          * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Double& d ) const;
+        virtual int compareTo(const Double& d) const;
 
         /**
          * @param d - the Double object to compare against.
          * @returns true if the two Double Objects have the same value.
          */
-        bool equals( const Double& d ) const {
+        bool equals(const Double& d) const {
             return this->value == d.value;
         }
 
@@ -101,7 +102,7 @@ namespace lang{
          * @param d - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const Double& d ) const {
+        virtual bool operator==(const Double& d) const {
             return this->value == d.value;
         }
 
@@ -111,7 +112,7 @@ namespace lang{
          * @param d - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const Double& d ) const {
+        virtual bool operator<(const Double& d) const {
             return this->value < d.value;
         }
 
@@ -123,13 +124,13 @@ namespace lang{
          * than the passed in value, and -1 if this object represents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const double& d ) const;
+        virtual int compareTo(const double& d) const;
 
         /**
          * @param d - the Double object to compare against.
          * @returns true if the two Double Objects have the same value.
          */
-        bool equals( const double& d ) const {
+        bool equals(const double& d) const {
             return this->value == d;
         }
 
@@ -138,7 +139,7 @@ namespace lang{
          * @param d - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator==( const double& d ) const {
+        virtual bool operator==(const double& d) const {
             return this->value == d;
         }
 
@@ -148,7 +149,7 @@ namespace lang{
          * @param d - the value to be compared to this one.
          * @return true if this object is equal to the one passed.
          */
-        virtual bool operator<( const double& d ) const {
+        virtual bool operator<(const double& d) const {
             return this->value < d;
         }
 
@@ -170,7 +171,7 @@ namespace lang{
          * @return float the value of the receiver.
          */
         virtual float floatValue() const {
-            return (float)this->value;
+            return (float) this->value;
         }
 
         /**
@@ -178,7 +179,7 @@ namespace lang{
          * @return byte the value of the receiver.
          */
         virtual unsigned char byteValue() const {
-            return (unsigned char)this->value;
+            return (unsigned char) this->value;
         }
 
         /**
@@ -186,7 +187,7 @@ namespace lang{
          * @return short the value of the receiver.
          */
         virtual short shortValue() const {
-            return (short)this->value;
+            return (short) this->value;
         }
 
         /**
@@ -194,7 +195,7 @@ namespace lang{
          * @return int the value of the receiver.
          */
         virtual int intValue() const {
-            return (int)this->value;
+            return (int) this->value;
         }
 
         /**
@@ -202,7 +203,7 @@ namespace lang{
          * @return long the value of the receiver.
          */
         virtual long long longValue() const {
-            return (long long)this->value;
+            return (long long) this->value;
         }
 
         /**
@@ -215,7 +216,7 @@ namespace lang{
          */
         bool isNaN() const;
 
-    public:  // Statics
+    public:
 
         /**
          * Compares the two specified double values. The sign of the integer value
@@ -228,7 +229,7 @@ namespace lang{
          * 0 if d1 is numerically less than d2; and a value greater than 0  if d1 is
          * numerically greater than d2.
          */
-        static int compare( double d1, double d2 );
+        static int compare(double d1, double d2);
 
         /**
          * Returns a representation of the specified floating-point value according
@@ -252,7 +253,7 @@ namespace lang{
          * @param value - double to be converted
          * @returns the long long bits that make up the double
          */
-        static long long doubleToLongBits( double value );
+        static long long doubleToLongBits(double value);
 
         /**
          * Returns a representation of the specified floating-point value according
@@ -279,19 +280,19 @@ namespace lang{
          * @param value - double to be converted
          * @returns the long long bits that make up the double
          */
-        static long long doubleToRawLongBits( double value );
+        static long long doubleToRawLongBits(double value);
 
         /**
          * @param value - The double to check.
          * @returns true if the double is equal to infinity.
          */
-        static bool isInfinite( double value );
+        static bool isInfinite(double value);
 
         /**
          * @param value - The double to check.
          * @returns true if the double is equal to NaN.
          */
-        static bool isNaN( double value );
+        static bool isNaN(double value);
 
         /**
          * Returns the double value corresponding to a given bit representation.
@@ -309,16 +310,20 @@ namespace lang{
          * @param bits - the long long bits to convert to double
          * @return the double converted from the bits
          */
-        static double longBitsToDouble( long long bits );
+        static double longBitsToDouble(long long bits);
 
         /**
          * Returns a new double initialized to the value represented by the
          * specified string, as performed by the valueOf method of class Double.
-         * @param value - The string to parse to an double
+         *
+         * @param value
+         *      The string to parse to an double.
+         *
          * @returns a double parsed from the passed string
+         *
          * @throws NumberFormatException
          */
-        static double parseDouble( const std::string value );
+        static double parseDouble(const String& value);
 
         /**
          * Returns a hexadecimal string representation of the double argument. All
@@ -354,7 +359,7 @@ namespace lang{
          * @param value - The double to convert to a string
          * @returns the Hex formatted double string.
          */
-        static std::string toHexString( double value );
+        static std::string toHexString(double value);
 
         /**
          * Returns a string representation of the double argument. All characters
@@ -387,31 +392,37 @@ namespace lang{
          * @param value - The double to convert to a string
          * @returns the formatted double string.
          */
-        static std::string toString( double value );
+        static std::string toString(double value);
 
         /**
          * Returns a Double instance representing the specified double value.
-         * @param value - double to wrap
+         *
+         * @param value
+         *      The double to wrap.
+         *
          * @returns new Double instance wrapping the primitive value
          */
-        static Double valueOf( double value );
+        static Double valueOf(double value);
 
         /**
-         * Returns a Double instance that wraps a primtive double which is parsed
+         * Returns a Double instance that wraps a primitive double which is parsed
          * from the string value passed.
-         * @param value - the string to parse
+         *
+         * @param value
+         *      The string to parse
+         *
          * @returns a new Double instance wrapping the double parsed from value
+         *
          * @throws NumberFormatException on error.
          */
-        static Double valueOf( const std::string& value );
+        static Double valueOf(const String& value);
 
     private:
 
-        static const long long DOUBLE_SIGN_MASK = 0x8000000000000000LL;
-        static const long long DOUBLE_EXPONENT_MASK = 0x7FF0000000000000LL;
-        static const long long DOUBLE_MANTISSA_MASK = 0x000FFFFFFFFFFFFFLL;
-        static const long long DOUBLE_NAN_BITS =
-            DOUBLE_EXPONENT_MASK | 0x0008000000000000LL;
+        static const long long DOUBLE_SIGN_MASK;
+        static const long long DOUBLE_EXPONENT_MASK;
+        static const long long DOUBLE_MANTISSA_MASK;
+        static const long long DOUBLE_NAN_BITS;
 
     };
 

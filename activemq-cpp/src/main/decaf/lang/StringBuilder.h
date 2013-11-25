@@ -48,7 +48,8 @@ namespace lang {
      *
      * @since 1.0
      */
-    class DECAF_API StringBuilder : public AbstractStringBuilder {
+    class DECAF_API StringBuilder : public AbstractStringBuilder,
+                                    public Appendable {
     public:
 
         /**
@@ -91,6 +92,8 @@ namespace lang {
         virtual ~StringBuilder();
 
     public:
+
+        virtual int length() const;
 
         /**
          * Appends the string representation of the given object pointer.  If the pointer
