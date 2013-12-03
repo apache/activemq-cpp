@@ -162,10 +162,10 @@ void OpenwireEnhancedConnectionTest::testDestinationSourceGetters() {
     int currentTempQueueCount = listener.tempQueueCount;
     int currentTempTopicCount = listener.tempTopicCount;
 
-    std::auto_ptr<Destination> destination1( session->createTopic("Test.Topic") );
-    std::auto_ptr<MessageConsumer> consumer1( session->createConsumer( destination1.get() ) );
-    std::auto_ptr<Destination> destination2( session->createQueue("Test.Queue") );
-    std::auto_ptr<MessageConsumer> consumer2( session->createConsumer( destination2.get() ) );
+    std::auto_ptr<Destination> destination1(session->createTopic(UUID::randomUUID().toString()));
+    std::auto_ptr<MessageConsumer> consumer1(session->createConsumer(destination1.get()));
+    std::auto_ptr<Destination> destination2(session->createQueue(UUID::randomUUID().toString()) );
+    std::auto_ptr<MessageConsumer> consumer2(session->createConsumer(destination2.get()));
 
     consumer1->close();
     consumer2->close();
