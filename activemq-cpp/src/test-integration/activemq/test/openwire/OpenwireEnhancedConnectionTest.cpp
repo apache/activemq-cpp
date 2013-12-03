@@ -155,10 +155,17 @@ void OpenwireEnhancedConnectionTest::testDestinationSourceGetters() {
     connection->start();
     source->start();
 
-    std::auto_ptr<Destination> destination1( session->createTopic("Test.Topic") );
-    std::auto_ptr<MessageConsumer> consumer1( session->createConsumer( destination1.get() ) );
-    std::auto_ptr<Destination> destination2( session->createQueue("Test.Queue") );
-    std::auto_ptr<MessageConsumer> consumer2( session->createConsumer( destination2.get() ) );
+    TimeUnit::SECONDS.sleep(2);
+
+    int currentQueueCount = listener.queueCount;
+    int currentTopicCount = listener.topicCount;
+    int currentTempQueueCount = listener.tempQueueCount;
+    int currentTempTopicCount = listener.tempTopicCount;
+
+    std::auto_ptr<Destination> destination1(session->createTopic(UUID::randomUUID().toString()));
+    std::auto_ptr<MessageConsumer> consumer1(session->createConsumer(destination1.get()));
+    std::auto_ptr<Destination> destination2(session->createQueue(UUID::randomUUID().toString()) );
+    std::auto_ptr<MessageConsumer> consumer2(session->createConsumer(destination2.get()));
 
     consumer1->close();
     consumer2->close();
@@ -166,27 +173,28 @@ void OpenwireEnhancedConnectionTest::testDestinationSourceGetters() {
     std::auto_ptr<Destination> destination3( session->createTemporaryQueue() );
     std::auto_ptr<Destination> destination4( session->createTemporaryTopic() );
 
-    Thread::sleep(1500);
+    TimeUnit::SECONDS.sleep(2);
 
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one Queue", 1, listener.queueCount);
-    CPPUNIT_ASSERT_MESSAGE("Should be at least Topic", listener.topicCount >= 1);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Queue", 1, listener.tempQueueCount);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Topic", 1, listener.tempTopicCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one Queue", currentQueueCount + 1, listener.queueCount);
+    CPPUNIT_ASSERT_MESSAGE("Should be at least Topic", listener.topicCount > currentTopicCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Queue", currentTempQueueCount + 1, listener.tempQueueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Topic", currentTempTopicCount + 1, listener.tempTopicCount);
 
     amq->destroyDestination(destination1.get());
     amq->destroyDestination(destination2.get());
 
-    Thread::sleep(1500);
+    TimeUnit::SECONDS.sleep(2);
 
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be no Queues", 0, listener.queueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be no Queues created by this test",
+                                 currentQueueCount, listener.queueCount);
 
     source->stop();
 
     std::auto_ptr<Destination> destination5( session->createTemporaryQueue() );
     std::auto_ptr<Destination> destination6( session->createTemporaryTopic() );
 
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Queue", 1, listener.tempQueueCount);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be one temp Topic", 1, listener.tempTopicCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Temp Queue Counts shouldn't change", currentTempQueueCount + 1, listener.tempQueueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Temp Topic Counts shouldn't change", currentTempTopicCount + 1, listener.tempTopicCount);
 
     listener.reset();
     source->start();
@@ -194,10 +202,12 @@ void OpenwireEnhancedConnectionTest::testDestinationSourceGetters() {
     std::auto_ptr<Destination> destination7( session->createTemporaryQueue() );
     std::auto_ptr<Destination> destination8( session->createTemporaryTopic() );
 
-    Thread::sleep(1500);
+    TimeUnit::SECONDS.sleep(2);
 
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be two temp Queues", 3, listener.tempQueueCount);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be two temp Topics", 3, listener.tempTopicCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be three total temp Queues from this test",
+                                 currentTempQueueCount + 3, listener.tempQueueCount);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should be three total temp Topics from this test",
+                                 currentTempTopicCount + 3, listener.tempTopicCount);
 
     source->stop();
     connection->close();
@@ -232,12 +242,10 @@ void OpenwireEnhancedConnectionTest::testDestinationSource() {
     connection->start();
     source->start();
 
-    TimeUnit::SECONDS.sleep(1);
+    TimeUnit::SECONDS.sleep(2);
 
-    CPPUNIT_ASSERT_EQUAL(0, (int)source->getQueues().size());
-    CPPUNIT_ASSERT_EQUAL(0, (int)source->getTopics().size());
-    CPPUNIT_ASSERT_EQUAL(0, (int)source->getTemporaryQueues().size());
-    CPPUNIT_ASSERT_EQUAL(0, (int)source->getTemporaryTopics().size());
+    int currTempQueueCount = (int)source->getTemporaryQueues().size();
+    int currTempTopicCount = (int)source->getTemporaryTopics().size();
 
     std::auto_ptr<Destination> destination1(session->createTemporaryQueue());
     std::auto_ptr<Destination> destination2(session->createTemporaryTopic());
@@ -251,8 +259,8 @@ void OpenwireEnhancedConnectionTest::testDestinationSource() {
     std::vector<cms::TemporaryQueue*> tempQueues = source->getTemporaryQueues();
     std::vector<cms::TemporaryTopic*> tempTopics = source->getTemporaryTopics();
 
-    CPPUNIT_ASSERT_EQUAL(3, (int)tempQueues.size());
-    CPPUNIT_ASSERT_EQUAL(3, (int)tempTopics.size());
+    CPPUNIT_ASSERT_EQUAL(currTempQueueCount + 3, (int)tempQueues.size());
+    CPPUNIT_ASSERT_EQUAL(currTempTopicCount + 3, (int)tempTopics.size());
 
     for (int i = 0; i < 3; ++i) {
         delete tempQueues[i];
