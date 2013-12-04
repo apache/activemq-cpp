@@ -1,5 +1,18 @@
 =========================================================================
-==  Release Notes for ActiveMQ CPP 3.8.0                               ==
+==  Release Notes for ActiveMQ CPP 3.8.2                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-514] - ActiveMQBytesMessage destruction may cause unhandled exception
+    [AMQCPP-515] - Stomp frame mishandled duplicate headers
+    [AMQCPP-516] - Don't fire transport interrupted event when no resume is possible
+    [AMQCPP-520] - AMQ crashes when an exception comes during the connection closure
+    [AMQCPP-525] - C++ client hangs when using the failover transport to connect to a network of brokers
+
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.8.1                               ==
 =========================================================================
 
 Bug
