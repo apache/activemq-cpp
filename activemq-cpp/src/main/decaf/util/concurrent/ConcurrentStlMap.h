@@ -774,8 +774,11 @@ namespace concurrent{
             typename std::map<K, V, COMPARATOR>::const_iterator iter;
 
             synchronized(&mutex) {
-                iter = valueMap.find(key);
-                return iter != valueMap.end();
+
+                if (!valueMap.empty()) {
+                    iter = valueMap.find(key);
+                    return iter != valueMap.end();
+                }
             }
 
             return false;
@@ -829,9 +832,12 @@ namespace concurrent{
         virtual V& get(const K& key) {
             typename std::map<K,V,COMPARATOR>::iterator iter;
             synchronized(&mutex) {
-                iter = valueMap.find(key);
-                if (iter != valueMap.end()) {
-                    return iter->second;
+
+                if (!valueMap.empty()) {
+                    iter = valueMap.find(key);
+                    if (iter != valueMap.end()) {
+                        return iter->second;
+                    }
                 }
             }
 
@@ -845,9 +851,11 @@ namespace concurrent{
         virtual const V& get(const K& key) const {
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
             synchronized(&mutex) {
-                iter = valueMap.find(key);
-                if (iter != valueMap.end()) {
-                    return iter->second;
+                if (!valueMap.empty()) {
+                    iter = valueMap.find(key);
+                    if (iter != valueMap.end()) {
+                        return iter->second;
+                    }
                 }
             }
 
@@ -916,13 +924,16 @@ namespace concurrent{
         virtual V remove(const K& key) {
             V result = V();
             synchronized(&mutex) {
-                typename std::map<K, V, COMPARATOR>::iterator iter = valueMap.find(key);
-                if (iter == valueMap.end()) {
-                    return result;
+
+                if (!valueMap.empty()) {
+                    typename std::map<K, V, COMPARATOR>::iterator iter = valueMap.find(key);
+                    if (iter == valueMap.end()) {
+                        return result;
+                    }
+                    result = iter->second;
+                    valueMap.erase(iter);
+                    modCount++;
                 }
-                result = iter->second;
-                valueMap.erase(iter);
-                modCount++;
             }
 
             return result;
