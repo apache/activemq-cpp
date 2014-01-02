@@ -50,7 +50,7 @@ namespace concurrent{
     typedef void* PLATFORM_THREAD_ENTRY_ARG;
     #define PLATFORM_THREAD_RETURN() return 0;
     #define PLATFORM_THREAD_CALLBACK_TYPE void*
-    #define PLATFORM_DEFAULT_STACK_SIZE 0x8000
+    #define PLATFORM_DEFAULT_STACK_SIZE 0x10000
     #define PLATFORM_CALLING_CONV
 
     typedef pthread_t decaf_thread_t;
