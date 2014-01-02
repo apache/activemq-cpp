@@ -352,10 +352,6 @@ namespace {
     void createThreadInstance(ThreadHandle* thread, long long stackSize, int priority,
                               bool suspended, threadingTask threadMain, void* threadArg) {
 
-        if (stackSize <= 0) {
-            stackSize = PLATFORM_DEFAULT_STACK_SIZE;
-        }
-
         thread->stackSize = stackSize;
         thread->priority = priority;
         thread->suspended = suspended;

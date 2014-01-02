@@ -415,7 +415,7 @@ void PlatformThread::setPriority(decaf_thread_t thread, int priority) {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long PlatformThread::getStackSize(decaf_thread_t thread DECAF_UNUSED) {
-    return PLATFORM_DEFAULT_STACK_SIZE;
+    return PLATFORM_MIN_STACK_SIZE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

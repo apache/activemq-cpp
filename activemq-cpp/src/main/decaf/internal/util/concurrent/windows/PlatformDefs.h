@@ -57,7 +57,7 @@ namespace concurrent{
 
     #define PLATFORM_THREAD_RETURN() return 0;
     #define PLATFORM_THREAD_CALLBACK_TYPE unsigned
-    #define PLATFORM_DEFAULT_STACK_SIZE 0x8000
+    #define PLATFORM_DEFAULT_STACK_SIZE 0x20000
     #define PLATFORM_CALLING_CONV __stdcall
 
     typedef HANDLE decaf_thread_t;

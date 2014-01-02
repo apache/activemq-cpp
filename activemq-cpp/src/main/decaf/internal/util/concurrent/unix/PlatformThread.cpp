@@ -342,6 +342,10 @@ void PlatformThread::createNewThread(decaf_thread_t* handle, threadMainMethod th
         if (stackSize < PTHREAD_STACK_MIN) {
             stackSize = PTHREAD_STACK_MIN;
         }
+    #else
+        if (stackSize < PLATFORM_MIN_STACK_SIZE) {
+            stackSize = PLATFORM_MIN_STACK_SIZE;
+        }
     #endif
 
         if (pthread_attr_setstacksize(&attributes, (size_t)stackSize) == EINVAL) {
