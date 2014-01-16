@@ -684,13 +684,21 @@ void OpenSSLSocket::verifyServerCert(const std::string& serverName) {
     }
 
     X509_NAME* subject = X509_get_subject_name(cert);
-    char buffer[256];
+    X509_NAME_ENTRY *entry;
+    int lastpos = -1;
 
-    if (subject != NULL && X509_NAME_get_text_by_NID(subject, NID_commonName, buffer, 256) > 0) {
-        buffer[255] = 0;
-        if (StringUtils::compare(buffer, serverName.c_str()) == 0) {
-            return;
-        }
+    if (subject != NULL) {
+       for (;;) {
+           lastpos = X509_NAME_get_index_by_NID(subject, NID_commonName, lastpos);
+           if (lastpos == -1) {
+               break;
+           }
+           entry = X509_NAME_get_entry(subject, lastpos);
+           const char * entryText = (const char *) ASN1_STRING_data(X509_NAME_ENTRY_get_data(entry));
+            if (StringUtils::compare(entryText , serverName.c_str()) == 0) {
+                return;
+            }
+       }
     }
 
     // We got here so no match to serverName in the Certificate
