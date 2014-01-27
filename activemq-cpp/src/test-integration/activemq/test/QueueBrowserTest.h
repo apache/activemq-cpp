@@ -33,6 +33,7 @@ namespace test {
         void testReceiveBrowseReceive();
         void testBrowseReceive();
         void testQueueBrowserWith2Consumers();
+        void testRepeatedQueueBrowserCreateDestroy();
 
     };
 
