@@ -366,8 +366,12 @@ Pointer<StompFrame> StompWireFormat::marshalMessage(const Pointer<Command> comma
 
     try {
         Pointer<ActiveMQBytesMessage> bytesMessage = message.dynamicCast<ActiveMQBytesMessage>();
-        frame->setBody(bytesMessage->getBodyBytes(), bytesMessage->getBodyLength());
+        unsigned char* bodyBytes = bytesMessage->getBodyBytes();
+        frame->setBody(bodyBytes, bytesMessage->getBodyLength());
         frame->setProperty(StompCommandConstants::HEADER_CONTENTLENGTH, Long::toString(bytesMessage->getBodyLength()));
+        if (bodyBytes) {
+            delete [] bodyBytes;
+        }
         return frame;
     } catch (ClassCastException& ex) {
     }
