@@ -750,7 +750,7 @@ void FailoverTransport::handleConnectionControl(const Pointer<Command> control) 
                     if (isReconnectSupported()) {
                         reconnect(URI(reconnectStr));
                     }
-                } catch (Exception e) {
+                } catch (Exception& e) {
                 }
             }
         }
