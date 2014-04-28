@@ -188,8 +188,7 @@ namespace discovery {
                     service->setFailed(true);
                     service->setFailureCount(service->getFailureCount() + 1);
 
-                    long
-                    reconnectDelay = 0;
+                    long long reconnectDelay = 0;
                     if (!useExponentialBackOff) {
                         reconnectDelay = initialReconnectDelay;
                     } else {
