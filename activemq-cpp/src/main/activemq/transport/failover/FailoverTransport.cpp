@@ -437,7 +437,7 @@ void FailoverTransport::oneway(const Pointer<Command> command) {
 
                     while (transport == NULL && !this->impl->closed && this->impl->connectionFailure == NULL) {
                         long long end = System::currentTimeMillis();
-                        if (this->impl->timeout > 0 && (end - start > this->impl->timeout)) {
+                        if (command->isMessage() && this->impl->timeout > 0 && (end - start > this->impl->timeout)) {
                             timedout = true;
                             break;
                         }
