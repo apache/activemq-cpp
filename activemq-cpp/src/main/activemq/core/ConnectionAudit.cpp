@@ -90,30 +90,31 @@ void ConnectionAudit::removeDispatcher(Dispatcher* dispatcher) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ConnectionAudit::isDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
-
-    if (checkForDuplicates && message != NULL) {
-        Pointer<ActiveMQDestination> destination = message->getDestination();
-        if (destination != NULL) {
-            if (destination->isQueue()) {
+    synchronized(&this->impl->mutex) {
+        if (checkForDuplicates && message != NULL) {
+            Pointer<ActiveMQDestination> destination = message->getDestination();
+            if (destination != NULL) {
+                if (destination->isQueue()) {
+                    Pointer<ActiveMQMessageAudit> audit;
+                    try {
+                        audit = this->impl->destinations.get(destination);
+                    } catch (NoSuchElementException& ex) {
+                        audit.reset(new ActiveMQMessageAudit(auditDepth, auditMaximumProducerNumber));
+                        this->impl->destinations.put(destination, audit);
+                    }
+                    bool result = audit->isDuplicate(message->getMessageId());
+                    return result;
+                }
                 Pointer<ActiveMQMessageAudit> audit;
                 try {
-                    audit = this->impl->destinations.get(destination);
+                    audit = this->impl->dispatchers.get(dispatcher);
                 } catch (NoSuchElementException& ex) {
                     audit.reset(new ActiveMQMessageAudit(auditDepth, auditMaximumProducerNumber));
-                    this->impl->destinations.put(destination, audit);
+                    this->impl->dispatchers.put(dispatcher, audit);
                 }
                 bool result = audit->isDuplicate(message->getMessageId());
                 return result;
             }
-            Pointer<ActiveMQMessageAudit> audit;
-            try {
-                audit = this->impl->dispatchers.get(dispatcher);
-            } catch (NoSuchElementException& ex) {
-                audit.reset(new ActiveMQMessageAudit(auditDepth, auditMaximumProducerNumber));
-                this->impl->dispatchers.put(dispatcher, audit);
-            }
-            bool result = audit->isDuplicate(message->getMessageId());
-            return result;
         }
     }
     return false;
@@ -121,19 +122,21 @@ bool ConnectionAudit::isDuplicate(Dispatcher* dispatcher, Pointer<commands::Mess
 
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionAudit::rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
-    if (checkForDuplicates && message != NULL) {
-        Pointer<ActiveMQDestination> destination = message->getDestination();
-        if (destination != NULL) {
-            if (destination->isQueue()) {
-                try {
-                    Pointer<ActiveMQMessageAudit> audit = this->impl->destinations.get(destination);
-                    audit->rollback(message->getMessageId());
-                } catch (NoSuchElementException& ex) {}
-            } else {
-                try {
-                    Pointer<ActiveMQMessageAudit> audit = this->impl->dispatchers.get(dispatcher);
-                    audit->rollback(message->getMessageId());
-                } catch (NoSuchElementException& ex) {}
+    synchronized(&this->impl->mutex) {
+        if (checkForDuplicates && message != NULL) {
+            Pointer<ActiveMQDestination> destination = message->getDestination();
+            if (destination != NULL) {
+                if (destination->isQueue()) {
+                    try {
+                        Pointer<ActiveMQMessageAudit> audit = this->impl->destinations.get(destination);
+                        audit->rollback(message->getMessageId());
+                    } catch (NoSuchElementException& ex) {}
+                } else {
+                    try {
+                        Pointer<ActiveMQMessageAudit> audit = this->impl->dispatchers.get(dispatcher);
+                        audit->rollback(message->getMessageId());
+                    } catch (NoSuchElementException& ex) {}
+                }
             }
         }
     }
