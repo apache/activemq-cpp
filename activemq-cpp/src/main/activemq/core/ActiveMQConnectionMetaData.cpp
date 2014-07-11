@@ -51,7 +51,7 @@ std::string ActiveMQConnectionMetaData::getCMSProviderName() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnectionMetaData::getProviderVersion() const {
-    return "3.8.2";
+    return "3.8.3";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ int ActiveMQConnectionMetaData::getProviderMinorVersion() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConnectionMetaData::getProviderPatchVersion() const {
-    return 2;
+    return 3;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,11 +74,11 @@ std::vector<std::string> ActiveMQConnectionMetaData::getCMSXPropertyNames() cons
 
     std::vector<std::string> jmxProperties;
 
-    jmxProperties.push_back( "JMSXUserID" );
-    jmxProperties.push_back( "JMSXGroupID" );
-    jmxProperties.push_back( "JMSXGroupSeq" );
-    jmxProperties.push_back( "JMSXDeliveryCount" );
-    jmxProperties.push_back( "JMSXProducerTXID" );
+    jmxProperties.push_back("JMSXUserID");
+    jmxProperties.push_back("JMSXGroupID");
+    jmxProperties.push_back("JMSXGroupSeq");
+    jmxProperties.push_back("JMSXDeliveryCount");
+    jmxProperties.push_back("JMSXProducerTXID");
 
     return jmxProperties;
 }

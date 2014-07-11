@@ -1,4 +1,22 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.8.3                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-527] - ConcurrentStlMap - stl map find crash with empty map
+    [AMQCPP-529] - Crash in Threads due to small stack size (set to 32768 bytes)
+    [AMQCPP-530] - SSL does not find hostname in cert with multiple cn's in dn
+    [AMQCPP-533] - Memory leak in StompWireFormat.cpp
+    [AMQCPP-538] - Catch exception by value in FailoverTransport
+    [AMQCPP-546] - ConnetionAudit should be thread safe
+    [AMQCPP-547] - activemq::core::ConnectionAudit::isDuplicate is not thread safe
+
+Improvement
+
+    [AMQCPP-545] - Failover transport timeout options should only operate on Message sends.
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.8.2                               ==
 =========================================================================
 
@@ -9,7 +27,6 @@ Bug
     [AMQCPP-516] - Don't fire transport interrupted event when no resume is possible
     [AMQCPP-520] - AMQ crashes when an exception comes during the connection closure
     [AMQCPP-525] - C++ client hangs when using the failover transport to connect to a network of brokers
-
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.8.1                               ==
