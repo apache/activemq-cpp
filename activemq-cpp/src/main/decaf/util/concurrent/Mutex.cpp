@@ -45,12 +45,18 @@ namespace concurrent {
     public:
 
         MutexProperties() : monitor(NULL), name() {
-            this->name = DEFAULT_NAME_PREFIX + Integer::toString( ++id );
+            std::string idStr = Integer::toString(++id);
+            this->name.reserve(DEFAULT_NAME_PREFIX.length() + idStr.length());
+            this->name.append(DEFAULT_NAME_PREFIX);
+            this->name.append(idStr);
         }
 
         MutexProperties(const std::string& name) : monitor(NULL), name(name) {
             if (this->name.empty()) {
-                this->name = DEFAULT_NAME_PREFIX + Integer::toString(++id);
+                std::string idStr = Integer::toString(++id);
+                this->name.reserve(DEFAULT_NAME_PREFIX.length() + idStr.length());
+                this->name.append(DEFAULT_NAME_PREFIX);
+                this->name.append(idStr);
             }
         }
 
