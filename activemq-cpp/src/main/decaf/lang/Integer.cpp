@@ -22,6 +22,7 @@
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Character.h>
 #include <sstream>
+#include <vector>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -142,7 +143,7 @@ std::string Integer::toString(int value, int radix) {
     // Save length and allocate a new buffer for the string, add one
     // more for the null character.
     int length = count;
-    char* buffer = new char[length + 1];
+    std::vector<char> buffer(length);
 
     do {
         int ch = 0 - (j % radix);
@@ -158,12 +159,7 @@ std::string Integer::toString(int value, int radix) {
         buffer[0] = '-';
     }
 
-    // Ensure there's a null
-    buffer[length] = 0;
-    std::string result(&buffer[0]);
-    delete[] buffer;
-
-    return result;
+    return std::string(&buffer[0], length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,19 +179,14 @@ std::string Integer::toBinaryString(int value) {
     // Save length and allocate a new buffer for the string, add one
     // more for the null character.
     int length = count;
-    char* buffer = new char[length + 1];
+    std::vector<char> buffer(length);
 
     do {
         buffer[--count] = (char) ((value & 1) + '0');
         value >>= 1;
     } while (count > 0);
 
-    // Ensure there's a null
-    buffer[length] = 0;
-    std::string result(&buffer[0]);
-    delete[] buffer;
-
-    return result;
+    return std::string(&buffer[0], length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,19 +206,14 @@ std::string Integer::toOctalString(int value) {
     // Save length and allocate a new buffer for the string, add one
     // more for the null character.
     int length = count;
-    char* buffer = new char[length + 1];
+    std::vector<char> buffer(length);
 
     do {
         buffer[--count] = (char) ((uvalue & 7) + '0');
         uvalue >>= 3;
     } while (count > 0);
 
-    // Ensure there's a null
-    buffer[length] = 0;
-    std::string result(&buffer[0]);
-    delete[] buffer;
-
-    return result;
+    return std::string(&buffer[0], length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,7 +233,7 @@ std::string Integer::toHexString(int value) {
     // Save length and allocate a new buffer for the string, add one
     // more for the null character.
     int length = count;
-    char* buffer = new char[length + 1];
+    std::vector<char> buffer(length);
 
     do {
         int t = value & 15;
@@ -260,12 +246,7 @@ std::string Integer::toHexString(int value) {
         value >>= 4;
     } while (count > 0);
 
-    // Ensure there's a null
-    buffer[length] = 0;
-    std::string result(&buffer[0]);
-    delete[] buffer;
-
-    return result;
+    return std::string(&buffer[0], length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
