@@ -140,10 +140,7 @@ std::string Integer::toString(int value, int radix) {
         count++;
     }
 
-    // Save length and allocate a new buffer for the string, add one
-    // more for the null character.
-    int length = count;
-    std::vector<char> buffer(length);
+    std::vector<char> buffer(count);
 
     do {
         int ch = 0 - (j % radix);
@@ -159,7 +156,7 @@ std::string Integer::toString(int value, int radix) {
         buffer[0] = '-';
     }
 
-    return std::string(&buffer[0], length);
+    return std::string(&buffer[0], buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,17 +173,14 @@ std::string Integer::toBinaryString(int value) {
         }
     }
 
-    // Save length and allocate a new buffer for the string, add one
-    // more for the null character.
-    int length = count;
-    std::vector<char> buffer(length);
+    std::vector<char> buffer(count);
 
     do {
         buffer[--count] = (char) ((value & 1) + '0');
         value >>= 1;
     } while (count > 0);
 
-    return std::string(&buffer[0], length);
+    return std::string(&buffer[0], buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,17 +197,14 @@ std::string Integer::toOctalString(int value) {
         }
     }
 
-    // Save length and allocate a new buffer for the string, add one
-    // more for the null character.
-    int length = count;
-    std::vector<char> buffer(length);
+    std::vector<char> buffer(count);
 
     do {
         buffer[--count] = (char) ((uvalue & 7) + '0');
         uvalue >>= 3;
     } while (count > 0);
 
-    return std::string(&buffer[0], length);
+    return std::string(&buffer[0], buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,10 +221,7 @@ std::string Integer::toHexString(int value) {
         }
     }
 
-    // Save length and allocate a new buffer for the string, add one
-    // more for the null character.
-    int length = count;
-    std::vector<char> buffer(length);
+    std::vector<char> buffer(count);
 
     do {
         int t = value & 15;
@@ -246,7 +234,7 @@ std::string Integer::toHexString(int value) {
         value >>= 4;
     } while (count > 0);
 
-    return std::string(&buffer[0], length);
+    return std::string(&buffer[0], buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
