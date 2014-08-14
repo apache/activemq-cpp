@@ -799,6 +799,11 @@ namespace core {
          */
         void setAlwaysSessionAsync(bool alwaysSessionAsync);
 
+        /**
+         * @returns the current connection's OpenWire protocol version.
+         */
+        int getProtocolVersion() const;
+
     public: // TransportListener
 
         /**
@@ -1065,6 +1070,9 @@ namespace core {
 
         // Allow subclasses to access the original Properties object for this connection.
         const decaf::util::Properties& getProperties() const;
+
+        // Process the WireFormatInfo command
+        void onWireFormatInfo(Pointer<commands::Command> command);
 
         // Process the ControlCommand command
         void onControlCommand(Pointer<commands::Command> command);

@@ -37,6 +37,7 @@
 #include <activemq/util/IdGenerator.h>
 #include <activemq/transport/failover/FailoverTransport.h>
 #include <activemq/transport/ResponseCallback.h>
+#include <activemq/wireformat/openwire/OpenWireFormat.h>
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Boolean.h>
@@ -83,6 +84,7 @@ using namespace activemq::exceptions;
 using namespace activemq::threads;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
+using namespace activemq::wireformat::openwire;
 using namespace decaf;
 using namespace decaf::io;
 using namespace decaf::util;
@@ -199,6 +201,7 @@ namespace core {
         Pointer<commands::BrokerInfo> brokerInfo;
         Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
         Pointer<AtomicInteger> transportInterruptionProcessingComplete;
+        Pointer<AtomicInteger> protocolVersion;
         Pointer<CountDownLatch> brokerInfoReceived;
         Pointer<AdvisoryConsumer> advisoryConsumer;
 
@@ -286,6 +289,7 @@ namespace core {
             connectionId->setValue(uniqueId);
 
             this->transportInterruptionProcessingComplete.reset(new AtomicInteger());
+            this->protocolVersion.reset(new AtomicInteger(OpenWireFormat::MAX_SUPPORTED_VERSION));
             this->executor.reset(
                 new ThreadPoolExecutor(1, 1, 5, TimeUnit::SECONDS,
                     new LinkedBlockingQueue<Runnable*>(),
@@ -1083,7 +1087,7 @@ void ActiveMQConnection::onCommand(const Pointer<Command> command) {
             }
 
         } else if (command->isWireFormatInfo()) {
-            this->config->brokerWireFormatInfo = command.dynamicCast<WireFormatInfo>();
+            this->onWireFormatInfo(command);
         } else if (command->isBrokerInfo()) {
             this->config->brokerInfo = command.dynamicCast<BrokerInfo>();
             this->config->brokerInfoReceived->countDown();
@@ -1113,6 +1117,12 @@ void ActiveMQConnection::onCommand(const Pointer<Command> command) {
     AMQ_CATCH_RETHROW(ActiveMQException)
     AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
     AMQ_CATCHALL_THROW(ActiveMQException)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onWireFormatInfo(Pointer<commands::Command> command AMQCPP_UNUSED) {
+    this->config->brokerWireFormatInfo = command.dynamicCast<WireFormatInfo>();
+    this->config->protocolVersion->set(this->config->brokerWireFormatInfo->getVersion());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1908,4 +1918,9 @@ bool ActiveMQConnection::isAlwaysSessionAsync() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setAlwaysSessionAsync(bool alwaysSessionAsync) {
     this->config->alwaysSessionAsync = alwaysSessionAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnection::getProtocolVersion() const {
+    return this->config->protocolVersion->get();
 }

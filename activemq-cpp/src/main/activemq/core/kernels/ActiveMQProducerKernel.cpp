@@ -81,8 +81,11 @@ ActiveMQProducerKernel::ActiveMQProducerKernel(ActiveMQSessionKernel* session,
         this->destination = destination.dynamicCast<cms::Destination>();
     }
 
-    // TODO - Check for need of MemoryUsage if there's a producer Windows size
-    //        and the Protocol version is greater than 3.
+    // Enable producer window flow control if protocol >= 3 and the window
+    // size > 0
+    if (session->getConnection()->getProtocolVersion() >= 3 && session->getConnection()->getProducerWindowSize() > 0) {
+        this->memoryUsage.reset(new MemoryUsage(session->getConnection()->getProducerWindowSize()));
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -41,7 +41,7 @@ namespace marshal {
     using decaf::lang::Pointer;
 
     class AMQCPP_API OpenWireFormat : public wireformat::WireFormat {
-    protected:
+    public:
 
         // Declared here to make life easier.
         static const unsigned char NULL_TYPE;
