@@ -1254,8 +1254,8 @@ void ActiveMQConsumerKernel::deliverAcks() {
                     this->internal->executor.reset(Executors::newSingleThreadExecutor());
                 }
 
-                this->internal->executor->submit(
-                    new AsyncMessageAckTask(ack, this->session, this->internal), true);
+                Pointer< Future<bool> >( this->internal->executor->submit(
+                    new AsyncMessageAckTask(ack, this->session, this->internal), true));
             } else {
                 this->internal->deliveringAcks.set(false);
             }
