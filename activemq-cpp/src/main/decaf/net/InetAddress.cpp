@@ -167,7 +167,7 @@ InetAddress InetAddress::getLocalHost() {
         apr_sockaddr_t* address = NULL;
         result = apr_sockaddr_info_get(&address, hostname, APR_UNSPEC, 0, APR_IPV4_ADDR_OK, pool.getAprPool());
 
-        if (result != APR_SUCCESS) {
+        if (result != APR_SUCCESS || address == NULL) {
             throw UnknownHostException(__FILE__, __LINE__, "Could not resolve the IP Address of this host.");
         }
 
