@@ -33,6 +33,8 @@ namespace test {
         void testEmptyMapSendReceive();
         void testMapWithEmptyStringValue();
         void testMapSetEmptyBytesVector();
+        void testMapWithSingleCharEntry();
+        void testMapWithCharAndStringEntry();
 
     };
 
