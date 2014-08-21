@@ -18,13 +18,14 @@
 #ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREOPTIMIZEDACKTEST_H_
 #define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREOPTIMIZEDACKTEST_H_
 
-#include <activemq/test/MessagePriorityTest.h>
+#include <activemq/test/CMSTestFixture.h>
+#include <activemq/util/IntegrationCommon.h>
 
 namespace activemq {
 namespace test {
 namespace openwire {
 
-    class OpenwireOptimizedAckTest : public MessagePriorityTest {
+    class OpenwireOptimizedAckTest : public CMSTestFixture {
 
         CPPUNIT_TEST_SUITE( OpenwireOptimizedAckTest );
         CPPUNIT_TEST( testOptimizedAckSettings );
@@ -37,6 +38,9 @@ namespace openwire {
 
         OpenwireOptimizedAckTest();
         virtual ~OpenwireOptimizedAckTest();
+
+        virtual void setUp() {}
+        virtual void tearDown() {}
 
         virtual std::string getBrokerURL() const;
 

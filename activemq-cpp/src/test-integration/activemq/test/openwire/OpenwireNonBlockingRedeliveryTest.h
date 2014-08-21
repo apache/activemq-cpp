@@ -18,13 +18,14 @@
 #ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIRENONBLOCKINGREDELIVERYTEST_H_
 #define _ACTIVEMQ_TEST_OPENWIRE_OPENWIRENONBLOCKINGREDELIVERYTEST_H_
 
-#include <activemq/test/MessagePriorityTest.h>
+#include <activemq/test/CMSTestFixture.h>
+#include <activemq/util/IntegrationCommon.h>
 
 namespace activemq {
 namespace test {
 namespace openwire {
 
-    class OpenwireNonBlockingRedeliveryTest : public MessagePriorityTest {
+    class OpenwireNonBlockingRedeliveryTest : public CMSTestFixture {
 
         CPPUNIT_TEST_SUITE( OpenwireNonBlockingRedeliveryTest );
 //        CPPUNIT_TEST( testConsumerMessagesAreNotOrdered );
@@ -40,6 +41,9 @@ namespace openwire {
 
         OpenwireNonBlockingRedeliveryTest();
         virtual ~OpenwireNonBlockingRedeliveryTest();
+
+        virtual void setUp() {}
+        virtual void tearDown() {}
 
         virtual std::string getBrokerURL() const;
 
