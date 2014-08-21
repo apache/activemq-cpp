@@ -31,6 +31,8 @@ namespace openwire {
         CPPUNIT_TEST( testEmptyMapSendReceive );
         CPPUNIT_TEST( testMapWithEmptyStringValue );
         CPPUNIT_TEST( testMapSetEmptyBytesVector );
+        CPPUNIT_TEST( testMapWithSingleCharEntry );
+        CPPUNIT_TEST( testMapWithCharAndStringEntry );
         CPPUNIT_TEST_SUITE_END();
 
     public:
