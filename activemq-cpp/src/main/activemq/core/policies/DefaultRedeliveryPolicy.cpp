@@ -56,14 +56,10 @@ long long DefaultRedeliveryPolicy::getNextRedeliveryDelay(long long previousDela
 
     static Random randomNumberGenerator;
 
-    long long nextDelay;
+    long long nextDelay = redeliveryDelay;
 
-    if (previousDelay == 0) {
-        nextDelay = redeliveryDelay;
-    } else if (useExponentialBackOff && (int) backOffMultiplier > 1) {
+    if (previousDelay > 0 && useExponentialBackOff && (int) backOffMultiplier > 1) {
         nextDelay = (long long) ((double) previousDelay * backOffMultiplier);
-    } else {
-        nextDelay = previousDelay;
     }
 
     if (useCollisionAvoidance) {
