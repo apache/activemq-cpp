@@ -1103,6 +1103,20 @@ void ActiveMQSessionKernel::start() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionKernel::stop() {
 
+    this->config->consumerLock.readLock().lock();
+    try {
+        Pointer<Iterator< Pointer<ActiveMQConsumerKernel> > > iter(this->config->consumers.iterator());
+
+        while (iter->hasNext()) {
+            Pointer<ActiveMQConsumerKernel> consumer = iter->next();
+            consumer->stop();
+        }
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
+    }
+
     if (this->executor.get() != NULL) {
         this->executor->stop();
     }
