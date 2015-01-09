@@ -137,7 +137,7 @@ namespace kernels {
                                          closeSyncRegistered(),
                                          unconsumedMessages(),
                                          dispatchedMessages(),
-                                         lastDeliveredSequenceId(0),
+                                         lastDeliveredSequenceId(-1),
                                          pendingAck(),
                                          deliveredCounter(0),
                                          additionalWindowSize(0),
