@@ -170,11 +170,15 @@ namespace util {
     public:
 
         virtual void clear() {
-            delete [] this->elements;
-            this->curSize = 0;
-            this->capacity = 10;
-            this->elements = new E[this->capacity];
-            AbstractList<E>::modCount++;
+            if (this->curSize > 0) {
+                delete [] this->elements;
+                this->curSize = 0;
+                this->capacity = 10;
+                this->elements = new E[this->capacity];
+                AbstractList<E>::modCount++;
+            } else {
+                ensureCapacity(10);
+            }
         }
 
         virtual bool isEmpty() const {
