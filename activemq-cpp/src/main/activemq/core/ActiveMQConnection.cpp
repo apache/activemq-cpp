@@ -37,6 +37,7 @@
 #include <activemq/util/IdGenerator.h>
 #include <activemq/transport/failover/FailoverTransport.h>
 #include <activemq/transport/ResponseCallback.h>
+#include <activemq/transport/DefaultTransportListener.h>
 
 #include <decaf/lang/Math.h>
 #include <decaf/lang/Boolean.h>
@@ -141,6 +142,7 @@ namespace core{
     public:
 
         static util::IdGenerator CONNECTION_ID_GENERATOR;
+        static DefaultTransportListener DO_NOTHING_TRANSPORT_LISTENER;
 
         Pointer<decaf::util::Properties> properties;
         Pointer<transport::Transport> transport;
@@ -309,6 +311,7 @@ namespace core{
 
     // Static init.
     util::IdGenerator ConnectionConfig::CONNECTION_ID_GENERATOR;
+    DefaultTransportListener ConnectionConfig::DO_NOTHING_TRANSPORT_LISTENER;
 
     class ConnectionErrorRunnable : public Runnable {
     private:
@@ -912,7 +915,7 @@ void ActiveMQConnection::disconnect(long long lastDeliveredSequenceId) {
     try {
 
         // Clear the listener, we don't care about async errors at this point.
-        this->config->transport->setTransportListener(NULL);
+        this->config->transport->setTransportListener(&ConnectionConfig::DO_NOTHING_TRANSPORT_LISTENER);
 
         // Allow the Support class to shutdown its resources, including the Transport.
         bool hasException = false;
