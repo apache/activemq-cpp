@@ -3,6 +3,24 @@
 =========================================================================
 
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.8.4                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-534] - Closing connection with setTransportListener to NULL may cause core dump
+    [AMQCPP-549] - Potential memory leak in consumer when delivering delayed ack.
+    [AMQCPP-550] - CMS (C++ client) crashed if getLocalHost failed
+    [AMQCPP-551] - EOFException when sending char in MapMessage between Java and C++
+    [AMQCPP-556] - setMessageListener on active session may leads to deadlock
+    [AMQCPP-558] - Port fix for AMQ-5513
+
+Improvement
+
+    [AMQCPP-548] - Too many temporary std::string in Mutex and decaf::lang::Integer::toString(int)
+    [AMQCPP-562] - Reduce memory delete and allocation in ArrayList
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.8.3                               ==
 =========================================================================
 
