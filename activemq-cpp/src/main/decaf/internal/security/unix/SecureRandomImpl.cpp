@@ -71,7 +71,7 @@ SecureRandomImpl::SecureRandomImpl() : config( new SRNGData() ) {
 
         do {
             // Attempt to find an OS source for secure random bytes.
-            result = apr_file_open( &config->randFile, files[index],
+            result = apr_file_open( &config->randFile, files[index++],
                                     APR_READ, APR_OS_DEFAULT,
                                     config->pool.getAprPool() );
         } while( index < 2 && result != APR_SUCCESS );
