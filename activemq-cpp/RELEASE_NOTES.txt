@@ -2,6 +2,10 @@
 ==  Release Notes for ActiveMQ CPP 3.8.4                               ==
 =========================================================================
 
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.8.4                               ==
+=========================================================================
+
 Bug
 
     [AMQCPP-534] - Closing connection with setTransportListener to NULL may cause core dump
