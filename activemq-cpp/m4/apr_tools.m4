@@ -80,7 +80,7 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
     AC_MSG_ERROR([apr-config --link-libtool --libs failed])
   fi
 
-  APR_PKGCONFIG="`echo $apr_config | sed 's,\(.*/\)\?apr\(-\?.*\)-config$,apr\2,'`"
+  APR_PKGCONFIG="`echo $apr_config | sed 's/\(.*\/\)\{0,1\}apr\(-\{0,1\}.*\)-config$/apr\2/'`"
 
   AC_SUBST([APR_LIBS])
   AC_SUBST([APR_LDFLAGS])
