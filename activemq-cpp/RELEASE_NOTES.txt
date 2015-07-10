@@ -2,6 +2,14 @@
 ==  Release Notes for ActiveMQ CPP 3.9.0                               ==
 =========================================================================
 
+Bug
+
+    [AMQCPP-572] - activemq-cmstemplate-stressor.vcproj missing
+
+Improvement
+
+    [AMQCPP-573] - Update OpenWire support to v11
+
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.8.4                               ==
 =========================================================================
