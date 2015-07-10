@@ -121,14 +121,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::mock::MockTransportFactory
 #include <activemq/transport/inactivity/InactivityMonitorTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::inactivity::InactivityMonitorTest );
 
-#include <activemq/transport/discovery/DiscoveryAgentRegistryTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::DiscoveryAgentRegistryTest );
-#include <activemq/transport/discovery/DiscoveryTransportFactoryTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::DiscoveryTransportFactoryTest );
-#include <activemq/transport/discovery/AbstractDiscoveryAgentTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::AbstractDiscoveryAgentTest );
-#include <activemq/transport/discovery/AbstractDiscoveryAgentFactoryTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::AbstractDiscoveryAgentFactoryTest );
+//#include <activemq/transport/discovery/DiscoveryAgentRegistryTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::DiscoveryAgentRegistryTest );
+//#include <activemq/transport/discovery/DiscoveryTransportFactoryTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::DiscoveryTransportFactoryTest );
+//#include <activemq/transport/discovery/AbstractDiscoveryAgentTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::AbstractDiscoveryAgentTest );
+//#include <activemq/transport/discovery/AbstractDiscoveryAgentFactoryTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::AbstractDiscoveryAgentFactoryTest );
 
 #include <activemq/transport/TransportRegistryTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportRegistryTest );
@@ -351,8 +351,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::LinkedHashMapTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::LinkedHashSetTest );
 #include <decaf/util/HashMapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashMapTest );
-#include <decaf/util/HashSetTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashSetTest );
+//#include <decaf/util/HashSetTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::HashSetTest );
 #include <decaf/util/AbstractCollectionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::AbstractCollectionTest );
 #include <decaf/util/AbstractListTest.h>
