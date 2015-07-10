@@ -71,6 +71,9 @@ void SubscriptionInfoMarshaller::tightUnmarshal(OpenWireFormat* wireFormat, Data
             info->setSubscribedDestination(Pointer<ActiveMQDestination>(dynamic_cast<ActiveMQDestination* >(
                 tightUnmarshalNestedObject(wireFormat, dataIn, bs))));
         }
+        if (wireVersion >= 11) {
+            info->setNoLocal(bs->readBoolean());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -95,6 +98,9 @@ int SubscriptionInfoMarshaller::tightMarshal1(OpenWireFormat* wireFormat, DataSt
         rc += tightMarshalString1(info->getSubcriptionName(), bs);
         if (wireVersion >= 3) {
             rc += tightMarshalNestedObject1(wireFormat, info->getSubscribedDestination().get(), bs);
+        }
+        if (wireVersion >= 11) {
+            bs->writeBoolean(info->isNoLocal());
         }
 
         return rc + 0;
@@ -123,6 +129,9 @@ void SubscriptionInfoMarshaller::tightMarshal2(OpenWireFormat* wireFormat, DataS
         if (wireVersion >= 3) {
             tightMarshalNestedObject2(wireFormat, info->getSubscribedDestination().get(), dataOut, bs);
         }
+        if (wireVersion >= 11) {
+            bs->readBoolean();
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException)
@@ -149,6 +158,9 @@ void SubscriptionInfoMarshaller::looseUnmarshal(OpenWireFormat* wireFormat, Data
             info->setSubscribedDestination(Pointer<ActiveMQDestination>(dynamic_cast<ActiveMQDestination*>(
                 looseUnmarshalNestedObject(wireFormat, dataIn))));
         }
+        if (wireVersion >= 11) {
+            info->setNoLocal(dataIn->readBoolean());
+        }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)
     AMQ_CATCH_EXCEPTION_CONVERT(exceptions::ActiveMQException, decaf::io::IOException)
@@ -172,6 +184,9 @@ void SubscriptionInfoMarshaller::looseMarshal(OpenWireFormat* wireFormat, DataSt
         looseMarshalString(info->getSubcriptionName(), dataOut);
         if (wireVersion >= 3) {
             looseMarshalNestedObject(wireFormat, info->getSubscribedDestination().get(), dataOut);
+        }
+        if (wireVersion >= 11) {
+            dataOut->writeBoolean(info->isNoLocal());
         }
     }
     AMQ_CATCH_RETHROW(decaf::io::IOException)

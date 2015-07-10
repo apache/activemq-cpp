@@ -73,7 +73,7 @@ void ActiveMQTextMessageMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 10 );
+    openWireFormat.setVersion( 11 );
     openWireFormat.setTightEncodingEnabled( false );
 
     ActiveMQTextMessage outCommand;
@@ -125,7 +125,7 @@ void ActiveMQTextMessageMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 10 );
+    openWireFormat.setVersion( 11 );
     openWireFormat.setTightEncodingEnabled( true );
 
     ActiveMQTextMessage outCommand;

@@ -42,7 +42,7 @@ Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(const decaf::util::P
         Pointer<WireFormatInfo> info(new WireFormatInfo());
 
         // Configure the version to use
-        info->setVersion(Integer::parseInt(properties.getProperty("wireFormat.version", "10")));
+        info->setVersion(Integer::parseInt(properties.getProperty("wireFormat.version", "11")));
 
         // parse params out of the properties
         info->setStackTraceEnabled(

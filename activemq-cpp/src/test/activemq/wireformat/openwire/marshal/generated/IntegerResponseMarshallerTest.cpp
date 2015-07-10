@@ -73,7 +73,7 @@ void IntegerResponseMarshallerTest::testLooseMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 10 );
+    openWireFormat.setVersion( 11 );
     openWireFormat.setTightEncodingEnabled( false );
 
     IntegerResponse outCommand;
@@ -113,7 +113,7 @@ void IntegerResponseMarshallerTest::testTightMarshal() {
     OpenWireFormat openWireFormat( props );
 
     // Configure for this test.
-    openWireFormat.setVersion( 10 );
+    openWireFormat.setVersion( 11 );
     openWireFormat.setTightEncodingEnabled( true );
 
     IntegerResponse outCommand;

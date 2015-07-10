@@ -52,6 +52,7 @@ namespace commands {
         std::string selector;
         std::string subcriptionName;
         Pointer<ActiveMQDestination> subscribedDestination;
+        bool noLocal;
 
     public:
 
@@ -97,6 +98,9 @@ namespace commands {
         virtual const Pointer<ActiveMQDestination>& getSubscribedDestination() const;
         virtual Pointer<ActiveMQDestination>& getSubscribedDestination();
         virtual void setSubscribedDestination( const Pointer<ActiveMQDestination>& subscribedDestination );
+
+        virtual bool isNoLocal() const;
+        virtual void setNoLocal( bool noLocal );
 
     };
 

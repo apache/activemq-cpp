@@ -141,7 +141,7 @@ std::string MessageId::toString() const {
                 key = "ID:" + textView;
             }
         } else {
-            this->key = this->producerId->toString() + ":" +
+            this->key = this->producerId->toString() + ":" + 
                         Long::toString(this->producerSequenceId);
         }
     }

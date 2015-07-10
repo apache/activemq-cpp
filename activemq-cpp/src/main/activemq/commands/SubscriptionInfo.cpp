@@ -39,7 +39,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 SubscriptionInfo::SubscriptionInfo() :
-    BaseDataStructure(), clientId(""), destination(NULL), selector(""), subcriptionName(""), subscribedDestination(NULL) {
+    BaseDataStructure(), clientId(""), destination(NULL), selector(""), subcriptionName(""), subscribedDestination(NULL), noLocal(false) {
 
 }
 
@@ -81,6 +81,7 @@ void SubscriptionInfo::copyDataStructure(const DataStructure* src) {
     this->setSelector(srcPtr->getSelector());
     this->setSubcriptionName(srcPtr->getSubcriptionName());
     this->setSubscribedDestination(srcPtr->getSubscribedDestination());
+    this->setNoLocal(srcPtr->isNoLocal());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +114,8 @@ std::string SubscriptionInfo::toString() const {
     } else {
         stream << "NULL";
     }
+    stream << ", ";
+    stream << "NoLocal = " << this->isNoLocal();
     stream << " }";
 
     return stream.str();
@@ -152,6 +155,9 @@ bool SubscriptionInfo::equals(const DataStructure* value) const {
             return false;
         }
     } else if (valuePtr->getSubscribedDestination() != NULL) {
+        return false;
+    }
+    if (this->isNoLocal() != valuePtr->isNoLocal()) {
         return false;
     }
     if (!BaseDataStructure::equals(value)) {
@@ -233,5 +239,15 @@ decaf::lang::Pointer<ActiveMQDestination>& SubscriptionInfo::getSubscribedDestin
 ////////////////////////////////////////////////////////////////////////////////
 void SubscriptionInfo::setSubscribedDestination(const decaf::lang::Pointer<ActiveMQDestination>& subscribedDestination) {
     this->subscribedDestination = subscribedDestination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool SubscriptionInfo::isNoLocal() const {
+    return noLocal;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SubscriptionInfo::setNoLocal(bool noLocal) {
+    this->noLocal = noLocal;
 }
 
