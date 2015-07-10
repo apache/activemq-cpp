@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>9</version>
+    <version>15</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -32,7 +32,7 @@
   <name>ActiveMQ-CPP Project</name>
   <inceptionYear>2007</inceptionYear>
   <prerequisites>
-    <maven>2.0.9</maven>
+    <maven>3.1.1</maven>
   </prerequisites>
 
   <organization>
@@ -60,14 +60,20 @@
   </mailingLists>
 
   <properties>
-    <activemq-version>5.7.0</activemq-version>
+    <source-version>1.7</source-version>
+    <target-version>1.7</target-version>
+
+    <activemq-version>5.11.1</activemq-version>
     <siteId>activemq-cpp-${activemq-version}</siteId>
     <projectName>Apache ActiveMQ-CPP</projectName>
     <annogen-version>0.1.0</annogen-version>
     <ant-version>1.7.0</ant-version>
-    <xstream-version>1.4.1</xstream-version>
+    <xstream-version>1.4.8</xstream-version>
     <activemq-client-dir>${ACTIVEMQ_SRC_HOME}/activemq-client/</activemq-client-dir>
     <activemq-cpp-openwire-generator-version>2.0</activemq-cpp-openwire-generator-version>
+    <junit-version>4.12</junit-version>
+    <assembly-plugin-version>2.4</assembly-plugin-version>
+    <maven-exec-version>1.4.0</maven-exec-version>
   </properties>
 
   <modules>
@@ -107,6 +113,7 @@
   </dependencyManagement>
 
   <build>
+    <defaultGoal>test</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -117,7 +124,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2.1</version>
+          <version>${assembly-plugin-version}</version>
           <configuration>
             <tarLongFileMode>gnu</tarLongFileMode>
           </configuration>
@@ -169,6 +176,20 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${source-version}</source>
+          <target>${target-version}</target>
+          <optimize>true</optimize>
+          <debug>true</debug>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>
@@ -180,7 +201,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.4</version>
             <inherited>true</inherited>
             <configuration>
               <passphrase>${gpg.passphrase}</passphrase>

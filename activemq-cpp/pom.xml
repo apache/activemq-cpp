@@ -36,7 +36,6 @@
     <dependency>
       <groupId>org.apache.activemq-cpp</groupId>
       <artifactId>activemq-cpp-openwire-generator</artifactId>
-      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
@@ -215,7 +214,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
+            <version>${maven-exec-version}</version>
             <executions>
               <execution>
                 <id>Configure</id>
@@ -286,7 +285,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2</version>
+            <version>${maven-exec-version}</version>
             <executions>
               <execution>
                 <phase>compile</phase>
