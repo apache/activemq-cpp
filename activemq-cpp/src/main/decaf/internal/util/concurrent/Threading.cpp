@@ -1674,3 +1674,44 @@ void Threading::destoryThreadLocalSlot(int slot) {
     library->tlsSlots[slot] = NULL;
     PlatformThread::unlockMutex(library->tlsLock);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void Threading::releaseCurrentThreadHandle() {
+    ThreadHandle* self = (ThreadHandle*)PlatformThread::getTlsValue(library->selfKey);
+
+    if (self != NULL) {
+        detachFromCurrentThread(self);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Threading::detachFromCurrentThread(ThreadHandle* self) {
+
+    PlatformThread::lockMutex(library->globalLock);
+
+    // Destroy given Foreign Thread Facade that was created during runtime.
+    std::vector<Thread*>::iterator iter = library->osThreads.begin();
+    bool isFound = false;
+    for (; iter != library->osThreads.end(); ++iter) {
+        if (self->parent == *iter) {
+            isFound = true;
+            break;
+        }
+    }
+
+    if (isFound) {
+        PlatformThread::setTlsValue(library->threadKey, NULL);
+        PlatformThread::setTlsValue(library->selfKey, NULL);
+
+        // Ensure all of this thread's local values are purged.
+        threadExitTlsCleanup(self);
+
+        // Destroy OS thread including self thread handle.
+        delete *iter;
+
+        // Remove thread form the global list.
+        library->osThreads.erase(iter);
+    }
+
+    PlatformThread::unlockMutex(library->globalLock);
+}

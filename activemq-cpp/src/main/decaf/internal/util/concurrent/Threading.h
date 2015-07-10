@@ -333,11 +333,13 @@ namespace concurrent {
         static void setThreadLocalValue(int slot, void* value);
 
         static void destoryThreadLocalSlot(int slot);
+	
+        static void releaseCurrentThreadHandle();
 
     private:
 
         static ThreadHandle* attachToCurrentThread();
-
+        static void detachFromCurrentThread(ThreadHandle* thread);
         static void monitorEnterUsingThreadId(MonitorHandle* monitor, ThreadHandle* thread);
         static bool monitorTryEnterUsingThreadId(MonitorHandle* monitor, ThreadHandle* thread);
         static void monitorExitUsingThreadId(MonitorHandle* monitor, ThreadHandle* thread);
