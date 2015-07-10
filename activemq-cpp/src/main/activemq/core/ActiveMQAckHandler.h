@@ -19,11 +19,11 @@
 
 #include <activemq/util/Config.h>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
     class Message;
 }
-namespace core{
+namespace core {
 
     /**
      * Interface class that is used to give CMS Messages an interface to

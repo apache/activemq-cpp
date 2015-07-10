@@ -146,7 +146,7 @@ namespace kernels {
         virtual bool isInLocalTransaction() const;
 
         /**
-         * Checks to see if there is currently an XA Transaction in progess, returns
+         * Checks to see if there is currently an XA Transaction in progress, returns
          * false if not, true otherwise.
          *
          * @returns true if an XA Transaction is in progress.

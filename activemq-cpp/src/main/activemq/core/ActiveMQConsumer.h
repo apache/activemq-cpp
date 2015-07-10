@@ -29,8 +29,8 @@
 
 #include <decaf/lang/Pointer.h>
 
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
     using decaf::lang::Pointer;
 

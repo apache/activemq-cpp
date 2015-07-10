@@ -21,8 +21,8 @@
 #include <map>
 #include <activemq/util/Config.h>
 
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
     /**
      * Class holding constant values for various ActiveMQ specific things
@@ -50,7 +50,7 @@ namespace core{
             DESTINATION_REMOVE_OPERATION = 1
         };
 
-        // Represents the Acknowledgement types that are supported for the
+        // Represents the Acknowledgment types that are supported for the
         // Message Ack Command.
         enum AckType {
             ACK_TYPE_DELIVERED   = 0,  // Message delivered but not consumed

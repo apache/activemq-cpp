@@ -26,8 +26,8 @@
 #include <activemq/commands/ProducerInfo.h>
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>
 
-namespace activemq{
-namespace core{
+namespace activemq {
+namespace core {
 
     using decaf::lang::Pointer;
 

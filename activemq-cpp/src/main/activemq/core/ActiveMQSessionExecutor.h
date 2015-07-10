@@ -26,9 +26,9 @@
 #include <activemq/threads/TaskRunner.h>
 #include <decaf/lang/Pointer.h>
 
-namespace activemq{
-namespace core{
-namespace kernels{
+namespace activemq {
+namespace core {
+namespace kernels {
     class ActiveMQSessionKernel;
 }
 
