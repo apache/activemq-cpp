@@ -80,5 +80,9 @@
       <directory>vs2008-build</directory>
       <lineEnding>keep</lineEnding>
     </fileSet>
+    <fileSet>
+      <directory>vs2010-build</directory>
+      <lineEnding>keep</lineEnding>
+    </fileSet>
   </fileSets>
 </assembly>
