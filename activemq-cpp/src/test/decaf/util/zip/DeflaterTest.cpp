@@ -1018,7 +1018,7 @@ void DeflaterTest::testDeflateBeforeSetInput() {
 
     CPPUNIT_ASSERT_EQUAL( 8, (int)deflater.deflate( buffer ) );
 
-    unsigned char expectedBytes[] = { 120, -100, 3, 0, 0, 0, 0, 1 };
+    unsigned char expectedBytes[] = { 120, (unsigned char) -100, 3, 0, 0, 0, 0, 1 };
 
     for( int i = 0; i < 8; i++ ) {
         CPPUNIT_ASSERT_EQUAL( expectedBytes[i], buffer[i] );

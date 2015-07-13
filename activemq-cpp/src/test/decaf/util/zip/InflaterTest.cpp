@@ -171,11 +171,14 @@ void InflaterTest::testInflateVector() {
 
     static const std::size_t SIZE = 39;
 
-    unsigned char byteArray[] = { 120, -38, 75, -54, 73, -52, 80, 40,
-                                  46, 41, -54, -52, 75, 87, 72, -50,
-                                  -49, 43, 73, -52, -52, 43, 86, 72,
-                                  2, 10, 34, 99, -123, -60, -68, 20,
-                                  -80, 32, 0, -101, -69, 17, 84 };
+    unsigned char byteArray[] = { 120, (unsigned char) -38, 75, (unsigned char) -54, 73,
+                                  (unsigned char) -52, 80, 40, 46, 41, (unsigned char) -54,
+                                  (unsigned char) -52, 75, 87, 72, (unsigned char) -50,
+                                  (unsigned char) -49, 43, 73, (unsigned char) -52,
+                                  (unsigned char) -52, 43, 86, 72, 2, 10, 34, 99,
+                                  (unsigned char) -123, (unsigned char) -60, (unsigned char) -68, 20,
+                                  (unsigned char) -80, 32, 0, (unsigned char) -101, (unsigned char) -69,
+                                  17, 84 };
 
     std::string codedString = "blah string contains blahblahblahblah and blah";
 
@@ -248,11 +251,13 @@ void InflaterTest::testInflateB1() {
 
     static const std::size_t CODEDATA_SIZE = 39;
 
-    unsigned char codedData[] = { 120, -38, 75, -54, 73, -52, 80, 40,
-                                  46, 41, -54, -52, 75, 87, 72, -50,
-                                  -49, 43, 73, -52, -52, 43, 86, 72,
-                                  2, 10, 34, 99, -123, -60, -68, 20,
-                                  -80, 32, 0, -101, -69, 17, 84 };
+    unsigned char codedData[] = { 120, (unsigned char) -38, 75, (unsigned char) -54, 73,
+                                  (unsigned char) -52, 80, 40, 46, 41, (unsigned char) -54,
+                                  (unsigned char) -52, 75, 87, 72, (unsigned char) -50,
+                                  (unsigned char) -49, 43, 73, (unsigned char) -52, (unsigned char) -52,
+                                  43, 86, 72, 2, 10, 34, 99, (unsigned char) -123, (unsigned char) -60,
+                                  (unsigned char) -68, 20, (unsigned char) -80, 32, 0, (unsigned char) -101,
+                                  (unsigned char) -69, 17, 84 };
     std::string codedString = "blah string contains blahblahblahblah and blah";
 
     Inflater infl1;
@@ -287,11 +292,14 @@ void InflaterTest::testInflateBII() {
 
     static const std::size_t SIZE = 39;
 
-    unsigned char byteArray[] = { 120, -38, 75, -54, 73, -52, 80, 40,
-                                  46, 41, -54, -52, 75, 87, 72, -50,
-                                  -49, 43, 73, -52, -52, 43, 86, 72,
-                                  2, 10, 34, 99, -123, -60, -68, 20,
-                                  -80, 32, 0, -101, -69, 17, 84 };
+    unsigned char byteArray[] = { 120, (unsigned char) -38, 75, (unsigned char) -54, 73,
+                                  (unsigned char) -52, 80, 40, 46, 41, (unsigned char) -54,
+                                  (unsigned char) -52, 75, 87, 72, (unsigned char) -50,
+                                  (unsigned char) -49, 43, 73, (unsigned char) -52,
+                                  (unsigned char) -52, 43, 86, 72, 2, 10, 34, 99,
+                                  (unsigned char) -123, (unsigned char) -60, (unsigned char) -68,
+                                  20, (unsigned char) -80, 32, 0, (unsigned char) -101,
+                                  (unsigned char) -69, 17, 84 };
 
     std::string codedString = "blah string contains blahblahblahblah and blah";
 
@@ -340,9 +348,14 @@ void InflaterTest::testInflateBII() {
 void InflaterTest::testInflateBII1() {
 
     static const std::size_t CODEDATA_SIZE = 39;
-    unsigned char codedData[] = { 120, -38, 75, -54, 73, -52, 80, 40, 46, 41, -54, -52, 75,
-                                  87, 72, -50, -49, 43, 73, -52, -52, 43, 86, 72, 2, 10,
-                                  34, 99, -123, -60, -68, 20, -80, 32, 0, -101, -69, 17, 84 };
+    unsigned char codedData[] = { 120, (unsigned char) -38, 75, (unsigned char) -54, 73,
+                                  (unsigned char) -52, 80, 40, 46, 41, (unsigned char) -54,
+                                  (unsigned char) -52, 75, 87, 72, (unsigned char) -50,
+                                  (unsigned char) -49, 43, 73, (unsigned char) -52,
+                                  (unsigned char) -52, 43, 86, 72, 2, 10,
+                                  34, 99, (unsigned char) -123, (unsigned char) -60,
+                                  (unsigned char) -68, 20, (unsigned char) -80, 32, 0,
+                                  (unsigned char) -101, (unsigned char) -69, 17, 84 };
 
     std::string codedString = "blah string";
 
@@ -703,7 +716,7 @@ void InflaterTest::testInflate() {
 
     {
         Inflater inflater;
-        unsigned char array[] = { -1 };
+        unsigned char array[] = { (unsigned char) -1 };
         inflater.setInput( array, 1, 0, 1 );
         try {
             inflater.inflate( b );
@@ -720,7 +733,7 @@ void InflaterTest::testInflate() {
 
     {
         Inflater inflater2;
-        unsigned char array[] = { -1, -1, -1 };
+        unsigned char array[] = { (unsigned char) -1, (unsigned char) -1, (unsigned char) -1 };
         inflater2.setInput( array, 3, 0, 3);
         try {
             inflater2.inflate( b );

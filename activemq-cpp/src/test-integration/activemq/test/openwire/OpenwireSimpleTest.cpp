@@ -373,7 +373,6 @@ void OpenwireSimpleTest::testMessageIdSetOnSend() {
 
     // Create CMS Object for Comms
     cms::Session* session(cmsProvider->getSession());
-    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
     cms::MessageProducer* producer = cmsProvider->getProducer();
     producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 

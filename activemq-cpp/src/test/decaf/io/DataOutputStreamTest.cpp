@@ -327,16 +327,16 @@ void DataOutputStreamTest::testWriteUTFEncoding() {
         unsigned char input[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
         unsigned char expect[] = {0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
 
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    expect, sizeof(expect)/sizeof(unsigned char) );
+        testHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                    expect, (int) sizeof(expect) / (int) sizeof(unsigned char) );
     }
 
     // Test data with 2-byte UT8 encoding.
     {
         unsigned char input[] = {0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
         unsigned char expect[] = {0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    expect, sizeof(expect)/sizeof(unsigned char)  );
+        testHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                    expect, (int) sizeof(expect) / (int) sizeof(unsigned char)  );
     }
 
     // Test data with 1-byte and 2-byte encoding with embedded NULL's.
@@ -344,8 +344,8 @@ void DataOutputStreamTest::testWriteUTFEncoding() {
         unsigned char input[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
         unsigned char expect[] = {0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
 
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    expect, sizeof(expect)/sizeof(unsigned char) );
+        testHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                    expect, (int) sizeof(expect) / (int) sizeof(unsigned char) );
     }
 }
 

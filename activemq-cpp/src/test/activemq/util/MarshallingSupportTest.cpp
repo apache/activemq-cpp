@@ -62,16 +62,16 @@ void MarshallingSupportTest::testAsciiToModifiedUtf8() {
         unsigned char input[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
         unsigned char expect[] = {0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
 
-        writeTestHelper( input, sizeof(input)/sizeof(unsigned char),
-                         expect, sizeof(expect)/sizeof(unsigned char) );
+        writeTestHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                         expect, (int) sizeof(expect) / (int) sizeof(unsigned char) );
     }
 
     // Test data with 2-byte UT8 encoding.
     {
         unsigned char input[] = {0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
         unsigned char expect[] = {0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
-        writeTestHelper( input, sizeof(input)/sizeof(unsigned char),
-                         expect, sizeof(expect)/sizeof(unsigned char)  );
+        writeTestHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                         expect, (int) sizeof(expect) / (int) sizeof(unsigned char)  );
     }
 
     // Test data with 1-byte and 2-byte encoding with embedded NULL's.
@@ -79,8 +79,8 @@ void MarshallingSupportTest::testAsciiToModifiedUtf8() {
         unsigned char input[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
         unsigned char expect[] = {0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
 
-        writeTestHelper( input, sizeof(input)/sizeof(unsigned char),
-                         expect, sizeof(expect)/sizeof(unsigned char) );
+        writeTestHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                         expect, (int) sizeof(expect) / (int) sizeof(unsigned char) );
     }
 
 }
@@ -105,16 +105,16 @@ void MarshallingSupportTest::testModifiedUtf8ToAscii() {
         unsigned char expect[] = { 0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64 };
         unsigned char input[] = { 0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64 };
 
-        readTestHelper( input, sizeof(input)/sizeof(unsigned char),
-                        expect, sizeof(expect)/sizeof(unsigned char) );
+        readTestHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                        expect, (int) sizeof(expect)/ (int) sizeof(unsigned char) );
     }
 
     // Test data with 2-byte UT8 encoding.
     {
         unsigned char expect[] = { 0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
         unsigned char input[] = { 0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
-        readTestHelper( input, sizeof(input)/sizeof(unsigned char),
-                        expect, sizeof(expect)/sizeof(unsigned char)  );
+        readTestHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                        expect, (int) sizeof(expect) / (int) sizeof(unsigned char)  );
     }
 
     // Test data with 1-byte and 2-byte encoding with embedded NULL's.
@@ -122,14 +122,14 @@ void MarshallingSupportTest::testModifiedUtf8ToAscii() {
         unsigned char expect[] = { 0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
         unsigned char input[] = { 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
 
-        readTestHelper( input, sizeof(input)/sizeof(unsigned char),
-                        expect, sizeof(expect)/sizeof(unsigned char) );
+        readTestHelper( input, (int) sizeof(input) / (int) sizeof(unsigned char),
+                        expect, (int) sizeof(expect) / (int) sizeof(unsigned char) );
     }
 
     // Test with bad UTF-8 encoding, missing 2nd byte of two byte value
     {
         unsigned char input[] = { 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xC2, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
-        std::string inputString( (char*)input, sizeof(input)/sizeof(unsigned char) );
+        std::string inputString( (char*)input, (int) sizeof(input) / (int) sizeof(unsigned char) );
 
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw a UTFDataFormatException",
@@ -140,7 +140,7 @@ void MarshallingSupportTest::testModifiedUtf8ToAscii() {
     // Test with bad UTF-8 encoding, encoded value greater than 255
     {
         unsigned char input[] = { 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xC2, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
-        std::string inputString( (char*)input, sizeof(input)/sizeof(unsigned char) );
+        std::string inputString( (char*)input, (int) sizeof(input) / (int) sizeof(unsigned char) );
 
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw a UTFDataFormatException",
@@ -151,7 +151,7 @@ void MarshallingSupportTest::testModifiedUtf8ToAscii() {
     // Test data with value greater than 255 in 2-byte encoding.
     {
         unsigned char input[] = { 0xC8, 0xA9, 0xC3, 0xA6};
-        std::string inputString( (char*)input, sizeof(input)/sizeof(unsigned char) );
+        std::string inputString( (char*)input, (int) sizeof(input) / (int) sizeof(unsigned char) );
 
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw a UTFDataFormatException",
@@ -162,7 +162,7 @@ void MarshallingSupportTest::testModifiedUtf8ToAscii() {
     // Test data with value greater than 255 in 3-byte encoding.
     {
         unsigned char input[] = { 0xE8, 0xA8, 0xA9, 0xC3, 0xA6};
-        std::string inputString( (char*)input, sizeof(input)/sizeof(unsigned char) );
+        std::string inputString( (char*)input, (int) sizeof(input) / (int) sizeof(unsigned char) );
 
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw a UTFDataFormatException",
@@ -173,7 +173,7 @@ void MarshallingSupportTest::testModifiedUtf8ToAscii() {
     // Test with three byte encode that's missing a last byte.
     {
         unsigned char input[] = { 0x00, 0x00, 0x00, 0x02, 0xE8, 0xA8};
-        std::string inputString( (char*)input, sizeof(input)/sizeof(unsigned char) );
+        std::string inputString( (char*)input, (int) sizeof(input) / (int) sizeof(unsigned char) );
 
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw a UTFDataFormatException",

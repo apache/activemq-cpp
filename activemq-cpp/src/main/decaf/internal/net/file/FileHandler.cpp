@@ -31,12 +31,12 @@ FileHandler::~FileHandler() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::net::URLConnection* FileHandler::openConnection(const decaf::net::URL& url) {
+decaf::net::URLConnection* FileHandler::openConnection(const decaf::net::URL& url DECAF_UNUSED) {
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::net::URLConnection* FileHandler::openConnection(const decaf::net::URL& url,
+decaf::net::URLConnection* FileHandler::openConnection(const decaf::net::URL& url DECAF_UNUSED,
                                                        const decaf::net::Proxy* proxy) {
 
     if (proxy == NULL) {

@@ -49,7 +49,7 @@ namespace lang{
 
         static const int rawBitsFor3_4eN38To38[];
         static const std::string expectedStringFor3_4eN38To38[];
-        static const int rawBitsFor1_17eN38To38[];
+        static const unsigned int rawBitsFor1_17eN38To38[];
         static const std::string expectedStringFor1_17eN38To38[];
 
         FloatTest();

@@ -56,9 +56,9 @@ void DisplayResults() {
     printf("\nT E S T   S U M M A R Y\n");
 
     if (days > 0) {
-        printf("Elapsed time = %d:%02.2d:%02.2d:%02.2d.%03.3d\n", days, hrs % 24, mins % 60, secs % 60, mills % 1000);
+        printf("Elapsed time = %d:%2.2d:%2.2d:%2.2d.%3.3d\n", days, hrs % 24, mins % 60, secs % 60, (int)(mills % 1000));
     } else {
-        printf("Elapsed time = %02.2d:%02.2d:%02.2d.%03.3d\n", hrs % 24, mins % 60, secs % 60, mills % 1000);
+        printf("Elapsed time = %2.2d:%2.2d:%2.2d.%3.3d\n", hrs % 24, mins % 60, secs % 60, (int)(mills % 1000));
     }
 
     printf("Threads used = %d\n", TestResults.threadCount);

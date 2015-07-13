@@ -210,7 +210,7 @@ void InflaterInputStreamTest::testRead() {
 void InflaterInputStreamTest::testAvailableNonEmptySource() {
 
     // this unsigned char[] is a deflation of these bytes: { 1, 3, 4, 6 }
-    unsigned char deflated[] = {72, -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0};
+    unsigned char deflated[] = {72, (unsigned char) -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0};
 
     ByteArrayInputStream bais( deflated, 13 );
     InflaterInputStream in( &bais );
@@ -233,7 +233,7 @@ void InflaterInputStreamTest::testAvailableNonEmptySource() {
 void InflaterInputStreamTest::testAvailableSkip() {
 
     // this unsigned char[] is a deflation of these bytes: { 1, 3, 4, 6 }
-    unsigned char deflated[] = { 72, -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0 };
+    unsigned char deflated[] = { 72, (unsigned char) -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0 };
     ByteArrayInputStream bais( deflated, 13 );
     InflaterInputStream in( &bais );
 
@@ -246,7 +246,7 @@ void InflaterInputStreamTest::testAvailableSkip() {
 void InflaterInputStreamTest::testAvailableEmptySource() {
 
     // this unsigned char[] is a deflation of the empty file
-    unsigned char deflated[] = { 120, -100, 3, 0, 0, 0, 0, 1 };
+    unsigned char deflated[] = { 120, (unsigned char) -100, 3, 0, 0, 0, 0, 1 };
     ByteArrayInputStream bais( deflated, 13 );
     InflaterInputStream in( &bais );
 
@@ -391,7 +391,7 @@ void InflaterInputStreamTest::testSkip2() {
 void InflaterInputStreamTest::testAvailable() {
 
     // this unsigned char[] is a deflation of these bytes: { 1, 3, 4, 6 }
-    unsigned char deflated[] = {72, -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0};
+    unsigned char deflated[] = {72, (unsigned char) -119, 99, 100, 102, 97, 3, 0, 0, 31, 0, 15, 0};
 
     ByteArrayInputStream bais( deflated, 13 );
     InflaterInputStream iis( &bais );

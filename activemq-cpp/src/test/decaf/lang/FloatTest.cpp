@@ -63,7 +63,7 @@ const std::string FloatTest::expectedStringFor3_4eN38To38[] = {
     "3.4028236E34", "3.4028234E35", "3.4028236E36", "3.4028235E37", "3.4028235E38" };
 
 ////////////////////////////////////////////////////////////////////////////////
-const int FloatTest::rawBitsFor1_17eN38To38[] = {
+const unsigned int FloatTest::rawBitsFor1_17eN38To38[] = {
     0x80800000, 0x82200000, 0x83c80000,
     0x857a0000, 0x871c4000, 0x88c35000, 0x8a742400, 0x8c189680, 0x8dbebc20, 0x8f6e6b28,
     0x911502f9, 0x92ba43b7, 0x9468d4a5, 0x961184e7, 0x97b5e621, 0x99635fa9, 0x9b0e1bca,

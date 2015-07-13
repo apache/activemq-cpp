@@ -147,7 +147,7 @@ namespace discovery {
                     return false;
                 }
 
-                int maxReconnectAttempts = maxReconnectAttempts;
+                int maxReconnectAttempts = this->maxReconnectAttempts;
 
                 // Are we done trying to recover this guy?
                 if (maxReconnectAttempts > 0 && service->getFailureCount() > maxReconnectAttempts) {
