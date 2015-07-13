@@ -178,6 +178,21 @@
     <Filter Include="decaf\util\comparators">
       <UniqueIdentifier>{f4100c60-25f0-4cb8-8b37-8c13f50671cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="decaf\internal\net\file">
+      <UniqueIdentifier>{c28b0efe-38a1-42c7-af11-29749f55e822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\net\http">
+      <UniqueIdentifier>{febfbbd6-a554-41ac-8146-f4559be64342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decaf\internal\net\https">
+      <UniqueIdentifier>{a35e574c-2c08-4dc9-884c-0ad38a5fccc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\discovery">
+      <UniqueIdentifier>{f870f841-d877-40a1-8c1a-7ac4274e0d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="activemq\transport\discovery\http">
+      <UniqueIdentifier>{0384ed27-9040-404e-918e-f75572fa637d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main\activemq\cmsutil\CachedConsumer.cpp">
@@ -2084,6 +2099,102 @@
     </ClCompile>
     <ClCompile Include="..\src\main\activemq\core\ActiveMQDestinationSource.cpp">
       <Filter>activemq\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\AbstractStringBuilder.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\Number.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\StringBuffer.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\StringBuilder.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\ArrayIndexOutOfBoundsException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\SecurityException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\lang\exceptions\StringIndexOutOfBoundsException.cpp">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\URIType.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\URLStreamHandlerManager.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\URLType.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\URLUtils.cpp">
+      <Filter>decaf\internal\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\file\FileHandler.cpp">
+      <Filter>decaf\internal\net\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\http\HttpHandler.cpp">
+      <Filter>decaf\internal\net\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\internal\net\https\HttpsHandler.cpp">
+      <Filter>decaf\internal\net\https</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\ContentHandlerFactory.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\FileNameMap.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\HttpURLConnection.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\Proxy.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URLConnection.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URLStreamHandler.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\decaf\net\URLStreamHandlerFactory.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgent.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgentFactory.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveredBrokerData.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryAgent.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryAgentFactory.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryAgentRegistry.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryListener.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryTransport.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryTransportFactory.cpp">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgent.cpp">
+      <Filter>activemq\transport\discovery\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgentFactory.cpp">
+      <Filter>activemq\transport\discovery\http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -4066,6 +4177,96 @@
     </ClInclude>
     <ClInclude Include="..\src\main\activemq\core\ActiveMQDestinationSource.h">
       <Filter>activemq\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\AbstractStringBuilder.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\StringBuffer.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\StringBuilder.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\ArrayIndexOutOfBoundsException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\SecurityException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\lang\exceptions\StringIndexOutOfBoundsException.h">
+      <Filter>decaf\lang\exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\URLStreamHandlerManager.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\URLType.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\URLUtils.h">
+      <Filter>decaf\internal\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\file\FileHandler.h">
+      <Filter>decaf\internal\net\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\http\HttpHandler.h">
+      <Filter>decaf\internal\net\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\internal\net\https\HttpsHandler.h">
+      <Filter>decaf\internal\net\https</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\ContentHandlerFactory.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\FileNameMap.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\HttpURLConnection.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\Proxy.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URLConnection.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URLStreamHandler.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\decaf\net\URLStreamHandlerFactory.h">
+      <Filter>decaf\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgent.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgentFactory.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveredBrokerData.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryAgent.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryAgentFactory.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryAgentRegistry.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryListener.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryTransport.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryTransportFactory.h">
+      <Filter>activemq\transport\discovery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgent.h">
+      <Filter>activemq\transport\discovery\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgentFactory.h">
+      <Filter>activemq\transport\discovery\http</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

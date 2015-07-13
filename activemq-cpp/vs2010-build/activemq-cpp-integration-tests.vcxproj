@@ -96,6 +96,7 @@
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireRedeliveryPolicyTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireQueueBrowserTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireRedeliveryPolicyTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.h" />

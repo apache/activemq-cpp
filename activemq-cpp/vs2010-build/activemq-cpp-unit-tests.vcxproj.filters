@@ -845,6 +845,15 @@
     <ClCompile Include="..\src\test\activemq\transport\TransportRegistryTest.cpp">
       <Filter>activemq\transport</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\test\decaf\lang\StringBufferTest.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test\decaf\lang\StringBuilderTest.cpp">
+      <Filter>decaf\lang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\test\decaf\net\URLTest.cpp">
+      <Filter>decaf\net</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\test\util\teamcity\TeamCityProgressListener.h">
@@ -1581,6 +1590,15 @@
     </ClInclude>
     <ClInclude Include="..\src\test\activemq\transport\TransportRegistryTest.h">
       <Filter>activemq\transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test\decaf\lang\StringBufferTest.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test\decaf\lang\StringBuilderTest.h">
+      <Filter>decaf\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test\decaf\net\URLTest.h">
+      <Filter>decaf\net</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -229,6 +229,8 @@
     <ClCompile Include="..\src\test\decaf\lang\MathTest.cpp" />
     <ClCompile Include="..\src\test\decaf\lang\PointerTest.cpp" />
     <ClCompile Include="..\src\test\decaf\lang\ShortTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\StringBufferTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\lang\StringBuilderTest.cpp" />
     <ClCompile Include="..\src\test\decaf\lang\StringTest.cpp" />
     <ClCompile Include="..\src\test\decaf\lang\SystemTest.cpp" />
     <ClCompile Include="..\src\test\decaf\lang\ThreadLocalTest.cpp" />
@@ -244,6 +246,7 @@
     <ClCompile Include="..\src\test\decaf\net\URITest.cpp" />
     <ClCompile Include="..\src\test\decaf\net\URLDecoderTest.cpp" />
     <ClCompile Include="..\src\test\decaf\net\URLEncoderTest.cpp" />
+    <ClCompile Include="..\src\test\decaf\net\URLTest.cpp" />
     <ClCompile Include="..\src\test\decaf\nio\BufferTest.cpp" />
     <ClCompile Include="..\src\test\decaf\security\MessageDigestTest.cpp" />
     <ClCompile Include="..\src\test\decaf\security\SecureRandomTest.cpp" />
@@ -478,6 +481,8 @@
     <ClInclude Include="..\src\test\decaf\lang\MathTest.h" />
     <ClInclude Include="..\src\test\decaf\lang\PointerTest.h" />
     <ClInclude Include="..\src\test\decaf\lang\ShortTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\StringBufferTest.h" />
+    <ClInclude Include="..\src\test\decaf\lang\StringBuilderTest.h" />
     <ClInclude Include="..\src\test\decaf\lang\StringTest.h" />
     <ClInclude Include="..\src\test\decaf\lang\SystemTest.h" />
     <ClInclude Include="..\src\test\decaf\lang\ThreadLocalTest.h" />
@@ -493,6 +498,7 @@
     <ClInclude Include="..\src\test\decaf\net\URITest.h" />
     <ClInclude Include="..\src\test\decaf\net\URLDecoderTest.h" />
     <ClInclude Include="..\src\test\decaf\net\URLEncoderTest.h" />
+    <ClInclude Include="..\src\test\decaf\net\URLTest.h" />
     <ClInclude Include="..\src\test\decaf\nio\BufferTest.h" />
     <ClInclude Include="..\src\test\decaf\security\MessageDigestTest.h" />
     <ClInclude Include="..\src\test\decaf\security\SecureRandomTest.h" />

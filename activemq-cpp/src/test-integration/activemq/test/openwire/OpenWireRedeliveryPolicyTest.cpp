@@ -69,16 +69,16 @@ void OpenWireRedeliveryPolicyTest::testGetNext() {
     policy.setBackOffMultiplier((short) 2);
     policy.setUseExponentialBackOff(true);
 
-    long delay = policy.getNextRedeliveryDelay(0);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 1", 500L, delay);
+    long long delay = policy.getNextRedeliveryDelay(0);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 1", 500LL, delay);
     delay = policy.getNextRedeliveryDelay(delay);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 2", 500L*2L, delay);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 2", 500L*2LL, delay);
     delay = policy.getNextRedeliveryDelay(delay);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 3", 500L*4L, delay);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 3", 500L*4LL, delay);
 
     policy.setUseExponentialBackOff(false);
     delay = policy.getNextRedeliveryDelay(delay);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 4", 500L, delay);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 4", 500LL, delay);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
