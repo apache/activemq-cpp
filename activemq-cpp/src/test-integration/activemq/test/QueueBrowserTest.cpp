@@ -242,3 +242,37 @@ void QueueBrowserTest::testRepeatedQueueBrowserCreateDestroy() {
         browser.reset(NULL);
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void QueueBrowserTest::testRepeatedQueueBrowserCreateDestroyWithMessageInQueue() {
+
+    ActiveMQConnection* connection = dynamic_cast<ActiveMQConnection*>(cmsProvider->getConnection());
+    CPPUNIT_ASSERT(connection != NULL);
+
+    std::auto_ptr<cms::Session> session(connection->createSession(cms::Session::AUTO_ACKNOWLEDGE));
+    std::auto_ptr<cms::Queue> queue(session->createTemporaryQueue());
+
+    std::auto_ptr<cms::MessageProducer> producer(session->createProducer(queue.get()));
+    std::auto_ptr<cms::TextMessage> textMessage(session->createTextMessage("Test"));
+
+    producer->setDeliveryMode(cms::DeliveryMode::NON_PERSISTENT);
+    for (int i = 0 ; i < 10; ++i) {
+        producer->send(textMessage.get());
+    }
+
+    connection->start();
+
+    std::auto_ptr<cms::QueueBrowser> browser(session->createBrowser(queue.get()));
+
+    for (int i = 0; i < 200; i++) {
+        browser.reset(session->createBrowser(queue.get()));
+        cms::MessageEnumeration* browserView = browser->getEnumeration();
+
+        if (browserView->hasMoreMessages()) {
+            std::auto_ptr<cms::Message> message(browserView->nextMessage());
+            CPPUNIT_ASSERT(message.get() != NULL);
+        }
+
+        browser.reset(NULL);
+    }
+}
