@@ -656,7 +656,7 @@ cms::MessageConsumer* ActiveMQSessionKernel::createDurableConsumer(const cms::To
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destination* destination ) {
+cms::MessageProducer* ActiveMQSessionKernel::createProducer(const cms::Destination* destination ) {
 
     try {
 
@@ -702,7 +702,7 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer( const cms::Destinat
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::QueueBrowser* ActiveMQSessionKernel::createBrowser( const cms::Queue* queue ) {
+cms::QueueBrowser* ActiveMQSessionKernel::createBrowser(const cms::Queue* queue ) {
 
     try {
         return ActiveMQSessionKernel::createBrowser(queue, "");
@@ -1271,6 +1271,7 @@ void ActiveMQSessionKernel::removeConsumer(Pointer<ActiveMQConsumerKernel> consu
         this->config->consumerLock.writeLock().lock();
         try {
             this->config->consumers.remove(consumer);
+            this->connection->removeAuditedDispatcher(consumer.get());
             this->config->consumerLock.writeLock().unlock();
         } catch (Exception& ex) {
             this->config->consumerLock.writeLock().unlock();

@@ -260,6 +260,14 @@ namespace core {
          */
         void rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message);
 
+        /**
+         * Removes the Audit information stored for a given MessageConsumer
+         *
+         * @param dispatcher
+         *      The Dispatcher instance that has received the Message.
+         */
+        void removeAuditedDispatcher(Dispatcher* dispatcher);
+
     public:   // Connection Interface Methods
 
         /**

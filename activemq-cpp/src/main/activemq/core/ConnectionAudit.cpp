@@ -84,7 +84,10 @@ ConnectionAudit::~ConnectionAudit() {
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionAudit::removeDispatcher(Dispatcher* dispatcher) {
     synchronized(&this->impl->mutex) {
-        this->impl->dispatchers.remove(dispatcher);
+        try {
+            this->impl->dispatchers.remove(dispatcher);
+        } catch (NoSuchElementException& ex) {
+        }
     }
 }
 

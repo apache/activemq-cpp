@@ -1909,6 +1909,11 @@ bool ActiveMQConnection::isDuplicate(Dispatcher* dispatcher, Pointer<commands::M
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::removeAuditedDispatcher(Dispatcher* dispatcher) {
+    this->config->connectionAudit.removeDispatcher(dispatcher);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::rollbackDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message) {
     this->config->connectionAudit.rollbackDuplicate(dispatcher, message);
 }
