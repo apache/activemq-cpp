@@ -632,9 +632,9 @@ void FailoverTransport::close() {
             transportToStop->close();
         }
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -682,9 +682,9 @@ void FailoverTransport::restoreTransport(const Pointer<Transport> transport) {
             transport->oneway(iter->next());
         }
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -757,8 +757,8 @@ void FailoverTransport::handleConnectionControl(const Pointer<Command> control) 
 
         processNewTransports(ctrlCommand->isRebalanceConnection(), ctrlCommand->getConnectedBrokers());
     }
-    AMQ_CATCH_RETHROW( Exception)
-    AMQ_CATCHALL_THROW( Exception)
+    AMQ_CATCH_RETHROW(Exception)
+    AMQ_CATCHALL_THROW(Exception)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1039,9 +1039,9 @@ Pointer<Transport> FailoverTransport::createTransport(const URI& location) const
 
         return transport;
     }
-    AMQ_CATCH_RETHROW( IOException)
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException)
-    AMQ_CATCHALL_THROW( IOException)
+    AMQ_CATCH_RETHROW(IOException)
+    AMQ_CATCH_EXCEPTION_CONVERT(Exception, IOException)
+    AMQ_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1104,7 +1104,7 @@ void FailoverTransport::processResponse(const Pointer<Response> response) {
             Pointer<Tracked> tracked = object.dynamicCast<Tracked>();
             tracked->onResponse();
         }
-        AMQ_CATCH_NOTHROW( ClassCastException)
+        AMQ_CATCH_NOTHROW(ClassCastException)
     }
 }
 

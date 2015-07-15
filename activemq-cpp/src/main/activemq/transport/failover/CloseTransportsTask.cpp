@@ -54,7 +54,7 @@ bool CloseTransportsTask::isPending() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool CloseTransportsTask::iterate() {
 
-    if (!transports.isEmpty()) {
+    while (!transports.isEmpty()) {
         Pointer<Transport> transport = transports.take();
 
         try {
@@ -63,8 +63,6 @@ bool CloseTransportsTask::iterate() {
         AMQ_CATCHALL_NOTHROW()
 
         transport.reset(NULL);
-
-        return !transports.isEmpty();
     }
 
     return false;
