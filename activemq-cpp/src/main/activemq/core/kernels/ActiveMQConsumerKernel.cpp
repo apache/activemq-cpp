@@ -862,7 +862,7 @@ void ActiveMQConsumerKernel::dispose() {
                 this->internal->optimizedAckTask = NULL;
             }
 
-            if (session->isClientAcknowledge()) {
+            if (session->isClientAcknowledge() || session->isIndividualAcknowledge()) {
                 if (!this->consumerInfo->isBrowser()) {
                     // roll back duplicates that aren't acknowledged
                     ArrayList< Pointer<MessageDispatch> > tmp;

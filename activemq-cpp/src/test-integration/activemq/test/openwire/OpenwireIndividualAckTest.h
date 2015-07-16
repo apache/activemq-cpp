@@ -34,6 +34,7 @@ namespace openwire {
         CPPUNIT_TEST( testIndividualAcknowledgeMultiMessages_AcknowledgeFirstTest );
         CPPUNIT_TEST( testManyMessageAckedAfterMessageConsumption );
         CPPUNIT_TEST( testManyMessageAckedAfterAllConsumption );
+        CPPUNIT_TEST( tesIndividualAcksWithClosedConsumerAndAudit );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,6 +48,7 @@ namespace openwire {
         void testIndividualAcknowledgeMultiMessages_AcknowledgeFirstTest();
         void testManyMessageAckedAfterMessageConsumption();
         void testManyMessageAckedAfterAllConsumption();
+        void tesIndividualAcksWithClosedConsumerAndAudit();
 
         virtual std::string getBrokerURL() const {
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
