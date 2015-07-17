@@ -379,7 +379,6 @@ namespace {
                     impl->rollbackOnFailedRecoveryRedelivery();
                 }
             } else {
-                std::cout << "TransactionSynhcronization calling acknowledge" << std::endl;
                 consumer->acknowledge();
             }
             consumer->setSynchronizationRegistered(false);
@@ -1382,11 +1381,8 @@ void ActiveMQConsumerKernel::acknowledge() {
             }
 
             if (session->isTransacted()) {
-                std::cout << "Consumer: rollbackOnFailedRecoveryRedelivery" << std::endl;
                 this->internal->rollbackOnFailedRecoveryRedelivery();
-                std::cout << "Consumer: doStartTransaction" << std::endl;
                 session->doStartTransaction();
-                std::cout << "Consumer: setTransactionId" << std::endl;
                 ack->setTransactionId(session->getTransactionContext()->getTransactionId());
             }
 
