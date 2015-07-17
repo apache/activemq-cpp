@@ -1176,7 +1176,7 @@ void ActiveMQConsumerKernel::afterMessageIsConsumed(Pointer<MessageDispatch> mes
         if (this->internal->unconsumedMessages->isClosed()) {
             return;
         } else if (messageExpired) {
-            acknowledge(message, ActiveMQConstants::ACK_TYPE_DELIVERED);
+            acknowledge(message, ActiveMQConstants::ACK_TYPE_EXPIRED);
             return;
         } else if (session->isTransacted()) {
             return;
