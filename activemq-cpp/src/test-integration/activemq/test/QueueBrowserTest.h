@@ -35,6 +35,7 @@ namespace test {
         void testQueueBrowserWith2Consumers();
         void testRepeatedQueueBrowserCreateDestroy();
         void testRepeatedQueueBrowserCreateDestroyWithMessageInQueue();
+        void testBrowsingExpirationIsIgnored();
 
     };
 

@@ -354,6 +354,20 @@ namespace kernels {
          */
         void setOptimizeAcknowledge(bool value);
 
+        /**
+         * @return true if the consumer will skip checking messages for expiration.
+         */
+        bool isConsumerExpiryCheckEnabled();
+
+        /**
+         * Configures whether this consumer will perform message expiration processing
+         * on all incoming messages.  This feature is enabled by default.
+         *
+         * @param consumerExpiryCheckEnabled
+         *      False if the default message expiration checks should be disabled.
+         */
+        void setConsumerExpiryCheckEnabled(bool consumerExpiryCheckEnabled);
+
     protected:
 
         /**

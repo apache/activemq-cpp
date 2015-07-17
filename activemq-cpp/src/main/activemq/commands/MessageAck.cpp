@@ -16,6 +16,7 @@
  */
 
 #include <activemq/commands/MessageAck.h>
+#include <activemq/core/ActiveMQConstants.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -355,3 +356,38 @@ void MessageAck::setPoisonCause(const decaf::lang::Pointer<BrokerError>& poisonC
 decaf::lang::Pointer<commands::Command> MessageAck::visit(activemq::state::CommandVisitor* visitor) {
     return visitor->processMessageAck(this);
 }
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isPoisonAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_POISON;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isStandardAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_CONSUMED;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isDeliveredAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_DELIVERED;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isRedeliveredAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_REDELIVERED;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isIndividualAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_INDIVIDUAL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isUnmatchedAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_UNMATCHED;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::isExpiredAck() {
+    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_EXPIRED;
+}
+

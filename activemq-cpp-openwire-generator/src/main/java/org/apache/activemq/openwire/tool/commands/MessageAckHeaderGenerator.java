@@ -29,7 +29,7 @@ public class MessageAckHeaderGenerator extends CommandHeaderGenerator {
         super.populateIncludeFilesSet();
     }
 
-    protected void generateAdditionalConstructors( PrintWriter out ) {
+    protected void generateAdditionalConstructors(PrintWriter out) {
 
         out.println("        "+getClassName()+"(const Pointer<Message>& message, int ackType, int messageCount);");
         out.println("");
@@ -39,4 +39,22 @@ public class MessageAckHeaderGenerator extends CommandHeaderGenerator {
         super.generateAdditionalConstructors(out);
     }
 
+    protected void generateAdditonalMembers(PrintWriter out) {
+        out.println("        bool isPoisonAck();");
+        out.println("");
+        out.println("        bool isStandardAck();");
+        out.println("");
+        out.println("        bool isDeliveredAck();");
+        out.println("");
+        out.println("        bool isRedeliveredAck();");
+        out.println("");
+        out.println("        bool isIndividualAck();");
+        out.println("");
+        out.println("        bool isUnmatchedAck();");
+        out.println("");
+        out.println("        bool isExpiredAck();");
+        out.println("");
+
+        super.generateAdditonalMembers( out );
+    }
 }

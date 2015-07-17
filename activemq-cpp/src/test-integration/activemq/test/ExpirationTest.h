@@ -38,6 +38,7 @@ namespace test{
         virtual void tearDown() {}
 
         virtual void testExpired();
+        virtual void testExpiredWithChecksDisabled();
         virtual void testNotExpired();
 
     };

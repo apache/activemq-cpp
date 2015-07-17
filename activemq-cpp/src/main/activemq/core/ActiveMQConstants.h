@@ -58,7 +58,9 @@ namespace core {
                                        // poison pill but discard anyway
             ACK_TYPE_CONSUMED    = 2,  // Message consumed, discard
             ACK_TYPE_REDELIVERED = 3,  // Message has been re-delivered.
-            ACK_TYPE_INDIVIDUAL  = 4   // Acks a single message at a time.
+            ACK_TYPE_INDIVIDUAL  = 4,  // Acks a single message at a time.
+            ACK_TYPE_UNMATCHED   = 5,  // Durable sub doesn't match selector
+            ACK_TYPE_EXPIRED     = 6   // Message expired.
         };
 
         /**

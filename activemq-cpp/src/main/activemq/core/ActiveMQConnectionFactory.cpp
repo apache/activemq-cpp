@@ -99,6 +99,7 @@ namespace core{
         long long optimizeAcknowledgeTimeOut;
         long long optimizedAckScheduledAckInterval;
         long long consumerFailoverRedeliveryWaitPeriod;
+        bool consumerExpiryCheckEnabled;
 
         cms::ExceptionListener* defaultListener;
         cms::MessageTransformer* defaultTransformer;
@@ -134,6 +135,7 @@ namespace core{
                             optimizeAcknowledgeTimeOut(300),
                             optimizedAckScheduledAckInterval(0),
                             consumerFailoverRedeliveryWaitPeriod(0),
+                            consumerExpiryCheckEnabled(true),
                             defaultListener(NULL),
                             defaultTransformer(NULL),
                             defaultPrefetchPolicy(new DefaultPrefetchPolicy()),
@@ -220,6 +222,8 @@ namespace core{
                 properties->getProperty("connection.watchTopicAdvisories", Boolean::toString(watchTopicAdvisories)));
             this->alwaysSessionAsync = Boolean::parseBoolean(
                 properties->getProperty("connection.alwaysSessionAsync", Boolean::toString(alwaysSessionAsync)));
+            this->consumerExpiryCheckEnabled = Boolean::parseBoolean(
+                properties->getProperty("connection.consumerExpiryCheckEnabled", Boolean::toString(consumerExpiryCheckEnabled)));
 
             this->defaultPrefetchPolicy->configure(*properties);
             this->defaultRedeliveryPolicy->configure(*properties);
@@ -416,6 +420,7 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setNonBlockingRedelivery(this->settings->nonBlockingRedelivery);
     connection->setConsumerFailoverRedeliveryWaitPeriod(this->settings->consumerFailoverRedeliveryWaitPeriod);
     connection->setAlwaysSessionAsync(this->settings->alwaysSessionAsync);
+    connection->setConsumerExpiryCheckEnabled(this->settings->consumerExpiryCheckEnabled);
 
     if (this->settings->defaultListener) {
         connection->setExceptionListener(this->settings->defaultListener);
@@ -746,4 +751,14 @@ bool ActiveMQConnectionFactory::isAlwaysSessionAsync() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setAlwaysSessionAsync(bool alwaysSessionAsync) {
     this->settings->alwaysSessionAsync = alwaysSessionAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnectionFactory::isConsumerExpiryCheckEnabled() {
+    return this->settings->consumerExpiryCheckEnabled;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setConsumerExpiryCheckEnabled(bool consumerExpiryCheckEnabled) {
+    this->settings->consumerExpiryCheckEnabled = consumerExpiryCheckEnabled;
 }

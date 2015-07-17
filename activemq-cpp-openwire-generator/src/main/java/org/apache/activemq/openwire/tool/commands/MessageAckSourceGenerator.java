@@ -17,10 +17,18 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class MessageAckSourceGenerator extends CommandSourceGenerator {
 
-    protected void generateAdditionalConstructors( PrintWriter out ) {
+    protected void populateIncludeFilesSet() {
+        Set<String> includes = getIncludeFiles();
+        includes.add("<activemq/core/ActiveMQConstants.h>");
+
+        super.populateIncludeFilesSet();
+    }
+
+    protected void generateAdditionalConstructors(PrintWriter out) {
 
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("MessageAck::MessageAck(const Pointer<Message>& message, int ackType, int messageCount) :");
@@ -46,4 +54,45 @@ public class MessageAckSourceGenerator extends CommandSourceGenerator {
 
         super.generateAdditionalConstructors(out);
     }
+
+    protected void generateAdditionalMethods(PrintWriter out) {
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isPoisonAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_POISON;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isStandardAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_CONSUMED;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isDeliveredAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_DELIVERED;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isRedeliveredAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_REDELIVERED;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isIndividualAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_INDIVIDUAL;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isUnmatchedAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_UNMATCHED;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("bool MessageAck::isExpiredAck() {");
+        out.println("    return this->ackType == activemq::core::ActiveMQConstants::ACK_TYPE_EXPIRED;");
+        out.println("}");
+        out.println("");
+
+        super.generateAdditionalMethods(out);
+    }
+
 }

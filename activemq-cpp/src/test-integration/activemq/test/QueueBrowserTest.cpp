@@ -276,3 +276,41 @@ void QueueBrowserTest::testRepeatedQueueBrowserCreateDestroyWithMessageInQueue()
         browser.reset(NULL);
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void QueueBrowserTest::testBrowsingExpirationIsIgnored() {
+
+    const int MESSAGES_TO_SEND = 50;
+
+    ActiveMQConnection* connection = dynamic_cast<ActiveMQConnection*>(cmsProvider->getConnection());
+    CPPUNIT_ASSERT(connection != NULL);
+
+    std::auto_ptr<cms::Session> session(connection->createSession(cms::Session::AUTO_ACKNOWLEDGE));
+    std::auto_ptr<cms::Queue> queue(session->createTemporaryQueue());
+    std::auto_ptr<cms::MessageProducer> producer(session->createProducer(queue.get()));
+
+    producer->setDeliveryMode(cms::DeliveryMode::NON_PERSISTENT);
+    producer->setTimeToLive(1000);
+
+    // Load the Queue with messages set to expire.
+    for (int i = 1; i <= MESSAGES_TO_SEND; i++) {
+        std::auto_ptr<cms::TextMessage> textMessage(session->createTextMessage("Message: " + Integer::toString(i)));
+        producer->send(textMessage.get());
+    }
+
+    std::auto_ptr<cms::QueueBrowser> browser(session->createBrowser(queue.get()));
+    cms::MessageEnumeration* enumeration = browser->getEnumeration();
+    int browsed = 0;
+
+    Thread::sleep(1000);
+
+    while (enumeration->hasMoreMessages()) {
+        std::auto_ptr<cms::Message> message(enumeration->nextMessage());
+        CPPUNIT_ASSERT(message.get() != NULL);
+        browsed++;
+    }
+
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should have browsed all", MESSAGES_TO_SEND, browsed);
+
+    browser->close();
+}

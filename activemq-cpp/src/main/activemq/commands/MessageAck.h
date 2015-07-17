@@ -91,6 +91,20 @@ namespace commands {
 
         virtual bool equals(const DataStructure* value) const;
 
+        bool isPoisonAck();
+
+        bool isStandardAck();
+
+        bool isDeliveredAck();
+
+        bool isRedeliveredAck();
+
+        bool isIndividualAck();
+
+        bool isUnmatchedAck();
+
+        bool isExpiredAck();
+
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
         virtual void setDestination( const Pointer<ActiveMQDestination>& destination );

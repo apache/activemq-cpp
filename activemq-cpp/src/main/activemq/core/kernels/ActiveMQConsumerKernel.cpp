@@ -116,6 +116,7 @@ namespace kernels {
         long long failoverRedeliveryWaitPeriod;
         bool transactedIndividualAck;
         bool nonBlockingRedelivery;
+        bool consumerExpiryCheckEnabled;
         bool optimizeAcknowledge;
         long long optimizeAckTimestamp;
         long long optimizeAcknowledgeTimeOut;
@@ -153,6 +154,7 @@ namespace kernels {
                                          failoverRedeliveryWaitPeriod(0),
                                          transactedIndividualAck(false),
                                          nonBlockingRedelivery(false),
+                                         consumerExpiryCheckEnabled(true),
                                          optimizeAcknowledge(false),
                                          optimizeAckTimestamp(System::currentTimeMillis()),
                                          optimizeAcknowledgeTimeOut(),
@@ -327,6 +329,13 @@ namespace kernels {
             }
         }
 
+        bool consumeExpiredMessage(const Pointer<MessageDispatch> dispatch) {
+            if (dispatch->getMessage()->isExpired()) {
+                return !info->isBrowser() && consumerExpiryCheckEnabled;
+            }
+
+            return false;
+        }
     };
 
 }}}
@@ -363,7 +372,6 @@ namespace {
         virtual ~TransactionSynhcronization() {}
 
         virtual void beforeEnd() {
-
             if (impl->transactedIndividualAck) {
                 impl->doClearDispatchList();
                 impl->waitForRedeliveries();
@@ -371,6 +379,7 @@ namespace {
                     impl->rollbackOnFailedRecoveryRedelivery();
                 }
             } else {
+                std::cout << "TransactionSynhcronization calling acknowledge" << std::endl;
                 consumer->acknowledge();
             }
             consumer->setSynchronizationRegistered(false);
@@ -678,6 +687,10 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
         }
     }
 
+    if (prefetch < 0) {
+        throw cms::CMSException("Cannot have a prefetch size less than zero");
+    }
+
     this->internal = new ActiveMQConsumerKernelConfig();
 
     Pointer<ConsumerInfo> consumerInfo(new ConsumerInfo());
@@ -741,7 +754,11 @@ ActiveMQConsumerKernel::ActiveMQConsumerKernel(ActiveMQSessionKernel* session,
         session->getConnection()->getConsumerFailoverRedeliveryWaitPeriod();
     this->internal->nonBlockingRedelivery = session->getConnection()->isNonBlockingRedelivery();
     this->internal->transactedIndividualAck =
-        session->getConnection()->isTransactedIndividualAck() || this->internal->nonBlockingRedelivery;
+        session->getConnection()->isTransactedIndividualAck() ||
+        this->internal->nonBlockingRedelivery ||
+        this->session->getConnection()->isMessagePrioritySupported();
+    this->internal->consumerExpiryCheckEnabled =
+        this->session->getConnection()->isConsumerExpiryCheckEnabled();
 
     if (this->consumerInfo->getPrefetchSize() < 0) {
         delete this->internal;
@@ -968,7 +985,7 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue(long long 
                 }
             } else if (dispatch->getMessage() == NULL) {
                 return Pointer<MessageDispatch> ();
-            } else if (dispatch->getMessage()->isExpired()) {
+            } else if (internal->consumeExpiredMessage(dispatch)) {
                 beforeMessageIsConsumed(dispatch);
                 afterMessageIsConsumed(dispatch, true);
                 if (timeout > 0) {
@@ -1336,6 +1353,9 @@ void ActiveMQConsumerKernel::acknowledge(Pointer<commands::MessageDispatch> disp
 
     try {
         Pointer<MessageAck> ack(new MessageAck(dispatch, ackType, 1));
+        if (ack->isExpiredAck()) {
+            ack->setFirstMessageId(ack->getLastMessageId());
+        }
         session->sendAck(ack);
         synchronized(&this->internal->dispatchedMessages) {
             this->internal->dispatchedMessages.remove(dispatch);
@@ -1362,8 +1382,11 @@ void ActiveMQConsumerKernel::acknowledge() {
             }
 
             if (session->isTransacted()) {
+                std::cout << "Consumer: rollbackOnFailedRecoveryRedelivery" << std::endl;
                 this->internal->rollbackOnFailedRecoveryRedelivery();
+                std::cout << "Consumer: doStartTransaction" << std::endl;
                 session->doStartTransaction();
+                std::cout << "Consumer: setTransactionId" << std::endl;
                 ack->setTransactionId(session->getTransactionContext()->getTransactionId());
             }
 
@@ -1531,7 +1554,7 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
                             Pointer<cms::Message> message = createCMSMessage(dispatch);
                             beforeMessageIsConsumed(dispatch);
                             try {
-                                bool expired = dispatch->getMessage()->isExpired();
+                                bool expired = isConsumerExpiryCheckEnabled() && dispatch->getMessage()->isExpired();
                                 if (!expired) {
                                     this->internal->listener->onMessage(message.get());
                                 }
@@ -1817,8 +1840,10 @@ void ActiveMQConsumerKernel::applyDestinationOptions(Pointer<ConsumerInfo> info)
 
     this->internal->nonBlockingRedelivery = Boolean::parseBoolean(
         options.getProperty("consumer.nonBlockingRedelivery", "false"));
-    this->internal->nonBlockingRedelivery = Boolean::parseBoolean(
+    this->internal->transactedIndividualAck = Boolean::parseBoolean(
         options.getProperty("consumer.transactedIndividualAck", "false"));
+    this->internal->consumerExpiryCheckEnabled = Boolean::parseBoolean(
+        options.getProperty("consumer.consumerExpiryCheckEnabled", "true"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1986,4 +2011,14 @@ void ActiveMQConsumerKernel::setOptimizeAcknowledge(bool value) {
     }
 
     this->internal->optimizeAcknowledge = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumerKernel::isConsumerExpiryCheckEnabled() {
+    return this->internal->consumerExpiryCheckEnabled;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumerKernel::setConsumerExpiryCheckEnabled(bool consumerExpiryCheckEnabled) {
+    this->internal->consumerExpiryCheckEnabled = consumerExpiryCheckEnabled;
 }

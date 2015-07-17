@@ -192,6 +192,7 @@ namespace core {
         long long optimizeAcknowledgeTimeOut;
         long long optimizedAckScheduledAckInterval;
         long long consumerFailoverRedeliveryWaitPeriod;
+        bool consumerExpiryCheckEnabled;
 
         std::auto_ptr<PrefetchPolicy> defaultPrefetchPolicy;
         std::auto_ptr<RedeliveryPolicy> defaultRedeliveryPolicy;
@@ -261,6 +262,7 @@ namespace core {
                              optimizeAcknowledgeTimeOut(300),
                              optimizedAckScheduledAckInterval(0),
                              consumerFailoverRedeliveryWaitPeriod(0),
+                             consumerExpiryCheckEnabled(true),
                              defaultPrefetchPolicy(NULL),
                              defaultRedeliveryPolicy(NULL),
                              exceptionListener(NULL),
@@ -1931,4 +1933,14 @@ void ActiveMQConnection::setAlwaysSessionAsync(bool alwaysSessionAsync) {
 ////////////////////////////////////////////////////////////////////////////////
 int ActiveMQConnection::getProtocolVersion() const {
     return this->config->protocolVersion->get();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConnection::isConsumerExpiryCheckEnabled() {
+    return this->config->consumerExpiryCheckEnabled;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setConsumerExpiryCheckEnabled(bool consumerExpiryCheckEnabled) {
+    this->config->consumerExpiryCheckEnabled = consumerExpiryCheckEnabled;
 }
