@@ -1523,3 +1523,18 @@ bool ActiveMQSessionKernel::isSessionAsyncDispatch() const {
 void ActiveMQSessionKernel::setSessionAsyncDispatch(bool sessionAsyncDispatch) {
     this->config->sessionAsyncDispatch = sessionAsyncDispatch;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::util::ArrayList< Pointer<ActiveMQConsumerKernel> > ActiveMQSessionKernel::getConsumers() const {
+    ArrayList< Pointer<ActiveMQConsumerKernel> > result;
+    this->config->consumerLock.readLock().lock();
+    try {
+        result.addAll(this->config->consumers);
+        this->config->consumerLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->consumerLock.readLock().unlock();
+        throw;
+    }
+
+    return result;
+}

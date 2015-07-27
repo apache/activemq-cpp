@@ -30,7 +30,7 @@ IntegrationCommon::IntegrationCommon() : urlCommon(), stompURL(), openwireURL() 
 
     this->urlCommon = "tcp://localhost:";
     this->stompURL = this->urlCommon + "61613?wireFormat=stomp";
-    this->openwireURL = this->urlCommon + "61616?wireFormat=openwire";
+    this->openwireURL = this->urlCommon + "61616?transport.trace=false";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

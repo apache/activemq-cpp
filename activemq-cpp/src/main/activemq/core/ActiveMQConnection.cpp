@@ -1679,6 +1679,22 @@ ExecutorService* ActiveMQConnection::getExecutor() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ArrayList< Pointer<ActiveMQSessionKernel> > ActiveMQConnection::getSessions() const {
+    ArrayList< Pointer<ActiveMQSessionKernel> > result;
+
+    this->config->sessionsLock.readLock().lock();
+    try {
+        result.addAll(this->config->activeSessions);
+        this->config->sessionsLock.readLock().unlock();
+    } catch (Exception& ex) {
+        this->config->sessionsLock.readLock().unlock();
+        throw;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQConnection::isWatchTopicAdvisories() const {
     return this->config->watchTopicAdvisories;
 }

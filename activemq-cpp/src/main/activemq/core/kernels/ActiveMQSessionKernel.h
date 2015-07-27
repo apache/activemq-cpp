@@ -41,6 +41,7 @@
 #include <activemq/threads/Scheduler.h>
 
 #include <decaf/lang/Pointer.h>
+#include <decaf/util/ArrayList.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
@@ -583,6 +584,15 @@ namespace kernels {
          * @param sessionAsyncDispatch The sessionAsyncDispatch to set.
          */
         void setSessionAsyncDispatch(bool sessionAsyncDispatch);
+
+        /**
+         * Returns an ArrayList containing a copy of all consumers currently in
+         * use on this Session.  Since this list is copied from the main consumers
+         * list the usage is thread safe after return.
+         *
+         * @return a list containing a pointer to each consumer active in this session.
+         */
+        decaf::util::ArrayList< Pointer<ActiveMQConsumerKernel> > getConsumers() const;
 
    private:
 

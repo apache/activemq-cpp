@@ -368,6 +368,16 @@ namespace kernels {
          */
         void setConsumerExpiryCheckEnabled(bool consumerExpiryCheckEnabled);
 
+        /**
+         * Returns true if the given MessageDispatch is expected to be redelivered in the
+         * currently open transaction.  This would be true for any message that was previously
+         * delivered in a transaction and a failover occurred prior to the transaction being
+         * completed.
+         *
+         * @return true if the given dispatch needs to be delivered to this consumer to recover.
+         */
+        bool isRedeliveryExpectedInCurrentTransaction(Pointer<commands::MessageDispatch> dispatch) const;
+
     protected:
 
         /**
@@ -424,7 +434,7 @@ namespace kernels {
 
         void registerSync();
 
-        void clearDispatchList();
+        void clearDeliveredList();
 
     };
 

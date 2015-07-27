@@ -32,6 +32,7 @@
 #include <activemq/core/kernels/ActiveMQProducerKernel.h>
 #include <activemq/core/kernels/ActiveMQSessionKernel.h>
 #include <decaf/util/Properties.h>
+#include <decaf/util/ArrayList.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/util/concurrent/ExecutorService.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -1070,9 +1071,17 @@ namespace core {
          * Determines whether the supplied Temporary Destination has already been deleted from the
          * Broker.  If watchTopicAdvisories is disabled this method will always return false.
          *
-         * @returns true if the temporary destination was deleted already.
+         * @return true if the temporary destination was deleted already.
          */
         bool isDeleted(Pointer<commands::ActiveMQTempDestination> destination) const;
+
+        /**
+         * Returns an ArrayList that contains a copy of all Sessions that are
+         * currently active in the Connection
+         *
+         * @return an ArrayList of Sessions active in this connection.
+         */
+        decaf::util::ArrayList< Pointer<activemq::core::kernels::ActiveMQSessionKernel> > getSessions() const;
 
     protected:
 
