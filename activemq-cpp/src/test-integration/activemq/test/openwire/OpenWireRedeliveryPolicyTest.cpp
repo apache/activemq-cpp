@@ -82,6 +82,20 @@ void OpenWireRedeliveryPolicyTest::testGetNext() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void OpenWireRedeliveryPolicyTest::testGetNextWithInitialDelay() {
+
+    DefaultRedeliveryPolicy policy;
+    policy.setInitialRedeliveryDelay(500);
+
+    long long delay = policy.getNextRedeliveryDelay(500);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 1", 1000LL, delay);
+    delay = policy.getNextRedeliveryDelay(delay);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 2", 1000LL, delay);
+    delay = policy.getNextRedeliveryDelay(delay);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect delay for cycle 3", 1000LL, delay);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void OpenWireRedeliveryPolicyTest::testExponentialRedeliveryPolicyDelaysDeliveryOnRollback() {
 
     Pointer<ActiveMQConnectionFactory> connectionFactory(
@@ -223,7 +237,8 @@ void OpenWireRedeliveryPolicyTest::testDLQHandling() {
     Pointer<MessageProducer> producer(session->createProducer(destination.get()));
     Pointer<MessageConsumer> consumer(session->createConsumer(destination.get()));
     Pointer<Queue> dlq(session->createQueue("ActiveMQ.DLQ"));
-    Pointer<MessageConsumer> dlqConsumer(session->createConsumer(destination.get()));
+    amqConnection->destroyDestination(dlq.get());
+    Pointer<MessageConsumer> dlqConsumer(session->createConsumer(dlq.get()));
 
     // Send the messages
     Pointer<TextMessage> message1(session->createTextMessage("1st"));
@@ -362,7 +377,7 @@ void OpenWireRedeliveryPolicyTest::testMaximumRedeliveryDelay() {
     policy->setUseExponentialBackOff(true);
     policy->setMaximumRedeliveries(-1);
     policy->setRedeliveryDelay(50);
-    // TODO - policy->setMaximumRedeliveryDelay(1000);
+    policy->setMaximumRedeliveryDelay(1000);
     policy->setBackOffMultiplier((short) 2);
     policy->setUseExponentialBackOff(true);
 
@@ -403,8 +418,8 @@ void OpenWireRedeliveryPolicyTest::testMaximumRedeliveryDelay() {
     CPPUNIT_ASSERT_EQUAL(std::string("2nd"), textMessage->getText());
     session->commit();
 
-    CPPUNIT_ASSERT_MESSAGE("Max delay should be 1 second.",
-                           policy->getNextRedeliveryDelay(Long::MAX_VALUE) == 1000);
+    long long result = policy->getNextRedeliveryDelay(Integer::MAX_VALUE);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Max delay should be 1 second.", 1000LL, result);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -473,8 +488,8 @@ void OpenWireRedeliveryPolicyTest::testRepeatedRedeliveryReceiveNoCommit() {
     producer->send(message1.get());
 
     const int MAX_REDELIVERIES = 4;
-    for (int i = 0; i <= MAX_REDELIVERIES + 1; i++) {
 
+    for (int i = 0; i <= MAX_REDELIVERIES + 1; i++) {
         Pointer<Connection> loopConnection(connectionFactory->createConnection());
         Pointer<ActiveMQConnection> amqConnection = loopConnection.dynamicCast<ActiveMQConnection>();
 
@@ -489,15 +504,16 @@ void OpenWireRedeliveryPolicyTest::testRepeatedRedeliveryReceiveNoCommit() {
         Pointer<MessageConsumer> consumer(session->createConsumer(destination.get()));
 
         Pointer<cms::Message> received(consumer->receive(1000));
-        Pointer<ActiveMQTextMessage> textMessage = received.dynamicCast<ActiveMQTextMessage>();
 
         if (i <= MAX_REDELIVERIES) {
+            Pointer<ActiveMQTextMessage> textMessage = received.dynamicCast<ActiveMQTextMessage>();
             CPPUNIT_ASSERT_MESSAGE("Failed to get first delivery", textMessage != NULL);
             CPPUNIT_ASSERT_EQUAL(std::string("1st"), textMessage->getText());
             CPPUNIT_ASSERT_EQUAL(i, textMessage->getRedeliveryCounter());
         } else {
-            CPPUNIT_ASSERT_MESSAGE("null on exceeding redelivery count", textMessage == NULL);
+            CPPUNIT_ASSERT_MESSAGE("null on exceeding redelivery count", received == NULL);
         }
+
         loopConnection->close();
     }
 
@@ -512,10 +528,8 @@ void OpenWireRedeliveryPolicyTest::testRepeatedRedeliveryReceiveNoCommit() {
         CPPUNIT_ASSERT_MESSAGE("cause exception has no policy ref",
                                cause.find("RedeliveryPolicy") != std::string::npos);
     } else {
-        //CPPUNIT_FAIL("Message did not have a rollback cause");
+        CPPUNIT_FAIL("Message did not have a rollback cause");
     }
-
-    dlqSession->commit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -615,10 +629,8 @@ void OpenWireRedeliveryPolicyTest::testRepeatedRedeliveryOnMessageNoCommit() {
         CPPUNIT_ASSERT_MESSAGE("cause exception has no policy ref",
                                cause.find("RedeliveryPolicy") != std::string::npos);
     } else {
-        //CPPUNIT_FAIL("Message did not have a rollback cause");
+        CPPUNIT_FAIL("Message did not have a rollback cause");
     }
-
-    dlqSession->commit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

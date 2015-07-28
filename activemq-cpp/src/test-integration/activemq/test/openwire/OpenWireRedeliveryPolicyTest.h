@@ -29,18 +29,18 @@ namespace openwire {
 
         CPPUNIT_TEST_SUITE( OpenWireRedeliveryPolicyTest );
         CPPUNIT_TEST( testGetNext );
+        CPPUNIT_TEST( testGetNextWithInitialDelay );
         CPPUNIT_TEST( testExponentialRedeliveryPolicyDelaysDeliveryOnRollback );
         CPPUNIT_TEST( testNornalRedeliveryPolicyDelaysDeliveryOnRollback );
-        // TODO CPPUNIT_TEST( testDLQHandling );
+        CPPUNIT_TEST( testDLQHandling );
         CPPUNIT_TEST( testInfiniteMaximumNumberOfRedeliveries );
         CPPUNIT_TEST( testZeroMaximumNumberOfRedeliveries );
-        // TODO CPPUNIT_TEST( testRepeatedRedeliveryReceiveNoCommit );
-        // TODO CPPUNIT_TEST( testRepeatedRedeliveryOnMessageNoCommit );
+        CPPUNIT_TEST( testRepeatedRedeliveryReceiveNoCommit );
+        CPPUNIT_TEST( testRepeatedRedeliveryOnMessageNoCommit );
         CPPUNIT_TEST( testInitialRedeliveryDelayZero );
         CPPUNIT_TEST( testInitialRedeliveryDelayOne );
         CPPUNIT_TEST( testRedeliveryDelayOne );
-        // TODO - We don't currently support this property.
-        // CPPUNIT_TEST( testMaximumRedeliveryDelay );
+        CPPUNIT_TEST( testMaximumRedeliveryDelay );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -54,6 +54,7 @@ namespace openwire {
         virtual std::string getBrokerURL() const;
 
         void testGetNext();
+        void testGetNextWithInitialDelay();
         void testExponentialRedeliveryPolicyDelaysDeliveryOnRollback();
         void testNornalRedeliveryPolicyDelaysDeliveryOnRollback();
         void testDLQHandling();
