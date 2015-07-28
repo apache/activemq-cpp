@@ -19,6 +19,8 @@
 
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/core/ActiveMQConnection.h>
 
 #include <decaf/lang/Thread.h>
 #include <decaf/util/UUID.h>
@@ -27,6 +29,7 @@
 using namespace std;
 using namespace cms;
 using namespace activemq;
+using namespace activemq::core;
 using namespace activemq::test;
 using namespace activemq::util;
 using namespace activemq::exceptions;
@@ -52,7 +55,7 @@ namespace {
 
     public:
 
-        ProducerThread( Session* session, Destination* destination, int num, int priority ) :
+        ProducerThread(Session* session, Destination* destination, int num, int priority) :
             session(session), destination(destination), num(num), priority(priority) {
         }
 
@@ -60,13 +63,13 @@ namespace {
 
         virtual void run() {
 
-            Pointer<MessageProducer> producer( session->createProducer( destination ) );
-            producer->setDeliveryMode( cms::DeliveryMode::NON_PERSISTENT );
-            producer->setPriority( priority );
+            Pointer<MessageProducer> producer(session->createProducer(destination));
+            producer->setDeliveryMode(cms::DeliveryMode::NON_PERSISTENT);
+            producer->setPriority(priority);
 
-            for( int i = 0; i < num; ++i ) {
-                Pointer<TextMessage> message( session->createTextMessage( "Test Message") );
-                producer->send( message.get() );
+            for (int i = 0; i < num; ++i) {
+                Pointer<TextMessage> message(session->createTextMessage("Test Message"));
+                producer->send(message.get());
             }
         }
     };
@@ -85,15 +88,21 @@ void MessagePriorityTest::testMessagePrioritySendReceive() {
 
     static const int MSG_COUNT = 25;
 
-    // Create CMS Object for Comms
-    cms::Session* session( cmsProvider->getSession() );
+    Pointer<ActiveMQConnectionFactory> connectionFactory(
+        new ActiveMQConnectionFactory(getBrokerURL()));
 
-    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    connectionFactory->setMessagePrioritySupported(true);
 
-    Destination* destination = cmsProvider->getDestination();
+    Pointer<Connection> connection(connectionFactory->createConnection());
+    Pointer<Session> session(connection->createSession(Session::AUTO_ACKNOWLEDGE));
+    Pointer<Queue> destination(session->createTemporaryQueue());
+    Pointer<MessageProducer> producer(session->createProducer(destination.get()));
+    Pointer<MessageConsumer> consumer(session->createConsumer(destination.get()));
 
-    ProducerThread thread1( session, destination, MSG_COUNT, 9 );
-    ProducerThread thread2( session, destination, MSG_COUNT, 1 );
+    connection->start();
+
+    ProducerThread thread1(session.get(), destination.get(), MSG_COUNT, 9);
+    ProducerThread thread2(session.get(), destination.get(), MSG_COUNT, 1);
 
     thread1.start();
     thread2.start();
@@ -101,11 +110,11 @@ void MessagePriorityTest::testMessagePrioritySendReceive() {
     thread1.join();
     thread2.join();
 
-    Thread::sleep( 3000 );
+    Thread::sleep(3000);
 
-    for( int i = 0; i < MSG_COUNT * 2; ++i ) {
-        Pointer<cms::Message> message( consumer->receive( 2000 ) );
-        CPPUNIT_ASSERT( message != NULL );
-        CPPUNIT_ASSERT( message->getCMSPriority() == ( i < MSG_COUNT ? 9 : 1 ) );
+    for (int i = 0; i < MSG_COUNT * 2; ++i) {
+        Pointer<cms::Message> message(consumer->receive(2000));
+        CPPUNIT_ASSERT(message != NULL);
+        CPPUNIT_ASSERT(message->getCMSPriority() == (i < MSG_COUNT ? 9 : 1));
     }
 }
