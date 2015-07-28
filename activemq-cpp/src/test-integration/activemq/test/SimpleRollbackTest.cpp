@@ -48,66 +48,66 @@ void SimpleRollbackTest::testRollbacks() {
     try {
 
         // Create CMS Object for Comms
-        cms::Session* session( cmsProvider->getSession() );
+        cms::Session* session(cmsProvider->getSession());
 
-        CMSListener listener( session );
+        CMSListener listener(session);
 
         cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-        consumer->setMessageListener( &listener );
+        consumer->setMessageListener(&listener);
         cms::MessageProducer* producer = cmsProvider->getProducer();
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+        producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
-        auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage() );
+        auto_ptr<cms::TextMessage> txtMessage(session->createTextMessage());
 
-        for( unsigned int i = 0; i < IntegrationCommon::defaultMsgCount; ++i ) {
+        for (unsigned int i = 0; i < IntegrationCommon::defaultMsgCount; ++i) {
             ostringstream lcStream;
             lcStream << "SimpleTest - Message #" << i << ends;
-            txtMessage->setText( lcStream.str() );
-            producer->send( txtMessage.get() );
+            txtMessage->setText(lcStream.str());
+            producer->send(txtMessage.get());
         }
 
         session->commit();
-        Thread::sleep( 50 );
+        Thread::sleep(50);
 
         // Wait for the messages to get here
-        listener.asyncWaitForMessages( IntegrationCommon::defaultMsgCount );
+        listener.asyncWaitForMessages(IntegrationCommon::defaultMsgCount);
         unsigned int numReceived = listener.getNumReceived();
-        CPPUNIT_ASSERT( numReceived == IntegrationCommon::defaultMsgCount );
+        CPPUNIT_ASSERT(numReceived == IntegrationCommon::defaultMsgCount);
 
         session->commit();
-        Thread::sleep( 50 );
+        Thread::sleep(50);
 
-        for( unsigned int i = 0; i < 5; ++i ) {
+        for (unsigned int i = 0; i < 5; ++i) {
             ostringstream lcStream;
             lcStream << "SimpleTest - Message #" << i << ends;
-            txtMessage->setText( lcStream.str() );
-            producer->send( txtMessage.get() );
+            txtMessage->setText(lcStream.str());
+            producer->send(txtMessage.get());
         }
 
         listener.reset();
         session->rollback();
-        Thread::sleep( 50 );
+        Thread::sleep(50);
 
         listener.reset();
-        txtMessage->setText( "SimpleTest - Message after Rollback" );
-        producer->send( txtMessage.get() );
+        txtMessage->setText("SimpleTest - Message after Rollback");
+        producer->send(txtMessage.get());
         session->commit();
 
         // Wait for the messages to get here
-        listener.asyncWaitForMessages( 1 );
-        CPPUNIT_ASSERT( listener.getNumReceived() == 1 );
+        listener.asyncWaitForMessages(1);
+        CPPUNIT_ASSERT(listener.getNumReceived() == 1);
 
         listener.reset();
-        txtMessage->setText( "SimpleTest - Message after Rollback" );
-        producer->send( txtMessage.get() );
+        txtMessage->setText("SimpleTest - Message after Rollback");
+        producer->send(txtMessage.get());
         session->commit();
 
         // Wait for the messages to get here
-        listener.asyncWaitForMessages( 1 );
-        CPPUNIT_ASSERT( listener.getNumReceived() == 1 );
+        listener.asyncWaitForMessages(1);
+        CPPUNIT_ASSERT(listener.getNumReceived() == 1);
         session->commit();
 
-    } catch( std::exception& ex ) {
+    } catch (std::exception& ex) {
         std::cout << ex.what() << std::endl;
         throw ex;
     }

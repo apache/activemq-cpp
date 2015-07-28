@@ -39,7 +39,7 @@ using namespace decaf::util::concurrent;
 namespace activemq{
 namespace test{
 
-    class SlowListener: public cms::MessageListener {
+    class SlowListener : public cms::MessageListener {
     public:
 
         unsigned int count;
@@ -48,14 +48,14 @@ namespace test{
         SlowListener() : MessageListener(), count(0), threadIds() {}
         virtual ~SlowListener() {}
 
-        void onMessage( const cms::Message* message ) {
+        void onMessage(const cms::Message* message) {
 
             synchronized( &threadIds ) {
                 count++;
-                threadIds.add( Thread::currentThread()->getId() );
+                threadIds.add(Thread::currentThread()->getId());
             }
 
-            Thread::sleep( 20 );
+            Thread::sleep(20);
         }
     };
 
@@ -71,61 +71,59 @@ void SlowListenerTest::testSlowListener() {
         cms::Session* session = cmsProvider->getSession();
 
         cms::MessageProducer* producer = cmsProvider->getProducer();
-        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+        producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
         const unsigned int numConsumers = 5;
         cms::MessageConsumer* consumers[numConsumers];
 
         // Create several consumers for the same destination.
-        for( unsigned int i = 0; i < numConsumers; i++ ) {
-            consumers[i] = session->createConsumer( cmsProvider->getDestination() );
-            consumers[i]->setMessageListener( &listener );
+        for (unsigned int i = 0; i < numConsumers; i++) {
+            consumers[i] = session->createConsumer(cmsProvider->getDestination());
+            consumers[i]->setMessageListener(&listener);
         }
 
-        auto_ptr<cms::BytesMessage> message( session->createBytesMessage() );
+        auto_ptr<cms::BytesMessage> message(session->createBytesMessage());
 
         unsigned int msgCount = 50;
-        for( unsigned int i = 0; i < msgCount; i++ ) {
-            producer->send( message.get() );
+        for (unsigned int i = 0; i < msgCount; i++) {
+            producer->send(message.get());
         }
 
         // Wait no more than 10 seconds for all the messages to come in.
-        waitForMessages( msgCount * numConsumers, 10000, &listener );
+        waitForMessages(msgCount * numConsumers, 10000, &listener);
 
-        synchronized( &listener.threadIds ) {
-
+        synchronized(&listener.threadIds) {
             // Make sure that the listener was always accessed by the same thread
             // and that it received all the messages from all consumers.
-            CPPUNIT_ASSERT_EQUAL( 1, (int)listener.threadIds.size() );
-            CPPUNIT_ASSERT_EQUAL( (msgCount * numConsumers), listener.count );
+            CPPUNIT_ASSERT_EQUAL(1, (int )listener.threadIds.size());
+            CPPUNIT_ASSERT_EQUAL((msgCount * numConsumers), listener.count);
         }
 
-        for( unsigned int i = 0; i < numConsumers; i++ ) {
+        for (unsigned int i = 0; i < numConsumers; i++) {
             delete consumers[i];
         }
 
-    } catch( ActiveMQException& ex ) {
+    } catch (ActiveMQException& ex) {
         ex.printStackTrace();
         throw ex;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SlowListenerTest::waitForMessages(
-    unsigned int count, long long maxWaitTime, SlowListener* l ) {
+void SlowListenerTest::waitForMessages(unsigned int count, long long maxWaitTime, SlowListener* l) {
 
     long long startTime = System::currentTimeMillis();
 
-    synchronized( &( l->threadIds ) ) {
+    synchronized(&(l->threadIds)) {
 
-        while( l->count < count ) {
+        while (l->count < count) {
 
             long long curTime = System::currentTimeMillis();
-            if( ( curTime - startTime ) >= maxWaitTime ) {
+            if ((curTime - startTime) >= maxWaitTime) {
                 return;
             }
 
-            l->threadIds.wait( 500 );
+            l->threadIds.wait(500);
         }
     }
 }

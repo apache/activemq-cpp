@@ -42,7 +42,7 @@ namespace test {
 
     private:
 
-        void testRunnerSync( cms::Session::AcknowledgeMode mode );
+        void testRunnerSync(cms::Session::AcknowledgeMode mode);
 
     };
 

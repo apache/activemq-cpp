@@ -41,7 +41,7 @@ namespace test{
 
     protected:
 
-        void waitForMessages( unsigned int count, long long maxWaitTime, SlowListener* listener );
+        void waitForMessages(unsigned int count, long long maxWaitTime, SlowListener* listener);
 
     };
 

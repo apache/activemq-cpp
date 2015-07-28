@@ -47,64 +47,64 @@ VirtualTopicTest::~VirtualTopicTest() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void VirtualTopicTest::testVirtualTopicSyncReceiveAutoAck() {
-    this->testRunnerSync( cms::Session::AUTO_ACKNOWLEDGE );
+    this->testRunnerSync(cms::Session::AUTO_ACKNOWLEDGE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void VirtualTopicTest::testVirtualTopicSyncReceiveClinetAck() {
-    this->testRunnerSync( cms::Session::CLIENT_ACKNOWLEDGE );
+    this->testRunnerSync(cms::Session::CLIENT_ACKNOWLEDGE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void VirtualTopicTest::testVirtualTopicSyncReceiveTransacted() {
-    this->testRunnerSync( cms::Session::SESSION_TRANSACTED );
+    this->testRunnerSync(cms::Session::SESSION_TRANSACTED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void VirtualTopicTest::testRunnerSync( cms::Session::AcknowledgeMode mode ) {
+void VirtualTopicTest::testRunnerSync(cms::Session::AcknowledgeMode mode) {
 
-    cmsProvider->setAckMode( mode );
+    cmsProvider->setAckMode(mode);
     cmsProvider->reconnectSession();
 
     // Create CMS Object for Comms
-    cms::Session* session( cmsProvider->getSession() );
+    cms::Session* session(cmsProvider->getSession());
 
-    auto_ptr<cms::Destination> topic( session->createTopic( PRODUCER_DESTINATION_NAME ) );
-    auto_ptr<cms::Destination> queueA( session->createQueue( CONSUMER_A_DESTINATION_NAME ) );
-    auto_ptr<cms::Destination> queueB( session->createQueue( CONSUMER_B_DESTINATION_NAME ) );
+    auto_ptr<cms::Destination> topic(session->createTopic(PRODUCER_DESTINATION_NAME));
+    auto_ptr<cms::Destination> queueA(session->createQueue(CONSUMER_A_DESTINATION_NAME));
+    auto_ptr<cms::Destination> queueB(session->createQueue(CONSUMER_B_DESTINATION_NAME));
 
-    auto_ptr<cms::MessageProducer> producer( session->createProducer( topic.get() ) );
-    auto_ptr<cms::MessageConsumer> consumerA( session->createConsumer( queueA.get() ) );
-    auto_ptr<cms::MessageConsumer> consumerB( session->createConsumer( queueB.get() ) );
+    auto_ptr<cms::MessageProducer> producer(session->createProducer(topic.get()));
+    auto_ptr<cms::MessageConsumer> consumerA(session->createConsumer(queueA.get()));
+    auto_ptr<cms::MessageConsumer> consumerB(session->createConsumer(queueB.get()));
 
-    producer->setDeliveryMode( cms::DeliveryMode::NON_PERSISTENT );
+    producer->setDeliveryMode(cms::DeliveryMode::NON_PERSISTENT);
 
-    auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+    auto_ptr<cms::TextMessage> txtMessage(session->createTextMessage("TEST MESSAGE"));
 
-    for( std::size_t i = 0; i < IntegrationCommon::defaultMsgCount; ++i ) {
-        producer->send( txtMessage.get() );
+    for (std::size_t i = 0; i < IntegrationCommon::defaultMsgCount; ++i) {
+        producer->send(txtMessage.get());
     }
 
-    if( cms::Session::SESSION_TRANSACTED == mode ) {
+    if (cms::Session::SESSION_TRANSACTED == mode) {
         session->commit();
     }
 
-    for( std::size_t i = 0; i < IntegrationCommon::defaultMsgCount; ++i ) {
+    for (std::size_t i = 0; i < IntegrationCommon::defaultMsgCount; ++i) {
 
-        auto_ptr<cms::Message> messageA( consumerA->receive( 2000 ) );
-        CPPUNIT_ASSERT( messageA.get() != NULL );
-        if( cms::Session::CLIENT_ACKNOWLEDGE == mode ) {
+        auto_ptr<cms::Message> messageA(consumerA->receive(2000));
+        CPPUNIT_ASSERT(messageA.get() != NULL);
+        if (cms::Session::CLIENT_ACKNOWLEDGE == mode) {
             messageA->acknowledge();
         }
 
-        auto_ptr<cms::Message> messageB( consumerB->receive( 2000 ) );
-        CPPUNIT_ASSERT( messageB.get() != NULL );
-        if( cms::Session::CLIENT_ACKNOWLEDGE == mode ) {
+        auto_ptr<cms::Message> messageB(consumerB->receive(2000));
+        CPPUNIT_ASSERT(messageB.get() != NULL);
+        if (cms::Session::CLIENT_ACKNOWLEDGE == mode) {
             messageB->acknowledge();
         }
     }
 
-    if( cms::Session::SESSION_TRANSACTED == mode ) {
+    if (cms::Session::SESSION_TRANSACTED == mode) {
         session->commit();
     }
 }

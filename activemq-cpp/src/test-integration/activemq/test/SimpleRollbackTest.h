@@ -32,8 +32,7 @@ namespace test{
         virtual ~SimpleRollbackTest();
 
         virtual void setUp() {
-            cmsProvider.reset(
-                new util::CMSProvider( getBrokerURL(), cms::Session::SESSION_TRANSACTED ) );
+            cmsProvider.reset(new util::CMSProvider(getBrokerURL(), cms::Session::SESSION_TRANSACTED));
         };
 
         virtual void testRollbacks();
