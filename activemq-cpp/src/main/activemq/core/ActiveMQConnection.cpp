@@ -243,7 +243,7 @@ namespace core {
                              alwaysSyncSend(false),
                              useAsyncSend(false),
                              sendAcksAsync(true),
-                             messagePrioritySupported(true),
+                             messagePrioritySupported(false),
                              watchTopicAdvisories(true),
                              useCompression(false),
                              useRetroactiveConsumer(false),
