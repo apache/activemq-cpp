@@ -1028,7 +1028,7 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue(long long 
             } else if (internal->redeliveryExceeded(dispatch)) {
                 internal->posionAck(dispatch,
                                     "dispatch to " + getConsumerId()->toString() +
-                                    " exceeds redelivery policy limit: " +
+                                    " exceeds RedeliveryPolicy limit: " +
                                     Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries()));
             }
 
@@ -1468,7 +1468,6 @@ void ActiveMQConsumerKernel::rollback() {
 
     clearDeliveredList();
     synchronized(this->internal->unconsumedMessages.get()) {
-
         if (this->internal->optimizeAcknowledge) {
             // remove messages read but not acknowledged at the broker yet through optimizeAcknowledge
             if (!this->consumerInfo->isBrowser()) {
@@ -1517,7 +1516,7 @@ void ActiveMQConsumerKernel::rollback() {
                                         this->internal->deliveredMessages.size()));
                 ack->setFirstMessageId(firstMsgId);
                 // TODO - Add cause to the message.
-                std::string message = "Exceeded redelivery policy limit:" +
+                std::string message = "Exceeded RedeliveryPolicy max redelivery limit:" +
                                        Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries());
                                        //", cause:" + lastMd.getRollbackCause(), lastMd.getRollbackCause()));
                 ack->setPoisonCause(internal->createBrokerError(message));
@@ -1657,6 +1656,7 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
                     }
                 }
             }
+
             if (++internal->dispatchedCount % 1000 == 0) {
                 internal->dispatchedCount = 0;
                 Thread::yield();

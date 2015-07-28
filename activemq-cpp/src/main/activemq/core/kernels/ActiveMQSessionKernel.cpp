@@ -361,12 +361,6 @@ void ActiveMQSessionKernel::dispose() {
         // Stop the dispatch executor.
         stop();
 
-        // Roll Back the transaction since we were closed without an explicit call
-        // to commit it.
-        if (this->transaction->isInTransaction()) {
-            this->transaction->rollback();
-        }
-
         // Dispose of all Consumers, the dispose method skips the RemoveInfo command.
         this->config->consumerLock.writeLock().lock();
         try {
@@ -412,6 +406,12 @@ void ActiveMQSessionKernel::dispose() {
         } catch (Exception& ex) {
             this->config->producerLock.writeLock().unlock();
             throw;
+        }
+
+        // Roll Back the transaction since we were closed without an explicit call
+        // to commit it.
+        if (this->transaction->isInTransaction()) {
+            this->transaction->rollback();
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
