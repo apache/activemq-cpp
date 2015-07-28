@@ -34,7 +34,8 @@ DefaultRedeliveryPolicy::DefaultRedeliveryPolicy() : backOffMultiplier(5.0),
                                                      maximumRedeliveries(6),
                                                      useCollisionAvoidance(false),
                                                      useExponentialBackOff(false),
-                                                     redeliveryDelay(initialRedeliveryDelay) {
+                                                     redeliveryDelay(initialRedeliveryDelay),
+                                                     maximumRedeliveryDelay(-1) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +61,10 @@ long long DefaultRedeliveryPolicy::getNextRedeliveryDelay(long long previousDela
 
     if (previousDelay > 0 && useExponentialBackOff && (int) backOffMultiplier > 1) {
         nextDelay = (long long) ((double) previousDelay * backOffMultiplier);
+        if (maximumRedeliveryDelay != -1 && nextDelay > maximumRedeliveryDelay) {
+            // in case the user made max redelivery delay less than redelivery delay for some reason.
+            nextDelay = Math::max(maximumRedeliveryDelay, redeliveryDelay);
+        }
     }
 
     if (useCollisionAvoidance) {
@@ -67,7 +72,8 @@ long long DefaultRedeliveryPolicy::getNextRedeliveryDelay(long long previousDela
          * First random determines +/-, second random determines how far to
          * go in that direction. -cgs
          */
-        double variance = (randomNumberGenerator.nextBoolean() ? collisionAvoidanceFactor : -collisionAvoidanceFactor) * randomNumberGenerator.nextDouble();
+        double variance = (randomNumberGenerator.nextBoolean() ?
+                collisionAvoidanceFactor : -collisionAvoidanceFactor) * randomNumberGenerator.nextDouble();
         nextDelay += (long long) ((double) nextDelay * variance);
     }
 
@@ -86,6 +92,7 @@ RedeliveryPolicy* DefaultRedeliveryPolicy::clone() const {
     copy->useExponentialBackOff = this->useExponentialBackOff;
     copy->backOffMultiplier = this->backOffMultiplier;
     copy->redeliveryDelay = this->redeliveryDelay;
+    copy->maximumRedeliveryDelay = this->maximumRedeliveryDelay;
 
     return copy;
 }

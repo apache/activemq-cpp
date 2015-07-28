@@ -36,6 +36,7 @@ namespace policies {
         bool useCollisionAvoidance;
         bool useExponentialBackOff;
         long long redeliveryDelay;
+        long long maximumRedeliveryDelay;
 
     private:
 
@@ -98,6 +99,14 @@ namespace policies {
 
         virtual void setUseExponentialBackOff(bool value) {
             this->useExponentialBackOff = value;
+        }
+
+        virtual long long getMaximumRedeliveryDelay() const {
+            return this->maximumRedeliveryDelay;
+        }
+
+        virtual void setMaximumRedeliveryDelay(long long value) {
+            this->maximumRedeliveryDelay = value;
         }
 
         virtual long long getNextRedeliveryDelay(long long previousDelay);

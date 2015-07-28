@@ -72,6 +72,10 @@ void RedeliveryPolicy::configure(const decaf::util::Properties& properties) {
             this->setUseExponentialBackOff(Boolean::parseBoolean(
                 properties.getProperty("cms.redeliveryPolicy.useExponentialBackOff")));
         }
+        if (properties.hasProperty("cms.redeliveryPolicy.maxRedeliveryDelay")) {
+            this->setMaximumRedeliveryDelay(Long::parseLong(
+                properties.getProperty("cms.redeliveryPolicy.maxRedeliveryDelay")));
+        }
     }
     DECAF_CATCH_RETHROW(Exception)
     DECAF_CATCHALL_THROW(Exception)

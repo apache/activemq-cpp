@@ -50,7 +50,7 @@ namespace core {
         virtual ~RedeliveryPolicy();
 
         /**
-         * @returns The value of the Back-Off Multiplier for Message Redelivery.
+         * @return The value of the Back-Off Multiplier for Message Redelivery.
          */
         virtual double getBackOffMultiplier() const = 0;
 
@@ -63,7 +63,7 @@ namespace core {
         virtual void setBackOffMultiplier(double value) = 0;
 
         /**
-         * @returns the currently set Collision Avoidance percentage.
+         * @return the currently set Collision Avoidance percentage.
          */
         virtual short getCollisionAvoidancePercent() const = 0;
 
@@ -76,7 +76,7 @@ namespace core {
         /**
          * Gets the initial time that redelivery of messages is delayed.
          *
-         * @returns the time in milliseconds that redelivery is delayed initially.
+         * @return the time in milliseconds that redelivery is delayed initially.
          */
         virtual long long getInitialRedeliveryDelay() const = 0;
 
@@ -91,7 +91,7 @@ namespace core {
         /**
          * Gets the time that redelivery of messages is delayed.
          *
-         * @returns the time in milliseconds that redelivery is delayed.
+         * @return the time in milliseconds that redelivery is delayed.
          */
         virtual long long getRedeliveryDelay() const = 0;
 
@@ -107,7 +107,7 @@ namespace core {
          * Gets the Maximum number of allowed redeliveries for a message before it will
          * be discarded by the consumer.
          *
-         * @returns maximum allowed redeliveries for a message.
+         * @return maximum allowed redeliveries for a message.
          */
         virtual int getMaximumRedeliveries() const = 0;
 
@@ -151,6 +151,24 @@ namespace core {
          *      Enable or Disable the exponential back off multiplier option.
          */
         virtual void setUseExponentialBackOff(bool value) = 0;
+
+        /**
+         * Returns the maximum amount of time that the redelivery delay is allowed
+         * to increase to before it is capped.
+         *
+         * @return the maximum redelivery delay value.
+         */
+        virtual long long getMaximumRedeliveryDelay() const = 0;
+
+        /**
+         * Sets the maximum amount of time that the redelivery delay is allowed
+         * to increase to before it is capped.  By default this value is set to
+         * -1 which disables any maximum delay.
+         *
+         * @param value
+         *      The maximum redelivery delay value in milliseconds.
+         */
+        virtual void setMaximumRedeliveryDelay(long long value) = 0;
 
         /**
          * Create a copy of this Policy and return it.
