@@ -27,8 +27,8 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/util/AbstractSet.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /**
      * Set template that wraps around a std::set to provide
@@ -52,40 +52,38 @@ namespace util{
 
         private:
 
-            SetIterator( const SetIterator& );
-            SetIterator operator= ( const SetIterator& );
+            SetIterator(const SetIterator&);
+            SetIterator operator=(const SetIterator&);
 
         public:
 
-            SetIterator( typename std::set<E>* set ) :
-                Iterator<E>(), current( set->begin() ), previous( set->begin() ), set( set ) {
+            SetIterator(typename std::set<E>* set) :
+                Iterator<E>(), current(set->begin()), previous(set->begin()), set(set) {
             }
 
             virtual ~SetIterator() {}
 
             virtual E next() {
-                if( this->current == set->end() ) {
+                if (this->current == set->end()) {
                     throw NoSuchElementException(
-                        __FILE__, __LINE__,
-                        "Set::Iterator::next - No more elements to return" );
+                        __FILE__, __LINE__, "Set::Iterator::next - No more elements to return");
                 }
 
                 this->previous = this->current;
-                return *( this->current++ );
+                return *(this->current++);
             }
 
             virtual bool hasNext() const {
-                return ( this->current != set->end() );
+                return (this->current != set->end());
             }
 
             virtual void remove() {
-                if( this->previous == set->end() ) {
+                if (this->previous == set->end()) {
                     throw lang::exceptions::IllegalStateException(
-                        __FILE__, __LINE__,
-                        "Set::Iterator::remove - Invalid State to call remove" );
+                        __FILE__, __LINE__, "Set::Iterator::remove - Invalid State to call remove");
                 }
 
-                this->set->erase( this->previous );
+                this->set->erase(this->previous);
                 this->previous = this->set->end();
             }
         };
@@ -99,36 +97,34 @@ namespace util{
 
         private:
 
-            ConstSetIterator( const ConstSetIterator& );
-            ConstSetIterator operator= ( const ConstSetIterator& );
+            ConstSetIterator(const ConstSetIterator&);
+            ConstSetIterator operator=(const ConstSetIterator&);
 
         public:
 
-            ConstSetIterator( const typename std::set<E>* set ) :
-                Iterator<E>(), current( set->begin() ), previous( set->begin() ), set( set ) {
+            ConstSetIterator(const typename std::set<E>* set) :
+                Iterator<E>(), current(set->begin()), previous(set->begin()), set(set) {
             }
 
             virtual ~ConstSetIterator() {}
 
             virtual E next() {
-                if( this->current == set->end() ) {
+                if (this->current == set->end()) {
                     throw NoSuchElementException(
-                        __FILE__, __LINE__,
-                        "Set::Iterator::next - No more elements to return" );
+                        __FILE__, __LINE__, "Set::Iterator::next - No more elements to return");
                 }
 
                 this->previous = this->current;
-                return *( this->current++ );
+                return *(this->current++);
             }
 
             virtual bool hasNext() const {
-                return ( this->current != set->end() );
+                return (this->current != set->end());
             }
 
             virtual void remove() {
                 throw lang::exceptions::UnsupportedOperationException(
-                    __FILE__, __LINE__,
-                    "Set::Iterator::remove - Not Valid on a Const Iterator" );
+                    __FILE__, __LINE__, "Set::Iterator::remove - Not Valid on a Const Iterator");
             }
         };
 
@@ -140,21 +136,19 @@ namespace util{
         StlSet() : AbstractSet<E>(), values() {}
 
         /**
-         * Copy constructor - copies the content of the given set into this
-         * one.
+         * Copy constructor - copies the content of the given set into this one.
          * @param source The source set.
          */
-        StlSet( const StlSet& source ) : AbstractSet<E>(), values() {
-            copy( source );
+        StlSet(const StlSet& source) : AbstractSet<E>(), values() {
+            copy(source);
         }
 
         /**
-         * Copy constructor - copies the content of the given set into this
-         * one.
+         * Copy constructor - copies the content of the given set into this one.
          * @param source The source set.
          */
-        StlSet( const Collection<E>& source ) : AbstractSet<E>(), values() {
-            AbstractSet<E>::copy( source );
+        StlSet(const Collection<E>& source) : AbstractSet<E>(), values() {
+            AbstractSet<E>::copy(source);
         }
 
         virtual ~StlSet() {}
@@ -163,20 +157,20 @@ namespace util{
          * {@inheritDoc}
          */
         Iterator<E>* iterator() {
-            return new SetIterator( &values );
+            return new SetIterator(&values);
         }
         Iterator<E>* iterator() const {
-            return new ConstSetIterator( &values );
+            return new ConstSetIterator(&values);
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool equals( const Collection<E>& collection ) const {
+        virtual bool equals(const Collection<E>& collection) const {
 
-            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>( &collection );
-            if( setptr == NULL ) {
-                return AbstractSet<E>::equals( collection );
+            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>(&collection);
+            if (setptr == NULL) {
+                return AbstractSet<E>::equals(collection);
             }
 
             return this->values == setptr->values;
@@ -185,11 +179,11 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual void copy( const Collection<E>& collection ) {
+        virtual void copy(const Collection<E>& collection) {
 
-            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>( &collection );
-            if( setptr == NULL ) {
-                AbstractSet<E>::copy( collection );
+            const StlSet<E>* setptr = dynamic_cast<const StlSet<E>*>(&collection);
+            if (setptr == NULL) {
+                AbstractSet<E>::copy(collection);
                 return;
             }
 
@@ -207,9 +201,9 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool contains( const E& value ) const {
+        virtual bool contains(const E& value) const {
             typename std::set<E>::const_iterator iter;
-            iter = values.find( value );
+            iter = values.find(value);
             return iter != values.end();
         }
 
@@ -224,21 +218,21 @@ namespace util{
          * @return The number of elements in this set.
          */
         virtual int size() const {
-            return (int)values.size();
+            return (int) values.size();
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool add( const E& value ) {
-            return values.insert( value ).second;
+        virtual bool add(const E& value) {
+            return values.insert(value).second;
         }
 
         /**
          * {@inheritDoc}
          */
-        virtual bool remove( const E& value ) {
-            return values.erase( value ) != 0;
+        virtual bool remove(const E& value) {
+            return values.erase(value) != 0;
         }
 
     };

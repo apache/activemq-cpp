@@ -108,7 +108,7 @@ namespace nio{
          *
          * @throws IllegalArgumentException if capacity is negative.
          */
-        ByteBuffer( int capacity );
+        ByteBuffer(int capacity);
 
     public:
 
@@ -133,7 +133,7 @@ namespace nio{
          * @throws BufferUnderflowException if there are fewer than length bytes remaining
          *         in this buffer
          */
-        ByteBuffer& get( std::vector<unsigned char> buffer );
+        ByteBuffer& get(std::vector<unsigned char> buffer);
 
         /**
          * Relative bulk get method.
@@ -164,7 +164,7 @@ namespace nio{
          *         remaining in this buffer.
          * @throws NullPointerException if the passed buffer is null.
          */
-        ByteBuffer& get( unsigned char* buffer, int size, int offset, int length );
+        ByteBuffer& get(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * This method transfers the bytes remaining in the given source buffer into
@@ -186,7 +186,7 @@ namespace nio{
          * @throws IllegalArgumentException if the source buffer is this buffer
          * @throws ReadOnlyBufferException if this buffer is read-only
          */
-        ByteBuffer& put( ByteBuffer& src );
+        ByteBuffer& put(ByteBuffer& src);
 
         /**
          * This method transfers bytes into this buffer from the given source array.
@@ -215,7 +215,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        ByteBuffer& put( const unsigned char* buffer, int size, int offset, int length );
+        ByteBuffer& put(const unsigned char* buffer, int size, int offset, int length);
 
         /**
          * This method transfers the entire content of the given source byte array into
@@ -229,7 +229,7 @@ namespace nio{
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        ByteBuffer& put( std::vector<unsigned char>& buffer );
+        ByteBuffer& put(std::vector<unsigned char>& buffer);
 
     public:   // Abstract Methods
 
@@ -460,7 +460,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
          */
-        virtual unsigned char get( int index ) const = 0;
+        virtual unsigned char get(int index) const = 0;
 
         /**
          * Reads the next byte at this buffer's current position, and then increments
@@ -484,7 +484,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
          */
-        virtual char getChar( int index ) const = 0;
+        virtual char getChar(int index) const = 0;
 
         /**
          * Reads the next eight bytes at this buffer's current position, and then
@@ -508,7 +508,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
          */
-        virtual double getDouble( int index ) const = 0;
+        virtual double getDouble(int index) const = 0;
 
         /**
          * Reads the next four bytes at this buffer's current position, and then
@@ -532,7 +532,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual float getFloat( int index ) const = 0;
+        virtual float getFloat(int index) const = 0;
 
         /**
          * Reads the next eight bytes at this buffer's current position, and then
@@ -556,7 +556,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual long long getLong( int index ) const = 0;
+        virtual long long getLong(int index) const = 0;
 
         /**
          * Reads the next four bytes at this buffer's current position, and then
@@ -580,7 +580,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual int getInt( int index ) const = 0;
+        virtual int getInt(int index) const = 0;
 
         /**
          * Reads the next two bytes at this buffer's current position, and then
@@ -604,7 +604,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
          */
-        virtual short getShort( int index ) const = 0;
+        virtual short getShort(int index) const = 0;
 
         /**
          * Writes the given byte into this buffer at the current position, and then
@@ -618,7 +618,7 @@ namespace nio{
          *         smaller than its limit.
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& put( unsigned char value ) = 0;
+        virtual ByteBuffer& put(unsigned char value) = 0;
 
         /**
          * Writes the given byte into this buffer at the given index.
@@ -632,7 +632,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& put( int index, unsigned char value ) = 0;
+        virtual ByteBuffer& put(int index, unsigned char value) = 0;
 
         /**
          * Writes one byte containing the given value, into this buffer at the
@@ -647,7 +647,7 @@ namespace nio{
          *        in this buffer than the size of the data to be written
          * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putChar( char value ) = 0;
+        virtual ByteBuffer& putChar(char value) = 0;
 
         /**
          * Writes one byte containing the given value, into this buffer at the
@@ -664,7 +664,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putChar( int index, char value ) = 0;
+        virtual ByteBuffer& putChar(int index, char value) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -679,7 +679,7 @@ namespace nio{
          *        in this buffer than the size of the data to be written
          * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putDouble( double value ) = 0;
+        virtual ByteBuffer& putDouble(double value) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -696,7 +696,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putDouble( int index, double value ) = 0;
+        virtual ByteBuffer& putDouble(int index, double value) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -711,7 +711,7 @@ namespace nio{
          *        in this buffer than the size of the data to be written.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putFloat( float value ) = 0;
+        virtual ByteBuffer& putFloat(float value) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -728,7 +728,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putFloat( int index, float value ) = 0;
+        virtual ByteBuffer& putFloat(int index, float value) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -743,7 +743,7 @@ namespace nio{
          *        in this buffer than the size of the data to be written.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putLong( long long value ) = 0;
+        virtual ByteBuffer& putLong(long long value) = 0;
 
         /**
          * Writes eight bytes containing the given value, into this buffer at the
@@ -760,7 +760,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putLong( int index, long long value ) = 0;
+        virtual ByteBuffer& putLong(int index, long long value) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -775,7 +775,7 @@ namespace nio{
          *        in this buffer than the size of the data to be written
          * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putInt( int value ) = 0;
+        virtual ByteBuffer& putInt(int value) = 0;
 
         /**
          * Writes four bytes containing the given value, into this buffer at the
@@ -792,7 +792,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only
          */
-        virtual ByteBuffer& putInt( int index, int value ) = 0;
+        virtual ByteBuffer& putInt(int index, int value) = 0;
 
         /**
          * Writes two bytes containing the given value, into this buffer at the
@@ -807,7 +807,7 @@ namespace nio{
          *        in this buffer than the size of the data to be written.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putShort( short value ) = 0;
+        virtual ByteBuffer& putShort(short value) = 0;
 
         /**
          * Writes two bytes containing the given value, into this buffer at the
@@ -824,7 +824,7 @@ namespace nio{
          *        minus the size of the type being written, or index is negative.
          * @throw ReadOnlyBufferException if this buffer is read-only.
          */
-        virtual ByteBuffer& putShort( int index, short value ) = 0;
+        virtual ByteBuffer& putShort(int index, short value) = 0;
 
         /**
          * Creates a new byte buffer whose content is a shared subsequence of this
@@ -841,27 +841,28 @@ namespace nio{
          */
         virtual ByteBuffer* slice() const = 0;
 
-    public:  // Comparable
+    public:
+        // Comparable
 
         /**
          * {@inheritDoc}
          */
-        virtual int compareTo( const ByteBuffer& value ) const;
+        virtual int compareTo(const ByteBuffer& value) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual bool equals( const ByteBuffer& value ) const;
+        virtual bool equals(const ByteBuffer& value) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual bool operator==( const ByteBuffer& value ) const;
+        virtual bool operator==(const ByteBuffer& value) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual bool operator<( const ByteBuffer& value ) const;
+        virtual bool operator<(const ByteBuffer& value) const;
 
     public:
 
@@ -876,7 +877,7 @@ namespace nio{
          *
          * @throws IllegalArgumentException if capacity is negative.
          */
-        static ByteBuffer* allocate( int capacity );
+        static ByteBuffer* allocate(int capacity);
 
         /**
          * Wraps the passed buffer with a new ByteBuffer.
@@ -902,7 +903,7 @@ namespace nio{
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
          */
-        static ByteBuffer* wrap( unsigned char* array, int size, int offset, int length );
+        static ByteBuffer* wrap(unsigned char* array, int size, int offset, int length);
 
         /**
          * Wraps the passed STL Byte Vector in a ByteBuffer.
@@ -919,7 +920,7 @@ namespace nio{
          *
          * @returns a new ByteBuffer that is backed by buffer, caller owns.
          */
-        static ByteBuffer* wrap( std::vector<unsigned char>& buffer );
+        static ByteBuffer* wrap(std::vector<unsigned char>& buffer);
 
     };
 

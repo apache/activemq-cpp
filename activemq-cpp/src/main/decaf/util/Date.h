@@ -51,13 +51,13 @@ namespace util{
          * Constructs the date with a given time value.
          * @param milliseconds The time in milliseconds;
          */
-        Date( long long milliseconds );
+        Date(long long milliseconds);
 
         /**
          * Copy constructor.
          * @param source The Date instance to copy into this one.
          */
-        Date( const Date& source );
+        Date(const Date& source);
 
         /**
          * Assigns the value of one Date object to another.
@@ -67,7 +67,7 @@ namespace util{
          *
          * @return reference to this object with the newly assigned value.
          */
-        Date& operator= ( const Date& value );
+        Date& operator=(const Date& value);
 
         virtual ~Date();
 
@@ -82,7 +82,7 @@ namespace util{
          * @param milliseconds The underlying time value in
          * milliseconds.
          */
-        void setTime( long long milliseconds );
+        void setTime(long long milliseconds);
 
         /**
          * Determines whether or not this date falls after the
@@ -90,7 +90,7 @@ namespace util{
          * @param when The date to compare
          * @return true if this date falls after when.
          */
-        bool after( const Date& when ) const;
+        bool after(const Date& when) const;
 
         /**
          * Determines whether or not this date falls before the
@@ -98,7 +98,7 @@ namespace util{
          * @param when The date to compare
          * @return true if this date falls before when.
          */
-        bool before( const Date& when ) const;
+        bool before(const Date& when) const;
 
         /**
          * Converts this Date object to a String of the form:
@@ -125,13 +125,13 @@ namespace util{
 
     public:  // Comparable
 
-        virtual int compareTo( const Date& value ) const;
+        virtual int compareTo(const Date& value) const;
 
-        virtual bool equals( const Date& value ) const;
+        virtual bool equals(const Date& value) const;
 
-        virtual bool operator==( const Date& value ) const;
+        virtual bool operator==(const Date& value) const;
 
-        virtual bool operator<( const Date& value ) const;
+        virtual bool operator<(const Date& value) const;
 
     };
 

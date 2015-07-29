@@ -21,8 +21,8 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/nio/InvalidMarkException.h>
 
-namespace decaf{
-namespace nio{
+namespace decaf {
+namespace nio {
 
     /**
      * A container for data of a specific primitive type.
@@ -133,8 +133,8 @@ namespace nio{
 
     public:
 
-        Buffer( int capactiy );
-        Buffer( const Buffer& other );
+        Buffer(int capactiy);
+        Buffer(const Buffer& other);
         virtual ~Buffer() {}
 
     public:
@@ -164,7 +164,7 @@ namespace nio{
          *
          * @throws IllegalArgumentException if preconditions on the new pos don't hold.
          */
-        virtual Buffer& position( int newPosition );
+        virtual Buffer& position(int newPosition);
 
         /**
          * @returns this buffers Limit
@@ -185,7 +185,7 @@ namespace nio{
          *
          * @throws IllegalArgumentException if preconditions on the new pos don't hold.
          */
-        virtual Buffer& limit( int newLimit );
+        virtual Buffer& limit(int newLimit);
 
         /**
          * Sets this buffer's mark at its position.

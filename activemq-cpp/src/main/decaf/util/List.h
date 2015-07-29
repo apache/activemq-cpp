@@ -77,8 +77,8 @@ namespace util{
          * @throws IndexOutOfBoundsException if the index is out of range
          *         (index < 0 || index > size())
          */
-        virtual ListIterator<E>* listIterator( int index ) = 0;
-        virtual ListIterator<E>* listIterator( int index ) const = 0;
+        virtual ListIterator<E>* listIterator(int index) = 0;
+        virtual ListIterator<E>* listIterator(int index) const = 0;
 
         /**
          * Returns the index of the first occurrence of the specified element in
@@ -94,7 +94,7 @@ namespace util{
          * @throws NullPointerException if the Collection is a container of pointers
          *         and does not allow NULL values.
          */
-        virtual int indexOf( const E& value ) const = 0;
+        virtual int indexOf(const E& value) const = 0;
 
         /**
          * Returns the index of the last occurrence of the specified element in
@@ -110,7 +110,7 @@ namespace util{
          * @throws NullPointerException if the Collection is a container of pointers
          *         and does not allow NULL values.
          */
-        virtual int lastIndexOf( const E& value ) const = 0;
+        virtual int lastIndexOf(const E& value) const = 0;
 
         /**
          * Gets the element contained at position passed.
@@ -123,7 +123,7 @@ namespace util{
          * @throws IndexOutOfBoundsException if the index given is less than zero
          *         or greater than the List size.
          */
-        virtual E get( int index ) const = 0;
+        virtual E get(int index) const = 0;
 
         /**
          * Replaces the element at the specified position in this list with the
@@ -146,7 +146,7 @@ namespace util{
          * @throws IllegalStateException if the element cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual E set( int index, const E& element ) = 0;
+        virtual E set(int index, const E& element) = 0;
 
         /**
          * Inserts the specified element at the specified position in this list.
@@ -167,7 +167,7 @@ namespace util{
          * @throws IllegalStateException if the element cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual void add( int index, const E& element ) = 0;
+        virtual void add(int index, const E& element) = 0;
 
         /**
          * Inserts all of the elements in the specified collection into this list at
@@ -196,7 +196,7 @@ namespace util{
          * @throws IllegalStateException if the element cannot be added at this time due
          *         to insertion restrictions.
          */
-        virtual bool addAll( int index, const Collection<E>& source ) = 0;
+        virtual bool addAll(int index, const Collection<E>& source) = 0;
 
         /**
          * Removes the element at the specified position in this list.
@@ -211,7 +211,7 @@ namespace util{
          *         or greater than the List size.
          * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
          */
-        virtual E removeAt( int index ) = 0;
+        virtual E removeAt(int index) = 0;
 
     };
 
