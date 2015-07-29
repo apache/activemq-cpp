@@ -32,7 +32,7 @@ namespace openwire {
         CPPUNIT_TEST( testBrowseReceive );
         CPPUNIT_TEST( testQueueBrowserWith2Consumers );
         CPPUNIT_TEST( testRepeatedQueueBrowserCreateDestroy );
-        // TODO - CPPUNIT_TEST( testRepeatedQueueBrowserCreateDestroyWithMessageInQueue );
+        CPPUNIT_TEST( testRepeatedQueueBrowserCreateDestroyWithMessageInQueue );
         CPPUNIT_TEST( testBrowsingExpirationIsIgnored );
         CPPUNIT_TEST_SUITE_END();
 

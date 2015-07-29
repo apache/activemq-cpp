@@ -63,12 +63,14 @@ namespace core{
                 const std::string& name, const std::string& selector,
                 int prefetch, int maxPendingMessageCount, bool noLocal,
                 bool browser, bool dispatchAsync,
-                cms::MessageListener* listener ) :
+                cms::MessageListener* listener) :
             ActiveMQConsumerKernel(session, id, destination, name, selector, prefetch,
                                    maxPendingMessageCount, noLocal, browser, dispatchAsync,
                                    listener), parent(parent) {
 
         }
+
+        virtual ~Browser() {}
 
         virtual void dispatch(const Pointer<MessageDispatch>& dispatched) {
 
@@ -82,9 +84,9 @@ namespace core{
 
                 this->parent->notifyMessageAvailable();
             }
-            AMQ_CATCH_RETHROW( ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-            AMQ_CATCHALL_THROW( ActiveMQException )
+            AMQ_CATCH_RETHROW(ActiveMQException)
+            AMQ_CATCH_EXCEPTION_CONVERT(Exception, ActiveMQException)
+            AMQ_CATCHALL_THROW(ActiveMQException)
         }
     };
 }}
@@ -94,19 +96,19 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser(ActiveMQSessionKernel* session,
                                            const Pointer<commands::ConsumerId>& consumerId,
                                            const Pointer<commands::ActiveMQDestination>& destination,
                                            const std::string& selector,
-                                           bool dispatchAsync ) : cms::QueueBrowser(),
-                                                                  cms::MessageEnumeration(),
-                                                                  session(session),
-                                                                  consumerId(consumerId),
-                                                                  destination(destination),
-                                                                  selector(selector),
-                                                                  dispatchAsync(dispatchAsync),
-                                                                  queue(NULL),
-                                                                  closed(false),
-                                                                  mutex(),
-                                                                  wait(),
-                                                                  browseDone(),
-                                                                  browser(NULL) {
+                                           bool dispatchAsync) : cms::QueueBrowser(),
+                                                                 cms::MessageEnumeration(),
+                                                                 session(session),
+                                                                 consumerId(consumerId),
+                                                                 destination(destination),
+                                                                 selector(selector),
+                                                                 dispatchAsync(dispatchAsync),
+                                                                 queue(NULL),
+                                                                 closed(false),
+                                                                 mutex(),
+                                                                 wait(),
+                                                                 browseDone(),
+                                                                 browser(NULL) {
 
     if (session == NULL) {
         throw ActiveMQException(__FILE__, __LINE__, "Session instance provided was NULL.");
@@ -122,7 +124,6 @@ ActiveMQQueueBrowser::ActiveMQQueueBrowser(ActiveMQSessionKernel* session,
 
     // Cache the Queue instance for faster retreival.
     this->queue = destination.dynamicCast<cms::Queue>().get();
-    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,14 +160,10 @@ cms::MessageEnumeration* ActiveMQQueueBrowser::getEnumeration() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQQueueBrowser::close() {
     try {
-
-        if (this->closed) {
-            return;
-        }
-
-        synchronized(&mutex) {
-            destroyConsumer();
-            this->closed = true;
+        if (closed.compareAndSet(false, true)) {
+            synchronized(&mutex) {
+                destroyConsumer();
+            }
         }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -237,7 +234,6 @@ cms::Message* ActiveMQQueueBrowser::nextMessage() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQQueueBrowser::notifyMessageAvailable() {
-
     synchronized(&wait) {
         wait.notifyAll();
     }
@@ -287,6 +283,7 @@ void ActiveMQQueueBrowser::destroyConsumer() {
             session->commit();
         }
 
+        this->browser->stop();
         this->browser->close();
         this->browser.reset(NULL);
     }
@@ -295,7 +292,7 @@ void ActiveMQQueueBrowser::destroyConsumer() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQQueueBrowser::checkClosed() {
-    if (closed) {
+    if (closed.get()) {
         throw ActiveMQException(__FILE__, __LINE__, "The QueueBrowser is closed.");
     }
 }

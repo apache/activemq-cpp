@@ -55,7 +55,7 @@ namespace kernels {
         std::string selector;
         bool dispatchAsync;
         cms::Queue* queue;
-        volatile bool closed;
+        decaf::util::concurrent::atomic::AtomicBoolean closed;
 
         mutable decaf::util::concurrent::Mutex mutex;
         mutable decaf::util::concurrent::Mutex wait;
