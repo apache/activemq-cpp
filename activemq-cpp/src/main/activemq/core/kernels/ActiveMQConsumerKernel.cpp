@@ -274,8 +274,9 @@ namespace kernels {
                     }
                 }
                 if (numberNotReplayed > 0) {
-                    std::string message = std::string("rolling back transaction (") +
-                        previouslyDeliveredMessages->transactionId->toString() +
+                    std::string txId = previouslyDeliveredMessages->transactionId != NULL ?
+                        previouslyDeliveredMessages->transactionId->toString() : "<None>";
+                    std::string message = std::string("rolling back transaction (") + txId +
                         ") post failover recovery. " + Integer::toString(numberNotReplayed) +
                         " previously delivered message(s) not replayed to consumer: " +
                         info->getConsumerId()->toString();
@@ -1420,7 +1421,7 @@ void ActiveMQConsumerKernel::acknowledge() {
 
     try {
 
-        clearDeliveredList();
+        this->internal->clearDeliveredList();
         this->internal->waitForRedeliveries();
 
         synchronized(&this->internal->deliveredMessages) {
