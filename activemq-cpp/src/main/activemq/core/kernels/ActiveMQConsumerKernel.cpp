@@ -1516,10 +1516,9 @@ void ActiveMQConsumerKernel::rollback() {
                 Pointer<MessageAck> ack(new MessageAck(lastMsg, ActiveMQConstants::ACK_TYPE_POISON,
                                         this->internal->deliveredMessages.size()));
                 ack->setFirstMessageId(firstMsgId);
-                // TODO - Add cause to the message.
-                std::string message = "Exceeded RedeliveryPolicy max redelivery limit:" +
-                                       Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries());
-                                       //", cause:" + lastMd.getRollbackCause(), lastMd.getRollbackCause()));
+                std::string message = "Exceeded RedeliveryPolicy max redelivery limit: " +
+                                       Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries()) +
+                                       " cause: " + lastMsg->getRollbackCause().getMessage();
                 ack->setPoisonCause(internal->createBrokerError(message));
                 session->sendAck(ack, true);
                 // Adjust the window size.
