@@ -140,6 +140,10 @@ URL::URL(const String& protocol, const String& host, int port, const String& fil
 ////////////////////////////////////////////////////////////////////////////////
 void URL::initialize(const URL* context, const String& theSpec, URLStreamHandler* handler) {
 
+    // If we throw in this method the constructor does not complete, so we
+    // need to protect against a leak of the URLImpl and release at the end.
+    Pointer<URLImpl> finalizer(impl);
+
     if (handler != NULL) {
         impl->streamHandler.reset(handler);
     }
@@ -195,11 +199,17 @@ void URL::initialize(const URL* context, const String& theSpec, URLStreamHandler
         throw MalformedURLException(
             __FILE__, __LINE__, "port out of range: %d", impl->url.getPort());
     }
+
+    finalizer.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void URL::initialize(const String& protocol, const String& host, int port,
                      const String& file, URLStreamHandler* handler) {
+
+    // If we throw in this method the constructor does not complete, so we
+    // need to protect against a leak of the URLImpl and release at the end.
+    Pointer<URLImpl> finalizer(impl);
 
     if (port < -1) {
         throw MalformedURLException(__FILE__, __LINE__, "Port out of range: %d", port);
@@ -246,6 +256,8 @@ void URL::initialize(const String& protocol, const String& host, int port,
     } else {
         impl->streamHandler.reset(handler);
     }
+
+    finalizer.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
