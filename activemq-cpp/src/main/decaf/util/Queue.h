@@ -73,7 +73,7 @@ namespace util{
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer( const E& value ) = 0;
+        virtual bool offer(const E& value) = 0;
 
         /**
          * Gets and removes the element in the head of the queue.  If the operation succeeds the
@@ -87,7 +87,7 @@ namespace util{
          * @return true if the element at the head of the queue was removed and assigned to the
          *         result parameter.
          */
-        virtual bool poll( E& result ) = 0;
+        virtual bool poll(E& result) = 0;
 
         /**
          * Gets and removes the element in the head of the queue. Throws a
@@ -110,7 +110,7 @@ namespace util{
          * @return true if the element at the head of the queue was removed and assigned to the
          *         result parameter.
          */
-        virtual bool peek( E& result ) const = 0;
+        virtual bool peek(E& result) const = 0;
 
         /**
          * Gets but not removes the element in the head of the queue. Throws a

@@ -24,8 +24,8 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/util/AbstractCollection.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /**
      * A collection that contains no duplicate elements. More formally, sets contain no
