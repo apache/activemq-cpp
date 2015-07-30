@@ -674,14 +674,14 @@ void FailoverTransportTest::testUriOptionsApplied() {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportTest::testConnectedToMockBroker() {
 
-    MockBrokerService broker1(61616);
-    MockBrokerService broker2(61618);
+    MockBrokerService broker1(61626);
+    MockBrokerService broker2(61628);
 
     broker1.start();
     broker1.waitUntilStarted();
 
-    std::string uri = "failover://(tcp://localhost:61616,"
-                                  "tcp://localhost:61618)?randomize=false";
+    std::string uri = "failover://(tcp://localhost:61626,"
+                                  "tcp://localhost:61628)?randomize=false";
 
     DefaultTransportListener listener;
     FailoverTransportFactory factory;

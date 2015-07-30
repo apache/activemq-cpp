@@ -18,6 +18,7 @@
 #include "TransactionTest.h"
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/core/ActiveMQConnection.h>
 #include <activemq/util/CMSListener.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <stdexcept>
@@ -41,83 +42,72 @@ TransactionTest::~TransactionTest() {
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionTest::testSendReceiveTransactedBatches() {
 
-    try {
+    // Create CMS Object for Comms
+    cms::Session* session = cmsProvider->getSession();
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
 
-        // Create CMS Object for Comms
-        cms::Session* session = cmsProvider->getSession();
-        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-        cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
-        producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+    for (int j = 0; j < batchCount - 8; j++) {
 
-        for (int j = 0; j < batchCount - 8; j++) {
+        auto_ptr<TextMessage> message(session->createTextMessage("Batch Message"));
 
-            auto_ptr<TextMessage> message(session->createTextMessage("Batch Message"));
-
-            for (int i = 0; i < batchSize; i++) {
-                CPPUNIT_ASSERT_NO_THROW_MESSAGE("Send should not throw an exception here.", producer->send(message.get()));
-            }
-
-            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Session Commit should not throw an exception here:", session->commit());
-
-            for (int i = 0; i < batchSize; i++) {
-                CPPUNIT_ASSERT_NO_THROW_MESSAGE("Receive Shouldn't throw a Message here:",
-                    message.reset(dynamic_cast<TextMessage*>(consumer->receive(1000 * 5))));
-
-                CPPUNIT_ASSERT_MESSAGE("Failed to receive all messages in batch", message.get() != NULL);
-                CPPUNIT_ASSERT(string("Batch Message") == message->getText());
-            }
-
-            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Session Commit should not throw an exception here:", session->commit());
+        for (int i = 0; i < batchSize; i++) {
+            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Send should not throw an exception here.", producer->send(message.get()));
         }
-    } catch (std::exception& ex) {
-        std::cout << ex.what() << std::endl;
-        throw ex;
+
+        CPPUNIT_ASSERT_NO_THROW_MESSAGE("Session Commit should not throw an exception here:", session->commit());
+
+        for (int i = 0; i < batchSize; i++) {
+            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Receive Shouldn't throw a Message here:",
+                message.reset(dynamic_cast<TextMessage*>(consumer->receive(1000 * 5))));
+
+            CPPUNIT_ASSERT_MESSAGE("Failed to receive all messages in batch", message.get() != NULL);
+            CPPUNIT_ASSERT(string("Batch Message") == message->getText());
+        }
+
+        CPPUNIT_ASSERT_NO_THROW_MESSAGE("Session Commit should not throw an exception here:", session->commit());
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionTest::testSendRollback() {
 
-    try {
+    // Create CMS Object for Comms
+    cms::Session* session = cmsProvider->getSession();
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageProducer* producer = cmsProvider->getProducer();
 
-        // Create CMS Object for Comms
-        cms::Session* session = cmsProvider->getSession();
-        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
-        cms::MessageProducer* producer = cmsProvider->getProducer();
+    producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
-        producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+    auto_ptr<TextMessage> outbound1(session->createTextMessage("First Message"));
+    auto_ptr<TextMessage> outbound2(session->createTextMessage("Second Message"));
 
-        auto_ptr<TextMessage> outbound1(session->createTextMessage("First Message"));
-        auto_ptr<TextMessage> outbound2(session->createTextMessage("Second Message"));
+    // sends a message
+    producer->send(outbound1.get());
+    session->commit();
 
-        // sends a message
-        producer->send(outbound1.get());
-        session->commit();
+    // sends a message that gets rollbacked
+    auto_ptr<Message> rollback(session->createTextMessage("I'm going to get rolled back."));
+    producer->send(rollback.get());
+    session->rollback();
 
-        // sends a message that gets rollbacked
-        auto_ptr<Message> rollback(session->createTextMessage("I'm going to get rolled back."));
-        producer->send(rollback.get());
-        session->rollback();
+    // sends a message
+    producer->send(outbound2.get());
+    session->commit();
 
-        // sends a message
-        producer->send(outbound2.get());
-        session->commit();
+    // receives the first message
+    auto_ptr<TextMessage> inbound1(dynamic_cast<TextMessage*>(consumer->receive(1500)));
 
-        // receives the first message
-        auto_ptr<TextMessage> inbound1(dynamic_cast<TextMessage*>(consumer->receive(1500)));
+    // receives the second message
+    auto_ptr<TextMessage> inbound2(dynamic_cast<TextMessage*>(consumer->receive(4000)));
 
-        // receives the second message
-        auto_ptr<TextMessage> inbound2(dynamic_cast<TextMessage*>(consumer->receive(4000)));
+    // validates that the rollbacked was not consumed
+    session->commit();
 
-        // validates that the rollbacked was not consumed
-        session->commit();
-
-        CPPUNIT_ASSERT(outbound1->getText() == inbound1->getText());
-        CPPUNIT_ASSERT(outbound2->getText() == inbound2->getText());
-    }
-    AMQ_CATCH_RETHROW(ActiveMQException)
-    AMQ_CATCHALL_THROW(ActiveMQException)
+    CPPUNIT_ASSERT(outbound1->getText() == inbound1->getText());
+    CPPUNIT_ASSERT(outbound2->getText() == inbound2->getText());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,79 +152,90 @@ void TransactionTest::testSendRollbackCommitRollback() {
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionTest::testSendSessionClose() {
 
-    try {
+    Pointer<ActiveMQConnectionFactory> connectionFactory(
+        new ActiveMQConnectionFactory(getBrokerURL()));
 
-        cmsProvider->getProducer()->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+    Pointer<Connection> connection(connectionFactory->createConnection());
+    Pointer<ActiveMQConnection> amqConnection = connection.dynamicCast<ActiveMQConnection>();
 
-        auto_ptr<TextMessage> outbound1(cmsProvider->getSession()->createTextMessage("First Message"));
-        auto_ptr<TextMessage> outbound2(cmsProvider->getSession()->createTextMessage("Second Message"));
+    connection->start();
+    Pointer<Session> session(connection->createSession(Session::SESSION_TRANSACTED));
+    Pointer<Queue> destination(session->createQueue("testSendSessionClose"));
 
-        // sends a message
-        cmsProvider->getProducer()->send(outbound1.get());
-        cmsProvider->getSession()->commit();
+    // Create the messages used for this test
+    auto_ptr<TextMessage> outbound1(session->createTextMessage("First Message"));
+    auto_ptr<TextMessage> outbound2(session->createTextMessage("Second Message"));
 
-        // sends a message that gets rolled back
-        auto_ptr<cms::Message> rollback(cmsProvider->getSession()->createTextMessage("I'm going to get rolled back."));
-        cmsProvider->getProducer()->send(rollback.get());
-        cmsProvider->getConsumer()->close();
+    Pointer<MessageConsumer> consumer(session->createConsumer(destination.get()));
+    Pointer<MessageProducer> producer(session->createProducer(destination.get()));
+    producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
-        cmsProvider->reconnectSession();
+    // Send Message #1
+    producer->send(outbound1.get());
+    session->commit();
 
-        // sends a message
-        cmsProvider->getProducer()->send(outbound2.get());
-        cmsProvider->getSession()->commit();
+    // Send a Message but roll it back by closing the session that owns the resources
+    auto_ptr<cms::Message> rollback(session->createTextMessage("I'm going to get rolled back."));
+    producer->send(outbound2.get());
+    session->close();
 
-        // receives the first message
-        auto_ptr<TextMessage> inbound1(dynamic_cast<TextMessage*>(cmsProvider->getConsumer()->receive(1500)));
+    session.reset(connection->createSession(Session::SESSION_TRANSACTED));
+    destination.reset(session->createQueue("testSendSessionClose"));
+    consumer.reset(session->createConsumer(destination.get()));
+    producer.reset(session->createProducer(destination.get()));
+    producer->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
 
-        // receives the second message
-        auto_ptr<cms::TextMessage> inbound2(dynamic_cast<TextMessage*>(cmsProvider->getConsumer()->receive(4000)));
+    // Send Message #2
+    producer->send(outbound2.get());
+    session->commit();
 
-        // validates that the rolled back was not consumed
-        cmsProvider->getSession()->commit();
+    // receives the first message
+    auto_ptr<TextMessage> inbound1(dynamic_cast<TextMessage*>(consumer->receive(1500)));
 
-        CPPUNIT_ASSERT(inbound1.get() != NULL);
-        CPPUNIT_ASSERT(inbound2.get() != NULL);
+    // receives the second message
+    auto_ptr<TextMessage> inbound2(dynamic_cast<TextMessage*>(consumer->receive(4000)));
 
-        CPPUNIT_ASSERT(outbound1->getText() == inbound1->getText());
-        CPPUNIT_ASSERT(outbound2->getText() == inbound2->getText());
-    }
-    AMQ_CATCH_RETHROW(ActiveMQException)
-    AMQ_CATCHALL_THROW(ActiveMQException)
+    // validates that the rolled back was not consumed
+    session->commit();
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to receive first message", inbound1.get() != NULL);
+    CPPUNIT_ASSERT_MESSAGE("Failed to receive second message", inbound2.get() != NULL);
+
+    CPPUNIT_ASSERT_MESSAGE("First messages aren't equal", outbound1->getText() == inbound1->getText());
+    CPPUNIT_ASSERT_MESSAGE("Second messages aren't equal", outbound2->getText() == inbound2->getText());
+
+    session->close();
+    amqConnection->destroyDestination(destination.get());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransactionTest::testWithTTLSet() {
 
-    try {
-        cmsProvider->getProducer()->setDeliveryMode(DeliveryMode::PERSISTENT);
+    cmsProvider->getProducer()->setDeliveryMode(DeliveryMode::PERSISTENT);
 
-        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+    cms::MessageConsumer* consumer = cmsProvider->getConsumer();
 
-        auto_ptr<TextMessage> outbound1(cmsProvider->getSession()->createTextMessage("First Message"));
+    auto_ptr<TextMessage> outbound1(cmsProvider->getSession()->createTextMessage("First Message"));
 
-        const std::size_t NUM_MESSAGES = 50;
+    const std::size_t NUM_MESSAGES = 50;
 
-        // sends a message
-        for (std::size_t i = 0; i < NUM_MESSAGES; ++i) {
-            cmsProvider->getProducer()->send(outbound1.get(), cms::DeliveryMode::PERSISTENT,
-                    cmsProvider->getProducer()->getPriority(), 120 * 1000);
-        }
-
-        cmsProvider->getSession()->commit();
-
-        for (std::size_t i = 0; i < NUM_MESSAGES; ++i) {
-
-            // receives the second message
-            auto_ptr<TextMessage> inbound1(dynamic_cast<TextMessage*>(consumer->receive(600000)));
-            CPPUNIT_ASSERT(inbound1.get() != NULL);
-            CPPUNIT_ASSERT(outbound1->getText() == inbound1->getText());
-        }
-
-        cmsProvider->getSession()->commit();
+    // sends a message
+    for (std::size_t i = 0; i < NUM_MESSAGES; ++i) {
+        cmsProvider->getProducer()->send(outbound1.get(), cms::DeliveryMode::PERSISTENT,
+                cmsProvider->getProducer()->getPriority(), 120 * 1000);
     }
-    AMQ_CATCH_RETHROW(ActiveMQException)
-    AMQ_CATCHALL_THROW(ActiveMQException)
+
+    cmsProvider->getSession()->commit();
+
+    for (std::size_t i = 0; i < NUM_MESSAGES; ++i) {
+
+        // receives the second message
+        auto_ptr<TextMessage> inbound1(dynamic_cast<TextMessage*>(consumer->receive(600000)));
+        CPPUNIT_ASSERT(inbound1.get() != NULL);
+        CPPUNIT_ASSERT(outbound1->getText() == inbound1->getText());
+    }
+
+    cmsProvider->getSession()->commit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
