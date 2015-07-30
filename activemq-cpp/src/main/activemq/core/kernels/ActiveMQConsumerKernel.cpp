@@ -1024,17 +1024,19 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue(long long 
                 if (timeout > 0) {
                     timeout = Math::max(deadline - System::currentTimeMillis(), 0LL);
                 }
-
-                continue;
             } else if (internal->redeliveryExceeded(dispatch)) {
                 internal->posionAck(dispatch,
                                     "dispatch to " + getConsumerId()->toString() +
                                     " exceeds RedeliveryPolicy limit: " +
                                     Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries()));
-            }
+                if (timeout > 0) {
+                    timeout = Math::max(deadline - System::currentTimeMillis(), 0LL);
+                }
 
-            // Return the message.
-            return dispatch;
+                sendPullRequest(timeout);
+            } else {
+                return dispatch;
+            }
         }
 
         return Pointer<MessageDispatch>();
