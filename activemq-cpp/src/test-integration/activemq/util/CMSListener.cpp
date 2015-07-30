@@ -43,42 +43,41 @@ void CMSListener::reset() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSListener::asyncWaitForMessages( unsigned int count ) {
+void CMSListener::asyncWaitForMessages(unsigned int count) {
 
     try {
 
         synchronized( &mutex ) {
             int stopAtZero = count + 5;
 
-            while( numReceived < count ) {
-                mutex.wait( 500 );
+            while (numReceived < count) {
+                mutex.wait(500);
 
-                if( --stopAtZero == 0 ) {
+                if (--stopAtZero == 0) {
                     break;
                 }
             }
         }
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSListener::onMessage( const cms::Message* message ) {
+void CMSListener::onMessage(const cms::Message* message) {
 
-    if( session->getAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE ) {
+    if (session->getAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE) {
         try {
             message->acknowledge();
-        } catch( CMSException& ex ) {
-            CPPUNIT_ASSERT_MESSAGE(ex.getStackTraceString(), false );
+        } catch (CMSException& ex) {
+            CPPUNIT_ASSERT_MESSAGE(ex.getStackTraceString(), false);
         }
     }
 
     // Got a text message.
-    const cms::TextMessage* txtMsg =
-        dynamic_cast<const cms::TextMessage*>( message );
+    const cms::TextMessage* txtMsg = dynamic_cast<const cms::TextMessage*>(message);
 
-    if( txtMsg != NULL ) {
+    if (txtMsg != NULL) {
         numReceived++;
 
         // Signal that we got one
@@ -90,10 +89,9 @@ void CMSListener::onMessage( const cms::Message* message ) {
     }
 
     // Got a bytes msg.
-    const cms::BytesMessage* bytesMsg =
-        dynamic_cast<const cms::BytesMessage*>( message );
+    const cms::BytesMessage* bytesMsg = dynamic_cast<const cms::BytesMessage*>(message);
 
-    if( bytesMsg != NULL ) {
+    if (bytesMsg != NULL) {
 
         numReceived++;
 
@@ -107,6 +105,6 @@ void CMSListener::onMessage( const cms::Message* message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CMSListener::onException( const cms::CMSException& error ) {
-    CPPUNIT_ASSERT_MESSAGE( error.getStackTraceString(), false );
+void CMSListener::onException(const cms::CMSException& error) {
+    CPPUNIT_ASSERT_MESSAGE(error.getStackTraceString(), false);
 }

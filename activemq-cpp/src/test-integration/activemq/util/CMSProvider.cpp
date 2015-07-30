@@ -155,8 +155,8 @@ void CMSProvider::initialize(const std::string& username, const std::string& pas
         // Force a new session to be created.
         reconnectSession();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,8 +175,8 @@ void CMSProvider::reconnect() {
             reconnectSession();
         }
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,8 +210,8 @@ void CMSProvider::reconnectSession() {
         // destroyed.
         this->session.reset( this->connection->createSession( this->ackMode ) );
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,24 +233,23 @@ void CMSProvider::unsubscribe() {
             this->session->unsubscribe(this->subscription);
         }
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ConnectionFactory* CMSProvider::getConnectionFactory() {
     try {
 
-        if( this->connectionFactory.get() == NULL ) {
+        if (this->connectionFactory.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
         return this->connectionFactory.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -258,16 +257,15 @@ cms::Connection* CMSProvider::getConnection() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
         return this->connection.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -275,16 +273,15 @@ cms::Session* CMSProvider::getSession() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
         return this->session.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,21 +289,19 @@ cms::MessageProducer* CMSProvider::getProducer() {
 
     try {
 
-        if( this->connection.get() == NULL ) {
+        if (this->connection.get() == NULL) {
             throw decaf::lang::exceptions::IllegalStateException(
-                __FILE__, __LINE__,
-                "CMSProvider has not been Initialized or is closed." );
+                __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        if( this->producer.get() == NULL ) {
-            this->producer.reset(
-                this->getSession()->createProducer( this->getDestination() ) );
+        if (this->producer.get() == NULL) {
+            this->producer.reset(this->getSession()->createProducer(this->getDestination()));
         }
 
         return this->producer.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,8 +320,8 @@ cms::MessageProducer* CMSProvider::getNoDestProducer() {
 
         return this->noDestProducer.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -341,8 +336,9 @@ cms::MessageConsumer* CMSProvider::getConsumer() {
 
         if (this->consumer.get() == NULL) {
             if (this->durable && this->topic) {
-                this->consumer.reset(this->getSession()->createDurableConsumer(
-                    dynamic_cast<cms::Topic*> (this->getDestination()), this->subscription, ""));
+                this->consumer.reset(
+                        this->getSession()->createDurableConsumer(dynamic_cast<cms::Topic*>(this->getDestination()),
+                                this->subscription, ""));
             } else {
                 this->consumer.reset(this->getSession()->createConsumer(this->getDestination()));
             }
@@ -350,8 +346,8 @@ cms::MessageConsumer* CMSProvider::getConsumer() {
 
         return this->consumer.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -374,8 +370,8 @@ cms::Destination* CMSProvider::getDestination() {
 
         return this->destination.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -398,8 +394,8 @@ cms::Destination* CMSProvider::getTempDestination() {
 
         return this->tempDestination.get();
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -412,7 +408,7 @@ void CMSProvider::destroyDestination(const cms::Destination* destination) {
                 __FILE__, __LINE__, "CMSProvider has not been Initialized or is closed.");
         }
 
-        ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*> (this->connection.get());
+        ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>(this->connection.get());
 
         try {
             amqConnection->destroyDestination(destination);
@@ -423,6 +419,6 @@ void CMSProvider::destroyDestination(const cms::Destination* destination) {
         } catch (...) {
         }
     }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW(activemq::exceptions::ActiveMQException)
+    AMQ_CATCHALL_THROW(activemq::exceptions::ActiveMQException)
 }
