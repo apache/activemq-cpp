@@ -106,6 +106,14 @@ namespace core {
         virtual int getTopicPrefetch() const = 0;
 
         /**
+         * Sets the prefetch value on all available prefetch configuration options.
+         *
+         * @param value
+         *      the prefetch value to set on all prefetch options.
+         */
+        virtual void setAll(int value);
+
+        /**
          * Given a requested value for a new prefetch limit, compare it against some max
          * prefetch value and return either the requested value or the maximum allowable
          * value for prefetch.

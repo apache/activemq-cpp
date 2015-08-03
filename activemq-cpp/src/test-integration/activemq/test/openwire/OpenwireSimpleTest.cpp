@@ -24,6 +24,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 
 #include <decaf/util/UUID.h>
+#include <decaf/lang/Thread.h>
 
 using namespace std;
 using namespace cms;
@@ -34,6 +35,7 @@ using namespace activemq::test::openwire;
 using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace decaf;
+using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -449,6 +451,59 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetchAndZeroRedelivery() {
 
     auto_ptr<cms::Message> message(consumer->receive(5000));
     CPPUNIT_ASSERT(message.get() == NULL);
+
+    session->commit();
+    session->close();
+
+    amqConnection->destroyDestination(queue.get());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testWithZeroConsumerPrefetchWithInFlightExpiration() {
+
+    ActiveMQConnectionFactory factory(getBrokerURL());
+    auto_ptr<cms::Connection> connection(factory.createConnection());
+
+    ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>(connection.get());
+    amqConnection->getPrefetchPolicy()->setAll(0);
+
+    connection->start();
+
+    {
+        auto_ptr<cms::Session> session(connection->createSession(cms::Session::AUTO_ACKNOWLEDGE));
+        auto_ptr<cms::Queue> queue(session->createQueue("testWithZeroConsumerPrefetchWithInFlightExpiration"));
+
+        amqConnection->destroyDestination(queue.get());
+
+        auto_ptr<cms::MessageProducer> producer(session->createProducer(queue.get()));
+
+        auto_ptr<cms::Message> expiredMessage(session->createTextMessage("Expired"));
+        auto_ptr<cms::Message> validMessage(session->createTextMessage("Valid"));
+        producer->send(expiredMessage.get(), cms::Message::DEFAULT_DELIVERY_MODE, cms::Message::DEFAULT_MSG_PRIORITY, 2000);
+        producer->send(validMessage.get());
+        session->close();
+    }
+
+    auto_ptr<cms::Session> session(connection->createSession(cms::Session::SESSION_TRANSACTED));
+    auto_ptr<cms::Queue> queue(session->createQueue("testWithZeroConsumerPrefetchWithInFlightExpiration"));
+    auto_ptr<cms::MessageConsumer> consumer(session->createConsumer(queue.get()));
+
+    {
+        auto_ptr<cms::Message> message(consumer->receive(5000));
+        CPPUNIT_ASSERT(message.get() != NULL);
+        TextMessage* received = dynamic_cast<TextMessage*>(message.get());
+        CPPUNIT_ASSERT_EQUAL(std::string("Expired"), received->getText());
+    }
+
+    session->rollback();
+    Thread::sleep(2500);
+
+    {
+        auto_ptr<cms::Message> message(consumer->receive(5000));
+        CPPUNIT_ASSERT(message.get() != NULL);
+        TextMessage* received = dynamic_cast<TextMessage*>(message.get());
+        CPPUNIT_ASSERT_EQUAL(std::string("Valid"), received->getText());
+    }
 
     session->commit();
     session->close();

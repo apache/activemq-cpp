@@ -1024,6 +1024,8 @@ decaf::lang::Pointer<MessageDispatch> ActiveMQConsumerKernel::dequeue(long long 
                 if (timeout > 0) {
                     timeout = Math::max(deadline - System::currentTimeMillis(), 0LL);
                 }
+
+                sendPullRequest(timeout);
             } else if (internal->redeliveryExceeded(dispatch)) {
                 internal->posionAck(dispatch,
                                     "dispatch to " + getConsumerId()->toString() +

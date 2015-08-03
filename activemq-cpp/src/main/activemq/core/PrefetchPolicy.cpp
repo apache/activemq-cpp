@@ -33,6 +33,19 @@ PrefetchPolicy::~PrefetchPolicy() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void PrefetchPolicy::setAll(int value) {
+
+    try {
+        this->setDurableTopicPrefetch(value);
+        this->setQueueBrowserPrefetch(value);
+        this->setQueuePrefetch(value);
+        this->setTopicPrefetch(value);
+    }
+    DECAF_CATCH_RETHROW(Exception)
+    DECAF_CATCHALL_THROW(Exception)
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void PrefetchPolicy::configure(const decaf::util::Properties& properties) {
 
     try {
