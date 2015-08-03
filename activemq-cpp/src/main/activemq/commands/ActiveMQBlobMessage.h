@@ -27,9 +27,7 @@
 namespace activemq {
 namespace commands {
 
-    class AMQCPP_API ActiveMQBlobMessage :
-        public ActiveMQMessageTemplate< cms::Message > {
-
+    class AMQCPP_API ActiveMQBlobMessage : public ActiveMQMessageTemplate< cms::Message > {
     private:
 
         std::string remoteBlobUrl;
@@ -39,39 +37,35 @@ namespace commands {
 
     public:
 
-        static const unsigned char ID_ACTIVEMQBLOBMESSAGE = 29;
+        static const unsigned char ID_ACTIVEMQBLOBMESSAGE;
         static const std::string BINARY_MIME_TYPE;
 
     private:
 
-        ActiveMQBlobMessage( const ActiveMQBlobMessage& );
-        ActiveMQBlobMessage& operator= ( const ActiveMQBlobMessage& );
+        ActiveMQBlobMessage(const ActiveMQBlobMessage&);
+        ActiveMQBlobMessage& operator=(const ActiveMQBlobMessage&);
 
     public:
 
         ActiveMQBlobMessage();
+
         virtual ~ActiveMQBlobMessage() throw() {}
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQBlobMessage* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
-    public:  // cms::Message
+    public:  // CMS Message
 
-        virtual cms::Message* clone() const {
-            ActiveMQBlobMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::Message*>(clone);
-        }
+        virtual cms::Message* clone() const;
 
-    public: // BlobMessage
+    public: // CMS BlobMessage
 
         /**
          * Get the Remote URL of the Blob.

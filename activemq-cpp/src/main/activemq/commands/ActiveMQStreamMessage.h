@@ -47,7 +47,7 @@ namespace commands {
 
     public:
 
-        const static unsigned char ID_ACTIVEMQSTREAMMESSAGE = 27;
+        const static unsigned char ID_ACTIVEMQSTREAMMESSAGE;
 
     private:
 
@@ -57,6 +57,7 @@ namespace commands {
     public:
 
         ActiveMQStreamMessage();
+
         virtual ~ActiveMQStreamMessage() throw ();
 
         virtual unsigned char getDataStructureType() const;
@@ -73,12 +74,7 @@ namespace commands {
 
     public: // CMS Message
 
-        virtual cms::StreamMessage* clone() const {
-            ActiveMQStreamMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::StreamMessage*>(clone);
-        }
+        virtual cms::StreamMessage* clone() const;
 
         virtual void clearBody();
 

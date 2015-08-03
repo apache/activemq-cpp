@@ -27,12 +27,10 @@
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQMapMessage :
-        public ActiveMQMessageTemplate<cms::MapMessage> {
-
+    class AMQCPP_API ActiveMQMapMessage : public ActiveMQMessageTemplate<cms::MapMessage> {
     private:
 
         // Map Structure to hold unmarshaled Map Data
@@ -40,18 +38,18 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_ACTIVEMQMAPMESSAGE = 25;
+        const static unsigned char ID_ACTIVEMQMAPMESSAGE;
 
     private:
 
-        ActiveMQMapMessage( const ActiveMQMapMessage& );
-        ActiveMQMapMessage& operator= ( const ActiveMQMapMessage& );
+        ActiveMQMapMessage(const ActiveMQMapMessage&);
+        ActiveMQMapMessage& operator=(const ActiveMQMapMessage&);
 
     public:
 
         ActiveMQMapMessage();
 
-        virtual ~ActiveMQMapMessage() throw();
+        virtual ~ActiveMQMapMessage() throw ();
 
         virtual unsigned char getDataStructureType() const;
 
@@ -61,146 +59,69 @@ namespace commands{
 
         virtual ActiveMQMapMessage* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat );
+        virtual void beforeMarshal(wireformat::WireFormat* wireFormat);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
-        virtual void clearBody() throw( cms::CMSException );
+        virtual void clearBody() throw (cms::CMSException);
 
-    public:   // CMS Message
+    public: // CMS Message
 
-        virtual cms::MapMessage* clone() const {
-            ActiveMQMapMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::MapMessage*>(clone);
-        }
+        virtual cms::MapMessage* clone() const;
 
-    public:   // CMS MapMessage
+    public: // CMS MapMessage
 
-        /**
-         * {@inheritDoc}
-         */
         virtual bool isEmpty() const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::vector< std::string > getMapNames() const;
+        virtual std::vector<std::string> getMapNames() const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool itemExists( const std::string& name ) const;
+        virtual bool itemExists(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
         virtual cms::Message::ValueType getValueType(const std::string& key) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool getBoolean( const std::string& name ) const;
+        virtual bool getBoolean(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setBoolean( const std::string& name, bool value );
+        virtual void setBoolean(const std::string& name, bool value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual unsigned char getByte( const std::string& name ) const;
+        virtual unsigned char getByte(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setByte( const std::string& name, unsigned char value );
+        virtual void setByte(const std::string& name, unsigned char value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::vector<unsigned char> getBytes( const std::string& name ) const;
+        virtual std::vector<unsigned char> getBytes(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setBytes( const std::string& name, const std::vector<unsigned char>& value );
+        virtual void setBytes(const std::string& name, const std::vector<unsigned char>& value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual char getChar( const std::string& name ) const;
+        virtual char getChar(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setChar( const std::string& name, char value );
+        virtual void setChar(const std::string& name, char value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual double getDouble( const std::string& name ) const;
+        virtual double getDouble(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setDouble( const std::string& name, double value );
+        virtual void setDouble(const std::string& name, double value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual float getFloat( const std::string& name ) const;
+        virtual float getFloat(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setFloat( const std::string& name, float value );
+        virtual void setFloat(const std::string& name, float value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual int getInt( const std::string& name ) const;
+        virtual int getInt(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setInt( const std::string& name, int value );
+        virtual void setInt(const std::string& name, int value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual long long getLong( const std::string& name ) const;
+        virtual long long getLong(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setLong( const std::string& name, long long value );
+        virtual void setLong(const std::string& name, long long value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual short getShort( const std::string& name ) const;
+        virtual short getShort(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setShort( const std::string& name, short value );
+        virtual void setShort(const std::string& name, short value);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::string getString( const std::string& name ) const;
+        virtual std::string getString(const std::string& name) const;
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setString( const std::string& name, const std::string& value );
+        virtual void setString(const std::string& name, const std::string& value);
 
     protected:
 

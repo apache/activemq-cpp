@@ -22,45 +22,38 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/ActiveMQMessageTemplate.h>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQMessage :
-        public ActiveMQMessageTemplate<cms::Message> {
-
+    class AMQCPP_API ActiveMQMessage : public ActiveMQMessageTemplate<cms::Message> {
     public:
 
-        static const unsigned char ID_ACTIVEMQMESSAGE = 23;
+        static const unsigned char ID_ACTIVEMQMESSAGE;
 
     private:
 
-        ActiveMQMessage( const ActiveMQMessage& );
-        ActiveMQMessage& operator= ( const ActiveMQMessage& );
+        ActiveMQMessage(const ActiveMQMessage&);
+        ActiveMQMessage& operator=(const ActiveMQMessage&);
 
     public:
 
         ActiveMQMessage();
 
-        virtual ~ActiveMQMessage() throw() {}
+        virtual ~ActiveMQMessage() throw () {}
 
         virtual unsigned char getDataStructureType() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual ActiveMQMessage* cloneDataStructure() const;
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
-    public:  // cms::Message
+    public:  // CMS Message
 
-        virtual cms::Message* clone() const {
-            ActiveMQMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::Message*>(clone);
-        }
+        virtual cms::Message* clone() const;
 
     };
 

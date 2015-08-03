@@ -85,9 +85,13 @@ namespace commands {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQStreamMessage::ActiveMQStreamMessage() :
-    ActiveMQMessageTemplate<cms::StreamMessage>(), impl(new ActiveMQStreamMessageImpl()), dataIn(), dataOut() {
+const unsigned char ActiveMQStreamMessage::ID_ACTIVEMQSTREAMMESSAGE = 27;
 
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQStreamMessage::ActiveMQStreamMessage() : ActiveMQMessageTemplate<cms::StreamMessage>(),
+                                                 impl(new ActiveMQStreamMessageImpl()),
+                                                 dataIn(),
+                                                 dataOut() {
     this->clearBody();
 }
 
@@ -110,6 +114,14 @@ ActiveMQStreamMessage* ActiveMQStreamMessage::cloneDataStructure() const {
     std::auto_ptr<ActiveMQStreamMessage> message(new ActiveMQStreamMessage());
     message->copyDataStructure(this);
     return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::StreamMessage* ActiveMQStreamMessage::clone() const {
+    ActiveMQStreamMessage* clone = this->cloneDataStructure();
+    clone->setReadOnlyBody(false);
+    clone->setReadOnlyProperties(false);
+    return dynamic_cast<cms::StreamMessage*>(clone);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

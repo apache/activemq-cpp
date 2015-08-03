@@ -39,8 +39,10 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQObjectMessage::ActiveMQObjectMessage() :
-    ActiveMQMessageTemplate<cms::ObjectMessage> () {
+const unsigned char ActiveMQObjectMessage::ID_ACTIVEMQOBJECTMESSAGE = 26;
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQObjectMessage::ActiveMQObjectMessage() : ActiveMQMessageTemplate<cms::ObjectMessage> () {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +55,14 @@ ActiveMQObjectMessage* ActiveMQObjectMessage::cloneDataStructure() const {
     std::auto_ptr<ActiveMQObjectMessage> message(new ActiveMQObjectMessage());
     message->copyDataStructure(this);
     return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* ActiveMQObjectMessage::clone() const {
+    ActiveMQObjectMessage* clone = this->cloneDataStructure();
+    clone->setReadOnlyBody(false);
+    clone->setReadOnlyProperties(false);
+    return dynamic_cast<cms::Message*>(clone);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +139,6 @@ std::vector<unsigned char> ActiveMQObjectMessage::getObjectBytes() const {
             inflater.close();
 
             return uncompressed;
-
         } else {
             return this->getContent();
         }

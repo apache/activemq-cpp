@@ -28,11 +28,10 @@
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQBytesMessage :
-        public ActiveMQMessageTemplate< cms::BytesMessage > {
+    class AMQCPP_API ActiveMQBytesMessage : public ActiveMQMessageTemplate< cms::BytesMessage > {
     private:
 
         /**
@@ -58,37 +57,32 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_ACTIVEMQBYTESMESSAGE = 24;
+        const static unsigned char ID_ACTIVEMQBYTESMESSAGE;
 
     private:
 
-        ActiveMQBytesMessage( const ActiveMQBytesMessage& );
-        ActiveMQBytesMessage& operator= ( const ActiveMQBytesMessage& );
+        ActiveMQBytesMessage(const ActiveMQBytesMessage&);
+        ActiveMQBytesMessage& operator=(const ActiveMQBytesMessage&);
 
     public:
 
         ActiveMQBytesMessage();
 
-        virtual ~ActiveMQBytesMessage() throw();
+        virtual ~ActiveMQBytesMessage() throw ();
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQBytesMessage* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
     public:   // CMS Message
 
-        virtual cms::BytesMessage* clone() const {
-            ActiveMQBytesMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::BytesMessage*>(clone);
-        }
+        virtual cms::BytesMessage* clone() const;
 
         virtual void clearBody();
 
@@ -96,7 +90,7 @@ namespace commands{
 
     public:   // CMS BytesMessage
 
-        virtual void setBodyBytes( const unsigned char* buffer, int numBytes );
+        virtual void setBodyBytes(const unsigned char* buffer, int numBytes);
 
         virtual unsigned char* getBodyBytes() const;
 
@@ -106,55 +100,55 @@ namespace commands{
 
         virtual bool readBoolean() const;
 
-        virtual void writeBoolean( bool value );
+        virtual void writeBoolean(bool value);
 
         virtual unsigned char readByte() const;
 
-        virtual void writeByte( unsigned char value );
+        virtual void writeByte(unsigned char value);
 
-        virtual int readBytes( std::vector<unsigned char>& value ) const;
+        virtual int readBytes(std::vector<unsigned char>& value) const;
 
-        virtual void writeBytes( const std::vector<unsigned char>& value );
+        virtual void writeBytes(const std::vector<unsigned char>& value);
 
-        virtual int readBytes( unsigned char* buffer, int length ) const;
+        virtual int readBytes(unsigned char* buffer, int length) const;
 
-        virtual void writeBytes( const unsigned char* value, int offset, int length );
+        virtual void writeBytes(const unsigned char* value, int offset, int length);
 
         virtual char readChar() const;
 
-        virtual void writeChar( char value );
+        virtual void writeChar(char value);
 
         virtual float readFloat() const;
 
-        virtual void writeFloat( float value );
+        virtual void writeFloat(float value);
 
         virtual double readDouble() const;
 
-        virtual void writeDouble( double value );
+        virtual void writeDouble(double value);
 
         virtual short readShort() const;
 
-        virtual void writeShort( short value );
+        virtual void writeShort(short value);
 
         virtual unsigned short readUnsignedShort() const;
 
-        virtual void writeUnsignedShort( unsigned short value );
+        virtual void writeUnsignedShort(unsigned short value);
 
         virtual int readInt() const;
 
-        virtual void writeInt( int value );
+        virtual void writeInt(int value);
 
         virtual long long readLong() const;
 
-        virtual void writeLong( long long value );
+        virtual void writeLong(long long value);
 
         virtual std::string readString() const;
 
-        virtual void writeString( const std::string& value );
+        virtual void writeString(const std::string& value);
 
         virtual std::string readUTF() const;
 
-        virtual void writeUTF( const std::string& value );
+        virtual void writeUTF(const std::string& value);
 
     private:
 

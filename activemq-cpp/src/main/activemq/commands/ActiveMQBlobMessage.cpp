@@ -25,11 +25,7 @@ using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::string ActiveMQBlobMessage::BINARY_MIME_TYPE = "application/octet-stream";
-
-std::string remoteBlobUrl;
-std::string mimeType;
-std::string name;
-bool deletedByBroker;
+const unsigned char ActiveMQBlobMessage::ID_ACTIVEMQBLOBMESSAGE = 29;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBlobMessage::ActiveMQBlobMessage() : ActiveMQMessageTemplate<cms::Message>(),
@@ -47,6 +43,14 @@ ActiveMQBlobMessage* ActiveMQBlobMessage::cloneDataStructure() const {
     std::auto_ptr<ActiveMQBlobMessage> message( new ActiveMQBlobMessage() );
     message->copyDataStructure( this );
     return message.release();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* ActiveMQBlobMessage::clone() const {
+    ActiveMQBlobMessage* clone = this->cloneDataStructure();
+    clone->setReadOnlyBody(false);
+    clone->setReadOnlyProperties(false);
+    return dynamic_cast<cms::Message*>(clone);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

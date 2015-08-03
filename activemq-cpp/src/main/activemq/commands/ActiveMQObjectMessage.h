@@ -23,15 +23,13 @@
 #include <activemq/util/Config.h>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQObjectMessage :
-        public ActiveMQMessageTemplate<cms::ObjectMessage> {
-
+    class AMQCPP_API ActiveMQObjectMessage : public ActiveMQMessageTemplate<cms::ObjectMessage> {
     public:
 
-        const static unsigned char ID_ACTIVEMQOBJECTMESSAGE = 26;
+        const static unsigned char ID_ACTIVEMQOBJECTMESSAGE;
 
     private:
 
@@ -55,16 +53,11 @@ namespace commands{
 
         virtual bool equals(const DataStructure* value) const;
 
-    public: // cms::Message
+    public: // CMS Message
 
-        virtual cms::Message* clone() const {
-            ActiveMQObjectMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::Message*>(clone);
-        }
+        virtual cms::Message* clone() const;
 
-    public: // cms::ObjectMessage
+    public: // CMS ObjectMessage
 
         virtual void setObjectBytes(const std::vector<unsigned char>& bytes);
 

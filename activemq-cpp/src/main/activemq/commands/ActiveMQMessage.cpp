@@ -22,8 +22,10 @@ using namespace activemq::util;
 using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMessage::ActiveMQMessage() :
-    ActiveMQMessageTemplate<cms::Message>()
+const unsigned char ActiveMQMessage::ID_ACTIVEMQMESSAGE = 23;
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQMessage::ActiveMQMessage() : ActiveMQMessageTemplate<cms::Message>()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,23 +34,31 @@ unsigned char ActiveMQMessage::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessage::copyDataStructure( const DataStructure* src ) {
-    ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
+void ActiveMQMessage::copyDataStructure(const DataStructure* src) {
+    ActiveMQMessageTemplate<cms::Message>::copyDataStructure(src);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMessage* ActiveMQMessage::cloneDataStructure() const {
     ActiveMQMessage* message = new ActiveMQMessage();
-    message->copyDataStructure( this );
+    message->copyDataStructure(this);
     return message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQMessage::toString() const{
+cms::Message* ActiveMQMessage::clone() const {
+    ActiveMQMessage* clone = this->cloneDataStructure();
+    clone->setReadOnlyBody(false);
+    clone->setReadOnlyProperties(false);
+    return dynamic_cast<cms::Message*>(clone);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQMessage::toString() const {
     return ActiveMQMessageTemplate<cms::Message>::toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQMessage::equals( const DataStructure* value ) const {
-    return ActiveMQMessageTemplate<cms::Message>::equals( value );
+bool ActiveMQMessage::equals(const DataStructure* value) const {
+    return ActiveMQMessageTemplate<cms::Message>::equals(value);
 }
