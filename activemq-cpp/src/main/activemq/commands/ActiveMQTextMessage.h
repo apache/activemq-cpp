@@ -25,59 +25,54 @@
 #include <string>
 #include <memory>
 
-namespace activemq{
-namespace commands{
+namespace activemq {
+namespace commands {
 
-    class AMQCPP_API ActiveMQTextMessage :
-        public ActiveMQMessageTemplate<cms::TextMessage> {
+    class AMQCPP_API ActiveMQTextMessage : public ActiveMQMessageTemplate<cms::TextMessage> {
     public:
 
-        const static unsigned char ID_ACTIVEMQTEXTMESSAGE = 28;
+        const static unsigned char ID_ACTIVEMQTEXTMESSAGE;
 
         mutable std::auto_ptr<std::string> text;
 
     private:
 
-        ActiveMQTextMessage( const ActiveMQTextMessage& );
-        ActiveMQTextMessage& operator= ( const ActiveMQTextMessage& );
+        ActiveMQTextMessage(const ActiveMQTextMessage&);
+        ActiveMQTextMessage& operator=(const ActiveMQTextMessage&);
 
     public:
 
         ActiveMQTextMessage();
-        virtual ~ActiveMQTextMessage() throw();
+
+        virtual ~ActiveMQTextMessage() throw ();
 
         virtual unsigned char getDataStructureType() const;
 
         virtual ActiveMQTextMessage* cloneDataStructure() const;
 
-        virtual void copyDataStructure( const DataStructure* src );
+        virtual void copyDataStructure(const DataStructure* src);
 
         virtual std::string toString() const;
 
-        virtual bool equals( const DataStructure* value ) const;
+        virtual bool equals(const DataStructure* value) const;
 
         virtual void clearBody();
 
-        virtual void beforeMarshal( wireformat::WireFormat* wireFormat );
+        virtual void beforeMarshal(wireformat::WireFormat* wireFormat);
 
         virtual unsigned int getSize() const;
 
-    public:   // CMS Message
+    public: // CMS Message
 
-        virtual cms::TextMessage* clone() const {
-            ActiveMQTextMessage* clone = this->cloneDataStructure();
-            clone->setReadOnlyBody(false);
-            clone->setReadOnlyProperties(false);
-            return dynamic_cast<cms::TextMessage*>(clone);
-        }
+        virtual cms::TextMessage* clone() const;
 
-    public:   // cms::TextMessage
+    public: // CMS TextMessage
 
         virtual std::string getText() const;
 
-        virtual void setText( const char* msg );
+        virtual void setText(const char* msg);
 
-        virtual void setText( const std::string& msg );
+        virtual void setText(const std::string& msg);
 
     };
 
