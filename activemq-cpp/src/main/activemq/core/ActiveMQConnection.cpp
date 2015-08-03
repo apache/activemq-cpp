@@ -717,7 +717,7 @@ void ActiveMQConnection::close() {
             }
         }
 
-        long long lastDeliveredSequenceId = 0;
+        long long lastDeliveredSequenceId = -1;
 
         // Get the complete list of active sessions.
         try {

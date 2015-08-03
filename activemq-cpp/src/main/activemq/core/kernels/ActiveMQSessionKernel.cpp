@@ -203,7 +203,7 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
                                                                              producerIds(),
                                                                              producerSequenceIds(),
                                                                              consumerIds(),
-                                                                             lastDeliveredSequenceId(0) {
+                                                                             lastDeliveredSequenceId(-2) {
 
     if (id == NULL || connection == NULL) {
         throw ActiveMQException(
@@ -225,8 +225,6 @@ ActiveMQSessionKernel::ActiveMQSessionKernel(ActiveMQConnection* connection,
         throw;
     }
 
-    this->closed.set(false);
-    this->lastDeliveredSequenceId = -1;
     this->config->sessionAsyncDispatch = connection->isAlwaysSessionAsync();
 
     // Create a Transaction object
