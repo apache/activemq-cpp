@@ -329,7 +329,7 @@ namespace util {
          */
         virtual std::vector<E> toArray() const {
             std::vector<E> valueArray;
-            valueArray.reserve(this->size());
+            valueArray.reserve((std::size_t) this->size());
 
             std::auto_ptr<Iterator<E> > iter(this->iterator());
             while (iter->hasNext()) {
