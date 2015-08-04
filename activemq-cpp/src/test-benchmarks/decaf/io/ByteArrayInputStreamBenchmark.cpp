@@ -37,12 +37,12 @@ void ByteArrayInputStreamBenchmark::setUp() {
     buffer = new unsigned char[bufferSize];
 
     // init to full String Buffer
-    stlBuffer.reserve( bufferSize );
-    for( int ix = 0; ix < bufferSize - 1; ++ix ) {
+    stlBuffer.reserve(bufferSize);
+    for (int ix = 0; ix < bufferSize - 1; ++ix) {
         buffer[ix] = 65;
-        stlBuffer.push_back( 65 );
+        stlBuffer.push_back(65);
     }
-    buffer[bufferSize-1] = 0;
+    buffer[bufferSize - 1] = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,28 +52,27 @@ void ByteArrayInputStreamBenchmark::tearDown(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStreamBenchmark::run(){
+void ByteArrayInputStreamBenchmark::run() {
 
     int numRuns = 25;
 
-    std::vector<unsigned char> bucket( bufferSize );
-    ByteArrayInputStream bis( buffer, bufferSize );
+    std::vector<unsigned char> bucket(bufferSize);
+    ByteArrayInputStream bis(buffer, bufferSize);
 
-    for( int iy = 0; iy < numRuns; ++iy ){
-        ByteArrayInputStream local( buffer, bufferSize );
+    for (int iy = 0; iy < numRuns; ++iy) {
+        ByteArrayInputStream local(buffer, bufferSize);
     }
 
-    for( int iy = 0; iy < numRuns; ++iy ){
+    for (std::size_t iy = 0; iy < numRuns; ++iy) {
 
-        for( int iz = 0; iz < bufferSize; ++iz ) {
-            bucket[iy] = (unsigned char)bis.read();
+        for (std::size_t iz = 0; iz < bufferSize; ++iz) {
+            bucket[iy] = (unsigned char) bis.read();
         }
         bis.reset();
     }
 
-    for( int iy = 0; iy < numRuns; ++iy ){
-        bis.read( &bucket[0], bufferSize, 0, bufferSize );
+    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+        bis.read(&bucket[0], bufferSize, 0, bufferSize);
         bis.reset();
     }
-
 }

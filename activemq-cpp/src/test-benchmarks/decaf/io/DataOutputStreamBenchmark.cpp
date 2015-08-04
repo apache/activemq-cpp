@@ -27,55 +27,55 @@ DataOutputStreamBenchmark::DataOutputStreamBenchmark() : testString() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStreamBenchmark::setUp(){
+void DataOutputStreamBenchmark::setUp() {
 
-    for( size_t i = 0; i < 8096; ++i ) {
+    for (size_t i = 0; i < 8096; ++i) {
         testString += 'a';
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStreamBenchmark::run(){
+void DataOutputStreamBenchmark::run() {
 
     int numRuns = 500;
 
     ByteArrayOutputStream bos;
-    DataOutputStream dos( &bos );
+    DataOutputStream dos(&bos);
 
-    for( int iy = 0; iy < numRuns * 40; ++iy ){
-        dos.writeLong( 0xFF00FF00FF00FF00LL );
+    for (int iy = 0; iy < numRuns * 40; ++iy) {
+        dos.writeLong((long long) 0xFF00FF00FF00FF00LL);
     }
-    for( int iy = 0; iy < numRuns * 40; ++iy ){
-        dos.writeInt( 312568 );
+    for (int iy = 0; iy < numRuns * 40; ++iy) {
+        dos.writeInt(312568);
     }
-    for( int iy = 0; iy < numRuns * 40; ++iy ){
-        dos.writeShort( 12568 );
+    for (int iy = 0; iy < numRuns * 40; ++iy) {
+        dos.writeShort(12568);
     }
-    for( int iy = 0; iy < numRuns * 40; ++iy ){
-        dos.writeUnsignedShort( 12568 );
+    for (int iy = 0; iy < numRuns * 40; ++iy) {
+        dos.writeUnsignedShort(12568);
     }
-    for( int iy = 0; iy < numRuns * 40; ++iy ){
-        dos.writeBoolean( true );
+    for (int iy = 0; iy < numRuns * 40; ++iy) {
+        dos.writeBoolean(true);
     }
-    for( int iy = 0; iy < numRuns * 40; ++iy ){
-        dos.writeDouble( 10.34235234 );
+    for (int iy = 0; iy < numRuns * 40; ++iy) {
+        dos.writeDouble(10.34235234);
     }
-    for( int iy = 0; iy < numRuns + 40; ++iy ){
-        dos.writeFloat( 32.4f );
+    for (int iy = 0; iy < numRuns + 40; ++iy) {
+        dos.writeFloat(32.4f);
     }
 
     bos.reset();
 
-    for( int iy = 0; iy < numRuns; ++iy ){
-        dos.writeChars( testString );
+    for (int iy = 0; iy < numRuns; ++iy) {
+        dos.writeChars(testString);
         bos.reset();
     }
-    for( int iy = 0; iy < numRuns; ++iy ){
-        dos.writeBytes( testString );
+    for (int iy = 0; iy < numRuns; ++iy) {
+        dos.writeBytes(testString);
         bos.reset();
     }
-    for( int iy = 0; iy < numRuns; ++iy ){
-        dos.writeUTF( testString );
+    for (int iy = 0; iy < numRuns; ++iy) {
+        dos.writeUTF(testString);
         bos.reset();
     }
 

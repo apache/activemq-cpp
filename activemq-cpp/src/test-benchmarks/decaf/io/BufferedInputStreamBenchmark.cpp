@@ -33,40 +33,38 @@ BufferedInputStreamBenchmark::~BufferedInputStreamBenchmark() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStreamBenchmark::setUp() {
-
     buffer = new unsigned char[bufferSize];
-    source.setByteArray( buffer, bufferSize );
+    source.setByteArray(buffer, bufferSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStreamBenchmark::tearDown(){
+void BufferedInputStreamBenchmark::tearDown() {
 
-    delete [] buffer;
+    delete[] buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStreamBenchmark::run(){
+void BufferedInputStreamBenchmark::run() {
 
     int numRuns = 25;
 
-    std::vector<unsigned char> bucket( bufferSize );
-    BufferedInputStream bis( &source );
+    std::vector<unsigned char> bucket(bufferSize);
+    BufferedInputStream bis(&source);
 
-    for( int iy = 0; iy < numRuns; ++iy ){
-        BufferedInputStream local( &source );
+    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+        BufferedInputStream local(&source);
     }
 
-    for( int iy = 0; iy < numRuns; ++iy ){
+    for (std::size_t iy = 0; iy < numRuns; ++iy) {
 
-        for( int iz = 0; iz < bufferSize; ++iz ) {
-            bucket[iy] = (unsigned char)bis.read();
+        for (int iz = 0; iz < bufferSize; ++iz) {
+            bucket[iy] = (unsigned char) bis.read();
         }
         source.reset();
     }
 
-    for( int iy = 0; iy < numRuns; ++iy ){
-        bis.read( &bucket[0], bufferSize, 0, bufferSize );
+    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+        bis.read(&bucket[0], bufferSize, 0, bufferSize);
         source.reset();
     }
-
 }
