@@ -20,12 +20,26 @@ import java.io.PrintWriter;
 
 public class LocalTransactionIdHeaderGenerator extends CommandHeaderGenerator {
 
-    protected void generateAdditonalMembers( PrintWriter out ) {
+    protected void generateAdditonalMembers(PrintWriter out) {
         out.println("        virtual bool isLocalTransactionId() const {");
         out.println("            return true;");
         out.println("        }");
         out.println("");
 
-        super.generateAdditonalMembers( out );
+        super.generateAdditonalMembers(out);
+    }
+
+    protected void generateProperties(PrintWriter out) {
+        out.println("    protected:");
+        out.println("");
+
+        out.println("        using TransactionId::compareTo;");
+        out.println("        using TransactionId::equals;");
+        out.println("        using TransactionId::operator <;");
+        out.println("        using TransactionId::operator==;");
+
+        out.println("");
+
+        super.generateProperties(out);
     }
 }

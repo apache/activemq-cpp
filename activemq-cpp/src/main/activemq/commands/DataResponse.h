@@ -76,7 +76,7 @@ namespace commands {
 
         virtual const Pointer<DataStructure>& getData() const;
         virtual Pointer<DataStructure>& getData();
-        virtual void setData( const Pointer<DataStructure>& data );
+        virtual void setData(const Pointer<DataStructure>& data);
 
     };
 

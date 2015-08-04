@@ -78,15 +78,15 @@ namespace commands {
 
         virtual const Pointer<ConnectionId>& getConnectionId() const;
         virtual Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
+        virtual void setConnectionId(const Pointer<ConnectionId>& connectionId);
 
         virtual const std::string& getSubcriptionName() const;
         virtual std::string& getSubcriptionName();
-        virtual void setSubcriptionName( const std::string& subcriptionName );
+        virtual void setSubcriptionName(const std::string& subcriptionName);
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
-        virtual void setClientId( const std::string& clientId );
+        virtual void setClientId(const std::string& clientId);
 
         /**
          * @return an answer of true to the isRemoveSubscriptionInfo() query.

@@ -88,45 +88,45 @@ namespace commands {
 
         virtual const Pointer<BrokerId>& getBrokerId() const;
         virtual Pointer<BrokerId>& getBrokerId();
-        virtual void setBrokerId( const Pointer<BrokerId>& brokerId );
+        virtual void setBrokerId(const Pointer<BrokerId>& brokerId);
 
         virtual const std::string& getBrokerURL() const;
         virtual std::string& getBrokerURL();
-        virtual void setBrokerURL( const std::string& brokerURL );
+        virtual void setBrokerURL(const std::string& brokerURL);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerInfo> >& getPeerBrokerInfos() const;
         virtual std::vector< decaf::lang::Pointer<BrokerInfo> >& getPeerBrokerInfos();
-        virtual void setPeerBrokerInfos( const std::vector< decaf::lang::Pointer<BrokerInfo> >& peerBrokerInfos );
+        virtual void setPeerBrokerInfos(const std::vector< decaf::lang::Pointer<BrokerInfo> >& peerBrokerInfos);
 
         virtual const std::string& getBrokerName() const;
         virtual std::string& getBrokerName();
-        virtual void setBrokerName( const std::string& brokerName );
+        virtual void setBrokerName(const std::string& brokerName);
 
         virtual bool isSlaveBroker() const;
-        virtual void setSlaveBroker( bool slaveBroker );
+        virtual void setSlaveBroker(bool slaveBroker);
 
         virtual bool isMasterBroker() const;
-        virtual void setMasterBroker( bool masterBroker );
+        virtual void setMasterBroker(bool masterBroker);
 
         virtual bool isFaultTolerantConfiguration() const;
-        virtual void setFaultTolerantConfiguration( bool faultTolerantConfiguration );
+        virtual void setFaultTolerantConfiguration(bool faultTolerantConfiguration);
 
         virtual bool isDuplexConnection() const;
-        virtual void setDuplexConnection( bool duplexConnection );
+        virtual void setDuplexConnection(bool duplexConnection);
 
         virtual bool isNetworkConnection() const;
-        virtual void setNetworkConnection( bool networkConnection );
+        virtual void setNetworkConnection(bool networkConnection);
 
         virtual long long getConnectionId() const;
-        virtual void setConnectionId( long long connectionId );
+        virtual void setConnectionId(long long connectionId);
 
         virtual const std::string& getBrokerUploadUrl() const;
         virtual std::string& getBrokerUploadUrl();
-        virtual void setBrokerUploadUrl( const std::string& brokerUploadUrl );
+        virtual void setBrokerUploadUrl(const std::string& brokerUploadUrl);
 
         virtual const std::string& getNetworkProperties() const;
         virtual std::string& getNetworkProperties();
-        virtual void setNetworkProperties( const std::string& networkProperties );
+        virtual void setNetworkProperties(const std::string& networkProperties);
 
         /**
          * @return an answer of true to the isBrokerInfo() query.

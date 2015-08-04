@@ -490,7 +490,7 @@ namespace util {
                 return false;
             }
 
-            virtual bool contains(const MapEntry<K,V>& entry) {
+            virtual bool contains(const MapEntry<K,V>& entry) const {
                 HashMapEntry* result = associatedMap->getEntry(entry.getKey());
                 if (result != NULL && entry.getValue() == result->getValue()) {
                     return true;
@@ -539,7 +539,7 @@ namespace util {
                         __FILE__, __LINE__, "Can't remove from const collection");
             }
 
-            virtual bool contains(const MapEntry<K,V>& entry) {
+            virtual bool contains(const MapEntry<K,V>& entry) const {
                 HashMapEntry* result = associatedMap->getEntry(entry.getKey());
                 if (result != NULL && entry.getValue() == result->getValue()) {
                     return true;

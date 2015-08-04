@@ -115,7 +115,7 @@ bool ExceptionResponse::equals(const DataStructure* value) const {
     }
 
     if (this->getException() != NULL) {
-        if (!this->getException()->equals( valuePtr->getException().get())) {
+        if (!this->getException()->equals(valuePtr->getException().get())) {
             return false;
         }
     } else if (valuePtr->getException() != NULL) {

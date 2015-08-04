@@ -148,14 +148,14 @@ bool ProducerInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getProducerId() != NULL) {
-        if (!this->getProducerId()->equals( valuePtr->getProducerId().get())) {
+        if (!this->getProducerId()->equals(valuePtr->getProducerId().get())) {
             return false;
         }
     } else if (valuePtr->getProducerId() != NULL) {
         return false;
     }
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
@@ -163,7 +163,7 @@ bool ProducerInfo::equals(const DataStructure* value) const {
     }
     for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
         if (this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals(valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
         } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {

@@ -189,21 +189,21 @@ bool MessageAck::equals(const DataStructure* value) const {
     }
 
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
     if (this->getTransactionId() != NULL) {
-        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
+        if (!this->getTransactionId()->equals(valuePtr->getTransactionId().get())) {
             return false;
         }
     } else if (valuePtr->getTransactionId() != NULL) {
         return false;
     }
     if (this->getConsumerId() != NULL) {
-        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
+        if (!this->getConsumerId()->equals(valuePtr->getConsumerId().get())) {
             return false;
         }
     } else if (valuePtr->getConsumerId() != NULL) {
@@ -213,14 +213,14 @@ bool MessageAck::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getFirstMessageId() != NULL) {
-        if (!this->getFirstMessageId()->equals( valuePtr->getFirstMessageId().get())) {
+        if (!this->getFirstMessageId()->equals(valuePtr->getFirstMessageId().get())) {
             return false;
         }
     } else if (valuePtr->getFirstMessageId() != NULL) {
         return false;
     }
     if (this->getLastMessageId() != NULL) {
-        if (!this->getLastMessageId()->equals( valuePtr->getLastMessageId().get())) {
+        if (!this->getLastMessageId()->equals(valuePtr->getLastMessageId().get())) {
             return false;
         }
     } else if (valuePtr->getLastMessageId() != NULL) {
@@ -230,7 +230,7 @@ bool MessageAck::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getPoisonCause() != NULL) {
-        if (!this->getPoisonCause()->equals( valuePtr->getPoisonCause().get())) {
+        if (!this->getPoisonCause()->equals(valuePtr->getPoisonCause().get())) {
             return false;
         }
     } else if (valuePtr->getPoisonCause() != NULL) {

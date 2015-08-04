@@ -40,7 +40,7 @@ Pointer<AbstractDiscoveryAgent> HttpDiscoveryAgentFactory::doCreateAgent() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void HttpDiscoveryAgentFactory::doConfigureAgent(Pointer<AbstractDiscoveryAgent> agent, const Properties& options) {
+void HttpDiscoveryAgentFactory::doConfigureAgent(Pointer<AbstractDiscoveryAgent> agent AMQCPP_UNUSED, const Properties& options AMQCPP_UNUSED) {
 
     try {
 

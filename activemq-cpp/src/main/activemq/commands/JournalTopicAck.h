@@ -83,26 +83,26 @@ namespace commands {
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual const Pointer<MessageId>& getMessageId() const;
         virtual Pointer<MessageId>& getMessageId();
-        virtual void setMessageId( const Pointer<MessageId>& messageId );
+        virtual void setMessageId(const Pointer<MessageId>& messageId);
 
         virtual long long getMessageSequenceId() const;
-        virtual void setMessageSequenceId( long long messageSequenceId );
+        virtual void setMessageSequenceId(long long messageSequenceId);
 
         virtual const std::string& getSubscritionName() const;
         virtual std::string& getSubscritionName();
-        virtual void setSubscritionName( const std::string& subscritionName );
+        virtual void setSubscritionName(const std::string& subscritionName);
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
-        virtual void setClientId( const std::string& clientId );
+        virtual void setClientId(const std::string& clientId);
 
         virtual const Pointer<TransactionId>& getTransactionId() const;
         virtual Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
+        virtual void setTransactionId(const Pointer<TransactionId>& transactionId);
 
     };
 

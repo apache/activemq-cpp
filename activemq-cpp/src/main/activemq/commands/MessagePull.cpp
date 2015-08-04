@@ -140,14 +140,14 @@ bool MessagePull::equals(const DataStructure* value) const {
     }
 
     if (this->getConsumerId() != NULL) {
-        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
+        if (!this->getConsumerId()->equals(valuePtr->getConsumerId().get())) {
             return false;
         }
     } else if (valuePtr->getConsumerId() != NULL) {
         return false;
     }
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
@@ -160,7 +160,7 @@ bool MessagePull::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getMessageId() != NULL) {
-        if (!this->getMessageId()->equals( valuePtr->getMessageId().get())) {
+        if (!this->getMessageId()->equals(valuePtr->getMessageId().get())) {
             return false;
         }
     } else if (valuePtr->getMessageId() != NULL) {

@@ -81,26 +81,26 @@ namespace commands {
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
-        virtual void setClientId( const std::string& clientId );
+        virtual void setClientId(const std::string& clientId);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual const std::string& getSelector() const;
         virtual std::string& getSelector();
-        virtual void setSelector( const std::string& selector );
+        virtual void setSelector(const std::string& selector);
 
         virtual const std::string& getSubcriptionName() const;
         virtual std::string& getSubcriptionName();
-        virtual void setSubcriptionName( const std::string& subcriptionName );
+        virtual void setSubcriptionName(const std::string& subcriptionName);
 
         virtual const Pointer<ActiveMQDestination>& getSubscribedDestination() const;
         virtual Pointer<ActiveMQDestination>& getSubscribedDestination();
-        virtual void setSubscribedDestination( const Pointer<ActiveMQDestination>& subscribedDestination );
+        virtual void setSubscribedDestination(const Pointer<ActiveMQDestination>& subscribedDestination);
 
         virtual bool isNoLocal() const;
-        virtual void setNoLocal( bool noLocal );
+        virtual void setNoLocal(bool noLocal);
 
     };
 

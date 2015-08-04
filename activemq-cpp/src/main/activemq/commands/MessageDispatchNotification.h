@@ -81,18 +81,18 @@ namespace commands {
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
+        virtual void setConsumerId(const Pointer<ConsumerId>& consumerId);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual long long getDeliverySequenceId() const;
-        virtual void setDeliverySequenceId( long long deliverySequenceId );
+        virtual void setDeliverySequenceId(long long deliverySequenceId);
 
         virtual const Pointer<MessageId>& getMessageId() const;
         virtual Pointer<MessageId>& getMessageId();
-        virtual void setMessageId( const Pointer<MessageId>& messageId );
+        virtual void setMessageId(const Pointer<MessageId>& messageId);
 
         /**
          * @return an answer of true to the isMessageDispatchNotification() query.

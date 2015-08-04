@@ -82,34 +82,34 @@ namespace commands {
         virtual bool equals(const DataStructure* value) const;
 
         virtual bool isClose() const;
-        virtual void setClose( bool close );
+        virtual void setClose(bool close);
 
         virtual bool isExit() const;
-        virtual void setExit( bool exit );
+        virtual void setExit(bool exit);
 
         virtual bool isFaultTolerant() const;
-        virtual void setFaultTolerant( bool faultTolerant );
+        virtual void setFaultTolerant(bool faultTolerant);
 
         virtual bool isResume() const;
-        virtual void setResume( bool resume );
+        virtual void setResume(bool resume);
 
         virtual bool isSuspend() const;
-        virtual void setSuspend( bool suspend );
+        virtual void setSuspend(bool suspend);
 
         virtual const std::string& getConnectedBrokers() const;
         virtual std::string& getConnectedBrokers();
-        virtual void setConnectedBrokers( const std::string& connectedBrokers );
+        virtual void setConnectedBrokers(const std::string& connectedBrokers);
 
         virtual const std::string& getReconnectTo() const;
         virtual std::string& getReconnectTo();
-        virtual void setReconnectTo( const std::string& reconnectTo );
+        virtual void setReconnectTo(const std::string& reconnectTo);
 
         virtual bool isRebalanceConnection() const;
-        virtual void setRebalanceConnection( bool rebalanceConnection );
+        virtual void setRebalanceConnection(bool rebalanceConnection);
 
         virtual const std::vector<unsigned char>& getToken() const;
         virtual std::vector<unsigned char>& getToken();
-        virtual void setToken( const std::vector<unsigned char>& token );
+        virtual void setToken(const std::vector<unsigned char>& token);
 
         /**
          * @return an answer of true to the isConnectionControl() query.

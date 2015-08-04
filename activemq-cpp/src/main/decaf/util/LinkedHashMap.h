@@ -539,6 +539,8 @@ namespace util {
 
             virtual ~ConstLinkedHashMapKeySet() {}
 
+            using HashMap<K, V, HASHCODE>::ConstHashMapKeySet::iterator;
+
             virtual Iterator<K>* iterator() const {
                 return new ConstKeyIterator(this->associatedMap);
             }
@@ -594,6 +596,8 @@ namespace util {
             virtual Iterator<V>* iterator() const {
                 return new ConstValueIterator(this->associatedMap);
             }
+
+            using HashMap<K, V, HASHCODE>::ConstHashMapValueCollection::iterator;
         };
 
     public:

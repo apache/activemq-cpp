@@ -129,14 +129,14 @@ bool TransactionInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getConnectionId() != NULL) {
-        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
+        if (!this->getConnectionId()->equals(valuePtr->getConnectionId().get())) {
             return false;
         }
     } else if (valuePtr->getConnectionId() != NULL) {
         return false;
     }
     if (this->getTransactionId() != NULL) {
-        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
+        if (!this->getTransactionId()->equals(valuePtr->getTransactionId().get())) {
             return false;
         }
     } else if (valuePtr->getTransactionId() != NULL) {

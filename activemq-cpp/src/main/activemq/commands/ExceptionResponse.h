@@ -76,7 +76,7 @@ namespace commands {
 
         virtual const Pointer<BrokerError>& getException() const;
         virtual Pointer<BrokerError>& getException();
-        virtual void setException( const Pointer<BrokerError>& exception );
+        virtual void setException(const Pointer<BrokerError>& exception);
 
     };
 

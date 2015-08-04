@@ -78,13 +78,13 @@ namespace commands {
 
         virtual const Pointer<TransactionId>& getTransactionId() const;
         virtual Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
+        virtual void setTransactionId(const Pointer<TransactionId>& transactionId);
 
         virtual unsigned char getType() const;
-        virtual void setType( unsigned char type );
+        virtual void setType(unsigned char type);
 
         virtual bool getWasPrepared() const;
-        virtual void setWasPrepared( bool wasPrepared );
+        virtual void setWasPrepared(bool wasPrepared);
 
     };
 

@@ -75,7 +75,7 @@ namespace commands {
 
         virtual const std::string& getMessage() const;
         virtual std::string& getMessage();
-        virtual void setMessage( const std::string& message );
+        virtual void setMessage(const std::string& message);
 
     };
 

@@ -48,6 +48,13 @@ namespace commands {
     class AMQCPP_API LocalTransactionId : public TransactionId, public decaf::lang::Comparable<LocalTransactionId> {
     protected:
 
+        using TransactionId::compareTo;
+        using TransactionId::equals;
+        using TransactionId::operator <;
+        using TransactionId::operator==;
+
+    protected:
+
         long long value;
         Pointer<ConnectionId> connectionId;
 
@@ -80,11 +87,11 @@ namespace commands {
         }
 
         virtual long long getValue() const;
-        virtual void setValue( long long value );
+        virtual void setValue(long long value);
 
         virtual const Pointer<ConnectionId>& getConnectionId() const;
         virtual Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
+        virtual void setConnectionId(const Pointer<ConnectionId>& connectionId);
 
         virtual int compareTo(const LocalTransactionId& value) const;
 

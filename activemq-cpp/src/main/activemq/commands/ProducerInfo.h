@@ -85,21 +85,21 @@ namespace commands {
 
         virtual const Pointer<ProducerId>& getProducerId() const;
         virtual Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const Pointer<ProducerId>& producerId );
+        virtual void setProducerId(const Pointer<ProducerId>& producerId);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
-        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
+        virtual void setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath);
 
         virtual bool isDispatchAsync() const;
-        virtual void setDispatchAsync( bool dispatchAsync );
+        virtual void setDispatchAsync(bool dispatchAsync);
 
         virtual int getWindowSize() const;
-        virtual void setWindowSize( int windowSize );
+        virtual void setWindowSize(int windowSize);
 
         /**
          * @return an answer of true to the isProducerInfo() query.

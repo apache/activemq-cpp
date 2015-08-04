@@ -121,7 +121,7 @@ bool RemoveInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getObjectId() != NULL) {
-        if (!this->getObjectId()->equals( valuePtr->getObjectId().get())) {
+        if (!this->getObjectId()->equals(valuePtr->getObjectId().get())) {
             return false;
         }
     } else if (valuePtr->getObjectId() != NULL) {

@@ -94,17 +94,17 @@ namespace commands {
 
         virtual const std::string& getTextView() const;
         virtual std::string& getTextView();
-        virtual void setTextView( const std::string& textView );
+        virtual void setTextView(const std::string& textView);
 
         virtual const Pointer<ProducerId>& getProducerId() const;
         virtual Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const Pointer<ProducerId>& producerId );
+        virtual void setProducerId(const Pointer<ProducerId>& producerId);
 
         virtual long long getProducerSequenceId() const;
-        virtual void setProducerSequenceId( long long producerSequenceId );
+        virtual void setProducerSequenceId(long long producerSequenceId);
 
         virtual long long getBrokerSequenceId() const;
-        virtual void setBrokerSequenceId( long long brokerSequenceId );
+        virtual void setBrokerSequenceId(long long brokerSequenceId);
 
         virtual int compareTo(const MessageId& value) const;
 

@@ -35,6 +35,13 @@ namespace commands {
 
         const static unsigned char ID_ACTIVEMQTOPIC = 101;
 
+    public:
+
+        using ActiveMQDestination::compareTo;
+        using ActiveMQDestination::equals;
+        using ActiveMQDestination::operator<;
+        using ActiveMQDestination::operator==;
+
     private:
 
         ActiveMQTopic(const ActiveMQTopic&);

@@ -140,14 +140,14 @@ bool JournalTopicAck::equals(const DataStructure* value) const {
     }
 
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
     if (this->getMessageId() != NULL) {
-        if (!this->getMessageId()->equals( valuePtr->getMessageId().get())) {
+        if (!this->getMessageId()->equals(valuePtr->getMessageId().get())) {
             return false;
         }
     } else if (valuePtr->getMessageId() != NULL) {
@@ -163,7 +163,7 @@ bool JournalTopicAck::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getTransactionId() != NULL) {
-        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
+        if (!this->getTransactionId()->equals(valuePtr->getTransactionId().get())) {
             return false;
         }
     } else if (valuePtr->getTransactionId() != NULL) {

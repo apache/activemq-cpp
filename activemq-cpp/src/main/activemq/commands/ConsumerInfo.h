@@ -113,68 +113,68 @@ namespace commands {
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
+        virtual void setConsumerId(const Pointer<ConsumerId>& consumerId);
 
         virtual bool isBrowser() const;
-        virtual void setBrowser( bool browser );
+        virtual void setBrowser(bool browser);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual int getPrefetchSize() const;
-        virtual void setPrefetchSize( int prefetchSize );
+        virtual void setPrefetchSize(int prefetchSize);
 
         virtual int getMaximumPendingMessageLimit() const;
-        virtual void setMaximumPendingMessageLimit( int maximumPendingMessageLimit );
+        virtual void setMaximumPendingMessageLimit(int maximumPendingMessageLimit);
 
         virtual bool isDispatchAsync() const;
-        virtual void setDispatchAsync( bool dispatchAsync );
+        virtual void setDispatchAsync(bool dispatchAsync);
 
         virtual const std::string& getSelector() const;
         virtual std::string& getSelector();
-        virtual void setSelector( const std::string& selector );
+        virtual void setSelector(const std::string& selector);
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
-        virtual void setClientId( const std::string& clientId );
+        virtual void setClientId(const std::string& clientId);
 
         virtual const std::string& getSubscriptionName() const;
         virtual std::string& getSubscriptionName();
-        virtual void setSubscriptionName( const std::string& subscriptionName );
+        virtual void setSubscriptionName(const std::string& subscriptionName);
 
         virtual bool isNoLocal() const;
-        virtual void setNoLocal( bool noLocal );
+        virtual void setNoLocal(bool noLocal);
 
         virtual bool isExclusive() const;
-        virtual void setExclusive( bool exclusive );
+        virtual void setExclusive(bool exclusive);
 
         virtual bool isRetroactive() const;
-        virtual void setRetroactive( bool retroactive );
+        virtual void setRetroactive(bool retroactive);
 
         virtual unsigned char getPriority() const;
-        virtual void setPriority( unsigned char priority );
+        virtual void setPriority(unsigned char priority);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
-        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
+        virtual void setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath);
 
         virtual const Pointer<BooleanExpression>& getAdditionalPredicate() const;
         virtual Pointer<BooleanExpression>& getAdditionalPredicate();
-        virtual void setAdditionalPredicate( const Pointer<BooleanExpression>& additionalPredicate );
+        virtual void setAdditionalPredicate(const Pointer<BooleanExpression>& additionalPredicate);
 
         virtual bool isNetworkSubscription() const;
-        virtual void setNetworkSubscription( bool networkSubscription );
+        virtual void setNetworkSubscription(bool networkSubscription);
 
         virtual bool isOptimizedAcknowledge() const;
-        virtual void setOptimizedAcknowledge( bool optimizedAcknowledge );
+        virtual void setOptimizedAcknowledge(bool optimizedAcknowledge);
 
         virtual bool isNoRangeAcks() const;
-        virtual void setNoRangeAcks( bool noRangeAcks );
+        virtual void setNoRangeAcks(bool noRangeAcks);
 
         virtual const std::vector< decaf::lang::Pointer<ConsumerId> >& getNetworkConsumerPath() const;
         virtual std::vector< decaf::lang::Pointer<ConsumerId> >& getNetworkConsumerPath();
-        virtual void setNetworkConsumerPath( const std::vector< decaf::lang::Pointer<ConsumerId> >& networkConsumerPath );
+        virtual void setNetworkConsumerPath(const std::vector< decaf::lang::Pointer<ConsumerId> >& networkConsumerPath);
 
         /**
          * @return an answer of true to the isConsumerInfo() query.

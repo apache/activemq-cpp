@@ -124,7 +124,7 @@ bool DataArrayResponse::equals(const DataStructure* value) const {
 
     for (size_t idata = 0; idata < this->getData().size(); ++idata) {
         if (this->getData()[idata] != NULL ) {
-            if (!this->getData()[idata]->equals( valuePtr->getData()[idata].get())) {
+            if (!this->getData()[idata]->equals(valuePtr->getData()[idata].get())) {
                 return false;
             }
         } else if (valuePtr->getData()[idata] != NULL) {

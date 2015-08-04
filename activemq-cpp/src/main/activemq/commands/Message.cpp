@@ -295,42 +295,42 @@ bool Message::equals(const DataStructure* value) const {
     }
 
     if (this->getProducerId() != NULL) {
-        if (!this->getProducerId()->equals( valuePtr->getProducerId().get())) {
+        if (!this->getProducerId()->equals(valuePtr->getProducerId().get())) {
             return false;
         }
     } else if (valuePtr->getProducerId() != NULL) {
         return false;
     }
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
     if (this->getTransactionId() != NULL) {
-        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
+        if (!this->getTransactionId()->equals(valuePtr->getTransactionId().get())) {
             return false;
         }
     } else if (valuePtr->getTransactionId() != NULL) {
         return false;
     }
     if (this->getOriginalDestination() != NULL) {
-        if (!this->getOriginalDestination()->equals( valuePtr->getOriginalDestination().get())) {
+        if (!this->getOriginalDestination()->equals(valuePtr->getOriginalDestination().get())) {
             return false;
         }
     } else if (valuePtr->getOriginalDestination() != NULL) {
         return false;
     }
     if (this->getMessageId() != NULL) {
-        if (!this->getMessageId()->equals( valuePtr->getMessageId().get())) {
+        if (!this->getMessageId()->equals(valuePtr->getMessageId().get())) {
             return false;
         }
     } else if (valuePtr->getMessageId() != NULL) {
         return false;
     }
     if (this->getOriginalTransactionId() != NULL) {
-        if (!this->getOriginalTransactionId()->equals( valuePtr->getOriginalTransactionId().get())) {
+        if (!this->getOriginalTransactionId()->equals(valuePtr->getOriginalTransactionId().get())) {
             return false;
         }
     } else if (valuePtr->getOriginalTransactionId() != NULL) {
@@ -355,7 +355,7 @@ bool Message::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getReplyTo() != NULL) {
-        if (!this->getReplyTo()->equals( valuePtr->getReplyTo().get())) {
+        if (!this->getReplyTo()->equals(valuePtr->getReplyTo().get())) {
             return false;
         }
     } else if (valuePtr->getReplyTo() != NULL) {
@@ -378,14 +378,14 @@ bool Message::equals(const DataStructure* value) const {
         }
     }
     if (this->getDataStructure() != NULL) {
-        if (!this->getDataStructure()->equals( valuePtr->getDataStructure().get())) {
+        if (!this->getDataStructure()->equals(valuePtr->getDataStructure().get())) {
             return false;
         }
     } else if (valuePtr->getDataStructure() != NULL) {
         return false;
     }
     if (this->getTargetConsumerId() != NULL) {
-        if (!this->getTargetConsumerId()->equals( valuePtr->getTargetConsumerId().get())) {
+        if (!this->getTargetConsumerId()->equals(valuePtr->getTargetConsumerId().get())) {
             return false;
         }
     } else if (valuePtr->getTargetConsumerId() != NULL) {
@@ -399,7 +399,7 @@ bool Message::equals(const DataStructure* value) const {
     }
     for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
         if (this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals(valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
         } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {
@@ -420,7 +420,7 @@ bool Message::equals(const DataStructure* value) const {
     }
     for (size_t icluster = 0; icluster < this->getCluster().size(); ++icluster) {
         if (this->getCluster()[icluster] != NULL ) {
-            if (!this->getCluster()[icluster]->equals( valuePtr->getCluster()[icluster].get())) {
+            if (!this->getCluster()[icluster]->equals(valuePtr->getCluster()[icluster].get())) {
                 return false;
             }
         } else if (valuePtr->getCluster()[icluster] != NULL) {

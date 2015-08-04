@@ -166,7 +166,7 @@ bool MessageId::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getProducerId() != NULL) {
-        if (!this->getProducerId()->equals( valuePtr->getProducerId().get())) {
+        if (!this->getProducerId()->equals(valuePtr->getProducerId().get())) {
             return false;
         }
     } else if (valuePtr->getProducerId() != NULL) {

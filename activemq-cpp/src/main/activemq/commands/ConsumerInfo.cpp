@@ -211,7 +211,7 @@ bool ConsumerInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getConsumerId() != NULL) {
-        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
+        if (!this->getConsumerId()->equals(valuePtr->getConsumerId().get())) {
             return false;
         }
     } else if (valuePtr->getConsumerId() != NULL) {
@@ -221,7 +221,7 @@ bool ConsumerInfo::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
@@ -259,7 +259,7 @@ bool ConsumerInfo::equals(const DataStructure* value) const {
     }
     for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
         if (this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals(valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
         } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {
@@ -267,7 +267,7 @@ bool ConsumerInfo::equals(const DataStructure* value) const {
         }
     }
     if (this->getAdditionalPredicate() != NULL) {
-        if (!this->getAdditionalPredicate()->equals( valuePtr->getAdditionalPredicate().get())) {
+        if (!this->getAdditionalPredicate()->equals(valuePtr->getAdditionalPredicate().get())) {
             return false;
         }
     } else if (valuePtr->getAdditionalPredicate() != NULL) {
@@ -284,7 +284,7 @@ bool ConsumerInfo::equals(const DataStructure* value) const {
     }
     for (size_t inetworkConsumerPath = 0; inetworkConsumerPath < this->getNetworkConsumerPath().size(); ++inetworkConsumerPath) {
         if (this->getNetworkConsumerPath()[inetworkConsumerPath] != NULL ) {
-            if (!this->getNetworkConsumerPath()[inetworkConsumerPath]->equals( valuePtr->getNetworkConsumerPath()[inetworkConsumerPath].get())) {
+            if (!this->getNetworkConsumerPath()[inetworkConsumerPath]->equals(valuePtr->getNetworkConsumerPath()[inetworkConsumerPath].get())) {
                 return false;
             }
         } else if (valuePtr->getNetworkConsumerPath()[inetworkConsumerPath] != NULL) {

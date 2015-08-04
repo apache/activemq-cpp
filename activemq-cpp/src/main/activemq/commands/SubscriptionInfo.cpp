@@ -138,7 +138,7 @@ bool SubscriptionInfo::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
@@ -151,7 +151,7 @@ bool SubscriptionInfo::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getSubscribedDestination() != NULL) {
-        if (!this->getSubscribedDestination()->equals( valuePtr->getSubscribedDestination().get())) {
+        if (!this->getSubscribedDestination()->equals(valuePtr->getSubscribedDestination().get())) {
             return false;
         }
     } else if (valuePtr->getSubscribedDestination() != NULL) {

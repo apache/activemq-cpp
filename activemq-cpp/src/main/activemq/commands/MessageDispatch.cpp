@@ -137,21 +137,21 @@ bool MessageDispatch::equals(const DataStructure* value) const {
     }
 
     if (this->getConsumerId() != NULL) {
-        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
+        if (!this->getConsumerId()->equals(valuePtr->getConsumerId().get())) {
             return false;
         }
     } else if (valuePtr->getConsumerId() != NULL) {
         return false;
     }
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
     if (this->getMessage() != NULL) {
-        if (!this->getMessage()->equals( valuePtr->getMessage().get())) {
+        if (!this->getMessage()->equals(valuePtr->getMessage().get())) {
             return false;
         }
     } else if (valuePtr->getMessage() != NULL) {

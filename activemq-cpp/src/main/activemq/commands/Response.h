@@ -74,7 +74,7 @@ namespace commands {
         virtual bool equals(const DataStructure* value) const;
 
         virtual int getCorrelationId() const;
-        virtual void setCorrelationId( int correlationId );
+        virtual void setCorrelationId(int correlationId);
 
         /**
          * @return an answer of true to the isResponse() query.

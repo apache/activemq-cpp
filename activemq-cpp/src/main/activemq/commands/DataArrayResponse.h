@@ -76,7 +76,7 @@ namespace commands {
 
         virtual const std::vector< decaf::lang::Pointer<DataStructure> >& getData() const;
         virtual std::vector< decaf::lang::Pointer<DataStructure> >& getData();
-        virtual void setData( const std::vector< decaf::lang::Pointer<DataStructure> >& data );
+        virtual void setData(const std::vector< decaf::lang::Pointer<DataStructure> >& data);
 
     };
 

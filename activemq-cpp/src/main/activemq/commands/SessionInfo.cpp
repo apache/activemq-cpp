@@ -119,7 +119,7 @@ bool SessionInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getSessionId() != NULL) {
-        if (!this->getSessionId()->equals( valuePtr->getSessionId().get())) {
+        if (!this->getSessionId()->equals(valuePtr->getSessionId().get())) {
             return false;
         }
     } else if (valuePtr->getSessionId() != NULL) {

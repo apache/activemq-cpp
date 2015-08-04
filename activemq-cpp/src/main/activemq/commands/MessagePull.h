@@ -82,22 +82,22 @@ namespace commands {
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
+        virtual void setConsumerId(const Pointer<ConsumerId>& consumerId);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual long long getTimeout() const;
-        virtual void setTimeout( long long timeout );
+        virtual void setTimeout(long long timeout);
 
         virtual const std::string& getCorrelationId() const;
         virtual std::string& getCorrelationId();
-        virtual void setCorrelationId( const std::string& correlationId );
+        virtual void setCorrelationId(const std::string& correlationId);
 
         virtual const Pointer<MessageId>& getMessageId() const;
         virtual Pointer<MessageId>& getMessageId();
-        virtual void setMessageId( const Pointer<MessageId>& messageId );
+        virtual void setMessageId(const Pointer<MessageId>& messageId);
 
         /**
          * @return an answer of true to the isMessagePull() query.

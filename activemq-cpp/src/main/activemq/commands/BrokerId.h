@@ -75,7 +75,7 @@ namespace commands {
 
         virtual const std::string& getValue() const;
         virtual std::string& getValue();
-        virtual void setValue( const std::string& value );
+        virtual void setValue(const std::string& value);
 
         virtual int compareTo(const BrokerId& value) const;
 

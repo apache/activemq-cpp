@@ -121,7 +121,7 @@ bool NetworkBridgeFilter::equals(const DataStructure* value) const {
     }
 
     if (this->getNetworkBrokerId() != NULL) {
-        if (!this->getNetworkBrokerId()->equals( valuePtr->getNetworkBrokerId().get())) {
+        if (!this->getNetworkBrokerId()->equals(valuePtr->getNetworkBrokerId().get())) {
             return false;
         }
     } else if (valuePtr->getNetworkBrokerId() != NULL) {

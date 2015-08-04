@@ -107,33 +107,33 @@ namespace commands {
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual const Pointer<TransactionId>& getTransactionId() const;
         virtual Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
+        virtual void setTransactionId(const Pointer<TransactionId>& transactionId);
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
+        virtual void setConsumerId(const Pointer<ConsumerId>& consumerId);
 
         virtual unsigned char getAckType() const;
-        virtual void setAckType( unsigned char ackType );
+        virtual void setAckType(unsigned char ackType);
 
         virtual const Pointer<MessageId>& getFirstMessageId() const;
         virtual Pointer<MessageId>& getFirstMessageId();
-        virtual void setFirstMessageId( const Pointer<MessageId>& firstMessageId );
+        virtual void setFirstMessageId(const Pointer<MessageId>& firstMessageId);
 
         virtual const Pointer<MessageId>& getLastMessageId() const;
         virtual Pointer<MessageId>& getLastMessageId();
-        virtual void setLastMessageId( const Pointer<MessageId>& lastMessageId );
+        virtual void setLastMessageId(const Pointer<MessageId>& lastMessageId);
 
         virtual int getMessageCount() const;
-        virtual void setMessageCount( int messageCount );
+        virtual void setMessageCount(int messageCount);
 
         virtual const Pointer<BrokerError>& getPoisonCause() const;
         virtual Pointer<BrokerError>& getPoisonCause();
-        virtual void setPoisonCause( const Pointer<BrokerError>& poisonCause );
+        virtual void setPoisonCause(const Pointer<BrokerError>& poisonCause);
 
         /**
          * @return an answer of true to the isMessageAck() query.

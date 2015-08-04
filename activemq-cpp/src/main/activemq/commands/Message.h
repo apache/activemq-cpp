@@ -274,110 +274,110 @@ namespace commands{
 
         virtual const Pointer<ProducerId>& getProducerId() const;
         virtual Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const Pointer<ProducerId>& producerId );
+        virtual void setProducerId(const Pointer<ProducerId>& producerId);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual const Pointer<TransactionId>& getTransactionId() const;
         virtual Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
+        virtual void setTransactionId(const Pointer<TransactionId>& transactionId);
 
         virtual const Pointer<ActiveMQDestination>& getOriginalDestination() const;
         virtual Pointer<ActiveMQDestination>& getOriginalDestination();
-        virtual void setOriginalDestination( const Pointer<ActiveMQDestination>& originalDestination );
+        virtual void setOriginalDestination(const Pointer<ActiveMQDestination>& originalDestination);
 
         virtual const Pointer<MessageId>& getMessageId() const;
         virtual Pointer<MessageId>& getMessageId();
-        virtual void setMessageId( const Pointer<MessageId>& messageId );
+        virtual void setMessageId(const Pointer<MessageId>& messageId);
 
         virtual const Pointer<TransactionId>& getOriginalTransactionId() const;
         virtual Pointer<TransactionId>& getOriginalTransactionId();
-        virtual void setOriginalTransactionId( const Pointer<TransactionId>& originalTransactionId );
+        virtual void setOriginalTransactionId(const Pointer<TransactionId>& originalTransactionId);
 
         virtual const std::string& getGroupID() const;
         virtual std::string& getGroupID();
-        virtual void setGroupID( const std::string& groupID );
+        virtual void setGroupID(const std::string& groupID);
 
         virtual int getGroupSequence() const;
-        virtual void setGroupSequence( int groupSequence );
+        virtual void setGroupSequence(int groupSequence);
 
         virtual const std::string& getCorrelationId() const;
         virtual std::string& getCorrelationId();
-        virtual void setCorrelationId( const std::string& correlationId );
+        virtual void setCorrelationId(const std::string& correlationId);
 
         virtual bool isPersistent() const;
-        virtual void setPersistent( bool persistent );
+        virtual void setPersistent(bool persistent);
 
         virtual long long getExpiration() const;
-        virtual void setExpiration( long long expiration );
+        virtual void setExpiration(long long expiration);
 
         virtual unsigned char getPriority() const;
-        virtual void setPriority( unsigned char priority );
+        virtual void setPriority(unsigned char priority);
 
         virtual const Pointer<ActiveMQDestination>& getReplyTo() const;
         virtual Pointer<ActiveMQDestination>& getReplyTo();
-        virtual void setReplyTo( const Pointer<ActiveMQDestination>& replyTo );
+        virtual void setReplyTo(const Pointer<ActiveMQDestination>& replyTo);
 
         virtual long long getTimestamp() const;
-        virtual void setTimestamp( long long timestamp );
+        virtual void setTimestamp(long long timestamp);
 
         virtual const std::string& getType() const;
         virtual std::string& getType();
-        virtual void setType( const std::string& type );
+        virtual void setType(const std::string& type);
 
         virtual const std::vector<unsigned char>& getContent() const;
         virtual std::vector<unsigned char>& getContent();
-        virtual void setContent( const std::vector<unsigned char>& content );
+        virtual void setContent(const std::vector<unsigned char>& content);
 
         virtual const std::vector<unsigned char>& getMarshalledProperties() const;
         virtual std::vector<unsigned char>& getMarshalledProperties();
-        virtual void setMarshalledProperties( const std::vector<unsigned char>& marshalledProperties );
+        virtual void setMarshalledProperties(const std::vector<unsigned char>& marshalledProperties);
 
         virtual const Pointer<DataStructure>& getDataStructure() const;
         virtual Pointer<DataStructure>& getDataStructure();
-        virtual void setDataStructure( const Pointer<DataStructure>& dataStructure );
+        virtual void setDataStructure(const Pointer<DataStructure>& dataStructure);
 
         virtual const Pointer<ConsumerId>& getTargetConsumerId() const;
         virtual Pointer<ConsumerId>& getTargetConsumerId();
-        virtual void setTargetConsumerId( const Pointer<ConsumerId>& targetConsumerId );
+        virtual void setTargetConsumerId(const Pointer<ConsumerId>& targetConsumerId);
 
         virtual bool isCompressed() const;
-        virtual void setCompressed( bool compressed );
+        virtual void setCompressed(bool compressed);
 
         virtual int getRedeliveryCounter() const;
-        virtual void setRedeliveryCounter( int redeliveryCounter );
+        virtual void setRedeliveryCounter(int redeliveryCounter);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
-        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
+        virtual void setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath);
 
         virtual long long getArrival() const;
-        virtual void setArrival( long long arrival );
+        virtual void setArrival(long long arrival);
 
         virtual const std::string& getUserID() const;
         virtual std::string& getUserID();
-        virtual void setUserID( const std::string& userID );
+        virtual void setUserID(const std::string& userID);
 
         virtual bool isRecievedByDFBridge() const;
-        virtual void setRecievedByDFBridge( bool recievedByDFBridge );
+        virtual void setRecievedByDFBridge(bool recievedByDFBridge);
 
         virtual bool isDroppable() const;
-        virtual void setDroppable( bool droppable );
+        virtual void setDroppable(bool droppable);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getCluster() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getCluster();
-        virtual void setCluster( const std::vector< decaf::lang::Pointer<BrokerId> >& cluster );
+        virtual void setCluster(const std::vector< decaf::lang::Pointer<BrokerId> >& cluster);
 
         virtual long long getBrokerInTime() const;
-        virtual void setBrokerInTime( long long brokerInTime );
+        virtual void setBrokerInTime(long long brokerInTime);
 
         virtual long long getBrokerOutTime() const;
-        virtual void setBrokerOutTime( long long brokerOutTime );
+        virtual void setBrokerOutTime(long long brokerOutTime);
 
         virtual bool isJMSXGroupFirstForConsumer() const;
-        virtual void setJMSXGroupFirstForConsumer( bool jMSXGroupFirstForConsumer );
+        virtual void setJMSXGroupFirstForConsumer(bool jMSXGroupFirstForConsumer);
 
         /**
          * @return an answer of true to the isMessage() query.

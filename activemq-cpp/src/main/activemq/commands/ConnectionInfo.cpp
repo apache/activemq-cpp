@@ -162,7 +162,7 @@ bool ConnectionInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getConnectionId() != NULL) {
-        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
+        if (!this->getConnectionId()->equals(valuePtr->getConnectionId().get())) {
             return false;
         }
     } else if (valuePtr->getConnectionId() != NULL) {
@@ -179,7 +179,7 @@ bool ConnectionInfo::equals(const DataStructure* value) const {
     }
     for (size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath) {
         if (this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if (!this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get())) {
+            if (!this->getBrokerPath()[ibrokerPath]->equals(valuePtr->getBrokerPath()[ibrokerPath].get())) {
                 return false;
             }
         } else if (valuePtr->getBrokerPath()[ibrokerPath] != NULL) {

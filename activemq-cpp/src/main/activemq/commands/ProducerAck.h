@@ -77,10 +77,10 @@ namespace commands {
 
         virtual const Pointer<ProducerId>& getProducerId() const;
         virtual Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const Pointer<ProducerId>& producerId );
+        virtual void setProducerId(const Pointer<ProducerId>& producerId);
 
         virtual int getSize() const;
-        virtual void setSize( int size );
+        virtual void setSize(int size);
 
         /**
          * @return an answer of true to the isProducerAck() query.

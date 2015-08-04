@@ -45,6 +45,10 @@ namespace core {
 
         virtual cms::Session* createSession(cms::Session::AcknowledgeMode ackMode);
 
+    public:
+
+        using ActiveMQConnection::createSession;
+
     };
 
 }}

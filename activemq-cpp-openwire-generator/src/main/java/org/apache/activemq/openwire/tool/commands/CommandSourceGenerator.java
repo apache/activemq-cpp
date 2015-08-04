@@ -396,7 +396,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
 
                 out.println("    for (size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + ") {");
                 out.println("        if (this->"+getter+"()[i"+parameterName+"] != NULL ) {" );
-                out.println("            if (!this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"].get())) {" );
+                out.println("            if (!this->"+getter+"()[i"+parameterName+"]->equals(valuePtr->"+getter+"()[i"+parameterName+"].get())) {" );
                 out.println("                return false;");
                 out.println("            }");
                 out.println("        } else if (valuePtr->"+getter+"()[i"+parameterName+"] != NULL) {");
@@ -413,7 +413,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
                 out.println("    }");
             } else {
                 out.println("    if (this->"+getter+"() != NULL) {");
-                out.println("        if (!this->"+getter+"()->equals( valuePtr->"+getter+"().get())) {" );
+                out.println("        if (!this->"+getter+"()->equals(valuePtr->"+getter+"().get())) {" );
                 out.println("            return false;");
                 out.println("        }");
                 out.println("    } else if (valuePtr->"+getter+"() != NULL) {");

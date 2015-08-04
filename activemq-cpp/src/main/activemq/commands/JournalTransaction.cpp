@@ -121,7 +121,7 @@ bool JournalTransaction::equals(const DataStructure* value) const {
     }
 
     if (this->getTransactionId() != NULL) {
-        if (!this->getTransactionId()->equals( valuePtr->getTransactionId().get())) {
+        if (!this->getTransactionId()->equals(valuePtr->getTransactionId().get())) {
             return false;
         }
     } else if (valuePtr->getTransactionId() != NULL) {

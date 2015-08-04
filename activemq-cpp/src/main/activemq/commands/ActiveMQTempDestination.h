@@ -34,6 +34,13 @@ namespace commands{
     class AMQCPP_API ActiveMQTempDestination : public ActiveMQDestination,
                                                public cms::Closeable,
                                                public decaf::lang::Comparable<ActiveMQTempDestination> {
+    public:
+
+        using ActiveMQDestination::compareTo;
+        using ActiveMQDestination::equals;
+        using ActiveMQDestination::operator<;
+        using ActiveMQDestination::operator==;
+
     protected:
 
         /**

@@ -90,13 +90,13 @@ namespace commands {
 
         virtual const std::string& getConnectionId() const;
         virtual std::string& getConnectionId();
-        virtual void setConnectionId( const std::string& connectionId );
+        virtual void setConnectionId(const std::string& connectionId);
 
         virtual long long getValue() const;
-        virtual void setValue( long long value );
+        virtual void setValue(long long value);
 
         virtual long long getSessionId() const;
-        virtual void setSessionId( long long sessionId );
+        virtual void setSessionId(long long sessionId);
 
         virtual int compareTo(const ProducerId& value) const;
 

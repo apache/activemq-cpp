@@ -90,42 +90,42 @@ namespace commands {
 
         virtual const Pointer<ConnectionId>& getConnectionId() const;
         virtual Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
+        virtual void setConnectionId(const Pointer<ConnectionId>& connectionId);
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
-        virtual void setClientId( const std::string& clientId );
+        virtual void setClientId(const std::string& clientId);
 
         virtual const std::string& getPassword() const;
         virtual std::string& getPassword();
-        virtual void setPassword( const std::string& password );
+        virtual void setPassword(const std::string& password);
 
         virtual const std::string& getUserName() const;
         virtual std::string& getUserName();
-        virtual void setUserName( const std::string& userName );
+        virtual void setUserName(const std::string& userName);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
-        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
+        virtual void setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath);
 
         virtual bool isBrokerMasterConnector() const;
-        virtual void setBrokerMasterConnector( bool brokerMasterConnector );
+        virtual void setBrokerMasterConnector(bool brokerMasterConnector);
 
         virtual bool isManageable() const;
-        virtual void setManageable( bool manageable );
+        virtual void setManageable(bool manageable);
 
         virtual bool isClientMaster() const;
-        virtual void setClientMaster( bool clientMaster );
+        virtual void setClientMaster(bool clientMaster);
 
         virtual bool isFaultTolerant() const;
-        virtual void setFaultTolerant( bool faultTolerant );
+        virtual void setFaultTolerant(bool faultTolerant);
 
         virtual bool isFailoverReconnect() const;
-        virtual void setFailoverReconnect( bool failoverReconnect );
+        virtual void setFailoverReconnect(bool failoverReconnect);
 
         virtual const std::string& getClientIp() const;
         virtual std::string& getClientIp();
-        virtual void setClientIp( const std::string& clientIp );
+        virtual void setClientIp(const std::string& clientIp);
 
         /**
          * @return an answer of true to the isConnectionInfo() query.

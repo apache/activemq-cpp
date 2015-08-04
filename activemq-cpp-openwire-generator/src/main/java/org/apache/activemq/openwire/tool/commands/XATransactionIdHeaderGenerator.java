@@ -28,8 +28,8 @@ public class XATransactionIdHeaderGenerator extends CommandHeaderGenerator {
         super.populateIncludeFilesSet();
     }
 
-    protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("        "+getClassName()+"( const cms::Xid* xid );");
+    protected void generateAdditionalConstructors(PrintWriter out) {
+        out.println("        " + getClassName() + "( const cms::Xid* xid );");
         out.println("");
 
         super.generateAdditionalConstructors(out);
@@ -41,7 +41,21 @@ public class XATransactionIdHeaderGenerator extends CommandHeaderGenerator {
         classes.add("cms::Xid");
     }
 
-    protected void generateAdditonalMembers( PrintWriter out ) {
+    protected void generateProperties(PrintWriter out) {
+        out.println("    protected:");
+        out.println("");
+
+        out.println("        using TransactionId::compareTo;");
+        out.println("        using TransactionId::equals;");
+        out.println("        using TransactionId::operator <;");
+        out.println("        using TransactionId::operator==;");
+
+        out.println("");
+
+        super.generateProperties(out);
+    }
+
+    protected void generateAdditonalMembers(PrintWriter out) {
         out.println("        virtual bool isXATransactionId() const {");
         out.println("            return true;");
         out.println("        }");
@@ -58,6 +72,6 @@ public class XATransactionIdHeaderGenerator extends CommandHeaderGenerator {
         out.println("        virtual int getGlobalTransactionId(unsigned char* buffer, int size) const;");
         out.println("");
 
-        super.generateAdditonalMembers( out );
+        super.generateAdditonalMembers(out);
     }
 }

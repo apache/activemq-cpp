@@ -126,14 +126,14 @@ bool ConnectionError::equals(const DataStructure* value) const {
     }
 
     if (this->getException() != NULL) {
-        if (!this->getException()->equals( valuePtr->getException().get())) {
+        if (!this->getException()->equals(valuePtr->getException().get())) {
             return false;
         }
     } else if (valuePtr->getException() != NULL) {
         return false;
     }
     if (this->getConnectionId() != NULL) {
-        if (!this->getConnectionId()->equals( valuePtr->getConnectionId().get())) {
+        if (!this->getConnectionId()->equals(valuePtr->getConnectionId().get())) {
             return false;
         }
     } else if (valuePtr->getConnectionId() != NULL) {

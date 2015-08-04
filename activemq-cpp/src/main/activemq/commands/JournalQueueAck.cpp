@@ -123,14 +123,14 @@ bool JournalQueueAck::equals(const DataStructure* value) const {
     }
 
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
         return false;
     }
     if (this->getMessageAck() != NULL) {
-        if (!this->getMessageAck()->equals( valuePtr->getMessageAck().get())) {
+        if (!this->getMessageAck()->equals(valuePtr->getMessageAck().get())) {
             return false;
         }
     } else if (valuePtr->getMessageAck() != NULL) {

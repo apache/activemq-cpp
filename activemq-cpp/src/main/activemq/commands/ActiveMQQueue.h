@@ -40,6 +40,13 @@ namespace commands {
 
         const static unsigned char ID_ACTIVEMQQUEUE = 100;
 
+    public:
+
+        using ActiveMQDestination::compareTo;
+        using ActiveMQDestination::equals;
+        using ActiveMQDestination::operator<;
+        using ActiveMQDestination::operator==;
+
     private:
 
         ActiveMQQueue(const ActiveMQQueue&);

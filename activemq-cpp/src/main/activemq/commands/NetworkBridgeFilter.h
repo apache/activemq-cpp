@@ -78,13 +78,13 @@ namespace commands {
 
         virtual const Pointer<BrokerId>& getNetworkBrokerId() const;
         virtual Pointer<BrokerId>& getNetworkBrokerId();
-        virtual void setNetworkBrokerId( const Pointer<BrokerId>& networkBrokerId );
+        virtual void setNetworkBrokerId(const Pointer<BrokerId>& networkBrokerId);
 
         virtual int getMessageTTL() const;
-        virtual void setMessageTTL( int messageTTL );
+        virtual void setMessageTTL(int messageTTL);
 
         virtual int getConsumerTTL() const;
-        virtual void setConsumerTTL( int consumerTTL );
+        virtual void setConsumerTTL(int consumerTTL);
 
     };
 

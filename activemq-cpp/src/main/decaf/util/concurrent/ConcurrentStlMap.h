@@ -31,9 +31,9 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/lang/Pointer.h>
 
-namespace decaf{
-namespace util{
-namespace concurrent{
+namespace decaf {
+namespace util {
+namespace concurrent {
 
     /**
      * Map template that wraps around a std::map to provide a more user-friendly
@@ -419,7 +419,7 @@ namespace concurrent{
                 return false;
             }
 
-            virtual bool contains(const MapEntry<K,V>& entry) {
+            virtual bool contains(const MapEntry<K,V>& entry) const {
                 synchronized(&this->associatedMap->mutex) {
                     if (this->associatedMap->containsKey(entry.getKey()) &&
                         this->associatedMap->get(entry.getKey()) == entry.getValue()) {
@@ -470,7 +470,7 @@ namespace concurrent{
                         __FILE__, __LINE__, "Can't remove from const collection");
             }
 
-            virtual bool contains(const MapEntry<K,V>& entry) {
+            virtual bool contains(const MapEntry<K,V>& entry) const {
                 synchronized(&this->associatedMap->mutex) {
                     if (this->associatedMap->containsKey(entry.getKey()) &&
                         this->associatedMap->get(entry.getKey()) == entry.getValue()) {

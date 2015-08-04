@@ -121,7 +121,7 @@ bool ProducerAck::equals(const DataStructure* value) const {
     }
 
     if (this->getProducerId() != NULL) {
-        if (!this->getProducerId()->equals( valuePtr->getProducerId().get())) {
+        if (!this->getProducerId()->equals(valuePtr->getProducerId().get())) {
             return false;
         }
     } else if (valuePtr->getProducerId() != NULL) {

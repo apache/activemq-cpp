@@ -166,7 +166,7 @@ bool BrokerInfo::equals(const DataStructure* value) const {
     }
 
     if (this->getBrokerId() != NULL) {
-        if (!this->getBrokerId()->equals( valuePtr->getBrokerId().get())) {
+        if (!this->getBrokerId()->equals(valuePtr->getBrokerId().get())) {
             return false;
         }
     } else if (valuePtr->getBrokerId() != NULL) {
@@ -177,7 +177,7 @@ bool BrokerInfo::equals(const DataStructure* value) const {
     }
     for (size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < this->getPeerBrokerInfos().size(); ++ipeerBrokerInfos) {
         if (this->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
-            if (!this->getPeerBrokerInfos()[ipeerBrokerInfos]->equals( valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos].get())) {
+            if (!this->getPeerBrokerInfos()[ipeerBrokerInfos]->equals(valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos].get())) {
                 return false;
             }
         } else if (valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL) {

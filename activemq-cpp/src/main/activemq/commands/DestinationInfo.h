@@ -82,21 +82,21 @@ namespace commands {
 
         virtual const Pointer<ConnectionId>& getConnectionId() const;
         virtual Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
+        virtual void setConnectionId(const Pointer<ConnectionId>& connectionId);
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual unsigned char getOperationType() const;
-        virtual void setOperationType( unsigned char operationType );
+        virtual void setOperationType(unsigned char operationType);
 
         virtual long long getTimeout() const;
-        virtual void setTimeout( long long timeout );
+        virtual void setTimeout(long long timeout);
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
-        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
+        virtual void setBrokerPath(const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath);
 
         virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 

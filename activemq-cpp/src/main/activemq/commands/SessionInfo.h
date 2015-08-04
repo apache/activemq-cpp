@@ -92,7 +92,7 @@ namespace commands {
 
         virtual const Pointer<SessionId>& getSessionId() const;
         virtual Pointer<SessionId>& getSessionId();
-        virtual void setSessionId( const Pointer<SessionId>& sessionId );
+        virtual void setSessionId(const Pointer<SessionId>& sessionId);
 
         virtual Pointer<Command> visit(activemq::state::CommandVisitor* visitor);
 

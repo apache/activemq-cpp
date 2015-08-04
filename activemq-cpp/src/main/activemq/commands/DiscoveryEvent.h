@@ -76,11 +76,11 @@ namespace commands {
 
         virtual const std::string& getServiceName() const;
         virtual std::string& getServiceName();
-        virtual void setServiceName( const std::string& serviceName );
+        virtual void setServiceName(const std::string& serviceName);
 
         virtual const std::string& getBrokerName() const;
         virtual std::string& getBrokerName();
-        virtual void setBrokerName( const std::string& brokerName );
+        virtual void setBrokerName(const std::string& brokerName);
 
     };
 

@@ -74,7 +74,7 @@ namespace commands {
         virtual bool equals(const DataStructure* value) const;
 
         virtual int getResult() const;
-        virtual void setResult( int result );
+        virtual void setResult(int result);
 
     };
 

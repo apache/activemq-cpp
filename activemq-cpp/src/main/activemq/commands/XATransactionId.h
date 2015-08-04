@@ -48,6 +48,13 @@ namespace commands {
     class AMQCPP_API XATransactionId : public TransactionId, public cms::Xid, public decaf::lang::Comparable<XATransactionId> {
     protected:
 
+        using TransactionId::compareTo;
+        using TransactionId::equals;
+        using TransactionId::operator <;
+        using TransactionId::operator==;
+
+    protected:
+
         int formatId;
         std::vector<unsigned char> globalTransactionId;
         std::vector<unsigned char> branchQualifier;
@@ -93,15 +100,15 @@ namespace commands {
         virtual int getGlobalTransactionId(unsigned char* buffer, int size) const;
 
         virtual int getFormatId() const;
-        virtual void setFormatId( int formatId );
+        virtual void setFormatId(int formatId);
 
         virtual const std::vector<unsigned char>& getGlobalTransactionId() const;
         virtual std::vector<unsigned char>& getGlobalTransactionId();
-        virtual void setGlobalTransactionId( const std::vector<unsigned char>& globalTransactionId );
+        virtual void setGlobalTransactionId(const std::vector<unsigned char>& globalTransactionId);
 
         virtual const std::vector<unsigned char>& getBranchQualifier() const;
         virtual std::vector<unsigned char>& getBranchQualifier();
-        virtual void setBranchQualifier( const std::vector<unsigned char>& branchQualifier );
+        virtual void setBranchQualifier(const std::vector<unsigned char>& branchQualifier);
 
         virtual int compareTo(const XATransactionId& value) const;
 

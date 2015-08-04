@@ -78,11 +78,11 @@ namespace commands {
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual const Pointer<MessageAck>& getMessageAck() const;
         virtual Pointer<MessageAck>& getMessageAck();
-        virtual void setMessageAck( const Pointer<MessageAck>& messageAck );
+        virtual void setMessageAck(const Pointer<MessageAck>& messageAck);
 
     };
 

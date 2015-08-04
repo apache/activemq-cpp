@@ -75,7 +75,7 @@ namespace commands {
 
         virtual const std::string& getCommand() const;
         virtual std::string& getCommand();
-        virtual void setCommand( const std::string& command );
+        virtual void setCommand(const std::string& command);
 
         /**
          * @return an answer of true to the isControlCommand() query.

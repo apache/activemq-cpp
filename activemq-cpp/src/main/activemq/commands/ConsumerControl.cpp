@@ -141,7 +141,7 @@ bool ConsumerControl::equals(const DataStructure* value) const {
     }
 
     if (this->getDestination() != NULL) {
-        if (!this->getDestination()->equals( valuePtr->getDestination().get())) {
+        if (!this->getDestination()->equals(valuePtr->getDestination().get())) {
             return false;
         }
     } else if (valuePtr->getDestination() != NULL) {
@@ -151,7 +151,7 @@ bool ConsumerControl::equals(const DataStructure* value) const {
         return false;
     }
     if (this->getConsumerId() != NULL) {
-        if (!this->getConsumerId()->equals( valuePtr->getConsumerId().get())) {
+        if (!this->getConsumerId()->equals(valuePtr->getConsumerId().get())) {
             return false;
         }
     } else if (valuePtr->getConsumerId() != NULL) {

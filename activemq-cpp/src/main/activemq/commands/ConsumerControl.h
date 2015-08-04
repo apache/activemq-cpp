@@ -83,26 +83,26 @@ namespace commands {
 
         virtual const Pointer<ActiveMQDestination>& getDestination() const;
         virtual Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
+        virtual void setDestination(const Pointer<ActiveMQDestination>& destination);
 
         virtual bool isClose() const;
-        virtual void setClose( bool close );
+        virtual void setClose(bool close);
 
         virtual const Pointer<ConsumerId>& getConsumerId() const;
         virtual Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
+        virtual void setConsumerId(const Pointer<ConsumerId>& consumerId);
 
         virtual int getPrefetch() const;
-        virtual void setPrefetch( int prefetch );
+        virtual void setPrefetch(int prefetch);
 
         virtual bool isFlush() const;
-        virtual void setFlush( bool flush );
+        virtual void setFlush(bool flush);
 
         virtual bool isStart() const;
-        virtual void setStart( bool start );
+        virtual void setStart(bool start);
 
         virtual bool isStop() const;
-        virtual void setStop( bool stop );
+        virtual void setStop(bool stop);
 
         /**
          * @return an answer of true to the isConsumerControl() query.

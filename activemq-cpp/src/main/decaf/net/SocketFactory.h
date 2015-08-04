@@ -77,7 +77,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while creating the Socket object.
          * @throws UnknownHostException if the host name is not known.
          */
-        virtual Socket* createSocket( const InetAddress* host, int port ) = 0;
+        virtual Socket* createSocket(const InetAddress* host, int port) = 0;
 
         /**
          * Creates a new Socket object and connects it to the specified remote host and
@@ -98,8 +98,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while creating the Socket object.
          * @throws UnknownHostException if the host name is not known.
          */
-        virtual Socket* createSocket( const InetAddress* host, int port,
-                                      const InetAddress* ifAddress, int localPort ) = 0;
+        virtual Socket* createSocket(const InetAddress* host, int port, const InetAddress* ifAddress, int localPort) = 0;
 
         /**
          * Creates a new Socket object and connects it to the specified remote host and
@@ -115,7 +114,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while creating the Socket object.
          * @throws UnknownHostException if the host name is not known.
          */
-        virtual Socket* createSocket( const std::string& name, int port ) = 0;
+        virtual Socket* createSocket(const std::string& name, int port) = 0;
 
         /**
          * Creates a new Socket object and connects it to the specified remote host and
@@ -135,8 +134,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while creating the Socket object.
          * @throws UnknownHostException if the host name is not known.
          */
-        virtual Socket* createSocket( const std::string& name, int port,
-                                      const InetAddress* ifAddress, int localPort ) = 0;
+        virtual Socket* createSocket(const std::string& name, int port, const InetAddress* ifAddress, int localPort) = 0;
 
         /**
          * Returns an pointer to the default SocketFactory for this Application, there is only one

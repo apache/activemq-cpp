@@ -78,11 +78,11 @@ namespace commands {
 
         virtual const Pointer<BrokerError>& getException() const;
         virtual Pointer<BrokerError>& getException();
-        virtual void setException( const Pointer<BrokerError>& exception );
+        virtual void setException(const Pointer<BrokerError>& exception);
 
         virtual const Pointer<ConnectionId>& getConnectionId() const;
         virtual Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
+        virtual void setConnectionId(const Pointer<ConnectionId>& connectionId);
 
         /**
          * @return an answer of true to the isConnectionError() query.

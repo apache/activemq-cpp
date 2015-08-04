@@ -79,14 +79,14 @@ namespace commands {
 
         virtual const Pointer<ConnectionId>& getConnectionId() const;
         virtual Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
+        virtual void setConnectionId(const Pointer<ConnectionId>& connectionId);
 
         virtual const Pointer<TransactionId>& getTransactionId() const;
         virtual Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
+        virtual void setTransactionId(const Pointer<TransactionId>& transactionId);
 
         virtual unsigned char getType() const;
-        virtual void setType( unsigned char type );
+        virtual void setType(unsigned char type);
 
         /**
          * @return an answer of true to the isTransactionInfo() query.

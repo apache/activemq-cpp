@@ -47,6 +47,8 @@ namespace util {
                         public virtual decaf::util::AbstractCollection<E> {
     public:
 
+        AbstractSet() : AbstractCollection<E>() {}
+
         virtual ~AbstractSet() {}
 
         /**

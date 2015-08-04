@@ -104,7 +104,11 @@ namespace ssl {
          * @throws IOException if an I/O exception occurs while performing this operation.
          * @throws UnknownHostException if the host is unknown.
          */
-        virtual Socket* createSocket( Socket* socket, std::string host, int port, bool autoClose ) = 0;
+        virtual Socket* createSocket(Socket* socket, std::string host, int port, bool autoClose) = 0;
+
+    public:
+
+        using SocketFactory::createSocket;
 
     };
 

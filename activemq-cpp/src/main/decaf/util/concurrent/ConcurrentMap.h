@@ -129,6 +129,10 @@ namespace concurrent {
          */
         virtual V replace( const K& key, const V& value ) = 0;
 
+    public:
+
+        using Map<K, V>::remove;
+
     };
 
 }}}

@@ -75,10 +75,10 @@ namespace commands {
         virtual bool equals(const DataStructure* value) const;
 
         virtual int getFirstNakNumber() const;
-        virtual void setFirstNakNumber( int firstNakNumber );
+        virtual void setFirstNakNumber(int firstNakNumber);
 
         virtual int getLastNakNumber() const;
-        virtual void setLastNakNumber( int lastNakNumber );
+        virtual void setLastNakNumber(int lastNakNumber);
 
         /**
          * @return an answer of true to the isReplayCommand() query.

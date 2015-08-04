@@ -115,7 +115,7 @@ bool DataResponse::equals(const DataStructure* value) const {
     }
 
     if (this->getData() != NULL) {
-        if (!this->getData()->equals( valuePtr->getData().get())) {
+        if (!this->getData()->equals(valuePtr->getData().get())) {
             return false;
         }
     } else if (valuePtr->getData() != NULL) {

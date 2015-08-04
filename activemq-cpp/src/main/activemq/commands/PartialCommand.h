@@ -75,11 +75,11 @@ namespace commands {
         virtual bool equals(const DataStructure* value) const;
 
         virtual int getCommandId() const;
-        virtual void setCommandId( int commandId );
+        virtual void setCommandId(int commandId);
 
         virtual const std::vector<unsigned char>& getData() const;
         virtual std::vector<unsigned char>& getData();
-        virtual void setData( const std::vector<unsigned char>& data );
+        virtual void setData(const std::vector<unsigned char>& data);
 
     };
 
