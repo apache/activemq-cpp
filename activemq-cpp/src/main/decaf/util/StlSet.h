@@ -139,7 +139,7 @@ namespace util {
          * Copy constructor - copies the content of the given set into this one.
          * @param source The source set.
          */
-        StlSet(const StlSet& source) : AbstractSet<E>(), values() {
+        StlSet(const StlSet& source) : AbstractCollection<E>(), AbstractSet<E>(), values() {
             copy(source);
         }
 

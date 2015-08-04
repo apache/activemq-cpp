@@ -50,11 +50,11 @@ void BufferedInputStreamBenchmark::run() {
     std::vector<unsigned char> bucket(bufferSize);
     BufferedInputStream bis(&source);
 
-    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+    for (int iy = 0; iy < numRuns; ++iy) {
         BufferedInputStream local(&source);
     }
 
-    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+    for (int iy = 0; iy < numRuns; ++iy) {
 
         for (int iz = 0; iz < bufferSize; ++iz) {
             bucket[iy] = (unsigned char) bis.read();
@@ -62,7 +62,7 @@ void BufferedInputStreamBenchmark::run() {
         source.reset();
     }
 
-    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+    for (int iy = 0; iy < numRuns; ++iy) {
         bis.read(&bucket[0], bufferSize, 0, bufferSize);
         source.reset();
     }

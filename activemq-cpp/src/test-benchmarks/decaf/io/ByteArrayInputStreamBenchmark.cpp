@@ -63,7 +63,7 @@ void ByteArrayInputStreamBenchmark::run() {
         ByteArrayInputStream local(buffer, bufferSize);
     }
 
-    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+    for (int iy = 0; iy < numRuns; ++iy) {
 
         for (std::size_t iz = 0; iz < bufferSize; ++iz) {
             bucket[iy] = (unsigned char) bis.read();
@@ -71,7 +71,7 @@ void ByteArrayInputStreamBenchmark::run() {
         bis.reset();
     }
 
-    for (std::size_t iy = 0; iy < numRuns; ++iy) {
+    for (int iy = 0; iy < numRuns; ++iy) {
         bis.read(&bucket[0], bufferSize, 0, bufferSize);
         bis.reset();
     }

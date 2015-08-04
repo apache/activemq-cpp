@@ -39,13 +39,16 @@ namespace {
     public:
 
         SimpleList() : AbstractSequentialList<E>(), list() {}
+
         virtual ~SimpleList() {}
 
-        virtual ListIterator<E>* listIterator( int index ) {
-            return list.listIterator( index );
+        using AbstractSequentialList<E>::listIterator;
+
+        virtual ListIterator<E>* listIterator(int index) {
+            return list.listIterator(index);
         }
-        virtual ListIterator<E>* listIterator( int index ) const {
-            return list.listIterator( index );
+        virtual ListIterator<E>* listIterator(int index) const {
+            return list.listIterator(index);
         }
 
         virtual int size() const {
@@ -72,11 +75,11 @@ namespace {
             throw UnsupportedOperationException();
         }
 
-        virtual void add( const E& e ) {
+        virtual void add(const E& e) {
             throw UnsupportedOperationException();
         }
 
-        virtual void set( const E& e ) {
+        virtual void set(const E& e) {
             throw UnsupportedOperationException();
         }
 
@@ -104,10 +107,12 @@ namespace {
 
         virtual ~MockAbstractSequentialList() {}
 
-        virtual ListIterator<E>* listIterator( int index ) {
+        using AbstractSequentialList<E>::listIterator;
+
+        virtual ListIterator<E>* listIterator(int index) {
             return new MockListIterator<E>();
         }
-        virtual ListIterator<E>* listIterator( int index ) const {
+        virtual ListIterator<E>* listIterator(int index) const {
             return new MockListIterator<E>();
         }
 

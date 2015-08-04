@@ -55,20 +55,20 @@ void FailoverTransportTest::testTransportCreate() {
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     transport->close();
 }
@@ -81,21 +81,21 @@ void FailoverTransportTest::testTransportCreateWithBackups() {
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
-    CPPUNIT_ASSERT( failover->isBackup() == true );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+    CPPUNIT_ASSERT(failover->isBackup() == true);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     transport->close();
 }
@@ -106,9 +106,9 @@ public:
 
     bool caughtException;
 
-    FailToConnectListener() : caughtException( false ) {}
+    FailToConnectListener() : caughtException(false) {}
 
-    virtual void onException( const decaf::lang::Exception& ex AMQCPP_UNUSED ) {
+    virtual void onException(const decaf::lang::Exception& ex AMQCPP_UNUSED) {
         caughtException = true;
     }
 };
@@ -117,27 +117,27 @@ public:
 void FailoverTransportTest::testTransportCreateFailOnCreate() {
 
     std::string uri =
-        "failover://(mock://localhost:61616?failOnCreate=true)?useExponentialBackOff=false&maxReconnectAttempts=3&initialReconnectDelay=100";
+            "failover://(mock://localhost:61616?failOnCreate=true)?useExponentialBackOff=false&maxReconnectAttempts=3&initialReconnectDelay=100";
 
     FailToConnectListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 3 );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->getMaxReconnectAttempts() == 3);
 
     transport->start();
 
-    Thread::sleep( 1000 );
+    Thread::sleep(1000);
 
-    CPPUNIT_ASSERT( listener.caughtException == true );
-    CPPUNIT_ASSERT( failover->isConnected() == false );
+    CPPUNIT_ASSERT(listener.caughtException == true);
+    CPPUNIT_ASSERT(failover->isConnected() == false);
 
     transport->close();
 }
@@ -146,31 +146,28 @@ void FailoverTransportTest::testTransportCreateFailOnCreate() {
 void FailoverTransportTest::testTransportCreateFailOnCreateSendMessage() {
 
     std::string uri =
-        "failover://(mock://localhost:61616?failOnCreate=true)?useExponentialBackOff=false&maxReconnectAttempts=3&initialReconnectDelay=100";
+            "failover://(mock://localhost:61616?failOnCreate=true)?useExponentialBackOff=false&maxReconnectAttempts=3&initialReconnectDelay=100";
 
-    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+    Pointer<ActiveMQMessage> message(new ActiveMQMessage());
 
     FailToConnectListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 3 );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->getMaxReconnectAttempts() == 3);
 
     transport->start();
 
-    CPPUNIT_ASSERT_THROW_MESSAGE(
-        "Should Throw a IOException",
-        transport->oneway( message ),
-        IOException );
+    CPPUNIT_ASSERT_THROW_MESSAGE("Should Throw a IOException", transport->oneway(message), IOException);
 
-    CPPUNIT_ASSERT( listener.caughtException == true );
+    CPPUNIT_ASSERT(listener.caughtException == true);
 
     transport->close();
 }
@@ -178,28 +175,27 @@ void FailoverTransportTest::testTransportCreateFailOnCreateSendMessage() {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportTest::testFailingBackupCreation() {
 
-    std::string uri =
-        "failover://(mock://localhost:61616,"
-                    "mock://localhost:61618?failOnCreate=true)?randomize=false&backup=true";
+    std::string uri = "failover://(mock://localhost:61616,"
+            "mock://localhost:61618?failOnCreate=true)?randomize=false&backup=true";
 
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
-    CPPUNIT_ASSERT( failover->isBackup() == true );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+    CPPUNIT_ASSERT(failover->isBackup() == true);
 
     transport->start();
 
-    Thread::sleep( 2000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(2000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     transport->close();
 }
@@ -210,9 +206,9 @@ public:
 
     int numMessages;
 
-    MessageCountingListener() : numMessages( 0 ) {}
+    MessageCountingListener() : numMessages(0) {}
 
-    virtual void onCommand( const Pointer<Command>& command AMQCPP_UNUSED ) {
+    virtual void onCommand(const Pointer<Command> command AMQCPP_UNUSED) {
         numMessages++;
     }
 };
@@ -223,40 +219,40 @@ void FailoverTransportTest::testSendOnewayMessage() {
     std::string uri = "failover://(mock://localhost:61616)?randomize=false";
 
     const int numMessages = 1000;
-    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+    Pointer<ActiveMQMessage> message(new ActiveMQMessage());
 
     MessageCountingListener messageCounter;
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     MockTransport* mock = NULL;
-    while( mock == NULL ) {
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    while (mock == NULL) {
+        mock = dynamic_cast<MockTransport*>(transport->narrow(typeid(MockTransport)));
     }
-    mock->setOutgoingListener( &messageCounter );
+    mock->setOutgoingListener(&messageCounter);
 
-    for( int i = 0; i < numMessages; ++i ) {
-        transport->oneway( message );
+    for (int i = 0; i < numMessages; ++i) {
+        transport->oneway(message);
     }
 
-    Thread::sleep( 2000 );
+    Thread::sleep(2000);
 
-    CPPUNIT_ASSERT( messageCounter.numMessages = numMessages );
+    CPPUNIT_ASSERT(messageCounter.numMessages = numMessages);
 
     transport->close();
 }
@@ -266,40 +262,40 @@ void FailoverTransportTest::testSendRequestMessage() {
 
     std::string uri = "failover://(mock://localhost:61616)?randomize=false";
 
-    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+    Pointer<ActiveMQMessage> message(new ActiveMQMessage());
 
     MessageCountingListener messageCounter;
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     MockTransport* mock = NULL;
-    while( mock == NULL ) {
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    while (mock == NULL) {
+        mock = dynamic_cast<MockTransport*>(transport->narrow(typeid(MockTransport)));
     }
-    mock->setOutgoingListener( &messageCounter );
+    mock->setOutgoingListener(&messageCounter);
 
-    transport->request( message );
-    transport->request( message );
-    transport->request( message );
-    transport->request( message );
-    Thread::sleep( 1000 );
+    transport->request(message);
+    transport->request(message);
+    transport->request(message);
+    transport->request(message);
+    Thread::sleep(1000);
 
-    CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
+    CPPUNIT_ASSERT(messageCounter.numMessages = 4);
 
     transport->close();
 }
@@ -307,44 +303,43 @@ void FailoverTransportTest::testSendRequestMessage() {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportTest::testSendOnewayMessageFail() {
 
-    std::string uri =
-        "failover://(mock://localhost:61616?failOnSendMessage=true,"
-                    "mock://localhost:61618)?randomize=false";
+    std::string uri = "failover://(mock://localhost:61616?failOnSendMessage=true,"
+            "mock://localhost:61618)?randomize=false";
 
-    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+    Pointer<ActiveMQMessage> message(new ActiveMQMessage());
 
     MessageCountingListener messageCounter;
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     MockTransport* mock = NULL;
-    while( mock == NULL ) {
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    while (mock == NULL) {
+        mock = dynamic_cast<MockTransport*>(transport->narrow(typeid(MockTransport)));
     }
-    mock->setOutgoingListener( &messageCounter );
+    mock->setOutgoingListener(&messageCounter);
 
-    transport->oneway( message );
-    transport->oneway( message );
-    transport->oneway( message );
-    transport->oneway( message );
-    Thread::sleep( 1000 );
+    transport->oneway(message);
+    transport->oneway(message);
+    transport->oneway(message);
+    transport->oneway(message);
+    Thread::sleep(1000);
 
-    CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
+    CPPUNIT_ASSERT(messageCounter.numMessages = 4);
 
     transport->close();
 }
@@ -352,44 +347,43 @@ void FailoverTransportTest::testSendOnewayMessageFail() {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportTest::testSendRequestMessageFail() {
 
-    std::string uri =
-        "failover://(mock://localhost:61616?failOnSendMessage=true,"
-                    "mock://localhost:61618)?randomize=false";
+    std::string uri = "failover://(mock://localhost:61616?failOnSendMessage=true,"
+            "mock://localhost:61618)?randomize=false";
 
-    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+    Pointer<ActiveMQMessage> message(new ActiveMQMessage());
 
     MessageCountingListener messageCounter;
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     MockTransport* mock = NULL;
-    while( mock == NULL ) {
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    while (mock == NULL) {
+        mock = dynamic_cast<MockTransport*>(transport->narrow(typeid(MockTransport)));
     }
-    mock->setOutgoingListener( &messageCounter );
+    mock->setOutgoingListener(&messageCounter);
 
-    transport->request( message );
-    transport->request( message );
-    transport->request( message );
-    transport->request( message );
-    Thread::sleep( 1000 );
+    transport->request(message);
+    transport->request(message);
+    transport->request(message);
+    transport->request(message);
+    Thread::sleep(1000);
 
-    CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
+    CPPUNIT_ASSERT(messageCounter.numMessages = 4);
 
     transport->close();
 }
@@ -402,52 +396,52 @@ void FailoverTransportTest::testWithOpewireCommands() {
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     Pointer<ConnectionInfo> connection = createConnection();
-    transport->request( connection );
-    Pointer<SessionInfo> session1 = createSession( connection );
-    transport->request( session1 );
-    Pointer<SessionInfo> session2 = createSession( connection );
-    transport->request( session2 );
-    Pointer<ConsumerInfo> consumer1 = createConsumer( session1 );
-    transport->request( consumer1 );
-    Pointer<ConsumerInfo> consumer2 = createConsumer( session1 );
-    transport->request( consumer2 );
-    Pointer<ConsumerInfo> consumer3 = createConsumer( session2 );
-    transport->request( consumer3 );
+    transport->request(connection);
+    Pointer<SessionInfo> session1 = createSession(connection);
+    transport->request(session1);
+    Pointer<SessionInfo> session2 = createSession(connection);
+    transport->request(session2);
+    Pointer<ConsumerInfo> consumer1 = createConsumer(session1);
+    transport->request(consumer1);
+    Pointer<ConsumerInfo> consumer2 = createConsumer(session1);
+    transport->request(consumer2);
+    Pointer<ConsumerInfo> consumer3 = createConsumer(session2);
+    transport->request(consumer3);
 
-    Pointer<ProducerInfo> producer1 = createProducer( session2 );
-    transport->request( producer1 );
+    Pointer<ProducerInfo> producer1 = createProducer(session2);
+    transport->request(producer1);
 
     // Remove the Producers
-    this->disposeOf( producer1, transport );
+    this->disposeOf(producer1, transport);
 
     // Remove the Consumers
-    this->disposeOf( consumer1, transport );
-    this->disposeOf( consumer2, transport );
-    this->disposeOf( consumer3, transport );
+    this->disposeOf(consumer1, transport);
+    this->disposeOf(consumer2, transport);
+    this->disposeOf(consumer3, transport);
 
     // Remove the Session instances.
-    this->disposeOf( session1, transport );
-    this->disposeOf( session2, transport );
+    this->disposeOf(session1, transport);
+    this->disposeOf(session2, transport);
 
     // Indicate that we are done.
-    Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
-    transport->oneway( shutdown );
+    Pointer<ShutdownInfo> shutdown(new ShutdownInfo());
+    transport->oneway(shutdown);
 
     transport->close();
 }
@@ -455,141 +449,137 @@ void FailoverTransportTest::testWithOpewireCommands() {
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<ConnectionInfo> FailoverTransportTest::createConnection() {
 
-    Pointer<ConnectionId> id( new ConnectionId() );
-    id->setValue( UUID::randomUUID().toString() );
+    Pointer<ConnectionId> id(new ConnectionId());
+    id->setValue(UUID::randomUUID().toString());
 
-    Pointer<ConnectionInfo> info( new ConnectionInfo() );
-    info->setClientId( UUID::randomUUID().toString() );
-    info->setConnectionId( id );
+    Pointer<ConnectionInfo> info(new ConnectionInfo());
+    info->setClientId(UUID::randomUUID().toString());
+    info->setConnectionId(id);
 
     return info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<SessionInfo> FailoverTransportTest::createSession( const Pointer<ConnectionInfo>& parent ) {
+Pointer<SessionInfo> FailoverTransportTest::createSession(const Pointer<ConnectionInfo>& parent) {
 
     static int idx = 1;
 
-    Pointer<SessionId> id( new SessionId() );
-    id->setConnectionId( parent->getConnectionId()->getValue() );
-    id->setValue( idx++ );
+    Pointer<SessionId> id(new SessionId());
+    id->setConnectionId(parent->getConnectionId()->getValue());
+    id->setValue(idx++);
 
-    Pointer<SessionInfo> info( new SessionInfo() );
-    info->setSessionId( id );
+    Pointer<SessionInfo> info(new SessionInfo());
+    info->setSessionId(id);
 
     return info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<ConsumerInfo> FailoverTransportTest::createConsumer( const Pointer<SessionInfo>& parent ) {
+Pointer<ConsumerInfo> FailoverTransportTest::createConsumer(const Pointer<SessionInfo>& parent) {
 
     static int idx = 1;
 
-    Pointer<ConsumerId> id( new ConsumerId() );
-    id->setConnectionId( parent->getSessionId()->getConnectionId() );
-    id->setSessionId( parent->getSessionId()->getValue() );
-    id->setValue( idx++ );
+    Pointer<ConsumerId> id(new ConsumerId());
+    id->setConnectionId(parent->getSessionId()->getConnectionId());
+    id->setSessionId(parent->getSessionId()->getValue());
+    id->setValue(idx++);
 
-    Pointer<ConsumerInfo> info( new ConsumerInfo() );
-    info->setConsumerId( id );
+    Pointer<ConsumerInfo> info(new ConsumerInfo());
+    info->setConsumerId(id);
 
     return info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<ProducerInfo> FailoverTransportTest::createProducer( const Pointer<SessionInfo>& parent ) {
+Pointer<ProducerInfo> FailoverTransportTest::createProducer(const Pointer<SessionInfo>& parent) {
 
     static int idx = 1;
 
-    Pointer<ProducerId> id( new ProducerId() );
-    id->setConnectionId( parent->getSessionId()->getConnectionId() );
-    id->setSessionId( parent->getSessionId()->getValue() );
-    id->setValue( idx++ );
+    Pointer<ProducerId> id(new ProducerId());
+    id->setConnectionId(parent->getSessionId()->getConnectionId());
+    id->setSessionId(parent->getSessionId()->getValue());
+    id->setValue(idx++);
 
-    Pointer<ProducerInfo> info( new ProducerInfo() );
-    info->setProducerId( id );
+    Pointer<ProducerInfo> info(new ProducerInfo());
+    info->setProducerId(id);
 
     return info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransportTest::disposeOf( const Pointer<SessionInfo>& session,
-                                       Pointer<Transport>& transport ) {
+void FailoverTransportTest::disposeOf(const Pointer<SessionInfo>& session, Pointer<Transport>& transport) {
 
-    Pointer<RemoveInfo> command( new RemoveInfo() );
-    command->setObjectId( session->getSessionId() );
-    transport->oneway( command );
+    Pointer<RemoveInfo> command(new RemoveInfo());
+    command->setObjectId(session->getSessionId());
+    transport->oneway(command);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransportTest::disposeOf( const Pointer<ConsumerInfo>& consumer,
-                                       Pointer<Transport>& transport ) {
+void FailoverTransportTest::disposeOf(const Pointer<ConsumerInfo>& consumer, Pointer<Transport>& transport) {
 
-    Pointer<RemoveInfo> command( new RemoveInfo() );
-    command->setObjectId( consumer->getConsumerId() );
-    transport->oneway( command );
+    Pointer<RemoveInfo> command(new RemoveInfo());
+    command->setObjectId(consumer->getConsumerId());
+    transport->oneway(command);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransportTest::disposeOf( const Pointer<ProducerInfo>& producer,
-                                       Pointer<Transport>& transport ) {
+void FailoverTransportTest::disposeOf(const Pointer<ProducerInfo>& producer, Pointer<Transport>& transport) {
 
-    Pointer<RemoveInfo> command( new RemoveInfo() );
-    command->setObjectId( producer->getProducerId() );
-    transport->oneway( command );
+    Pointer<RemoveInfo> command(new RemoveInfo());
+    command->setObjectId(producer->getProducerId());
+    transport->oneway(command);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportTest::testTransportHandlesConnectionControl() {
 
-    std::string uri =
-        "failover://(mock://localhost:61618?failOnCreate=true,mock://localhost:61616)?randomize=false";
+    std::string uri = "failover://(mock://localhost:61618?failOnCreate=true,mock://localhost:61616)?randomize=false";
 
     std::string reconnectStr = "mock://localhost:61613?name=Reconnect";
 
-    Pointer<ConnectionControl> control( new ConnectionControl() );
-    control->setReconnectTo( reconnectStr );
-    control->setRebalanceConnection( true );
+    Pointer<ConnectionControl> control(new ConnectionControl());
+    control->setReconnectTo(reconnectStr);
+    control->setRebalanceConnection(true);
 
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
     failover->setUpdateURIsSupported(true);
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
-    Thread::sleep( 3000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
+    Thread::sleep(3000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
 
     MockTransport* mock = NULL;
-    while( mock == NULL ) {
-        Thread::sleep( 100 );
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    while (mock == NULL) {
+        Thread::sleep(100);
+        mock = dynamic_cast<MockTransport*>(transport->narrow(typeid(MockTransport)));
     }
 
     LinkedList<URI> removals;
-    removals.add( URI("mock://localhost:61616") );
+    removals.add(URI("mock://localhost:61616"));
 
-    mock->fireCommand( control );
-    Thread::sleep( 2000 );
-    failover->removeURI( true, removals );
+    mock->fireCommand(control);
+    Thread::sleep(2000);
+    failover->removeURI(true, removals);
 
-    Thread::sleep( 20000 );
+    Thread::sleep(20000);
 
     mock = NULL;
-    while( mock == NULL ) {
-        Thread::sleep( 100 );
-        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    while (mock == NULL) {
+        Thread::sleep(100);
+        mock = dynamic_cast<MockTransport*>(transport->narrow(typeid(MockTransport)));
     }
 
     CPPUNIT_ASSERT_EQUAL(std::string("Reconnect"), mock->getName());
@@ -599,27 +589,27 @@ void FailoverTransportTest::testTransportHandlesConnectionControl() {
 void FailoverTransportTest::testPriorityBackupConfig() {
 
     std::string uri = "failover://(mock://localhost:61616,"
-                                  "mock://localhost:61618)?randomize=false&priorityBackup=true";
+                      "mock://localhost:61618)?randomize=false&priorityBackup=true";
 
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
-    CPPUNIT_ASSERT( failover->isPriorityBackup() == true );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+    CPPUNIT_ASSERT(failover->isPriorityBackup() == true);
 
     transport->start();
 
-    Thread::sleep( 1000 );
-    CPPUNIT_ASSERT( failover->isConnected() == true );
-    CPPUNIT_ASSERT( failover->isConnectedToPriority() == true );
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == true);
 
     transport->close();
 }
@@ -645,28 +635,28 @@ void FailoverTransportTest::testUriOptionsApplied() {
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == true );
-    CPPUNIT_ASSERT( failover->isPriorityBackup() == true );
-    CPPUNIT_ASSERT( failover->isUseExponentialBackOff() == false );
-    CPPUNIT_ASSERT( failover->getInitialReconnectDelay() == 222 );
-    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 27 );
-    CPPUNIT_ASSERT( failover->getStartupMaxReconnectAttempts() == 44 );
-    CPPUNIT_ASSERT( failover->isBackup() == true );
-    CPPUNIT_ASSERT( failover->isTrackMessages() == false );
-    CPPUNIT_ASSERT( failover->getMaxCacheSize() == 16543217 );
-    CPPUNIT_ASSERT( failover->isUpdateURIsSupported() == false );
-    CPPUNIT_ASSERT( failover->getMaxReconnectDelay() == 55555 );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == true);
+    CPPUNIT_ASSERT(failover->isPriorityBackup() == true);
+    CPPUNIT_ASSERT(failover->isUseExponentialBackOff() == false);
+    CPPUNIT_ASSERT(failover->getInitialReconnectDelay() == 222);
+    CPPUNIT_ASSERT(failover->getMaxReconnectAttempts() == 27);
+    CPPUNIT_ASSERT(failover->getStartupMaxReconnectAttempts() == 44);
+    CPPUNIT_ASSERT(failover->isBackup() == true);
+    CPPUNIT_ASSERT(failover->isTrackMessages() == false);
+    CPPUNIT_ASSERT(failover->getMaxCacheSize() == 16543217);
+    CPPUNIT_ASSERT(failover->isUpdateURIsSupported() == false);
+    CPPUNIT_ASSERT(failover->getMaxReconnectDelay() == 55555);
 
     const List<URI>& priorityUris = failover->getPriorityURIs();
-    CPPUNIT_ASSERT( priorityUris.size() == 2 );
+    CPPUNIT_ASSERT(priorityUris.size() == 2);
 
     transport->close();
 }
@@ -681,29 +671,29 @@ void FailoverTransportTest::testConnectedToMockBroker() {
     broker1.waitUntilStarted();
 
     std::string uri = "failover://(tcp://localhost:61626,"
-                                  "tcp://localhost:61628)?randomize=false";
+            "tcp://localhost:61628)?randomize=false";
 
     DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
-    Pointer<Transport> transport( factory.create( uri ) );
-    CPPUNIT_ASSERT( transport != NULL );
-    transport->setTransportListener( &listener );
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
 
-    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
-        transport->narrow( typeid( FailoverTransport ) ) );
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
 
-    CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
 
     transport->start();
 
     int count = 0;
     while (!failover->isConnected() && count++ < 20) {
-        Thread::sleep( 200 );
+        Thread::sleep(200);
     }
-    CPPUNIT_ASSERT( failover->isConnected() == true );
-    CPPUNIT_ASSERT( failover->isConnectedToPriority() == false );
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == false);
 
     transport->close();
 

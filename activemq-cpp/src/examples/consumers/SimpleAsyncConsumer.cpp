@@ -62,15 +62,15 @@ private:
 
 private:
 
-    SimpleAsyncConsumer( const SimpleAsyncConsumer& );
-    SimpleAsyncConsumer& operator= ( const SimpleAsyncConsumer& );
+    SimpleAsyncConsumer(const SimpleAsyncConsumer&);
+    SimpleAsyncConsumer& operator=(const SimpleAsyncConsumer&);
 
 public:
 
-    SimpleAsyncConsumer( const std::string& brokerURI,
-                         const std::string& destURI,
-                         bool useTopic = false,
-                         bool clientAck = false ) :
+    SimpleAsyncConsumer(const std::string& brokerURI,
+                        const std::string& destURI,
+                        bool useTopic = false,
+                        bool clientAck = false) :
         connection(NULL),
         session(NULL),
         destination(NULL),
@@ -94,16 +94,15 @@ public:
         try {
 
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory* connectionFactory =
-                new ActiveMQConnectionFactory( brokerURI );
+            ActiveMQConnectionFactory* connectionFactory = new ActiveMQConnectionFactory(brokerURI);
 
             // Create a Connection
             connection = connectionFactory->createConnection();
             delete connectionFactory;
 
-            ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>( connection );
-            if( amqConnection != NULL ) {
-                amqConnection->addTransportListener( this );
+            ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>(connection);
+            if (amqConnection != NULL) {
+                amqConnection->addTransportListener(this);
             }
 
             connection->start();
@@ -111,22 +110,22 @@ public:
             connection->setExceptionListener(this);
 
             // Create a Session
-            if( clientAck ) {
-                session = connection->createSession( Session::CLIENT_ACKNOWLEDGE );
+            if (clientAck) {
+                session = connection->createSession(Session::CLIENT_ACKNOWLEDGE);
             } else {
-                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+                session = connection->createSession(Session::AUTO_ACKNOWLEDGE);
             }
 
             // Create the destination (Topic or Queue)
-            if( useTopic ) {
-                destination = session->createTopic( destURI );
+            if (useTopic) {
+                destination = session->createTopic(destURI);
             } else {
-                destination = session->createQueue( destURI );
+                destination = session->createQueue(destURI);
             }
 
             // Create a MessageConsumer from the Session to the Topic or Queue
-            consumer = session->createConsumer( destination );
-            consumer->setMessageListener( this );
+            consumer = session->createConsumer(destination);
+            consumer->setMessageListener(this);
 
         } catch (CMSException& e) {
             e.printStackTrace();
@@ -134,28 +133,26 @@ public:
     }
 
     // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ) {
+    virtual void onMessage(const Message* message) {
 
         static int count = 0;
 
-        try
-        {
+        try {
             count++;
-            const TextMessage* textMessage =
-                dynamic_cast< const TextMessage* >( message );
+            const TextMessage* textMessage = dynamic_cast<const TextMessage*>(message);
             string text = "";
 
-            if( textMessage != NULL ) {
+            if (textMessage != NULL) {
                 text = textMessage->getText();
             } else {
                 text = "NOT A TEXTMESSAGE!";
             }
 
-            if( clientAck ) {
+            if (clientAck) {
                 message->acknowledge();
             }
 
-            printf( "Message #%d Received: %s\n", count, text.c_str() );
+            printf("Message #%d Received: %s\n", count, text.c_str());
         } catch (CMSException& e) {
             e.printStackTrace();
         }
@@ -163,9 +160,13 @@ public:
 
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
-    virtual void onException( const CMSException& ex AMQCPP_UNUSED ) {
+    virtual void onException(const CMSException& ex AMQCPP_UNUSED) {
         printf("CMS Exception occurred.  Shutting down client.\n");
         exit(1);
+    }
+
+    virtual void onException(const decaf::lang::Exception& ex) {
+        printf("Transport Exception occurred: %s \n", ex.getMessage().c_str());
     }
 
     virtual void transportInterrupted() {

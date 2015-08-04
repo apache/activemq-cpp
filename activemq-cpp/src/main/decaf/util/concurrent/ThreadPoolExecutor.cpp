@@ -201,7 +201,7 @@ namespace concurrent{
 
          protected:
 
-            virtual bool isHeldExclusively() {
+            virtual bool isHeldExclusively() const {
                 return getState() == 1;
             }
 

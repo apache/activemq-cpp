@@ -63,9 +63,11 @@ namespace {
 
         SuspendedCompletionCondition(ThreadHandle* thread) : thread(thread) {}
 
-        bool operator()() {
+        virtual bool operator()() {
             return !thread->suspended;
         }
+
+        using CompletionCondition::operator();
     };
 
     class MonitorWaitCompletionCondition : public CompletionCondition {
@@ -1104,6 +1106,9 @@ namespace {
 
             return false;
         }
+
+        using CompletionCondition::operator();
+
     };
 }
 
@@ -1219,6 +1224,9 @@ namespace {
 
             return false;
         }
+
+        using CompletionCondition::operator();
+
     };
 }
 
@@ -1354,7 +1362,7 @@ namespace {
 
         ParkCompletionCondition(ThreadHandle* handle) : handle(handle) {}
 
-        bool operator()() {
+        virtual bool operator()() {
             if (handle->unparked == true) {
                 handle->unparked = false;
                 return true;
@@ -1364,6 +1372,9 @@ namespace {
 
             return false;
         }
+
+        using CompletionCondition::operator();
+
     };
 }
 

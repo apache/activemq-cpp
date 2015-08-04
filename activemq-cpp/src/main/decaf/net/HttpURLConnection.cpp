@@ -117,7 +117,7 @@ std::string HttpURLConnection::getResponseMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void HttpURLConnection::setRequestMethod(const std::string& method) {
+void HttpURLConnection::setRequestMethod(const std::string& method DECAF_UNUSED) {
     if (connected) {
         throw ProtocolException(__FILE__, __LINE__, "Connection already established");
     }

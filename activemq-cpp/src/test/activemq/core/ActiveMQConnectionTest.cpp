@@ -63,6 +63,10 @@ namespace core {
 
         virtual ~MyCommandListener() {}
 
+        virtual void onCommand(const Pointer<Command> command) {
+            cmd = command.get();
+        }
+
         virtual void onCommand(commands::Command* command) {
             cmd = command;
         }

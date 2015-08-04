@@ -42,6 +42,8 @@ namespace {
             return NULL;
         }
 
+        using URLStreamHandler::openConnection;
+
     public:
 
         void parse(URL& url, const String& spec, int start, int end) {
