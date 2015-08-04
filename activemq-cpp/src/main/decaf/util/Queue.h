@@ -122,6 +122,10 @@ namespace util{
          */
         virtual E element() const = 0;
 
+    public:
+
+        using decaf::util::Collection<E>::remove;
+
     };
 
 }}
