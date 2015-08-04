@@ -39,7 +39,6 @@ void BufferedInputStreamBenchmark::setUp() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStreamBenchmark::tearDown() {
-
     delete[] buffer;
 }
 

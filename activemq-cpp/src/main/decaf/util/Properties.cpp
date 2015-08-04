@@ -428,8 +428,8 @@ void Properties::load(decaf::io::InputStream* stream) {
                             }
                             std::string temp(buf.begin(), buf.begin() + offset);
 
-                            this->internal->properties.put(temp.substr(
-                                0, keyLength), temp.substr(keyLength));
+                            this->internal->properties.put(
+                                temp.substr(0, (std::size_t) keyLength), temp.substr((std::size_t) keyLength));
                         }
 
                         keyLength = -1;
@@ -451,7 +451,8 @@ void Properties::load(decaf::io::InputStream* stream) {
                         }
                         break;
                 }
-                if( Character::isWhitespace( nextChar ) ) {
+
+                if (Character::isWhitespace(nextChar)) {
                     if (mode == PARSE_MODE_CONTINUE) {
                         mode = PARSE_MODE_IGNORE;
                     }
@@ -486,7 +487,8 @@ void Properties::load(decaf::io::InputStream* stream) {
 
         if (keyLength >= 0) {
             std::string temp(buf.begin(), buf.begin() + offset);
-            this->internal->properties.put(temp.substr(0, keyLength), temp.substr(keyLength));
+            this->internal->properties.put(
+                temp.substr(0, (std::size_t) keyLength), temp.substr((std::size_t) keyLength));
         }
     }
     DECAF_CATCH_RETHROW(IOException)

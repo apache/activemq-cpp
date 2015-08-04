@@ -149,7 +149,7 @@ namespace util {
     template<>
     struct HashCode<long long> : public HashCodeUnaryBase<long long> {
         int operator()(long long arg) const {
-            return (int) (arg ^ ((unsigned long long) arg >> 32));
+            return (int) ((unsigned long long) arg ^ ((unsigned long long) arg >> 32));
         }
     };
 
@@ -164,7 +164,7 @@ namespace util {
     struct HashCode<double> : public HashCodeUnaryBase<double> {
         int operator()(double arg) const {
             long long value = decaf::lang::Double::doubleToLongBits(arg);
-            return (int) (value ^ ((unsigned long long) value >> 32));
+            return (int) ((unsigned long long) value ^ ((unsigned long long) value >> 32));
         }
     };
 

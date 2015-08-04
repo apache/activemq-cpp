@@ -411,7 +411,7 @@ const Map<string, string>& System::getenv() {
         } else if (tokens > 2) {
             // special case: first equals delimits the key value, the rest are
             // part of the variable
-            int pos = (int) env[i].find("=");
+            std::size_t pos = env[i].find("=");
             key = env[i].substr(0, pos);
             value = env[i].substr(pos + 1, string::npos);
         } else if (tokens == 0) {

@@ -497,8 +497,8 @@ namespace concurrent {
                 this->arrayLock.readLock().unlock();
                 throw;
             }
-            std::vector<E> result( current->size );
-            for( int i = 0; i < current->size; ++i ) {
+            std::vector<E> result((std::size_t) current->size);
+            for (int i = 0; i < current->size; ++i) {
                 result[i] = current->elements[i];
             }
 
