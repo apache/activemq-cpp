@@ -151,7 +151,7 @@ namespace kernels {
         virtual bool iterate();
 
         /**
-         * @returns a vector containing all the unconsumed messages, this clears the
+         * @return a vector containing all the unconsumed messages, this clears the
          *          Message Dispatch Channel when called.
          */
         std::vector< Pointer<MessageDispatch> > getUnconsumedMessages() {

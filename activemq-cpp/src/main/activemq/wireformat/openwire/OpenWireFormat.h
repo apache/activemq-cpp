@@ -126,7 +126,7 @@ namespace marshal {
          * stream passed.
          * @param object - The DataStructure to marshal
          * @param bs - the BooleanStream to write to
-         * @returns size of the data returned.
+         * @return size of the data returned.
          */
         virtual int tightMarshalNestedObject1(commands::DataStructure* object, utils::BooleanStream* bs);
 
@@ -147,7 +147,7 @@ namespace marshal {
          * returned is now the property of the caller.
          * @param dis - DataInputStream to read from
          * @param bs - BooleanStream to read from
-         * @returns Newly allocated DataStructure Object
+         * @return Newly allocated DataStructure Object
          * @throws IOException if an error occurs.
          */
         commands::DataStructure* tightUnmarshalNestedObject(decaf::io::DataInputStream* dis, utils::BooleanStream* bs);
@@ -158,7 +158,7 @@ namespace marshal {
          * the Data and construct a new DataStructure based Object, the
          * pointer to the Object returned is now owned by the caller.
          * @param dis - the DataInputStream to read the data from
-         * @returns a new DataStructure derived Object pointer
+         * @return a new DataStructure derived Object pointer
          * @throws IOException if an error occurs.
          */
         commands::DataStructure* looseUnmarshalNestedObject(decaf::io::DataInputStream* dis);
@@ -368,7 +368,7 @@ namespace marshal {
          * @param dis
          *      The DataInputStream to read from.
          *
-         * @returns new DataStructure* that the caller owns.
+         * @return new DataStructure* that the caller owns.
          *
          * @throws IOException if an error occurs during the unmarshal.
          */

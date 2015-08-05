@@ -45,7 +45,7 @@ namespace discovery {
          * @param agentURI
          *      The URI that describes the agent and any requested configuration changes.
          *
-         * @returns a new DiscoveryAgent instance with all URI options applied.
+         * @return a new DiscoveryAgent instance with all URI options applied.
          */
         virtual decaf::lang::Pointer<DiscoveryAgent> createAgent(const decaf::net::URI& agentURI);
 
@@ -57,7 +57,7 @@ namespace discovery {
          * After this method is called by createAgent the configuration method will be invoked to
          * allow the URI options to be applied.
          *
-         * @returns a Pointer to the newly created discovery agent instance.
+         * @return a Pointer to the newly created discovery agent instance.
          *
          * @throws ActiveMQException if an error occurs while creating the agent.
          */

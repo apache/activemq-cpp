@@ -143,7 +143,7 @@ namespace commands{
          *
          *   Pointer<cms::Message> cmsMsg = message->copy().dynamic_cast<cms::Message>();
          *
-         * @returns a Pointer<Message> which is a duplicate of this object.
+         * @return a Pointer<Message> which is a duplicate of this object.
          */
         Pointer<Message> copy() const {
             return Pointer<Message>(this->cloneDataStructure());
@@ -167,7 +167,7 @@ namespace commands{
         /**
          * Indicates that this command is aware of Marshaling, and needs
          * to have its Marshaling methods invoked.
-         * @returns boolean indicating desire to be in marshaling stages
+         * @return boolean indicating desire to be in marshaling stages
          */
         virtual bool isMarshalAware() const {
             return true;
@@ -185,7 +185,7 @@ namespace commands{
         /**
          * Gets the Acknowledgment Handler that this Message will use
          * when the Acknowledge method is called.
-         * @returns handler ActiveMQAckHandler to call or NULL if not set
+         * @return handler ActiveMQAckHandler to call or NULL if not set
          */
         virtual Pointer<core::ActiveMQAckHandler> getAckHandler() const {
             return this->ackHandler;
@@ -203,7 +203,7 @@ namespace commands{
         /**
          * Gets the ActiveMQConnection instance that this Command was created from
          * when the session create methods are called to create a Message..
-         * @returns the ActiveMQConnection parent for this Message or NULL if not set.
+         * @return the ActiveMQConnection parent for this Message or NULL if not set.
          */
         core::ActiveMQConnection* getConnection() const {
             return this->connection;
@@ -211,14 +211,14 @@ namespace commands{
 
         /**
          * Returns the Size of this message in Bytes.
-         * @returns number of bytes this message equates to.
+         * @return number of bytes this message equates to.
          */
         virtual unsigned int getSize() const;
 
         /**
          * Returns if this message has expired, meaning that its
          * Expiration time has elapsed.
-         * @returns true if message is expired.
+         * @return true if message is expired.
          */
         virtual bool isExpired() const;
 

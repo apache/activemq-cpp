@@ -79,7 +79,7 @@ namespace lang {
 
         /**
          * @param l - the Long object to compare against.
-         * @returns true if the two Integer Objects have the same value.
+         * @return true if the two Integer Objects have the same value.
          */
         bool equals(const Long& l) const {
             return this->value == l.value;
@@ -116,7 +116,7 @@ namespace lang {
 
         /**
          * @param l - the Long object to compare against.
-         * @returns true if the two Integer Objects have the same value.
+         * @return true if the two Integer Objects have the same value.
          */
         bool equals(const long long& l) const {
             return this->value == l;
@@ -142,7 +142,7 @@ namespace lang {
         }
 
         /**
-         * @returns this Long Object as a String Representation
+         * @return this Long Object as a String Representation
          */
         std::string toString() const;
 
@@ -218,7 +218,7 @@ namespace lang {
          * character of the specified String is the minus sign. No whitespace
          * characters are permitted in the string.
          * @param value - The string to decode
-         * @returns a Long object containing the decoded value
+         * @return a Long object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
         static Long decode(const String& value);
@@ -319,7 +319,7 @@ namespace lang {
          * Returns the value obtained by reversing the order of the bits in the
          * two's complement binary representation of the specified long long value.
          * @param value - the value whose bits are to be reversed
-         * @returns the reversed bits long long.
+         * @return the reversed bits long long.
          */
         static long long reverse(long long value);
 
@@ -398,7 +398,7 @@ namespace lang {
          *
          * @param value - the long long to convert to a string
          * @param radix - the radix to format the string in
-         * @returns an long long formatted to the string value of the radix given.
+         * @return an long long formatted to the string value of the radix given.
          */
         static std::string toString(long long value, int radix);
 
@@ -419,7 +419,7 @@ namespace lang {
          * If uppercase letters are desired, the toUpperCase() method may be called
          * on the result:
          * @param value - the long long to be translated to an Octal string
-         * @returns the unsigned long long value as a Octal string
+         * @return the unsigned long long value as a Octal string
          */
         static std::string toHexString(long long value);
 
@@ -439,7 +439,7 @@ namespace lang {
          *      01234567
          *
          * @param value - the long long to be translated to an Octal string
-         * @returns the unsigned long long value as a Octal string
+         * @return the unsigned long long value as a Octal string
          */
         static std::string toOctalString(long long value);
 
@@ -456,7 +456,7 @@ namespace lang {
          * The characters '0' and '1' are used as binary
          * digits.
          * @param value - the long long to be translated to a binary string
-         * @returns the unsigned long long value as a binary string
+         * @return the unsigned long long value as a binary string
          */
         static std::string toBinaryString(long long value);
 

@@ -91,7 +91,7 @@ namespace lang {
 
         /**
          * @param d - the Double object to compare against.
-         * @returns true if the two Double Objects have the same value.
+         * @return true if the two Double Objects have the same value.
          */
         bool equals(const Double& d) const {
             return this->value == d.value;
@@ -128,7 +128,7 @@ namespace lang {
 
         /**
          * @param d - the Double object to compare against.
-         * @returns true if the two Double Objects have the same value.
+         * @return true if the two Double Objects have the same value.
          */
         bool equals(const double& d) const {
             return this->value == d;
@@ -154,7 +154,7 @@ namespace lang {
         }
 
         /**
-         * @returns this Double Object as a String Representation
+         * @return this Double Object as a String Representation
          */
         std::string toString() const;
 
@@ -207,12 +207,12 @@ namespace lang {
         }
 
         /**
-         * @returns true if the double is equal to positive infinity.
+         * @return true if the double is equal to positive infinity.
          */
         bool isInfinite() const;
 
         /**
-         * @returns true if the double is equal to NaN.
+         * @return true if the double is equal to NaN.
          */
         bool isNaN() const;
 
@@ -225,7 +225,7 @@ namespace lang {
          *        new Double(d1).compareTo(new Double(d2))
          * @param d1 - the first double to compare
          * @param d2 - the second double to compare
-         * @returns the value 0 if d1 is numerically equal to d2; a value less than
+         * @return the value 0 if d1 is numerically equal to d2; a value less than
          * 0 if d1 is numerically less than d2; and a value greater than 0  if d1 is
          * numerically greater than d2.
          */
@@ -251,7 +251,7 @@ namespace lang {
          * same as the argument to doubleToLongBits (except all NaN values are
          * collapsed to a single "canonical" NaN value).
          * @param value - double to be converted
-         * @returns the long long bits that make up the double
+         * @return the long long bits that make up the double
          */
         static long long doubleToLongBits(double value);
 
@@ -278,19 +278,19 @@ namespace lang {
          * longBitsToDouble(long) method, will produce a floating-point value the
          * same as the argument to doubleToRawLongBits.
          * @param value - double to be converted
-         * @returns the long long bits that make up the double
+         * @return the long long bits that make up the double
          */
         static long long doubleToRawLongBits(double value);
 
         /**
          * @param value - The double to check.
-         * @returns true if the double is equal to infinity.
+         * @return true if the double is equal to infinity.
          */
         static bool isInfinite(double value);
 
         /**
          * @param value - The double to check.
-         * @returns true if the double is equal to NaN.
+         * @return true if the double is equal to NaN.
          */
         static bool isNaN(double value);
 
@@ -319,7 +319,7 @@ namespace lang {
          * @param value
          *      The string to parse to an double.
          *
-         * @returns a double parsed from the passed string
+         * @return a double parsed from the passed string
          *
          * @throws NumberFormatException
          */
@@ -357,7 +357,7 @@ namespace lang {
          *        there must be at least one nonzero digit in a subnormal significand.
          *
          * @param value - The double to convert to a string
-         * @returns the Hex formatted double string.
+         * @return the Hex formatted double string.
          */
         static std::string toHexString(double value);
 
@@ -390,7 +390,7 @@ namespace lang {
          *    followed by a representation of n as a decimal integer, as produced
          *    by the method Integer.toString(int).
          * @param value - The double to convert to a string
-         * @returns the formatted double string.
+         * @return the formatted double string.
          */
         static std::string toString(double value);
 
@@ -400,7 +400,7 @@ namespace lang {
          * @param value
          *      The double to wrap.
          *
-         * @returns new Double instance wrapping the primitive value
+         * @return new Double instance wrapping the primitive value
          */
         static Double valueOf(double value);
 
@@ -411,7 +411,7 @@ namespace lang {
          * @param value
          *      The string to parse
          *
-         * @returns a new Double instance wrapping the double parsed from value
+         * @return a new Double instance wrapping the double parsed from value
          *
          * @throws NumberFormatException on error.
          */

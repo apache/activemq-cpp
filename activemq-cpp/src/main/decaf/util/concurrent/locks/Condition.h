@@ -285,7 +285,7 @@ namespace locks {
          *
          * @param nanosTimeout - the maximum time to wait, in nanoseconds
          *
-         * @returns an estimate of the nanosTimeout value minus the time spent waiting upon
+         * @return an estimate of the nanosTimeout value minus the time spent waiting upon
          *          return from this method. A positive value may be used as the argument to
          *          a subsequent call to this method to finish waiting out the desired time.
          *          A value less than or equal to zero indicates that no time remains.
@@ -311,7 +311,7 @@ namespace locks {
          * @param time - the maximum time to wait
          * @param unit - the time unit of the time argument
          *
-         * @returns false if the waiting time detectably elapsed before return from the
+         * @return false if the waiting time detectably elapsed before return from the
          *          method, else true
          *
          * @throws RuntimeException
@@ -383,7 +383,7 @@ namespace locks {
          *
          * @param deadline - the absolute time to wait until
          *
-         * @returns false if the deadline has elapsed upon return, else true
+         * @return false if the deadline has elapsed upon return, else true
          *
          * @throws RuntimeException
          *         if an unexpected error occurs while trying to wait on the Condition.

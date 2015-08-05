@@ -117,7 +117,7 @@ namespace io{
          *
          * The default implementation of this method returns false.
          *
-         * @returns true if this stream instance supports marks
+         * @return true if this stream instance supports marks
          */
         virtual bool markSupported() const {
             return false;
@@ -247,7 +247,7 @@ namespace io{
          * @param num
          *       The number of bytes to skip.
          *
-         * @returns total bytes skipped
+         * @return total bytes skipped
          *
          * @throws IOException if an I/O error occurs.
          * @throws UnsupportedOperationException if the concrete stream class does

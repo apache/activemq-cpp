@@ -65,7 +65,7 @@ namespace transport {
          * @param name
          *        The name of the Factory to find in the Registry.
          *
-         * @returns the Factory registered under the given name.
+         * @return the Factory registered under the given name.
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
@@ -105,7 +105,7 @@ namespace transport {
          * Retrieves a list of the names of all the Registered Transport's in this
          * Registry.
          *
-         * @returns stl vector of strings with all the Transport names registered.
+         * @return stl vector of strings with all the Transport names registered.
          */
         std::vector<std::string> getTransportNames() const;
 

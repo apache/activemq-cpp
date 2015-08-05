@@ -81,7 +81,7 @@ namespace lang{
 
         /**
          * @param i - the Integer object to compare against.
-         * @returns true if the two Integer Objects have the same value.
+         * @return true if the two Integer Objects have the same value.
          */
         bool equals(const Integer& i) const {
             return this->value == i.value;
@@ -118,7 +118,7 @@ namespace lang{
 
         /**
          * @param i - the Integer object to compare against.
-         * @returns true if the two Integer Objects have the same value.
+         * @return true if the two Integer Objects have the same value.
          */
         bool equals(const int& i) const {
             return this->value == i;
@@ -144,7 +144,7 @@ namespace lang{
         }
 
         /**
-         * @returns this <code>Integer</code> Object as a String Representation
+         * @return this <code>Integer</code> Object as a String Representation
          */
         std::string toString() const;
 
@@ -211,7 +211,7 @@ namespace lang{
          * character of the specified String is the minus sign. No whitespace
          * characters are permitted in the string.
          * @param value - The string to decode
-         * @returns a Integer object containing the decoded value
+         * @return a Integer object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
         static Integer decode(const String& value);
@@ -228,7 +228,7 @@ namespace lang{
          * Returns the value obtained by reversing the order of the bits in the
          * two's complement binary representation of the specified int  value.
          * @param value - the value whose bits are to be reversed
-         * @returns the reversed bits int.
+         * @return the reversed bits int.
          */
         static int reverse(int value);
 
@@ -268,7 +268,7 @@ namespace lang{
          * @param s
          *      String to convert to a int
          *
-         * @returns the converted int value
+         * @return the converted int value
          * @throws NumberFormatException if the string is not a int.
          */
         static int parseInt(const String& s);
@@ -350,7 +350,7 @@ namespace lang{
          *
          * @param value - the int to convert to a string
          * @param radix - the radix to format the string in
-         * @returns an int formatted to the string value of the radix given.
+         * @return an int formatted to the string value of the radix given.
          */
         static std::string toString(int value, int radix);
 
@@ -371,7 +371,7 @@ namespace lang{
          * If uppercase letters are desired, the toUpperCase() method may be called
          * on the result:
          * @param value - the int to be translated to an Octal string
-         * @returns the unsigned int value as a Octal string
+         * @return the unsigned int value as a Octal string
          */
         static std::string toHexString(int value);
 
@@ -391,7 +391,7 @@ namespace lang{
          *      01234567
          *
          * @param value - the int to be translated to an Octal string
-         * @returns the unsigned int value as a Octal string
+         * @return the unsigned int value as a Octal string
          */
         static std::string toOctalString(int value);
 
@@ -410,7 +410,7 @@ namespace lang{
          * digits.
          *
          * @param value - the int to be translated to a binary string
-         * @returns the unsigned int value as a binary string
+         * @return the unsigned int value as a binary string
          */
         static std::string toBinaryString(int value);
 

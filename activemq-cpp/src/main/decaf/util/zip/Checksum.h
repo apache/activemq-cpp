@@ -40,7 +40,7 @@ namespace zip {
         virtual ~Checksum();
 
         /**
-         * @returns the current checksum value.
+         * @return the current checksum value.
          */
         virtual long long getValue() const = 0;
 

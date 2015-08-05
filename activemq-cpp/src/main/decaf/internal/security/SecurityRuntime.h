@@ -58,7 +58,7 @@ namespace security {
         /**
          * Return the Security Framework's Service Registry.
          *
-         * @returns a pointer to the frameworks Service Registry.
+         * @return a pointer to the frameworks Service Registry.
          */
         ServiceRegistry* getServiceRegistry();
 
@@ -70,7 +70,7 @@ namespace security {
          * The pointer returned is owned by the Security runtime and should not be
          * deleted or copied by the caller.
          *
-         * @returns a pointer to the Security Runtime's single Lock instance.
+         * @return a pointer to the Security Runtime's single Lock instance.
          */
         decaf::util::concurrent::Mutex* getRuntimeLock();
 

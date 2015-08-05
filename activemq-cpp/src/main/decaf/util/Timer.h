@@ -120,7 +120,7 @@ namespace util {
          *
          * This method can be called on a Timer object that has no scheduled tasks without error.
          *
-         * @returns the number of tasks removed from the queue.
+         * @return the number of tasks removed from the queue.
          */
         int purge();
 

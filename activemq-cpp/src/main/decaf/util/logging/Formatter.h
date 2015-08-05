@@ -42,14 +42,14 @@ namespace logging{
         /**
          * Format the given log record and return the formatted string.
          * @param record The Log Record to Format
-         * @returns the formatted record.
+         * @return the formatted record.
          */
         virtual std::string format( const LogRecord& record ) const = 0;
 
         /**
          * Format the message string from a log record.
          * @param record The Log Record to Format
-         * @returns the formatted message
+         * @return the formatted message
          */
         virtual std::string formatMessage( const LogRecord& record ) const;
 

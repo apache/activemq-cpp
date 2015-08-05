@@ -195,7 +195,7 @@ namespace net {
          * Gets the SocketAddress (usually IP address + port number) of the remote host that this
          * packet is being sent to or is coming from.
          *
-         * @returns the SocketAddress for this datagram packet.
+         * @return the SocketAddress for this datagram packet.
          */
         SocketAddress* getSocketAddress() const;
 

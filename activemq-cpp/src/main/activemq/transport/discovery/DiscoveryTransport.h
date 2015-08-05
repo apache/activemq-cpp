@@ -67,7 +67,7 @@ namespace discovery {
         /**
          * Returns the currently configured Discovery Agent
          *
-         * @returns the pointer to the currently configured agent or NULL if not set.
+         * @return the pointer to the currently configured agent or NULL if not set.
          */
         Pointer<DiscoveryAgent> getDiscoveryAgent() const;
 
@@ -82,7 +82,7 @@ namespace discovery {
         /**
          * Gets the currently set parameters that are applied to newly discovered services URIs.
          *
-         * @returns the currently set Properties to apply to new service URIs.
+         * @return the currently set Properties to apply to new service URIs.
          */
         decaf::util::Properties getParameters() const;
 

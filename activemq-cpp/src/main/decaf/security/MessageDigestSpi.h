@@ -55,14 +55,14 @@ namespace security {
          * Queries the SPI implementation and returns true if the SPI can be
          * cloned.
          *
-         * @returns true if the SPI is clonable.
+         * @return true if the SPI is clonable.
          */
         virtual bool isCloneable() const;
 
         /**
          * Returns a clone if the implementation supports being cloned.
          *
-         * @returns a new pointer that is a copy of this object.
+         * @return a new pointer that is a copy of this object.
          *
          * @throws CloneNotSupportedException
          *      if this is called on an implementation that does not support cloning.
@@ -74,7 +74,7 @@ namespace security {
         /**
          * Returns the digest length in bytes.
          *
-         * @returns The digest length in bytes.
+         * @return The digest length in bytes.
          */
         virtual int engineGetDigestLength() = 0;
 
@@ -130,7 +130,7 @@ namespace security {
          * Once engineDigest has been called, the engine should be reset (see engineReset).
          * Resetting is the responsibility of the engine implementor.
          *
-         * @returns an STL vector of bytes containing the resulting hash value.
+         * @return an STL vector of bytes containing the resulting hash value.
          */
         virtual std::vector<unsigned char> engineDigest() = 0;
 
@@ -154,7 +154,7 @@ namespace security {
          *      DigestException. This parameter is ignored if its value is greater
          *      than or equal to the actual digest length.
          *
-         * @returns the length of the digest stored in the output buffer.
+         * @return the length of the digest stored in the output buffer.
          *
          * @throws DigestException if an error occurs.
          * @throws NullPointerException if the buffer pointer is NULL.

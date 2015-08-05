@@ -41,12 +41,12 @@ namespace util {
         virtual ~LongSequenceGenerator();
 
         /**
-         * @returns the next id in the sequence.
+         * @return the next id in the sequence.
          */
         long long getNextSequenceId();
 
         /**
-         * @returns the last id that was generated.
+         * @return the last id that was generated.
          */
         long long getLastSequenceId();
 

@@ -94,13 +94,13 @@ namespace locks {
 
         /**
          * Returns the lock used for reading.
-         * @returns the lock used for reading.
+         * @return the lock used for reading.
          */
         virtual Lock& readLock() = 0;
 
         /**
          * Returns the lock used for writing.
-         * @returns the lock used for writing.
+         * @return the lock used for writing.
          */
         virtual Lock& writeLock() = 0;
 

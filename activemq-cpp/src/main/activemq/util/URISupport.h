@@ -69,7 +69,7 @@ namespace util {
          * @param query
          *      The query string to parse and extract the encoded properties.
          *
-         * @returns Properties object with the parsed output.
+         * @return Properties object with the parsed output.
          *
          * @throw IllegalArgumentException if the Query string is not well formed.
          */
@@ -226,7 +226,7 @@ namespace util {
          * If so the we attempt to replace the value with what is stored in that
          * env var, if the var is not set then we throw an IllegalArgumentException.
          * @param value - the value to check for env
-         * @returns the env var if value points to an env var else returns value
+         * @return the env var if value points to an env var else returns value
          * @throws IllegalArgumentException if the var is not set or has bad syntax
          */
         static std::string replaceEnvValues(const std::string& value);

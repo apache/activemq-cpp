@@ -65,12 +65,12 @@ namespace tcp {
         virtual ~TcpSocket();
 
         /**
-         * @returns true if the socketHandle is not in a disconnected state.
+         * @return true if the socketHandle is not in a disconnected state.
          */
         bool isConnected() const;
 
         /**
-         * @returns true if the close method has been called on this Socket.
+         * @return true if the close method has been called on this Socket.
          */
         bool isClosed() const;
 

@@ -101,7 +101,7 @@ namespace cms {
          * @param name
          *      the name of the property to be removed.
          *
-         * @returns the value that was removed from the Properties, or empty string.
+         * @return the value that was removed from the Properties, or empty string.
          */
         virtual std::string remove(const std::string& name) = 0;
 
@@ -109,7 +109,7 @@ namespace cms {
          * Returns a vector containing all the names of the properties currently stored
          * in the Properties object.
          *
-         * @returns an STL std::vector<std::string> with all the currently stored property names.
+         * @return an STL std::vector<std::string> with all the currently stored property names.
          */
         virtual std::vector<std::string> propertyNames() const = 0;
 
@@ -133,7 +133,7 @@ namespace cms {
         /**
          * Clones this object.
          *
-         * @returns a replica of this object.
+         * @return a replica of this object.
          */
         virtual CMSProperties* clone() const = 0;
 
@@ -146,7 +146,7 @@ namespace cms {
          * Formats the contents of the Properties Object into a string
          * that can be logged, etc.
          *
-         * @returns string value of this object.
+         * @return string value of this object.
          */
         virtual std::string toString() const = 0;
 

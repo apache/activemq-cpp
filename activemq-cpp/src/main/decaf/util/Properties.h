@@ -126,7 +126,7 @@ namespace util{
          * @param value
          *      The value to be written.
          *
-         * @returns the old value of the property or empty string if not set.
+         * @return the old value of the property or empty string if not set.
          */
         std::string setProperty(const std::string& name, const std::string& value);
 
@@ -146,7 +146,7 @@ namespace util{
          * @param name
          *      The name of the property to remove.
          *
-         * @returns the previous value of the property if set, or empty string.
+         * @return the previous value of the property if set, or empty string.
          */
         std::string remove(const std::string& name);
 
@@ -155,7 +155,7 @@ namespace util{
          * in the default property list if a key of the same name has not already been found from
          * the main properties list.
          *
-         * @returns a set of keys in this property list where the key and its corresponding value are
+         * @return a set of keys in this property list where the key and its corresponding value are
          *          strings, including the keys in the default property list.
          */
         std::vector<std::string> propertyNames() const;
@@ -180,7 +180,7 @@ namespace util{
         /**
          * Clones this object.
          *
-         * @returns a replica of this object.
+         * @return a replica of this object.
          */
         Properties* clone() const;
 
@@ -206,7 +206,7 @@ namespace util{
         /**
          * Formats the contents of the Properties Object into a string that can be logged, etc.
          *
-         * @returns string value of this object.
+         * @return string value of this object.
          */
         std::string toString() const;
 

@@ -53,7 +53,7 @@ namespace ssl {
          * The default instance of the SSLContext should be immediately usable without any need
          * for the client to initialize this context.
          *
-         * @returns a pointer to the Default SSLContext instance.
+         * @return a pointer to the Default SSLContext instance.
          */
         static SSLContext* getDefault();
 
@@ -77,7 +77,7 @@ namespace ssl {
          * Returns an SocketFactory instance for use with this Context, the SocketFactory is owned
          * by the Context and should not be deleted by the caller.
          *
-         * @returns a pointer to this SSLContext's SocketFactory for creating SSLSocket objects.
+         * @return a pointer to this SSLContext's SocketFactory for creating SSLSocket objects.
          *
          * @throws IllegalStateException if the SSLContextSpi requires initialization but it
          *         has not yet been initialized.
@@ -88,7 +88,7 @@ namespace ssl {
          * Returns an ServerSocketFactory instance for use with this Context, the ServerSocketFactory
          * is owned by the Context and should not be deleted by the caller.
          *
-         * @returns a pointer to this SSLContext's ServerSocketFactory for creating SSLServerSocket objects.
+         * @return a pointer to this SSLContext's ServerSocketFactory for creating SSLServerSocket objects.
          *
          * @throws IllegalStateException if the SSLContextSpi requires initialization but it
          *         has not yet been initialized.

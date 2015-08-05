@@ -138,7 +138,7 @@ namespace failover {
          * Returns true if there is a Backup in the pool that's on the priority
          * backups list.
          *
-         * @returns true if there is a priority backup available.
+         * @return true if there is a priority backup available.
          */
         bool isPriorityBackupAvailable() const;
 

@@ -77,7 +77,7 @@ namespace locks {
         /**
          * Returns true if this lock has fairness set true.
          *
-         * @returns true if the Lock uses a fair policy otherwise false.
+         * @return true if the Lock uses a fair policy otherwise false.
          */
         bool isFair() const;
 
@@ -147,7 +147,7 @@ namespace locks {
          * immediately after it is called.  The Condition object must be associated with this Lock
          * or an exception will be thrown.
          *
-         * @returns an estimate of the number of waiting threads.
+         * @return an estimate of the number of waiting threads.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
@@ -207,7 +207,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains all the threads that may be waiting
          * on the given Condition object instance at the time this method is called.
          *
-         * @returns a Collection pointer that contains waiting threads on given Condition object.
+         * @return a Collection pointer that contains waiting threads on given Condition object.
          *          The caller owns the returned pointer.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.

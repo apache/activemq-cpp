@@ -364,7 +364,7 @@ namespace cms {
         /**
          * Gets the currently configured MessageTransformer for this MessageProducer.
          *
-         * @returns the pointer to the currently set cms::MessageTransformer.
+         * @return the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 

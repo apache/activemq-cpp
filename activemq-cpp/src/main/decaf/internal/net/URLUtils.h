@@ -40,7 +40,7 @@ namespace net {
          * @param url
          *      the URL whose host value is to be returned.
          *
-         * @returns the host value or 'localhost' for file based protocols.
+         * @return the host value or 'localhost' for file based protocols.
          */
         static decaf::lang::String getHost(const decaf::net::URL& url);
 
@@ -53,7 +53,7 @@ namespace net {
          *      true to remove leading ".." segments from the path. This is appropriate
          *      for paths that are known to be absolute.
          *
-         * @returns the canonicalized Path value.
+         * @return the canonicalized Path value.
          */
         static decaf::lang::String canonicalizePath(const decaf::lang::String& original, bool discardRelativePrefix);
 
@@ -67,7 +67,7 @@ namespace net {
          * @param path
          *      The path value from a given URL.
          *
-         * @returns a safe version of the Path value.
+         * @return a safe version of the Path value.
          */
         static decaf::lang::String authoritySafePath(const decaf::lang::String& authority,
                                                      const decaf::lang::String& path);
@@ -81,7 +81,7 @@ namespace net {
          * @param c
          *      The value from the given index.
          *
-         * @returns true if the char value is valid for the given index.
+         * @return true if the char value is valid for the given index.
          */
         static bool isValidSchemeChar(int index, char c);
 
@@ -110,7 +110,7 @@ namespace net {
          * @param end
          *      The end index to stop the search at.
          *
-         * @returns the first index that matches one of the chars or the end value if no matches..
+         * @return the first index that matches one of the chars or the end value if no matches..
          */
         static int findFirstOf(const decaf::lang::String& string,
                                const decaf::lang::String& chars, int start, int end);

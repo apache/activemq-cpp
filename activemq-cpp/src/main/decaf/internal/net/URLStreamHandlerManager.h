@@ -57,7 +57,7 @@ namespace net {
          * application.  The returned pointer should never be deleted by the
          * application.
          *
-         * @returns a URLStreamHandlerManager instance.
+         * @return a URLStreamHandlerManager instance.
          */
         static URLStreamHandlerManager* getInstance();
 
@@ -69,7 +69,7 @@ namespace net {
          * @param protocol
          *      The protocol to return a URL Stream Handler instance for.
          *
-         * @returns a URLStreamHandler instance for the given protocol.
+         * @return a URLStreamHandler instance for the given protocol.
          */
         decaf::net::URLStreamHandler* getURLStreamHandler(const decaf::lang::String& protocol);
 

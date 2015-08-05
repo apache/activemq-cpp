@@ -57,7 +57,7 @@ namespace io {
          * Reads in one byte and returns true if that byte is nonzero, false if that
          * byte is zero.
          *
-         * @returns the boolean value of the read in byte (0=false, 1=true).
+         * @return the boolean value of the read in byte (0=false, 1=true).
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -68,7 +68,7 @@ namespace io {
          * Reads and returns one input byte. The byte is treated as a
          * signed value in the range -128 through 127, inclusive.
          *
-         * @returns the 8-bit value read.
+         * @return the 8-bit value read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -79,7 +79,7 @@ namespace io {
          * Reads one input byte, zero-extends it to type int, and returns
          * the result, which is therefore in the range 0  through 255.
          *
-         * @returns the 8 bit unsigned value read.
+         * @return the 8 bit unsigned value read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -91,7 +91,7 @@ namespace io {
          * is made up of one bytes.  This returns the same result as
          * <code>readByte</code>
          *
-         * @returns the 8 bit char read.
+         * @return the 8 bit char read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -104,7 +104,7 @@ namespace io {
          * the readlong  method, then converting this long  value to a double
          * in exactly the manner of the method Double::longBitsToDouble.
          *
-         * @returns the double value read.
+         * @return the double value read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -117,7 +117,7 @@ namespace io {
          * readInt  method, then converting this int  value to a float in
          * exactly the manner of the method Float::intBitsToFloat.
          *
-         * @returns the float value read.
+         * @return the float value read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -132,7 +132,7 @@ namespace io {
          *  (((a & 0xff) << 24) | ((b & 0xff) << 16) |
          *   ((c & 0xff) << 8) | (d & 0xff))
          *
-         * @returns the int value read.
+         * @return the int value read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -155,7 +155,7 @@ namespace io {
          *   ((long)(g & 0xff) <<  8) |
          *   ((long)(h & 0xff)))
          *
-         * @returns the 64 bit long long read.
+         * @return the 64 bit long long read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -168,7 +168,7 @@ namespace io {
          *
          *   (short)((a << 8) | (b & 0xff))
          *
-         * @returns the 16 bit short value read.
+         * @return the 16 bit short value read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -182,7 +182,7 @@ namespace io {
          *
          *   (((a & 0xff) << 8) | (b & 0xff))
          *
-         * @returns the 16 bit unsigned short read.
+         * @return the 16 bit unsigned short read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -193,7 +193,7 @@ namespace io {
          * Reads an NULL terminated ASCII string to the stream and returns the
          * string to the caller.
          *
-         * @returns string object containing the string read.
+         * @return string object containing the string read.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.
@@ -230,7 +230,7 @@ namespace io {
          * encoded UTF-8 bytes is an unsigned short, which implies that the String will
          * be no longer than 65535 characters.
          *
-         * @returns The decoded string read from stream.
+         * @return The decoded string read from stream.
          *
          * @throws IOException if an I/O Error occurs.
          * @throws EOFException if the end of input is reached.

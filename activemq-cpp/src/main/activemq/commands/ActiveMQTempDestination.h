@@ -121,14 +121,14 @@ namespace commands{
         /**
          * Retrieves the Parent Connection that created this Connection.
          *
-         * @returns pointer to a Connection if one was set, false otherwise.
+         * @return pointer to a Connection if one was set, false otherwise.
          */
         core::ActiveMQConnection* getConnection() const {
             return this->connection;
         }
 
         /**
-         * @returns the connection Id of the Connection that created this temporary destination.
+         * @return the connection Id of the Connection that created this temporary destination.
          */
         std::string getConnectionId() const {
             return this->connectionId;

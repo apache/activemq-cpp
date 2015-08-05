@@ -115,7 +115,7 @@ namespace nio{
         virtual ~ByteBuffer() {}
 
         /**
-         * @returns a std::string describing this object
+         * @return a std::string describing this object
          */
         virtual std::string toString() const;
 
@@ -128,7 +128,7 @@ namespace nio{
          * amount of data that is to be read, that is to say, the caller should call
          * buffer.resize( N ) before calling this get method.
          *
-         * @returns a reference to this Byte Buffer.
+         * @return a reference to this Byte Buffer.
          *
          * @throws BufferUnderflowException if there are fewer than length bytes remaining
          *         in this buffer
@@ -156,7 +156,7 @@ namespace nio{
          * @param length
          *      The amount of data to put in the passed buffer.
          *
-         * @returns a reference to this Buffer.
+         * @return a reference to this Buffer.
          *
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
          *         are not met.
@@ -179,7 +179,7 @@ namespace nio{
          * @param src
          *      The buffer to take bytes from an place in this one.
          *
-         * @returns a reference to this buffer
+         * @return a reference to this buffer
          *
          * @throws BufferOverflowException if there is insufficient space in this
          *         buffer for the remaining bytes in the source buffer
@@ -207,7 +207,7 @@ namespace nio{
          * @param length
          *      The number of bytes to be read from the given array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
@@ -224,7 +224,7 @@ namespace nio{
          * @param buffer
          *      The buffer whose contents are copied to this ByteBuffer.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
@@ -236,7 +236,7 @@ namespace nio{
         /**
          * Tells whether or not this buffer is read-only.
          *
-         * @returns true if, and only if, this buffer is read-only
+         * @return true if, and only if, this buffer is read-only
          */
         virtual bool isReadOnly() const = 0;
 
@@ -249,7 +249,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure
          * that this buffer has an accessible backing array.
          *
-         * @returns The array that backs this buffer
+         * @return The array that backs this buffer
          *
          * @throws ReadOnlyBufferException if this buffer is backed by an array but
          *         is read-only
@@ -268,7 +268,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure
          * that this buffer has an accessible backing array.
          *
-         * @returns The offset within this buffer's array of the first element of
+         * @return The offset within this buffer's array of the first element of
          *          the buffer.
          *
          * @throws ReadOnlyBufferException if this buffer is backed by an array but
@@ -284,7 +284,7 @@ namespace nio{
          * be invoked.  Subclasses should override this method if they do not have a
          * backing array as this class always returns true.
          *
-         * @returns true if, and only if, this buffer is backed by an array and is not
+         * @return true if, and only if, this buffer is backed by an array and is not
          *          read-only.
          */
         virtual bool hasArray() const = 0;
@@ -300,7 +300,7 @@ namespace nio{
          * the number of bytes remaining in this buffer, and its mark will be undefined.
          * The new buffer will be read-only if, and only if, this buffer is read-only.
          *
-         * @returns the new Char Buffer, which the caller then owns.
+         * @return the new Char Buffer, which the caller then owns.
          */
         virtual CharBuffer* asCharBuffer() const = 0;
 
@@ -316,7 +316,7 @@ namespace nio{
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
          *
-         * @returns the new double Buffer, which the caller then owns.
+         * @return the new double Buffer, which the caller then owns.
          */
         virtual DoubleBuffer* asDoubleBuffer() const = 0;
 
@@ -332,7 +332,7 @@ namespace nio{
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
          *
-         * @returns the new float Buffer, which the caller then owns.
+         * @return the new float Buffer, which the caller then owns.
          */
         virtual FloatBuffer* asFloatBuffer() const = 0;
 
@@ -348,7 +348,7 @@ namespace nio{
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
          *
-         * @returns the new int Buffer, which the caller then owns.
+         * @return the new int Buffer, which the caller then owns.
          */
         virtual IntBuffer* asIntBuffer() const = 0;
 
@@ -364,7 +364,7 @@ namespace nio{
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
          *
-         * @returns the new long Buffer, which the caller then owns.
+         * @return the new long Buffer, which the caller then owns.
          */
         virtual LongBuffer* asLongBuffer() const = 0;
 
@@ -380,7 +380,7 @@ namespace nio{
          * will be undefined. The new buffer will be read-only if, and only if, this
          * buffer is read-only.
          *
-         * @returns the new short Buffer, which the caller then owns.
+         * @return the new short Buffer, which the caller then owns.
          */
         virtual ShortBuffer* asShortBuffer() const = 0;
 
@@ -417,7 +417,7 @@ namespace nio{
          * zero, so that an invocation of this method can be followed immediately by
          * an invocation of another relative put method.
          *
-         * @returns a reference to this ByteBuffer.
+         * @return a reference to this ByteBuffer.
          *
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
@@ -434,7 +434,7 @@ namespace nio{
          * to those of this buffer. The new buffer will be read-only if, and only if,
          * this buffer is read-only.
          *
-         * @returns a new Byte Buffer which the caller owns.
+         * @return a new Byte Buffer which the caller owns.
          */
         virtual ByteBuffer* duplicate() = 0;
 
@@ -442,7 +442,7 @@ namespace nio{
          * Relative get method. Reads the byte at this buffer's current position, and
          * then increments the position.
          *
-         * @returns The byte at the buffer's current position.
+         * @return The byte at the buffer's current position.
          *
          * @throws BufferUnderflowException if the buffer's current position is not
          *         smaller than its limit.
@@ -455,7 +455,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the byte is to be read.
          *
-         * @returns the byte that is located at the given index.
+         * @return the byte that is located at the given index.
          *
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
@@ -466,7 +466,7 @@ namespace nio{
          * Reads the next byte at this buffer's current position, and then increments
          * the position by one
          *
-         * @returns the next char in the buffer.
+         * @return the next char in the buffer.
          *
          * @throws BufferUnderflowException if there are no more bytes remaining in
          *         this buffer, meaning we have reached the set limit.
@@ -479,7 +479,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the byte is to be read.
          *
-         * @returns the char at the given index in the buffer
+         * @return the char at the given index in the buffer
          *
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
@@ -490,7 +490,7 @@ namespace nio{
          * Reads the next eight bytes at this buffer's current position, and then
          * increments the position by that amount.
          *
-         * @returns the next double in the buffer.
+         * @return the next double in the buffer.
          *
          * @throws BufferUnderflowException if there are no more bytes remaining in
          *         this buffer, meaning we have reached the set limit.
@@ -503,7 +503,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the double at the given index in the buffer.
+         * @return the double at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
@@ -514,7 +514,7 @@ namespace nio{
          * Reads the next four bytes at this buffer's current position, and then
          * increments the position by that amount.
          *
-         * @returns the next float in the buffer.
+         * @return the next float in the buffer.
          *
          * @throws BufferUnderflowException if there are no more bytes remaining in
          *         this buffer, meaning we have reached the set limit.
@@ -527,7 +527,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the float at the given index in the buffer.
+         * @return the float at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
@@ -538,7 +538,7 @@ namespace nio{
          * Reads the next eight bytes at this buffer's current position, and then
          * increments the position by that amount.
          *
-         * @returns the next long long in the buffer.
+         * @return the next long long in the buffer.
          *
          * @throws BufferUnderflowException if there are no more bytes remaining in
          *         this buffer, meaning we have reached the set limit.
@@ -551,7 +551,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the long long at the given index in the buffer.
+         * @return the long long at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
@@ -562,7 +562,7 @@ namespace nio{
          * Reads the next four bytes at this buffer's current position, and then
          * increments the position by that amount.
          *
-         * @returns the next int in the buffer.
+         * @return the next int in the buffer.
          *
          * @throws BufferUnderflowException if there are no more bytes remaining in
          *         this buffer, meaning we have reached the set limit.
@@ -575,7 +575,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the int at the given index in the buffer.
+         * @return the int at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
@@ -586,7 +586,7 @@ namespace nio{
          * Reads the next two bytes at this buffer's current position, and then
          * increments the position by that amount.
          *
-         * @returns the next short in the buffer.
+         * @return the next short in the buffer.
          *
          * @throws BufferUnderflowException if there are no more bytes remaining in
          *         this buffer, meaning we have reached the set limit.
@@ -599,7 +599,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the short at the given index in the buffer.
+         * @return the short at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes
          *         remaining to fill the requested Data Type, or index is negative.
@@ -612,7 +612,7 @@ namespace nio{
          *
          * @param value - the byte value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if this buffer's current position is not
          *         smaller than its limit.
@@ -626,7 +626,7 @@ namespace nio{
          * @param index - position in the Buffer to write the data
          * @param value - the byte to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -641,7 +641,7 @@ namespace nio{
          * @param value
          *      The value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw BufferOverflowException if there are fewer than bytes remaining
          *        in this buffer than the size of the data to be written
@@ -658,7 +658,7 @@ namespace nio{
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -673,7 +673,7 @@ namespace nio{
          * @param value
          *      The value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw BufferOverflowException if there are fewer than bytes remaining
          *        in this buffer than the size of the data to be written
@@ -690,7 +690,7 @@ namespace nio{
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -705,7 +705,7 @@ namespace nio{
          * @param value
          *      The value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw BufferOverflowException if there are fewer than bytes remaining
          *        in this buffer than the size of the data to be written.
@@ -722,7 +722,7 @@ namespace nio{
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -737,7 +737,7 @@ namespace nio{
          * @param value
          *      The value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw BufferOverflowException if there are fewer than bytes remaining
          *        in this buffer than the size of the data to be written.
@@ -754,7 +754,7 @@ namespace nio{
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -769,7 +769,7 @@ namespace nio{
          * @param value
          *      The value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw BufferOverflowException if there are fewer than bytes remaining
          *        in this buffer than the size of the data to be written
@@ -786,7 +786,7 @@ namespace nio{
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer
+         * @return a reference to this buffer
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -801,7 +801,7 @@ namespace nio{
          * @param value
          *      The value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw BufferOverflowException if there are fewer than bytes remaining
          *        in this buffer than the size of the data to be written.
@@ -818,7 +818,7 @@ namespace nio{
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer
+         * @return a reference to this buffer
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -837,7 +837,7 @@ namespace nio{
          * number of bytes remaining in this buffer, and its mark will be undefined. The
          * new buffer will be read-only if, and only if, this buffer is read-only.
          *
-         * @returns the newly create ByteBuffer which the caller owns.
+         * @return the newly create ByteBuffer which the caller owns.
          */
         virtual ByteBuffer* slice() const = 0;
 
@@ -873,7 +873,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated ByteBuffer which the caller owns.
+         * @return a newly allocated ByteBuffer which the caller owns.
          *
          * @throws IllegalArgumentException if capacity is negative.
          */
@@ -897,7 +897,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new ByteBuffer that is backed by buffer, caller owns.
+         * @return a new ByteBuffer that is backed by buffer, caller owns.
          *
          * @throws NullPointerException if the array passed in is NULL.
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
@@ -918,7 +918,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must
          *      have been sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new ByteBuffer that is backed by buffer, caller owns.
+         * @return a new ByteBuffer that is backed by buffer, caller owns.
          */
         static ByteBuffer* wrap(std::vector<unsigned char>& buffer);
 

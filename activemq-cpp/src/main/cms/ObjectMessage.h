@@ -52,7 +52,7 @@ namespace cms {
         /**
          * Returns the byte array containing the serialized form of the transmitted Object.
          *
-         * @returns a byte vector containing the serialized Object.
+         * @return a byte vector containing the serialized Object.
          *
          * @throws CMSException - if the operation fails due to an internal error.
          * @throws MessageNotReadableException - if the message is in write only mode.

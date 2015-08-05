@@ -61,7 +61,7 @@ namespace atomic {
 
         /**
          * Gets the current value.
-         * @returns the current value.
+         * @return the current value.
          */
         int get() const {
             return this->value;
@@ -78,7 +78,7 @@ namespace atomic {
         /**
          * Atomically sets to the given value and returns the old value.
          * @param newValue - the new value.
-         * @returns the previous value.
+         * @return the previous value.
          */
         int getAndSet( int newValue );
 
@@ -88,52 +88,52 @@ namespace atomic {
          *
          * @param expect - the expected value
          * @param update - the new value
-         * @returns true if successful. False return indicates that the actual
+         * @return true if successful. False return indicates that the actual
          * value was not equal to the expected value.
          */
         bool compareAndSet( int expect, int update );
 
         /**
          * Atomically increments by one the current value.
-         * @returns the previous value.
+         * @return the previous value.
          */
         int getAndIncrement();
 
         /**
          * Atomically decrements by one the current value.
-         * @returns the previous value.
+         * @return the previous value.
          */
         int getAndDecrement();
 
         /**
          * Atomically adds the given value to the current value.
          * @param delta - The value to add.
-         * @returns the previous value.
+         * @return the previous value.
          */
         int getAndAdd( int delta );
 
         /**
          * Atomically increments by one the current value.
-         * @returns the updated value.
+         * @return the updated value.
          */
         int incrementAndGet();
 
         /**
          * Atomically decrements by one the current value.
-         * @returns the updated value.
+         * @return the updated value.
          */
         int decrementAndGet();
 
         /**
          * Atomically adds the given value to the current value.
          * @param delta - the value to add.
-         * @returns the updated value.
+         * @return the updated value.
          */
         int addAndGet( int delta );
 
         /**
          * Returns the String representation of the current value.
-         * @returns the String representation of the current value.
+         * @return the String representation of the current value.
          */
         std::string toString() const;
 
@@ -141,7 +141,7 @@ namespace atomic {
          * Description copied from class: Number
          * Returns the value of the specified number as an int. This may involve
          * rounding or truncation.
-         * @returns the numeric value represented by this object after conversion
+         * @return the numeric value represented by this object after conversion
          * to type int.
          */
         int intValue() const;
@@ -150,7 +150,7 @@ namespace atomic {
          * Description copied from class: Number
          * Returns the value of the specified number as a long. This may involve
          * rounding or truncation.
-         * @returns the numeric value represented by this object after conversion
+         * @return the numeric value represented by this object after conversion
          * to type long long.
          */
         long long longValue() const;
@@ -159,7 +159,7 @@ namespace atomic {
          * Description copied from class: Number
          * Returns the value of the specified number as a float. This may involve
          * rounding.
-         * @returns the numeric value represented by this object after conversion
+         * @return the numeric value represented by this object after conversion
          * to type float.
          */
         float floatValue() const;
@@ -168,7 +168,7 @@ namespace atomic {
          * Description copied from class: Number
          * Returns the value of the specified number as a double. This may
          * involve rounding.
-         * @returns the numeric value represented by this object after conversion
+         * @return the numeric value represented by this object after conversion
          * to type double.
          */
         double doubleValue() const;

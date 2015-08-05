@@ -83,7 +83,7 @@ namespace cms {
         /**
          * Gets the metadata for this connection.
          *
-         * @returns the connection MetaData pointer ( caller does not own it ).
+         * @return the connection MetaData pointer ( caller does not own it ).
          *
          * @throws CMSException
          *         if the provider fails to get the connection metadata for this connection.
@@ -172,7 +172,7 @@ namespace cms {
         /**
          * Gets the currently configured MessageTransformer for this Connection.
          *
-         * @returns the pointer to the currently set cms::MessageTransformer.
+         * @return the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 

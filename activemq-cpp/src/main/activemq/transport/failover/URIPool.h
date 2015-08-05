@@ -70,14 +70,14 @@ namespace failover {
         /**
          * Gets a static view of the URI List contained in this URI Pool
          *
-         * @returns a static reference to this Pools list of URIs.
+         * @return a static reference to this Pools list of URIs.
          */
         const decaf::util::List<decaf::net::URI>& getURIList() const {
             return this->uriPool;
         }
 
         /**
-         * @returns true if this URI Pool is empty.
+         * @return true if this URI Pool is empty.
          */
         bool isEmpty() const;
 
@@ -118,7 +118,7 @@ namespace failover {
          *
          * @param uri - a URI previously taken from the pool.
          *
-         * @returns true if the URI was added or false if its already in the list.
+         * @return true if the URI was added or false if its already in the list.
          */
         bool addURI(const decaf::net::URI& uri);
 
@@ -128,7 +128,7 @@ namespace failover {
          *
          * @param uris - List of URIs to add into the Pool.
          *
-         * @returns true if any URI was added or false if they were already in the list.
+         * @return true if any URI was added or false if they were already in the list.
          */
         bool addURIs(const decaf::util::List<decaf::net::URI>& uris);
 
@@ -138,7 +138,7 @@ namespace failover {
          * @param uri
          *      The URI to find and remove from the free list
          *
-         * @returns true if the URI was removed or false if no change was made.
+         * @return true if the URI was removed or false if no change was made.
          */
         bool removeURI(const decaf::net::URI& uri);
 
@@ -165,7 +165,7 @@ namespace failover {
         /**
          * Returns true if the given URI is contained in this set of URIs.
          *
-         * @returns true if the URI is in the list.
+         * @return true if the URI is in the list.
          */
         bool contains(const decaf::net::URI& uri) const;
 
@@ -173,7 +173,7 @@ namespace failover {
          * Returns true if the URI given is the first in the list of
          * URIs contained in this pool.
          *
-         * @returns true if the URI is index 0 in the URI list.
+         * @return true if the URI is index 0 in the URI list.
          */
         bool isPriority(const decaf::net::URI& uri) const;
 
@@ -185,7 +185,7 @@ namespace failover {
         /**
          * Compares the URIs in this set to that of another URIPool
          *
-         * @returns true if the URIPool instance contains the same values.
+         * @return true if the URIPool instance contains the same values.
          */
         bool equals(const URIPool& other) const;
 

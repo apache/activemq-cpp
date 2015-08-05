@@ -217,7 +217,7 @@ namespace net{
         virtual void close();
 
         /**
-         * @returns true if the close method has been called on the ServerSocket.
+         * @return true if the close method has been called on the ServerSocket.
          */
         virtual bool isClosed() const;
 
@@ -290,12 +290,12 @@ namespace net{
         /**
          * Gets the port number on the Local machine that this ServerSocket is bound to.
          *
-         * @returns the port number of this machine that is bound, if not bound returns -1.
+         * @return the port number of this machine that is bound, if not bound returns -1.
          */
         virtual int getLocalPort() const;
 
         /**
-         * @returns a string representing this ServerSocket.
+         * @return a string representing this ServerSocket.
          */
         virtual std::string toString() const;
 
@@ -330,7 +330,7 @@ namespace net{
         /**
          * Allows a subclass to override what is considered the default backlog.
          *
-         * @returns the default backlog for connections.
+         * @return the default backlog for connections.
          */
         virtual int getDefaultBacklog();
 

@@ -75,7 +75,7 @@ namespace http {
          * Gets the amount of time the agent waits before attempting to fetch the list
          * of registered Brokers from the configured HTTP registry service.
          *
-         * @returns Time in milliseconds to wait between update attempts.
+         * @return Time in milliseconds to wait between update attempts.
          */
         long long getUpdateInterval() const;
 
@@ -90,7 +90,7 @@ namespace http {
         /**
          * Gets the URL for the Broker registry where the agent gets its updates.
          *
-         * @returns The URL to poll for registry entries.
+         * @return The URL to poll for registry entries.
          */
         std::string getRegistryURL() const;
 

@@ -45,7 +45,7 @@ namespace concurrent {
          * Returns the current threads assigned value, but retains ownership
          * to this value unless the remove method is subsequently called.
          *
-         * @returns the currently held value for this thread.
+         * @return the currently held value for this thread.
          */
         void* getRawValue() const;
 

@@ -94,7 +94,7 @@ namespace util {
          * @param dataIn
          *      The DataInputStream to read the String data from.
          *
-         * @returns the String value.
+         * @return the String value.
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */
@@ -111,7 +111,7 @@ namespace util {
          * @param dataIn
          *      The DataInputStream to read the String data from.
          *
-         * @returns the String value.
+         * @return the String value.
          *
          * @throws IOException if an I/O error occurs while writing the string.
          */

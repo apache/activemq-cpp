@@ -62,7 +62,7 @@ namespace cms {
          * The client can use the provided XA resource to interact with the XA Transaction
          * Manager in use in the client application.
          *
-         * @returns an XAResouce instance to the caller, the caller does not own this
+         * @return an XAResouce instance to the caller, the caller does not own this
          *          pointer and should not delete it.
          */
         virtual XAResource* getXAResource() const = 0;

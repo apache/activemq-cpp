@@ -67,12 +67,12 @@ namespace util {
          * Converts the contents into a formatted string that can be output
          * in a Log File or other debugging tool.
          *
-         * @returns formatted String of all elements in the map.
+         * @return formatted String of all elements in the map.
          */
         std::string toString() const;
 
         /**
-         * @returns the numeric type value for the given key if it exists.
+         * @return the numeric type value for the given key if it exists.
          * @throws NoSuchElementException if the key is not present in the map.
          */
         virtual PrimitiveValueNode::PrimitiveType getValueType(const std::string& key) const;
@@ -83,7 +83,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -104,7 +104,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -125,7 +125,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -146,7 +146,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -167,7 +167,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -188,7 +188,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -209,7 +209,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -230,7 +230,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -251,7 +251,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns
@@ -272,7 +272,7 @@ namespace util {
          * an exception of type NoSuchElementException is thrown.
          *
          * @param key - the location to return the value from.
-         * @returns the value at key in the type requested.
+         * @return the value at key in the type requested.
          * @throw NoSuchElementException if key is not in the map.
          * @throw UnSupportedOperationException if the value cannot be converted
          *                                      to the type this method returns

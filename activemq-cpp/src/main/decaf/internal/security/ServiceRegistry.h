@@ -69,7 +69,7 @@ namespace security {
          * @param name
          *      The name of the service to find, format is "serviceName.algorithmName"
          *
-         * @returns a caller owned pointer to a new ProviderService for the named service.
+         * @return a caller owned pointer to a new ProviderService for the named service.
          */
         decaf::security::ProviderService* getService(const std::string& name);
 

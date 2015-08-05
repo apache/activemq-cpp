@@ -55,7 +55,7 @@ namespace util {
     public:
 
         /**
-         * @returns a newly generated unique id.
+         * @return a newly generated unique id.
          */
         std::string generateId() const;
 
@@ -72,14 +72,14 @@ namespace util {
         /**
          * Gets the seed value from a Generated Id, the count portion is removed.
          *
-         * @returns the seed portion of the Id, minus the count value.
+         * @return the seed portion of the Id, minus the count value.
          */
         static std::string getSeedFromId(const std::string& id);
 
         /**
          * Gets the count value from a Generated Id, the seed portion is removed.
          *
-         * @returns the sequence count portion of the id, minus the seed value.
+         * @return the sequence count portion of the id, minus the seed value.
          */
         static long long getSequenceFromId(const std::string& id);
 
@@ -91,7 +91,7 @@ namespace util {
          * @param id2
          *      The second id to compare, or right hand side.
          *
-         * @returns zero if ids are equal or positove if id1 > id2...
+         * @return zero if ids are equal or positove if id1 > id2...
          */
         static int compare(const std::string& id1, const std::string& id2);
 

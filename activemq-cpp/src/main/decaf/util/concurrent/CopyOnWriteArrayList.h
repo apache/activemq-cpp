@@ -781,7 +781,7 @@ namespace concurrent {
          * @param value
          *      The element to be added if not already contained in this List.
          *
-         * @returns true if the element is added to this List.
+         * @return true if the element is added to this List.
          */
         bool addIfAbsent(const E& value) {
             this->arrayLock.writeLock().lock();
@@ -816,7 +816,7 @@ namespace concurrent {
          * @param collection
          *      The collection whose elements are to be added if not already in this List.
          *
-         * @returns the number of elements that are added to this List.
+         * @return the number of elements that are added to this List.
          */
         int addAllAbsent(const Collection<E>& collection) {
 
@@ -861,7 +861,7 @@ namespace concurrent {
          * @param index
          *      The index in the list to begin the search from.
          *
-         * @returns the index in the list that matches the value given, or -1 if not found.
+         * @return the index in the list that matches the value given, or -1 if not found.
          *
          * @throws IndexOutOfBoundsException if the given index is greater than or equal to the List size.
          */
@@ -900,7 +900,7 @@ namespace concurrent {
          * @param index
          *      The index in the List to begin the search from.
          *
-         * @returns the index in the List that matches the given element or -1 if not found.
+         * @return the index in the List that matches the given element or -1 if not found.
          *
          * @throws IndexOutOfBoundsException if the given index is negative.
          */

@@ -93,7 +93,7 @@ namespace atomic {
 
         /**
          * Returns the String representation of the current value.
-         * @returns string representation of the current value.
+         * @return string representation of the current value.
          */
         std::string toString() const {
             return decaf::lang::Long::toString( (long long)this->value );

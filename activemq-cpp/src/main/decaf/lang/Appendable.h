@@ -50,7 +50,7 @@ namespace lang {
          * @param value
          *      The character to append.
          *
-         * @returns a Reference to this Appendable
+         * @return a Reference to this Appendable
          *
          * @throws Exception if an error occurs.
          */
@@ -64,7 +64,7 @@ namespace lang {
          *      If csq is NULL, then characters will be appended as if csq contained the
          *      string "null".
          *
-         * @returns a Reference to this Appendable.
+         * @return a Reference to this Appendable.
          *
          * @throws Exception if an error occurs.
          */
@@ -81,7 +81,7 @@ namespace lang {
          * @param end
          *      The index of the character following the last character in the subsequence.
          *
-         * @returns a Reference to this Appendable
+         * @return a Reference to this Appendable
          *
          * @throws Exception if an error occurs.
          * @throws IndexOutOfBoundsException start is greater than end, or end is

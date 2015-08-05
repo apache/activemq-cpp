@@ -215,7 +215,7 @@ namespace concurrent {
          * @param takeOwnership
          *      Boolean value indicating if the Executor now owns the pointer to the task.
          *
-         * @returns a new Future<?> pointer that is owned by the caller.
+         * @return a new Future<?> pointer that is owned by the caller.
          *
          * @throws RejectedExecutionException if the task cannot be scheduled for execution
          * @throws NullPointerException if the Runnable pointer passed is NULL.

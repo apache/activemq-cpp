@@ -50,7 +50,7 @@ namespace internal{
 
         /**
          * Gets the internal APR Pool.
-         * @returns the internal APR pool
+         * @return the internal APR pool
          */
         apr_pool_t* getAprPool() const;
 

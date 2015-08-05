@@ -75,7 +75,7 @@ namespace lang {
         virtual int compareTo(const Short& s) const;
 
         /**
-         * @returns true if the two Short Objects have the same value.
+         * @return true if the two Short Objects have the same value.
          */
         bool equals(const Short& s) const {
             return this->value == s.value;
@@ -111,7 +111,7 @@ namespace lang {
         virtual int compareTo(const short& s) const;
 
         /**
-         * @returns true if the two Short Objects have the same value.
+         * @return true if the two Short Objects have the same value.
          */
         bool equals(const short& s) const {
             return this->value == s;
@@ -137,7 +137,7 @@ namespace lang {
         }
 
         /**
-         * @returns this Short Object as a String Representation
+         * @return this Short Object as a String Representation
          */
         std::string toString() const;
 
@@ -192,7 +192,7 @@ namespace lang {
     public:
 
         /**
-         * @returns a string representing the primitive value as Base 10
+         * @return a string representing the primitive value as Base 10
          */
         static std::string toString(short value);
 
@@ -208,7 +208,7 @@ namespace lang {
          * character of the specified String is the minus sign. No whitespace
          * characters are permitted in the string.
          * @param value - The string to decode
-         * @returns a Short object containing the decoded value
+         * @return a Short object containing the decoded value
          * @throws NumberFomatException if the string is not formatted correctly.
          */
         static Short decode(const String& value);
@@ -261,7 +261,7 @@ namespace lang {
          * @param s
          *      String to convert to a short
          *
-         * @returns the converted short value
+         * @return the converted short value
          *
          * @throws NumberFormatException if the string is not a short.
          */

@@ -77,7 +77,7 @@ namespace security {
          * security provider framework uses this method to construct implementations.
          * Applications will typically not need to call it.
          *
-         * @returns a new instance of the SecuritySpi provided by this ProviderService.
+         * @return a new instance of the SecuritySpi provided by this ProviderService.
          */
         virtual SecuritySpi* newInstance() = 0;
 
@@ -85,7 +85,7 @@ namespace security {
          * Return a String representation of this service.  The format of this string is
          * always, "type.algorithm"
          *
-         * @returns string describing this ProviderService.
+         * @return string describing this ProviderService.
          */
         std::string toString() const {
             return getType() + "." + getAlgorithm();

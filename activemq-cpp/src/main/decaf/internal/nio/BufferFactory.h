@@ -50,7 +50,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated ByteBuffer which the caller owns.
+         * @return a newly allocated ByteBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -74,7 +74,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new ByteBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new ByteBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -95,7 +95,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new ByteBuffer that is backed by buffer, caller owns.
+         * @return a new ByteBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::ByteBuffer* createByteBuffer( std::vector<unsigned char>& buffer );
 
@@ -106,7 +106,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated CharBuffer which the caller owns.
+         * @return a newly allocated CharBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -130,7 +130,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new CharBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new CharBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -150,7 +150,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new CharBuffer that is backed by buffer, caller owns.
+         * @return a new CharBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::CharBuffer* createCharBuffer( std::vector<char>& buffer );
 
@@ -161,7 +161,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated DoubleBuffer which the caller owns.
+         * @return a newly allocated DoubleBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -185,7 +185,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new DoubleBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new DoubleBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -205,7 +205,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new DoubleBuffer that is backed by buffer, caller owns.
+         * @return a new DoubleBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::DoubleBuffer* createDoubleBuffer( std::vector<double>& buffer );
 
@@ -216,7 +216,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated FloatBuffer which the caller owns.
+         * @return a newly allocated FloatBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -240,7 +240,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new FloatBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new FloatBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -260,7 +260,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new FloatBuffer that is backed by buffer, caller owns.
+         * @return a new FloatBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::FloatBuffer* createFloatBuffer( std::vector<float>& buffer );
 
@@ -268,7 +268,7 @@ namespace nio{
          * Allocates a new long long buffer whose position will be zero its limit will
          * be its capacity and its mark is not set.
          * @param capacity - the internal buffer's capacity.
-         * @returns a newly allocated DoubleBuffer which the caller owns.
+         * @return a newly allocated DoubleBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -292,7 +292,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new LongBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new LongBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -312,7 +312,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new LongBuffer that is backed by buffer, caller owns.
+         * @return a new LongBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::LongBuffer* createLongBuffer( std::vector<long long>& buffer );
 
@@ -323,7 +323,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated IntBuffer which the caller owns.
+         * @return a newly allocated IntBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -347,7 +347,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new IntBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new IntBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -367,7 +367,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new IntBuffer that is backed by buffer, caller owns.
+         * @return a new IntBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::IntBuffer* createIntBuffer( std::vector<int>& buffer );
 
@@ -378,7 +378,7 @@ namespace nio{
          * @param capacity
          *      The internal buffer's capacity.
          *
-         * @returns a newly allocated ShortBuffer which the caller owns.
+         * @return a newly allocated ShortBuffer which the caller owns.
          *
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
          */
@@ -402,7 +402,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new ShortBuffer that is backed by buffer, caller owns the returned pointer.
+         * @return a new ShortBuffer that is backed by buffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if the buffer given in Null.
          * @throws IndexOutOfBoundsException if the capacity specified is negative.
@@ -422,7 +422,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new DoubleBuffer that is backed by buffer, caller owns.
+         * @return a new DoubleBuffer that is backed by buffer, caller owns.
          */
         static decaf::nio::ShortBuffer* createShortBuffer( std::vector<short>& buffer );
 

@@ -280,14 +280,14 @@ namespace net {
          *
          * Since hosts comparison requires name resolution, this operation is a blocking operation.
          *
-         * @returns true if this URL is considered equal to the given URL instance.
+         * @return true if this URL is considered equal to the given URL instance.
          */
         bool equals(const URL& other) const;
 
         /**
          * Gets the authority part of this URL.
          *
-         * @returns the authority part of this URL.
+         * @return the authority part of this URL.
          */
         decaf::lang::String getAuthority() const;
 
@@ -296,7 +296,7 @@ namespace net {
          * scheme or the URLStreamHandler for the URL do not define a default port number, then
          * -1 is returned.
          *
-         * @returns the default port for the given scheme.
+         * @return the default port for the given scheme.
          */
         int getDefaultPort() const;
 
@@ -305,7 +305,7 @@ namespace net {
          * plus the concatenation of the value of getQuery(), if any. If there is no query portion,
          * this method and getPath() will return identical results.
          *
-         * @returns the file name associated with this URL.
+         * @return the file name associated with this URL.
          */
         decaf::lang::String getFile() const;
 
@@ -314,49 +314,49 @@ namespace net {
          * RFC 2732, i.e. for a literal IPv6 address, this method will return the IPv6 address
          * enclosed in square brackets ('[' and ']').
          *
-         * @returns the host name for this URL.
+         * @return the host name for this URL.
          */
         decaf::lang::String getHost() const;
 
         /**
          * Gets the path part of this URL.
          *
-         * @returns the path part of this URL.
+         * @return the path part of this URL.
          */
         decaf::lang::String getPath() const;
 
         /**
          * Gets the user Info part of this URL.
          *
-         * @returns the user info part of this URL.
+         * @return the user info part of this URL.
          */
         decaf::lang::String getUserInfo() const;
 
         /**
          * Gets the port of this URL.
          *
-         * @returns the port of this URL or -1 if not set.
+         * @return the port of this URL or -1 if not set.
          */
         int getPort() const;
 
         /**
          * Gets the protocol of this URL.
          *
-         * @returns the path part of this URL.
+         * @return the path part of this URL.
          */
         decaf::lang::String getProtocol() const;
 
         /**
          * Gets the query part of this URL.
          *
-         * @returns the query part of this URL or empty string if not set.
+         * @return the query part of this URL or empty string if not set.
          */
         decaf::lang::String getQuery() const;
 
         /**
          * Gets the anchor or "reference" portion of this URL.
          *
-         * @returns the anchor or "reference" portion of this URL.
+         * @return the anchor or "reference" portion of this URL.
          */
         decaf::lang::String getRef() const;
 
@@ -366,7 +366,7 @@ namespace net {
          * The hash code is based upon all the URL components relevant for URL comparison which
          * means that the host resolution may cause this operation to block.
          *
-         * @returns the integer has code for this URL.
+         * @return the integer has code for this URL.
          */
         int hashCode() const;
 
@@ -383,7 +383,7 @@ namespace net {
          * be of that subclass. For example, for HTTP an HttpURLConnection will be returned,
          * and for JAR a JarURLConnection will be returned.
          *
-         * @returns a new URLConnection instance for this URL.
+         * @return a new URLConnection instance for this URL.
          *
          * @throws IOException if an error occurs while opening the connection.
          */
@@ -397,7 +397,7 @@ namespace net {
          * @param proxy
          *      The proxy instance to use to make the connection.
          *
-         * @returns a new URLConnection instance for this URL.
+         * @return a new URLConnection instance for this URL.
          *
          * @throws IOException if an error occurs while opening the connection.
          * @throws IllegalArgumentException if proxy is null, or proxy has the wrong type.
@@ -409,7 +409,7 @@ namespace net {
          * Shortcut method to opens a connection to this URL and fetch an InputStream
          * for reading from that connection.
          *
-         * @returns an InputStream that reads from this URL's location.
+         * @return an InputStream that reads from this URL's location.
          *
          * @throws IOException if an error occurs.
          */
@@ -419,7 +419,7 @@ namespace net {
          * Compares this URL to the other ignoring the fragment portion to determine if both
          * reference the same remote object.
          *
-         * @returns true if both URL's reference the same external object.
+         * @return true if both URL's reference the same external object.
          */
         bool sameFile(const URL& other) const;
 
@@ -427,21 +427,21 @@ namespace net {
          * Constructs a string representation of this URL, by calling the toExternalForm
          * method of the stream protocol handler for this object.
          *
-         * @returns the string representation of this URL.
+         * @return the string representation of this URL.
          */
         decaf::lang::String toExternalForm() const;
 
         /**
          * Calls toExternalForm to create a string representation of this URL.
          *
-         * @returns the string representation of this URL.
+         * @return the string representation of this URL.
          */
         std::string toString() const;
 
         /**
          * Returns a URI instance that is the equivalent of this URL.
          *
-         * @returns the URI that is the equivalent of this URL.
+         * @return the URI that is the equivalent of this URL.
          */
         URI toURI() const;
 

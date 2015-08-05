@@ -40,7 +40,7 @@ namespace lang {
         /**
          * Gets the single instance of the Decaf Runtime for this Process.
          *
-         * @returns pointer to the single Decaf Runtime instance that exists
+         * @return pointer to the single Decaf Runtime instance that exists
          *          for this process
          */
         static Runtime* getRuntime();

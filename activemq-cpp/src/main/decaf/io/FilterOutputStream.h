@@ -110,7 +110,7 @@ namespace io{
     protected:
 
         /**
-         * @returns true if this stream has been closed.
+         * @return true if this stream has been closed.
          */
         virtual bool isClosed() const;
 

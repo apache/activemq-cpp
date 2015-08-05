@@ -58,7 +58,7 @@ namespace atomic {
 
         /**
          * Gets the current value of this AtomicBoolean.
-         * @returns the currently set value.
+         * @return the currently set value.
          */
         bool get() const {
             return value == 0 ? false : true;
@@ -78,7 +78,7 @@ namespace atomic {
          *
          * @param expect - the expected value
          * @param update - the new value
-         * @returns true if successful. False return indicates that the actual value
+         * @return true if successful. False return indicates that the actual value
          * was not equal to the expected value.
          */
         bool compareAndSet(bool expect, bool update);
@@ -87,13 +87,13 @@ namespace atomic {
          * Atomically sets to the given value and returns the previous value.
          *
          * @param newValue - the new value
-         * @returns the previous value
+         * @return the previous value
          */
         bool getAndSet(bool newValue);
 
         /**
          * Returns the String representation of the current value.
-         * @returns the String representation of the current value.
+         * @return the String representation of the current value.
          */
         std::string toString() const;
 

@@ -244,12 +244,12 @@ namespace commands{
 
         /**
          * Determines if we think this is a Valid WireFormatInfo command
-         * @returns true if its valid.
+         * @return true if its valid.
          */
         bool isValid() const;
 
         /**
-         * @returns answers true to the isWireFormatInfo query
+         * @return answers true to the isWireFormatInfo query
          */
         virtual bool isWireFormatInfo() const {
             return true;

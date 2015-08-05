@@ -60,7 +60,7 @@ namespace ssl {
          * The returned SSLParameters instance is requires to have non-empty values in its ciphersuites
          * and protocols.
          *
-         * @returns new SSLParameters instance with the SSLContext defaults.
+         * @return new SSLParameters instance with the SSLContext defaults.
          *
          * @throws UnsupportedOperationException if the defaults cannot be obtained.
          */
@@ -73,7 +73,7 @@ namespace ssl {
          * The returned SSLParameters instance is requires to have non-empty values in its ciphersuites
          * and protocols.
          *
-         * @returns a new SSLParameters instance with the full set of settings that are supported.
+         * @return a new SSLParameters instance with the full set of settings that are supported.
          *
          * @throws UnsupportedOperationException if the supported parameters cannot be obtained.
          */
@@ -84,7 +84,7 @@ namespace ssl {
          *
          * The SocketFactory is owned by the Service Provider and should not be destroyed by the caller.
          *
-         * @returns SocketFactory instance that can be used to create new SSLSockets.
+         * @return SocketFactory instance that can be used to create new SSLSockets.
          *
          * @throws IllegalStateException if the SSLContextSpi object requires initialization but
          *         has not been initialized yet.
@@ -96,7 +96,7 @@ namespace ssl {
          *
          * The ServerSocketFactory is owned by the Service Provider and should not be destroyed by the caller.
          *
-         * @returns SocketFactory instance that can be used to create new SSLServerSockets.
+         * @return SocketFactory instance that can be used to create new SSLServerSockets.
          *
          * @throws IllegalStateException if the SSLContextSpi object requires initialization but
          *         has not been initialized yet.

@@ -97,7 +97,7 @@ namespace io{
 
         /**
          * Converts the bytes in the buffer into a standard C++ string
-         * @returns a string containing the bytes in the buffer
+         * @return a string containing the bytes in the buffer
          */
         virtual std::string toString() const;
 

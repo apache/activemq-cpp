@@ -110,7 +110,7 @@ namespace concurrent {
          * <p>
          * @param sourceDuration - Duration value to convert.
          * @param sourceUnit - Unit type of the source duration.
-         * @returns the converted duration in this unit, or Long.MIN_VALUE if conversion
+         * @return the converted duration in this unit, or Long.MIN_VALUE if conversion
          * would negatively overflow, or Long.MAX_VALUE if it would positively overflow.
          */
         long long convert( long long sourceDuration, const TimeUnit& sourceUnit ) const;
@@ -258,7 +258,7 @@ namespace concurrent {
          *
          * @param name
          *          The Name of the TimeUnit constant to be returned.
-         * @returns
+         * @return
          *          A constant reference to the TimeUnit Constant with the given name.
          * @throws IllegalArgumentException
          *          if this enum type has no constant with the specified name

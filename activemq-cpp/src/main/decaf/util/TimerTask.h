@@ -71,7 +71,7 @@ namespace util {
          *
          * This method may be called repeatedly; the second and subsequent calls have no effect.
          *
-         * @returns true if this task is scheduled for one-time execution and has not yet run, or this
+         * @return true if this task is scheduled for one-time execution and has not yet run, or this
          * task is scheduled for repeated execution. Returns false if the task was scheduled for one-time
          * execution and has already run, or if the task was never scheduled, or if the task was already
          * canceled. (Loosely speaking, this method returns true if it prevents one or more scheduled
@@ -97,7 +97,7 @@ namespace util {
          * This method is typically not used in conjunction with fixed-delay execution repeating tasks, as
          * their scheduled execution times are allowed to drift over time, and so are not terribly significant.
          *
-         * @returns the time at which the most recent execution of this task was scheduled to occur, in the
+         * @return the time at which the most recent execution of this task was scheduled to occur, in the
          * format returned by Date.getTime(). The return value is undefined if the task has yet to commence its
          * first execution.
          */

@@ -72,7 +72,7 @@ namespace wireformat {
          * @param in
          *      The input stream to read the command from.
          *
-         * @returns the newly marshaled Command, caller owns the pointer
+         * @return the newly marshaled Command, caller owns the pointer
          *
          * @throws IOException if an I/O error occurs.
          */
@@ -97,7 +97,7 @@ namespace wireformat {
         /**
          * Returns true if this WireFormat has a Negotiator that needs to wrap the
          * Transport that uses it.
-         * @returns true if the WireFormat provides a Negotiator.
+         * @return true if the WireFormat provides a Negotiator.
          */
         virtual bool hasNegotiator() const = 0;
 
@@ -108,7 +108,7 @@ namespace wireformat {
          * can query the WireFormat instance to determine if its busy or not and not mark the
          * connection as inactive if so.
          *
-         * @returns true if the WireFormat object is unmarshaling a message.
+         * @return true if the WireFormat object is unmarshaling a message.
          */
         virtual bool inReceive() const = 0;
 
@@ -119,7 +119,7 @@ namespace wireformat {
          * @param transport
          *      The Transport to Wrap the Negotiator around.
          *
-         * @returns new instance of a WireFormatNegotiator as a Pointer<Transport>.
+         * @return new instance of a WireFormatNegotiator as a Pointer<Transport>.
          *
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */

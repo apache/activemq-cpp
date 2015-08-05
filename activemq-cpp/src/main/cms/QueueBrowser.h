@@ -56,14 +56,14 @@ namespace cms {
         virtual ~QueueBrowser();
 
         /**
-         * @returns the Queue that this browser is listening on.
+         * @return the Queue that this browser is listening on.
          *
          * @throws CMSException if an internal error occurs.
          */
         virtual const Queue* getQueue() const = 0;
 
         /**
-         * @returns the MessageSelector that is used on when this browser was
+         * @return the MessageSelector that is used on when this browser was
          * created or empty string if no selector was present.
          *
          * @throws CMSException if an internal error occurs.
@@ -75,7 +75,7 @@ namespace cms {
          * the Queue in the order that a client would receive them.  The pointer returned is
          * owned by the browser and should not be deleted by the client application.
          *
-         * @returns a pointer to a Queue Enumeration, this Pointer is owned by the QueueBrowser
+         * @return a pointer to a Queue Enumeration, this Pointer is owned by the QueueBrowser
          *          and should not be deleted by the client.
          *
          * @throws CMSException if an internal error occurs.

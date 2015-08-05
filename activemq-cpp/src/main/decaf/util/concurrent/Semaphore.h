@@ -229,7 +229,7 @@ namespace concurrent {
          * though it breaks fairness. If you want to honor the fairness setting, then use
          * tryAcquire(0, TimeUnit.SECONDS) which is almost equivalent (it also detects interruption).
          *
-         * @returns true if a permit was acquired and false otherwise
+         * @return true if a permit was acquired and false otherwise
          *
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
          */
@@ -265,7 +265,7 @@ namespace concurrent {
          * @param timeout the maximum time to wait for a permit
          * @param unit the time unit of the timeout argument
          *
-         * @returns true if a permit was acquired and false if the waiting time elapsed before a permit
+         * @return true if a permit was acquired and false if the waiting time elapsed before a permit
          *          was acquired
          *
          * @throw InterruptedException if the current thread is interrupted.
@@ -361,7 +361,7 @@ namespace concurrent {
          *
          * @param permits the number of permits to acquire
          *
-         * @returns true if the permits were acquired and false otherwise.
+         * @return true if the permits were acquired and false otherwise.
          *
          * @throw IllegalArgumentException if the permits argument is negative.
          * @throw RuntimeException if an unexpected error occurs while acquiring the Semaphore.
@@ -404,7 +404,7 @@ namespace concurrent {
          * @param timeout the maximum amount of time to wait to acquire the permits.
          * @param unit the units that the timeout param represents.
          *
-         * @returns true if all permits were acquired and false if the waiting time elapsed before
+         * @return true if all permits were acquired and false if the waiting time elapsed before
          *          all permits were acquired
          *
          * @throw IllegalArgumentException if the permits argument is negative.
@@ -435,21 +435,21 @@ namespace concurrent {
          *
          * This method is typically used for debugging and testing purposes.
          *
-         * @returns the number of permits available in this semaphore
+         * @return the number of permits available in this semaphore
          */
         int availablePermits() const;
 
         /**
          * Acquires and returns all permits that are immediately available.
          *
-         * @returns the number of permits acquired
+         * @return the number of permits acquired
          *
          * @throw RuntimeException if an unexpected error occurs while draining the Semaphore.
          */
         int drainPermits();
 
         /**
-         * @returns true if this semaphore has fairness set true
+         * @return true if this semaphore has fairness set true
          */
         bool isFair() const;
 
@@ -457,7 +457,7 @@ namespace concurrent {
          * Returns a string identifying this semaphore, as well as its state. The state, in
          * brackets, includes the String "Permits =" followed by the number of permits.
          *
-         * @returns a string identifying this semaphore, as well as its state
+         * @return a string identifying this semaphore, as well as its state
          */
         std::string toString() const;
 
@@ -466,12 +466,12 @@ namespace concurrent {
          * value changes dynamically so the result of this method can be invalid immediately after it
          * is called.
          *
-         * @returns an estimate of the number of waiting threads.
+         * @return an estimate of the number of waiting threads.
          */
         int getQueueLength() const;
 
         /**
-         * @returns true if there are threads that are currently waiting to acquire this Semaphore.
+         * @return true if there are threads that are currently waiting to acquire this Semaphore.
          */
         bool hasQueuedThreads() const;
 
@@ -494,7 +494,7 @@ namespace concurrent {
          * Creates and returns a new Collection object that contains a best effort snapshot of the
          * threads that are currently waiting to acquire.
          *
-         * @returns a Collection pointer that contains waiting threads for lock acquisition.
+         * @return a Collection pointer that contains waiting threads for lock acquisition.
          *          The caller owns the returned pointer.
          */
         decaf::util::Collection<decaf::lang::Thread*>* getQueuedThreads() const;

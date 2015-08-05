@@ -104,7 +104,7 @@ namespace util{
          * @param source
          *      Map to compare to this one.
          *
-         * @returns true if the Map passed is equal in value to this one.
+         * @return true if the Map passed is equal in value to this one.
          */
         virtual bool equals(const Map& source) const = 0;
 
@@ -200,7 +200,7 @@ namespace util{
          * @param value
          *      The value to be set.
          *
-         * @returns true if the put operation replaced a value that was associated with
+         * @return true if the put operation replaced a value that was associated with
          *          an existing mapping to the given key or false otherwise.
          *
          * @throws UnsupportedOperationException if this map is unmodifiable.
@@ -227,7 +227,7 @@ namespace util{
          * @param oldValue (out)
          *      The value previously held in the mapping for this key.  .
          *
-         * @returns true if the put operation replaced a value that was associated with
+         * @return true if the put operation replaced a value that was associated with
          *          an existing mapping to the given key or false otherwise.
          *
          * @throws UnsupportedOperationException if this map is unmodifiable.
@@ -276,7 +276,7 @@ namespace util{
          * Iterator.remove, Set.remove, removeAll, retainAll and clear operations. It does not
          * support the add or addAll operations.
          *
-         * @returns a reference  to a Set<MapEntry<K,V>> that is backed by this Map.
+         * @return a reference  to a Set<MapEntry<K,V>> that is backed by this Map.
          */
         virtual Set< MapEntry<K,V> >& entrySet() = 0;
         virtual const Set< MapEntry<K,V> >& entrySet() const = 0;

@@ -213,7 +213,7 @@ namespace cms {
          * @param name
          *      The string property name key used to look up the value type.
          *
-         * @returns The ValueType contained in the given property.
+         * @return The ValueType contained in the given property.
          *
          * @throws CMSException if no property exists that matches the requested key.
          */

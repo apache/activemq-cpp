@@ -115,7 +115,7 @@ namespace cms {
          * the client code must ensure that the object remains valid for the lifetime of the CMS
          * object to which the ExceptionListener has been assigned.
          *
-         * @returns the pointer to the currently set cms::ExceptionListener.
+         * @return the pointer to the currently set cms::ExceptionListener.
          */
         virtual cms::ExceptionListener* getExceptionListener() const = 0;
 
@@ -135,7 +135,7 @@ namespace cms {
         /**
          * Gets the currently configured MessageTransformer for this ConnectionFactory.
          *
-         * @returns the pointer to the currently set cms::MessageTransformer.
+         * @return the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const = 0;
 

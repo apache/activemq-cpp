@@ -140,7 +140,7 @@ namespace failover {
     public:
 
         /**
-         * @returns true if there is a need for the iterate method to be called by this
+         * @return true if there is a need for the iterate method to be called by this
          *          classes task runner.
          */
         virtual bool isPending() const;

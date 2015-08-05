@@ -46,7 +46,7 @@ namespace cms {
         /**
          * Gets the CMS major version number.
          *
-         * @returns the CMS API major version number
+         * @return the CMS API major version number
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -56,7 +56,7 @@ namespace cms {
         /**
          * Gets the CMS minor version number.
          *
-         * @returns the CMS API minor version number
+         * @return the CMS API minor version number
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -66,7 +66,7 @@ namespace cms {
         /**
          * Gets the CMS provider name.
          *
-         * @returns the CMS provider name
+         * @return the CMS provider name
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -76,7 +76,7 @@ namespace cms {
         /**
          * Gets the CMS provider version.
          *
-         * @returns the CMS provider version
+         * @return the CMS provider version
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -86,7 +86,7 @@ namespace cms {
         /**
          * Gets the CMS provider major version number.
          *
-         * @returns the CMS provider major version number
+         * @return the CMS provider major version number
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -96,7 +96,7 @@ namespace cms {
         /**
          * Gets the CMS provider minor version number.
          *
-         * @returns the CMS provider minor version number
+         * @return the CMS provider minor version number
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -106,7 +106,7 @@ namespace cms {
         /**
          * Gets the CMS provider patch version number.
          *
-         * @returns the CMS provider patch version number
+         * @return the CMS provider patch version number
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
@@ -116,7 +116,7 @@ namespace cms {
         /**
          * Gets an Vector of the CMSX property names.
          *
-         * @returns an Vector of CMSX property names
+         * @return an Vector of CMSX property names
          *
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.

@@ -40,21 +40,21 @@ namespace cms {
          * if the caller wishes to store it beyond the lifetime of this event
          * object.
          *
-         * @returns a cms::Destination instance that this event relates to.
+         * @return a cms::Destination instance that this event relates to.
          */
         virtual const cms::Destination* getDestination() const = 0;
 
         /**
          * Returns true if this events represents the addition of a Destination.
          *
-         * @returns true if this events represents the addition of a Destination.
+         * @return true if this events represents the addition of a Destination.
          */
         virtual bool isAddOperation() const = 0;
 
         /**
          * Returns true if this events represents the removal of a Destination.
          *
-         * @returns true if this events represents the removal of a Destination.
+         * @return true if this events represents the removal of a Destination.
          */
         virtual bool isRemoveOperation() const = 0;
 

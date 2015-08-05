@@ -216,7 +216,7 @@ namespace lang {
          *
          * @param value - The new value to contain.
          *
-         * @returns The pointer instance that was held by this Pointer object, the pointer is
+         * @return The pointer instance that was held by this Pointer object, the pointer is
          *          no longer owned by this Pointer and won't be freed when this Pointer goes
          *          out of scope.
          */
@@ -244,7 +244,7 @@ namespace lang {
          * Returns the current size of the contained array or zero if the array is
          * NULL.
          *
-         * @returns the size of the array or zero if the array is NULL
+         * @return the size of the array or zero if the array is NULL
          */
         int length() const {
             return this->array->length;

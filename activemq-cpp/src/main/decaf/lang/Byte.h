@@ -128,21 +128,21 @@ namespace lang {
         }
 
         /**
-         * @returns true if the two Byte Objects have the same value.
+         * @return true if the two Byte Objects have the same value.
          */
         bool equals(const Byte& c) const {
             return this->value == c.value;
         }
 
         /**
-         * @returns true if the two Bytes have the same value.
+         * @return true if the two Bytes have the same value.
          */
         bool equals(const unsigned char& c) const {
             return this->value == c;
         }
 
         /**
-         * @returns this Byte Object as a String Representation
+         * @return this Byte Object as a String Representation
          */
         std::string toString() const;
 
@@ -197,7 +197,7 @@ namespace lang {
     public:
 
         /**
-         * @returns a string representing the primitive value as Base 10
+         * @return a string representing the primitive value as Base 10
          */
         static std::string toString(unsigned char value);
 
@@ -216,7 +216,7 @@ namespace lang {
          * @param value
          *      The string to decode
          *
-         * @returns a Byte object containing the decoded value
+         * @return a Byte object containing the decoded value
          *
          * @throws NumberFomatException if the string is not formatted correctly.
          */
@@ -263,7 +263,7 @@ namespace lang {
          * @param s
          *      String to convert to a unsigned char
          *
-         * @returns the converted unsigned char value
+         * @return the converted unsigned char value
          *
          * @throws NumberFormatException if the string is not a unsigned char.
          */
@@ -275,7 +275,7 @@ namespace lang {
          * @param value
          *      The primitive char to wrap.
          *
-         * @returns a new Character instance that wraps this value.
+         * @return a new Character instance that wraps this value.
          */
         static Byte valueOf(unsigned char value) {
             return Byte(value);

@@ -103,12 +103,12 @@ namespace core {
         const Pointer<commands::ConsumerId>& getConsumerId() const;
 
         /**
-         * @returns if this Consumer has been closed.
+         * @return if this Consumer has been closed.
          */
         bool isClosed() const;
 
         /**
-         * @returns the number of Message's this consumer is waiting to Dispatch.
+         * @return the number of Message's this consumer is waiting to Dispatch.
          */
         int getMessageAvailableCount() const;
 
@@ -127,7 +127,7 @@ namespace core {
          * Gets a pointer to this Consumer's Redelivery Policy object, the Consumer
          * retains ownership of this pointer so the caller should not delete it.
          *
-         * @returns a Pointer to a RedeliveryPolicy that is in use by this Consumer.
+         * @return a Pointer to a RedeliveryPolicy that is in use by this Consumer.
          */
         RedeliveryPolicy* getRedeliveryPolicy() const;
 
@@ -135,7 +135,7 @@ namespace core {
          * Gets the error that caused this Consumer to be in a Failed state, or NULL if
          * there is no Error.
          *
-         * @returns pointer to the error that faulted this Consumer or NULL.
+         * @return pointer to the error that faulted this Consumer or NULL.
          */
         decaf::lang::Exception* getFailureError() const;
 
@@ -143,7 +143,7 @@ namespace core {
          * Time in Milliseconds before an automatic acknowledge is done for any outstanding
          * delivered Messages.  A value less than one means no task is scheduled.
          *
-         * @returns time in milliseconds for the scheduled ack task.
+         * @return time in milliseconds for the scheduled ack task.
          */
         long long getOptimizedAckScheduledAckInterval() const;
 
@@ -158,7 +158,7 @@ namespace core {
         void setOptimizedAckScheduledAckInterval(long long value);
 
         /**
-         * @returns true if this consumer is using optimize acknowledge mode.
+         * @return true if this consumer is using optimize acknowledge mode.
          */
         bool isOptimizeAcknowledge() const;
 

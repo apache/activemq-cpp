@@ -112,7 +112,7 @@ namespace ssl {
          * Gets a vector containing the names of all the cipher suites that are supported by this
          * SSLServerSocket.  Normally not all of these cipher suites will be enabled on the Socket.
          *
-         * @returns a vector containing the names of all the supported cipher suites.
+         * @return a vector containing the names of all the supported cipher suites.
          */
         virtual std::vector<std::string> getSupportedCipherSuites() const = 0;
 
@@ -120,7 +120,7 @@ namespace ssl {
          * Gets a vector containing the names of all the protocols that could be enabled for
          * this SSLServerSocket instance.
          *
-         * @returns a vector containing the names of all the supported protocols.
+         * @return a vector containing the names of all the supported protocols.
          */
         virtual std::vector<std::string> getSupportedProtocols() const = 0;
 
@@ -165,7 +165,7 @@ namespace ssl {
         virtual void setEnabledProtocols( const std::vector<std::string>& protocols ) = 0;
 
         /**
-         * @returns true if the Socket request client Authentication.
+         * @return true if the Socket request client Authentication.
          */
         virtual bool getWantClientAuth() const = 0;
 
@@ -180,7 +180,7 @@ namespace ssl {
         virtual void setWantClientAuth( bool value ) = 0;
 
         /**
-         * @returns true if the Socket requires client Authentication.
+         * @return true if the Socket requires client Authentication.
          */
         virtual bool getNeedClientAuth() const = 0;
 

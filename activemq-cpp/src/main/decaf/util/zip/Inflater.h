@@ -132,7 +132,7 @@ namespace zip {
          * Returns the total number of bytes remaining in the input buffer. This can be used to
          * find out what bytes still remain in the input buffer after decompression has finished.
          *
-         * @returns the total number of bytes remaining in the input buffer
+         * @return the total number of bytes remaining in the input buffer
          */
         int getRemaining() const;
 
@@ -201,7 +201,7 @@ namespace zip {
         bool needsInput() const;
 
         /**
-         * @returns true if a preset dictionary is needed for decompression.
+         * @return true if a preset dictionary is needed for decompression.
          */
         bool needsDictionary() const;
 
@@ -272,14 +272,14 @@ namespace zip {
         int inflate(std::vector<unsigned char>& buffer);
 
         /**
-         * @returns the ADLER-32 value of the uncompressed data.
+         * @return the ADLER-32 value of the uncompressed data.
          *
          * @throws IllegalStateException if in the end state.
          */
         long long getAdler() const;
 
         /**
-         * @returns the total number of compressed bytes input so far.
+         * @return the total number of compressed bytes input so far.
          *
          * @throws IllegalStateException if in the end state.
          */

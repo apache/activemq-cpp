@@ -56,7 +56,7 @@ namespace core {
         /**
          * Gets the amount of messages to prefetch for a Durable Topic.
          *
-         * @returns value of the number of messages to prefetch.
+         * @return value of the number of messages to prefetch.
          */
         virtual int getDurableTopicPrefetch() const = 0;
 
@@ -71,7 +71,7 @@ namespace core {
         /**
          * Gets the amount of messages to prefetch for a Queue.
          *
-         * @returns value of the number of messages to prefetch.
+         * @return value of the number of messages to prefetch.
          */
         virtual int getQueuePrefetch() const = 0;
 
@@ -86,7 +86,7 @@ namespace core {
         /**
          * Gets the amount of messages to prefetch for a Queue Browser.
          *
-         * @returns value of the number of messages to prefetch.
+         * @return value of the number of messages to prefetch.
          */
         virtual int getQueueBrowserPrefetch() const = 0;
 
@@ -101,7 +101,7 @@ namespace core {
         /**
          * Gets the amount of messages to prefetch for a Topic.
          *
-         * @returns value of the number of messages to prefetch.
+         * @return value of the number of messages to prefetch.
          */
         virtual int getTopicPrefetch() const = 0;
 
@@ -118,7 +118,7 @@ namespace core {
          * prefetch value and return either the requested value or the maximum allowable
          * value for prefetch.
          *
-         * @returns the allowable value for a prefetch limit, either requested or the max.
+         * @return the allowable value for a prefetch limit, either requested or the max.
          */
         virtual int getMaxPrefetchLimit(int value) const = 0;
 

@@ -206,7 +206,7 @@ namespace cms {
         /**
          * Gets the error code that was assigned to this XAException.
          *
-         * @returns the assigned error code.
+         * @return the assigned error code.
          */
         int getErrorCode() const {
             return this->errorCode;

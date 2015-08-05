@@ -62,7 +62,7 @@ namespace util{
         /**
          * Converts the contents into a formatted string that can be output
          * in a Log File or other debugging tool.
-         * @returns formatted String of all elements in the list.
+         * @return formatted String of all elements in the list.
          */
         std::string toString() const;
 

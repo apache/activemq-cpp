@@ -73,7 +73,7 @@ namespace util {
          * and returns a long long with the bits of the parsed string, the
          * caller can then convert those to a float or doulbe as needed.
          * @param hexString - string to parse
-         * @returns the bits parsed from the string
+         * @return the bits parsed from the string
          */
         long long parse(const std::string& hexString);
 
@@ -156,14 +156,14 @@ namespace util {
         /*
          * Parses the hex string to a double number.
          * @param hexString - string to parse
-         * @returns the parsed double value
+         * @return the parsed double value
          */
         static double parseDouble(const std::string& hexString);
 
         /*
          * Parses the hex string to a float number.
          * @param hexString - string to parse
-         * @returns the parsed float value
+         * @return the parsed float value
          */
         static float parseFloat(const std::string& hexString);
 
@@ -173,7 +173,7 @@ namespace util {
         /*
          * Analyzes the hex string and extracts the sign and digit segments.
          * @param hexString - string to parse
-         * @returns array of three strings holding the segments caller owns
+         * @return array of three strings holding the segments caller owns
          */
         static std::string* getSegmentsFromHexString(const std::string& hexString);
 

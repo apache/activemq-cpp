@@ -57,7 +57,7 @@ namespace net {
         /**
          * Gets the source URI string that was parsed to obtain this URIType
          * instance and the resulting data,
-         * @returns the source URI string
+         * @return the source URI string
          */
         std::string getSource() const {
             return this->source;
@@ -269,7 +269,7 @@ namespace net {
         /**
          * Gets if the URI is valid, meaning that the source has been set and
          * parsed and all relevant data fields have been set.
-         * @returns true if the URIType contains valid data.
+         * @return true if the URIType contains valid data.
          */
         bool isValid() const {
             return valid;
@@ -287,7 +287,7 @@ namespace net {
         /**
          * Gets the computed hashCode for this URIType or return -1 if non is set
          *
-         * @returns the hash code for this URIType instance or -1 if not set.
+         * @return the hash code for this URIType instance or -1 if not set.
          */
         int getHashCode() const {
             return this->hashCode;

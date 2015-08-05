@@ -61,7 +61,7 @@ namespace benchmark{
 
         /**
          * Gets the number of runs made so far
-         * @returns unsigned int that counts the number of runs
+         * @return unsigned int that counts the number of runs
          */
         long long getNumberOfRuns() const {
             return numberOfRuns;
@@ -70,7 +70,7 @@ namespace benchmark{
         /**
          * Gets the overall average time that the count has recoreded
          * for all start / stop cycles.
-         * @returns the average time for all the runs times / numberOfRuns
+         * @return the average time for all the runs times / numberOfRuns
          */
         long long getAverageTime() const;
 

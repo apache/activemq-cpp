@@ -67,7 +67,7 @@ namespace lang {
          * the internal character buffer, when the number of characters inserted exceeds the current
          * capacity the internal buffer is reallocated and old contents copied to the new buffer.
          *
-         * @returns the current capacity value.
+         * @return the current capacity value.
          */
         virtual int capacity() const;
 
@@ -125,7 +125,7 @@ namespace lang {
          * @param value
          *      The String to locate within this string buffer.
          *
-         * @returns the index of the specified substring within this string buffer or -1 if not found.
+         * @return the index of the specified substring within this string buffer or -1 if not found.
          */
         virtual int indexOf(const String& value) const;
 
@@ -138,7 +138,7 @@ namespace lang {
          * @param start
          *      The index to start the search from.
          *
-         * @returns the index of the specified substring within this string buffer or -1 if not found.
+         * @return the index of the specified substring within this string buffer or -1 if not found.
          */
         virtual int indexOf(const String& value, int start) const;
 
@@ -148,7 +148,7 @@ namespace lang {
          * @param value
          *      The String to locate within this string buffer.
          *
-         * @returns the last index of the specified substring within this string buffer or -1
+         * @return the last index of the specified substring within this string buffer or -1
          *          if not found.
          */
         virtual int lastIndexOf(const String& value) const;
@@ -162,7 +162,7 @@ namespace lang {
          * @param start
          *      The index to start the search from.
          *
-         * @returns the last index of the specified substring within this string buffer or -1
+         * @return the last index of the specified substring within this string buffer or -1
          *          if not found.
          */
         virtual int lastIndexOf(const String& value, int start) const;
@@ -170,7 +170,7 @@ namespace lang {
         /**
          * Returns the current length of the String that has been built.
          *
-         * @returns the current number of characters that have been inserted.
+         * @return the current number of characters that have been inserted.
          */
         virtual int length() const;
 
@@ -208,7 +208,7 @@ namespace lang {
          * @param start
          *      The starting index of the substring to create.
          *
-         * @returns a new String that is a subset of this character buffer.
+         * @return a new String that is a subset of this character buffer.
          *
          * @throws StringIndexOutOfBoundsException
          *      if start is less than zero, or greater than the length of this buffer.
@@ -225,7 +225,7 @@ namespace lang {
          * @param end
          *      The ending index of the substring to create. (exclusive)
          *
-         * @returns a new String that is a subset of this character buffer.
+         * @return a new String that is a subset of this character buffer.
          *
          * @throws StringIndexOutOfBoundsException
          *      if start or end is less than zero, or end is greater than the length of this buffer
@@ -244,7 +244,7 @@ namespace lang {
          * @param end
          *      The ending index of the substring to create. (exclusive)
          *
-         * @returns a new CharSequence pointer that is a subset of this character buffer.
+         * @return a new CharSequence pointer that is a subset of this character buffer.
          *
          * @throws StringIndexOutOfBoundsException
          *      if start or end is less than zero, or end is greater than the length of this buffer

@@ -40,7 +40,7 @@ namespace logging{
         /**
          * Check if a given log record should be published.
          * @param record the <code>LogRecord</code> to check.
-         * @returns true if the record is loggable.
+         * @return true if the record is loggable.
          */
         virtual bool isLoggable( const LogRecord& record ) const = 0;
 

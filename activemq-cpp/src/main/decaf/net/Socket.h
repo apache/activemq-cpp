@@ -229,35 +229,35 @@ namespace net{
         /**
          * Indicates whether or not this socket is connected to am end point.
          *
-         * @returns true if connected, false otherwise.
+         * @return true if connected, false otherwise.
          */
         bool isConnected() const {
             return connected;
         }
 
         /**
-         * @returns true if the Socket has been closed.
+         * @return true if the Socket has been closed.
          */
         bool isClosed() const {
             return closed;
         }
 
         /**
-         * @returns true if this Socket has been bound to a Local address.
+         * @return true if this Socket has been bound to a Local address.
          */
         bool isBound() const {
             return bound;
         }
 
         /**
-         * @returns true if input on this Socket has been shutdown.
+         * @return true if input on this Socket has been shutdown.
          */
         bool isInputShutdown() const {
             return inputShutdown;
         }
 
         /**
-         * @returns true if output on this Socket has been shutdown.
+         * @return true if output on this Socket has been shutdown.
          */
         bool isOutputShutdown() const {
             return outputShutdown;
@@ -310,14 +310,14 @@ namespace net{
         /**
          * Returns the address to which the socket is connected.
          *
-         * @returns the remote IP address to which this socket is connected, or null if the socket is not connected.
+         * @return the remote IP address to which this socket is connected, or null if the socket is not connected.
          */
         std::string getInetAddress() const;
 
         /**
          * Gets the local address to which the socket is bound.
          *
-         * @returns the local address to which the socket is bound or InetAddress.anyLocalAddress() if the socket is not bound yet.
+         * @return the local address to which the socket is bound or InetAddress.anyLocalAddress() if the socket is not bound yet.
          */
         std::string getLocalAddress() const;
 
@@ -466,7 +466,7 @@ namespace net{
         /**
          * Gets the Status of the TCP_NODELAY setting for this socket.
          *
-         * @returns true if TCP_NODELAY is enabled for the socket.
+         * @return true if TCP_NODELAY is enabled for the socket.
          *
          * @throws SocketException Thrown if unable to set the information.
          */
@@ -490,7 +490,7 @@ namespace net{
          *
          * Refer to your platforms network documentation regarding support for this setting.
          *
-         * @returns the bitset result of querying the traffic class setting.
+         * @return the bitset result of querying the traffic class setting.
          *
          * @throws SocketException if an error is encountered while performing this operation.
          */
@@ -541,7 +541,7 @@ namespace net{
         virtual void sendUrgentData(int data);
 
         /**
-         * @returns a string representing this Socket.
+         * @return a string representing this Socket.
          */
         virtual std::string toString() const;
 

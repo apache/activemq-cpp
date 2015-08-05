@@ -35,7 +35,7 @@ namespace lang {
         virtual ~Iterable() {}
 
         /**
-         * @returns an iterator over a set of elements of type T.
+         * @return an iterator over a set of elements of type T.
          */
         virtual decaf::util::Iterator<E>* iterator() = 0;
         virtual decaf::util::Iterator<E>* iterator() const = 0;

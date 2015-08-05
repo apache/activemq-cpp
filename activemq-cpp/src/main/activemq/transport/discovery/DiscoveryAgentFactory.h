@@ -48,7 +48,7 @@ namespace discovery {
          * @param agentURI
          *      The URI that defines the agent to create along with it configuration options.
          *
-         * @returns a new DiscoveryAgent instance for the given URI.
+         * @return a new DiscoveryAgent instance for the given URI.
          *
          * @throws IOException if an error occurs creating the given agent.
          */

@@ -198,7 +198,7 @@ namespace net {
         /**
          * Gets the computed hashCode for this URLType or return -1 if non is set
          *
-         * @returns the hash code for this URLType instance or -1 if not set.
+         * @return the hash code for this URLType instance or -1 if not set.
          */
         int getHashCode() const {
             return this->hashCode;

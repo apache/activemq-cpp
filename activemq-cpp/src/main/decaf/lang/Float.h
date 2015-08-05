@@ -86,7 +86,7 @@ namespace lang {
 
         /**
          * @param f - the Float object to compare against.
-         * @returns true if the two Float Objects have the same value.
+         * @return true if the two Float Objects have the same value.
          */
         bool equals(const Float& f) const {
             return this->value == f.value;
@@ -123,7 +123,7 @@ namespace lang {
 
         /**
          * @param f - the Float object to compare against.
-         * @returns true if the two Float Objects have the same value.
+         * @return true if the two Float Objects have the same value.
          */
         bool equals(const float& f) const {
             return this->value == f;
@@ -149,7 +149,7 @@ namespace lang {
         }
 
         /**
-         * @returns this Float Object as a String Representation
+         * @return this Float Object as a String Representation
          */
         std::string toString() const;
 
@@ -202,12 +202,12 @@ namespace lang {
         }
 
         /**
-         * @returns true if the float is equal to positive infinity.
+         * @return true if the float is equal to positive infinity.
          */
         bool isInfinite() const;
 
         /**
-         * @returns true if the float is equal to NaN.
+         * @return true if the float is equal to NaN.
          */
         bool isNaN() const;
 
@@ -220,7 +220,7 @@ namespace lang {
          * call: Float( f1 ).compareTo( Float( f2) )
          * @param f1 - the first double to compare
          * @param f2 - the second double to compare
-         * @returns the value 0 if d1 is numerically equal to f2; a value less than
+         * @return the value 0 if d1 is numerically equal to f2; a value less than
          * 0 if f1 is numerically less than f2; and a value greater than 0  if f1 is
          * numerically greater than f2.
          */
@@ -245,7 +245,7 @@ namespace lang {
          * same as the argument to floatToIntBits (except all NaN values are
          * collapsed to a single "canonical" NaN value).
          * @param value - the float to convert to int bits
-         * @returns the int that holds the float's value
+         * @return the int that holds the float's value
          */
         static int floatToIntBits(float value);
 
@@ -272,7 +272,7 @@ namespace lang {
          * as the argument to floatToRawIntBits.
          * @param value
          *      The float to convert to a raw int.
-         * @returns the raw int value of the float
+         * @return the raw int value of the float
          */
         static int floatToRawIntBits(float value);
 
@@ -297,7 +297,7 @@ namespace lang {
 
         /**
          * @param value - The float to check.
-         * @returns true if the float is equal to infinity.
+         * @return true if the float is equal to infinity.
          */
         static bool isInfinite(float value);
 
@@ -307,7 +307,7 @@ namespace lang {
          * @param value
          *      The float to check.
          *
-         * @returns true if the float is equal to NaN.
+         * @return true if the float is equal to NaN.
          */
         static bool isNaN(float value);
 
@@ -318,7 +318,7 @@ namespace lang {
          * @param value
          *      The string to parse.
          *
-         * @returns a float parsed from the string
+         * @return a float parsed from the string
          *
          * @throw NumberFormatException if an error occurs parsing the String.
          */
@@ -356,7 +356,7 @@ namespace lang {
          *        there must be at least one nonzero digit in a subnormal significand.
          *
          * @param value - The float to convert to a string
-         * @returns the Hex formatted float string.
+         * @return the Hex formatted float string.
          */
         static std::string toHexString(float value);
 
@@ -392,14 +392,14 @@ namespace lang {
          * @param value
          *      The float to convert to a string
          *
-         * @returns the formatted float string.
+         * @return the formatted float string.
          */
         static std::string toString(float value);
 
         /**
          * Returns a Float instance representing the specified float value.
          * @param value - float to wrap
-         * @returns new Float instance wrapping the primitive value
+         * @return new Float instance wrapping the primitive value
          */
         static Float valueOf(float value);
 
@@ -408,7 +408,7 @@ namespace lang {
          * from the string value passed.
          *
          * @param value - the string to parse
-         * @returns a new Float instance wrapping the float parsed from value
+         * @return a new Float instance wrapping the float parsed from value
          * @throws NumberFormatException on error.
          */
         static Float valueOf(const String& value);

@@ -141,7 +141,7 @@ namespace net{
          * default SocketFactory per application, the pointer returned by this method is owned by
          * the SocketFactory class and in not to be deleted by the caller.
          *
-         * @returns pointer to the applications default SocketFactory.
+         * @return pointer to the applications default SocketFactory.
          *
          * @throws SocketException if an error occurs while getting the default instance.
          */

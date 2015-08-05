@@ -69,7 +69,7 @@ namespace net {
          * Parse the passed in URI.
          * @param uri - the URI to Parse
          * @param forceServer - if true invalid URI data throws an Exception
-         * @returns a URIType instance containing the parsed data.
+         * @return a URIType instance containing the parsed data.
          * @throws URISyntaxException if forceServer is true and the URI is invalid.
          */
         URIType parseURI( const std::string& uri, bool forceServer );
@@ -147,7 +147,7 @@ namespace net {
          * <p>
          * @param forceServer
          * @param authority
-         * @returns a URIType instance containing the parsed data.
+         * @return a URIType instance containing the parsed data.
          * @throw URISyntaxException
          */
         URIType parseAuthority( bool forceServer, const std::string& authority );

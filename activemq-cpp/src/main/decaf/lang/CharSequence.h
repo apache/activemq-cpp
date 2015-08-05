@@ -39,7 +39,7 @@ namespace lang {
         virtual ~CharSequence();
 
         /**
-         * @returns the length of the underlying character sequence.
+         * @return the length of the underlying character sequence.
          */
         virtual int length() const = 0;
 
@@ -50,7 +50,7 @@ namespace lang {
          * @param index
          *      The position to return the char at.
          *
-         * @returns the char at the given position.
+         * @return the char at the given position.
          *
          * @throws IndexOutOfBoundsException if index is > than length() or negative
          */
@@ -67,14 +67,14 @@ namespace lang {
          * @param end
          *      The end index, exclusive.
          *
-         * @returns a new CharSequence
+         * @return a new CharSequence
          *
          * @throws IndexOutOfBoundsException if start or end > length() or start or end are negative.
          */
         virtual CharSequence* subSequence(int start, int end) const = 0;
 
         /**
-         * @returns the String representation of this CharSequence
+         * @return the String representation of this CharSequence
          */
         virtual std::string toString() const = 0;
 

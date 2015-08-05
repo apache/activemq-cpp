@@ -203,7 +203,7 @@ namespace logging{
         /**
          * Gets a reference to the Logging Properties used by this
          * logger.
-         * @returns The Logger Properties Pointer
+         * @return The Logger Properties Pointer
          */
         const util::Properties& getProperties() const {
             return properties;

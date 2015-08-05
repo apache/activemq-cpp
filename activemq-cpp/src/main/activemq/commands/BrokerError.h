@@ -74,7 +74,7 @@ namespace commands {
         /**
          * Clone this object and return a new instance that the
          * caller now owns, this will be an exact copy of this one
-         * @returns new copy of this object.
+         * @return new copy of this object.
          */
         virtual BrokerError* cloneDataStructure() const {
             BrokerError* error = new BrokerError();
@@ -100,7 +100,7 @@ namespace commands {
 
         /**
          * Gets the string holding the error message
-         * @returns String Message
+         * @return String Message
          */
         virtual const std::string& getMessage() const {
             return message;
@@ -116,7 +116,7 @@ namespace commands {
 
         /**
          * Gets the string holding the Exception Class name
-         * @returns Exception Class name
+         * @return Exception Class name
          */
         virtual const std::string& getExceptionClass() const {
             return exceptionClass;
@@ -132,7 +132,7 @@ namespace commands {
 
         /**
          * Gets the Broker Error that caused this exception
-         * @returns Broker Error Pointer
+         * @return Broker Error Pointer
          */
         virtual const decaf::lang::Pointer<BrokerError>& getCause() const {
             return cause;
@@ -148,7 +148,7 @@ namespace commands {
 
         /**
          * Gets the Stack Trace Elements for the Exception
-         * @returns Stack Trace Elements
+         * @return Stack Trace Elements
          */
         virtual const std::vector<decaf::lang::Pointer<StackTraceElement> >& getStackTraceElements() const {
             return stackTraceElements;
@@ -163,7 +163,7 @@ namespace commands {
         }
 
         /**
-         * @returns the local Exception that was the source of this BrokerError instance
+         * @return the local Exception that was the source of this BrokerError instance
          */
         decaf::lang::Pointer<decaf::lang::Exception> getLocalException() const {
             return this->exCause;

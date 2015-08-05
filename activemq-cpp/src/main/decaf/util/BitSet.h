@@ -147,7 +147,7 @@ namespace util {
         /**
          * Returns the number of bits set to true in this BitSet.
          *
-         * @returns the number of bits set to true in this BitSet.
+         * @return the number of bits set to true in this BitSet.
          */
         int cardinality();
 
@@ -189,7 +189,7 @@ namespace util {
          *
          * must be true. The current sizes of the two bit sets are not compared.
          *
-         * @returns true if the sets are the same, false otherwise.
+         * @return true if the sets are the same, false otherwise.
          */
         bool equals(const BitSet& set) const;
 
@@ -224,7 +224,7 @@ namespace util {
          * @param index
          *      The index of the bit in question.
          *
-         * @returns the value of the bit with the specified index.
+         * @return the value of the bit with the specified index.
          *
          * @throws IndexOutOfBoundsException if the index value is negative.
          */
@@ -239,7 +239,7 @@ namespace util {
          * @param toIndex
          *      The index (exclusive) to stop at.
          *
-         * @returns a new BitSet containing the specified values.
+         * @return a new BitSet containing the specified values.
          *
          * @throws IndexOutOfBoundsException if fromIndex is negative, or toIndex is negative, or
          *                                   fromIndex is larger than toIndex.
@@ -253,14 +253,14 @@ namespace util {
          * @param set
          *      BitSet to intersect with.
          *
-         * @returns boolean indicating whether this BitSet intersects the specified BitSet.
+         * @return boolean indicating whether this BitSet intersects the specified BitSet.
          */
         bool intersects(const BitSet& set) const;
 
         /**
          * Returns true if this BitSet contains no bits that are set to true.
          *
-         * @returns true if the set is empty, false otherwise.
+         * @return true if the set is empty, false otherwise.
          */
         bool isEmpty() const;
 
@@ -268,7 +268,7 @@ namespace util {
          * Returns the "logical size" of this BitSet: the index of the highest set bit in the
          * BitSet plus one. Returns zero if the BitSet contains no set bits.
          *
-         * @returns the logical size of the BitSet.
+         * @return the logical size of the BitSet.
          */
         int length() const;
 
@@ -279,7 +279,7 @@ namespace util {
          * @param index
          *      The index to start the search from (inclusive).
          *
-         * @returns the index of the next clear bit.
+         * @return the index of the next clear bit.
          *
          * @throws IndexOutOfBoundsException if the index value is negative.
          */
@@ -292,7 +292,7 @@ namespace util {
          * @param index
          *      The index to start the search from (inclusive).
          *
-         * @returns the index of the next set bit.
+         * @return the index of the next set bit.
          *
          * @throws IndexOutOfBoundsException if the index value is negative.
          */
@@ -354,7 +354,7 @@ namespace util {
          * Returns the number of bits of space actually in use by this BitSet to represent bit
          * values. The maximum element in the set is the size - 1st element.
          *
-         * @returns the number of bits currently in this bit set.
+         * @return the number of bits currently in this bit set.
          */
         int size() const;
 
@@ -365,7 +365,7 @@ namespace util {
          * ", " (a comma and a space) and surrounded by braces, resulting in the usual mathematical
          * notation for a set of integers.
          *
-         * @returns string representation of the BitSet.
+         * @return string representation of the BitSet.
          */
         std::string toString() const;
 

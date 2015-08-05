@@ -58,12 +58,12 @@ namespace util {
         Pointer<TimerTask> peek();
 
         /**
-         * @returns true if the heap is empty.
+         * @return true if the heap is empty.
          */
         bool isEmpty() const;
 
         /**
-         * @returns the size of the heap.
+         * @return the size of the heap.
          */
         std::size_t size() const;
 
@@ -108,7 +108,7 @@ namespace util {
          * Searches the heap for the specified TimerTask element and returns its position in the
          * heap.  Returns the unsigned equivalent of -1 if the element is not found.
          *
-         * @returns the position in the Heap where the Task is stored, or npos.
+         * @return the position in the Heap where the Task is stored, or npos.
          */
         std::size_t find(const Pointer<TimerTask>& task) const;
 

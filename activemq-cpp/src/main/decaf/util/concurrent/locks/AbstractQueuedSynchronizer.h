@@ -72,7 +72,7 @@ namespace locks {
             /**
              * Used to check on the ownership status of this ConditionObject
              *
-             * @returns true if the ConditionObject is owned by the given AbstractQueuedSynchronizer
+             * @return true if the ConditionObject is owned by the given AbstractQueuedSynchronizer
              */
             virtual bool isOwnedBy(const AbstractQueuedSynchronizer* sync) const = 0;
 
@@ -80,7 +80,7 @@ namespace locks {
              * Returns true if there are any waiters on this Condition object at the time
              * of its calling.
              *
-             * @returns true if there are currently waiters false otherwise.
+             * @return true if there are currently waiters false otherwise.
              */
             virtual bool hasWaiters() const = 0;
 
@@ -96,7 +96,7 @@ namespace locks {
              * Retrieves a new Collection object that contains Threads that may be waiting
              * on this Condition object.
              *
-             * @returns new Collection object that holds possible waiters. Caller owns.
+             * @return new Collection object that holds possible waiters. Caller owns.
              */
             virtual Collection<decaf::lang::Thread*>* getWaitingThreads() const = 0;
         };
@@ -154,7 +154,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains only those threads that may
          * be waiting to acquire this Synchronization in exclusive mode.
          *
-         * @returns a Collection pointer that contains waiting threads for exclusive acquisition.
+         * @return a Collection pointer that contains waiting threads for exclusive acquisition.
          *          The caller owns the returned pointer.
          */
         Collection<decaf::lang::Thread*>* getExclusiveQueuedThreads() const;
@@ -163,7 +163,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains only those threads that may
          * be waiting to acquire this Synchronization in shared mode.
          *
-         * @returns a Collection pointer that contains waiting threads for shared acquisition.
+         * @return a Collection pointer that contains waiting threads for shared acquisition.
          *          The caller owns the returned pointer.
          */
         Collection<decaf::lang::Thread*>* getSharedQueuedThreads() const;
@@ -172,7 +172,7 @@ namespace locks {
          * Returns the first thread queue (the thread that's been waiting the longest) if there
          * are currently no queued threads this method returns NULL.
          *
-         * @returns the first thread in the queue or NULL if none are currently waiting.
+         * @return the first thread in the queue or NULL if none are currently waiting.
          */
         decaf::lang::Thread* getFirstQueuedThread() const;
 
@@ -180,7 +180,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains a best effort snapshot of the
          * threads that are currently waiting to acquire.
          *
-         * @returns a Collection pointer that contains waiting threads for lock acquisition.
+         * @return a Collection pointer that contains waiting threads for lock acquisition.
          *          The caller owns the returned pointer.
          */
         Collection<decaf::lang::Thread*>* getQueuedThreads() const;
@@ -190,7 +190,7 @@ namespace locks {
          * value changes dynamically so the result of this method can be invalid immediately after it
          * is called.
          *
-         * @returns an estimate of the number of waiting threads.
+         * @return an estimate of the number of waiting threads.
          */
         int getQueueLength() const;
 
@@ -198,7 +198,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains all the threads that may be waiting
          * on the given ConditionOject instance at the time this method is called.
          *
-         * @returns a Collection pointer that contains waiting threads on given ConditionObject.
+         * @return a Collection pointer that contains waiting threads on given ConditionObject.
          *          The caller owns the returned pointer.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
@@ -213,7 +213,7 @@ namespace locks {
          * immediately after it is called.  The ConditionObject must be associated with this
          * AbstractQueuedSynchronizer or an exception will be thrown.
          *
-         * @returns an estimate of the number of waiting threads.
+         * @return an estimate of the number of waiting threads.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
@@ -222,12 +222,12 @@ namespace locks {
         int getWaitQueueLength(const AbstractQueuedSynchronizer::ConditionObject* condition) const;
 
         /**
-         * @returns true if there has ever been the need for the acquire method to block.
+         * @return true if there has ever been the need for the acquire method to block.
          */
         bool hasContended() const;
 
         /**
-         * @returns true if there are threads that are currently waiting to acquire.
+         * @return true if there are threads that are currently waiting to acquire.
          */
         bool hasQueuedThreads() const;
 
@@ -235,7 +235,7 @@ namespace locks {
          * Returns true if there are any threads that are currently waiting on the given ConditionObject,
          * the condition must be associated with this synchronizer instance.
          *
-         * @returns true if the condition object has waiting threads.
+         * @return true if the condition object has waiting threads.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
@@ -246,7 +246,7 @@ namespace locks {
         /**
          * Traverse the Queue if waiting threads to see if the given thread is present.
          *
-         * @returns true if the given thread is in the wait Queue.
+         * @return true if the given thread is in the wait Queue.
          *
          * @throws NullPointerException if the thread pointer is NULL.
          */
@@ -255,7 +255,7 @@ namespace locks {
         /**
          * Checks whether the given ConditionObject uses this Synchronizer as its lock object.
          *
-         * @returns true if the ConditionObject uses this Synchronizer as its lock.
+         * @return true if the ConditionObject uses this Synchronizer as its lock.
          *
          * @throws NullPointerException if the condition pointer is NULL.
          */
@@ -291,7 +291,7 @@ namespace locks {
          * and also contains the indicators "nonempty" or "empty" based on whether the thread queue
          * is empty or not.
          *
-         * @returns a string value that identifies this AbstractQueuedSynchronizer.
+         * @return a string value that identifies this AbstractQueuedSynchronizer.
          */
         std::string toString() const;
 
@@ -305,7 +305,7 @@ namespace locks {
          * @param nanos
          *      Time in nanoseconds to wait before reporting the acquisition as failed.
          *
-         * @returns true if the acquire succeeded, false otherwise.
+         * @return true if the acquire succeeded, false otherwise.
          *
          * @throws InterruptedException if the calling thread is interrupted.
          */
@@ -321,7 +321,7 @@ namespace locks {
          * @param nanos
          *      Time in nanoseconds to wait before reporting the acquisition as failed.
          *
-         * @returns true if the acquire succeeded, false otherwise.
+         * @return true if the acquire succeeded, false otherwise.
          *
          * @throws InterruptedException if the calling thread is interrupted.
          */
@@ -332,7 +332,7 @@ namespace locks {
         /**
          * Gets and returns the currently set value of this object Synchronization sate.
          *
-         * @returns the value of the synchronization sate.
+         * @return the value of the synchronization sate.
          */
         virtual int getState() const;
 
@@ -353,7 +353,7 @@ namespace locks {
          * @param update
          *      The new value to assign the state if the current value matches the expected.
          *
-         * @returns true if a change is made, false otherwise.
+         * @return true if a change is made, false otherwise.
          */
         virtual bool compareAndSetState(int expect, int update);
 
@@ -382,7 +382,7 @@ namespace locks {
          * @param arg
          *      The value passed to the acquire method.
          *
-         * @returns true if the acquire succeeded, false otherwise.
+         * @return true if the acquire succeeded, false otherwise.
          *
          * @throws IllegalMonitorStateException if the acquire places the object in an invalid state.
          * @throws UnsupportedOperationException if exclusive mode is not supported.
@@ -421,7 +421,7 @@ namespace locks {
          * @param arg
          *      The value that was passed to the release method.
          *
-         * @returns true if the synchronization is now fully released such that waiting threads can
+         * @return true if the synchronization is now fully released such that waiting threads can
          *          now attempt to acquire it, false if not fully released.
          *
          * @throws IllegalMonitorStateException if the release places the object in an invalid state.
@@ -438,7 +438,7 @@ namespace locks {
          * @param arg
          *      The value that was passed to the release method.
          *
-         * @returns true if the synchronization is now fully released such that waiting threads can
+         * @return true if the synchronization is now fully released such that waiting threads can
          *          now attempt to acquire it, false if not fully released.
          *
          * @throws IllegalMonitorStateException if the release places the object in an invalid state.
@@ -451,7 +451,7 @@ namespace locks {
          * logic implemented inside this class.  Can be overridden by derived classes that wish to
          * provide their own implementation of a ConditionObject.
          *
-         * @returns a new ConditionObject that is owned by the caller.
+         * @return a new ConditionObject that is owned by the caller.
          */
         virtual ConditionObject* createDefaultConditionObject();
 

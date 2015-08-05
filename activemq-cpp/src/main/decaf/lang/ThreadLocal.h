@@ -64,7 +64,7 @@ namespace lang {
          * variable has no value for the current thread, it is first initialized to the value
          * returned by an invocation of the initialValue() method.
          *
-         * @returns the current thread's value for this thread local.
+         * @return the current thread's value for this thread local.
          */
         E& get() {
             void* bytes = getRawValue();

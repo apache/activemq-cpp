@@ -63,7 +63,7 @@ namespace concurrent {
          * @param r
          *      A pointer to a Runnable instance to be executed by new Thread instance returned.
          *
-         * @returns constructed thread, or NULL if the request to create a thread is rejected
+         * @return constructed thread, or NULL if the request to create a thread is rejected
          *          the caller owns the returned pointer.
          */
         virtual decaf::lang::Thread* newThread(decaf::lang::Runnable* r) = 0;

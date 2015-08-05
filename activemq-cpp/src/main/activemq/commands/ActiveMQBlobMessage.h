@@ -69,7 +69,7 @@ namespace commands {
 
         /**
          * Get the Remote URL of the Blob.
-         * @returns string from of the Remote Blob URL.
+         * @return string from of the Remote Blob URL.
          */
         std::string getRemoteBlobUrl() const {
             return this->remoteBlobUrl;
@@ -85,7 +85,7 @@ namespace commands {
 
         /**
          * Get the Mime Type of the Blob.
-         * @returns string holding the MIME Type.
+         * @return string holding the MIME Type.
          */
         std::string getMimeType() const {
             return this->mimeType;
@@ -101,7 +101,7 @@ namespace commands {
 
         /**
          * Gets the Name of the Blob.
-         * @returns string name of the Blob.
+         * @return string name of the Blob.
          */
         std::string getName() const {
             return this->name;

@@ -117,7 +117,7 @@ namespace ssl {
          * Gets a vector containing the names of all the cipher suites that are supported by this
          * SSLSocket.  Normally not all of these cipher suites will be enabled on the Socket.
          *
-         * @returns a vector containing the names of all the supported cipher suites.
+         * @return a vector containing the names of all the supported cipher suites.
          */
         virtual std::vector<std::string> getSupportedCipherSuites() const = 0;
 
@@ -125,7 +125,7 @@ namespace ssl {
          * Gets a vector containing the names of all the protocols that could be enabled for
          * this SSLSocket instance.
          *
-         * @returns a vector containing the names of all the supported protocols.
+         * @return a vector containing the names of all the supported protocols.
          */
         virtual std::vector<std::string> getSupportedProtocols() const = 0;
 
@@ -175,7 +175,7 @@ namespace ssl {
          * The cipherSuites and protocols vectors in the returned SSLParameters reference will
          * never be empty.
          *
-         * @returns an SSLParameters object with the settings in use for the SSLSocket.
+         * @return an SSLParameters object with the settings in use for the SSLSocket.
          */
         virtual SSLParameters getSSLParameters() const;
 

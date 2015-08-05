@@ -60,7 +60,7 @@ namespace lang {
          * "Note: this class has a natural ordering that is inconsistent with
          * equals."
          * @param value - the Object to be compared.
-         * @returns a negative integer, zero, or a positive integer as this
+         * @return a negative integer, zero, or a positive integer as this
          * object is less than, equal to, or greater than the specified object.
          */
         virtual int compareTo(const T& value) const = 0;

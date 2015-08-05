@@ -131,7 +131,7 @@ namespace core {
         virtual long long getNextRedeliveryDelay(long long previousDelay) = 0;
 
         /**
-         * @returns whether or not collision avoidance is enabled for this Policy.
+         * @return whether or not collision avoidance is enabled for this Policy.
          */
         virtual bool isUseCollisionAvoidance() const = 0;
 
@@ -142,7 +142,7 @@ namespace core {
         virtual void setUseCollisionAvoidance(bool value) = 0;
 
         /**
-         * @returns whether or not the exponential back off option is enabled.
+         * @return whether or not the exponential back off option is enabled.
          */
         virtual bool isUseExponentialBackOff() const = 0;
 

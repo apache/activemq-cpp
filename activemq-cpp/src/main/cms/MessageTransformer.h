@@ -57,7 +57,7 @@ namespace cms {
          * @param transformed
          *      A pointer to the location in memory where the newly transformed Message has been allocated.
          *
-         * @returns true if the MessageProducer should handle deleting the transformed Message once sent.
+         * @return true if the MessageProducer should handle deleting the transformed Message once sent.
          *
          * @throws cms::CMSException if an error occurs during the transform operation.
          */
@@ -81,7 +81,7 @@ namespace cms {
          * @param transformed
          *      A pointer to the location in memory where the newly transformed Message has been allocated.
          *
-         * @returns true if the MessageConsumer should handle deleting the transformed Message once sent.
+         * @return true if the MessageConsumer should handle deleting the transformed Message once sent.
          *
          * @throws cms::CMSException if an error occurs during the transform operation.
          */

@@ -105,7 +105,7 @@ namespace io{
         virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
         /**
-         * @returns true if this stream has been closed.
+         * @return true if this stream has been closed.
          */
         virtual bool isClosed() const;
 

@@ -140,7 +140,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         template<typename POINTER>
         StringBuffer& append(const POINTER* pointer) {
@@ -161,7 +161,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         template<typename TYPE>
         StringBuffer& append(const Pointer<TYPE> pointer) {
@@ -181,7 +181,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(bool value);
 
@@ -191,7 +191,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(char value);
 
@@ -201,7 +201,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(short value);
 
@@ -211,7 +211,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(int value);
 
@@ -221,7 +221,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(long long value);
 
@@ -231,7 +231,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(float value);
 
@@ -241,7 +241,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(double value);
 
@@ -251,7 +251,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(const char* value);
 
@@ -278,7 +278,7 @@ namespace lang {
          * @param value
          *      The CharSequence value to be appended into this buffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(const CharSequence* value);
 
@@ -305,7 +305,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(const String& value);
 
@@ -315,7 +315,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& append(const StringBuilder& value);
 
@@ -330,7 +330,7 @@ namespace lang {
          * @param end
          *      The ending index (exclusive) to delete from this buffer.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws StringIndexOutOfBoundsException
          *      if start is negative, greater than length(), or greater than end.
@@ -343,7 +343,7 @@ namespace lang {
          * @param index
          *      The index in this buffer where the character to delete is located.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws StringIndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -359,7 +359,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         template<typename POINTER>
         StringBuffer& insert(int index, const POINTER* pointer) {
@@ -382,7 +382,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         template<typename TYPE>
         StringBuffer& insert(int index, const Pointer<TYPE> pointer) {
@@ -405,7 +405,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -421,7 +421,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -437,7 +437,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -453,7 +453,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -469,7 +469,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -485,7 +485,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -501,7 +501,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -516,7 +516,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws NullPointerException if the target C string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -532,7 +532,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws NullPointerException if the target C string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -548,7 +548,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws NullPointerException if the target std::string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -570,7 +570,7 @@ namespace lang {
          * @param length
          *      The number of characters to copy from the given C string.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws NullPointerException if the target C string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -590,7 +590,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -612,7 +612,7 @@ namespace lang {
          * @param length
          *      The number of characters to copy from the given CharSequence.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -634,7 +634,7 @@ namespace lang {
          * @param value
          *      The new string value to replace the older value.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException if start is negative, greater than end or greater than length().
          */
@@ -643,7 +643,7 @@ namespace lang {
         /**
          * Reverses the order of characters in this builder.
          *
-         * @returns a reference to this StringBuffer so that operations can be chained.
+         * @return a reference to this StringBuffer so that operations can be chained.
          */
         StringBuffer& reverse();
 

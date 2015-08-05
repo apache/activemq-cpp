@@ -63,7 +63,7 @@ namespace zip {
         virtual ~CheckedOutputStream();
 
         /**
-         * @returns a pointer to the Checksum instance in use by this object.
+         * @return a pointer to the Checksum instance in use by this object.
          */
         Checksum* getChecksum() const {
             return this->sum;

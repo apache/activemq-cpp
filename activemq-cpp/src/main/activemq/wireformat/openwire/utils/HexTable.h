@@ -52,7 +52,7 @@ namespace utils{
          * @param index
          *      The index of the value in the table to fetch.
          *
-         * @returns string containing the hex value if the index
+         * @return string containing the hex value if the index
          *
          * @throws IndexOutOfBoundsException if the index exceeds the table size.
          */
@@ -62,7 +62,7 @@ namespace utils{
         /**
          * Returns the max size of this Table.
          *
-         * @returns an integer size value for the table.
+         * @return an integer size value for the table.
          */
         virtual std::size_t size() const{
             return table.size();

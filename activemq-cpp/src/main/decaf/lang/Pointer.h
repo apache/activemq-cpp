@@ -167,7 +167,7 @@ namespace lang {
          * is not guaranteed to be safe if the Pointer is held by more than one object or this
          * method is called from more than one thread.
          *
-         * @returns The pointer instance that was held by this Pointer object, the pointer is
+         * @return The pointer instance that was held by this Pointer object, the pointer is
          *          no longer owned by this Pointer and won't be freed when this Pointer goes
          *          out of scope.
          */

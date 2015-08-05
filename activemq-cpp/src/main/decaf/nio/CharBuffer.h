@@ -85,7 +85,7 @@ namespace nio{
         virtual ~CharBuffer() {}
 
         /**
-         * @returns a std::string describing this object
+         * @return a std::string describing this object
          */
         virtual std::string toString() const;
 
@@ -95,7 +95,7 @@ namespace nio{
          * @param value
          *      The char to append.
          *
-         * @returns a reference to this modified CharBuffer.
+         * @return a reference to this modified CharBuffer.
          *
          * @throws BufferOverflowException if there is no more space
          * @throws ReadOnlyBufferException if this Buffer is read only.
@@ -109,7 +109,7 @@ namespace nio{
          * @param value
          *      The CharSequence to append.
          *
-         * @returns a reference to this modified CharBuffer
+         * @return a reference to this modified CharBuffer
          *
          * @throws BufferOverflowException if there is no more space
          * @throws ReadOnlyBufferException if this Buffer is read only.
@@ -127,7 +127,7 @@ namespace nio{
          * @param end
          *      The index to append to.
          *
-         * @returns a reference to this modified CharBuffer.
+         * @return a reference to this modified CharBuffer.
          *
          * @throws BufferOverflowException if there is no more space
          * @throws ReadOnlyBufferException if this Buffer is read only.
@@ -144,7 +144,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure that
          * this buffer has an accessible backing array.
          *
-         * @returns the array that backs this Buffer.
+         * @return the array that backs this Buffer.
          *
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
@@ -158,7 +158,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure that
          * this buffer has an accessible backing array.
          *
-         * @returns The offset into the backing array where index zero starts.
+         * @return The offset into the backing array where index zero starts.
          *
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
@@ -189,7 +189,7 @@ namespace nio{
          *
          * @param index - The index of the character to be read relative to position
          *
-         * @returns The character at index position() + index.
+         * @return The character at index position() + index.
          *
          * @throws IndexOutOfBoundsException if the index + the current position exceeds the
          *         size of the buffer or the index is negative.
@@ -210,7 +210,7 @@ namespace nio{
          * zero, so that an invocation of this method can be followed immediately by
          * an invocation of another relative put method.
          *
-         * @returns a reference to this CharBuffer.
+         * @return a reference to this CharBuffer.
          *
          * @throws ReadOnlyBufferException - If this buffer is read-only
          */
@@ -227,7 +227,7 @@ namespace nio{
          * to those of this buffer. The new buffer will be read-only if, and only if,
          * this buffer is read-only.
          *
-         * @returns a new char Buffer which the caller owns.
+         * @return a new char Buffer which the caller owns.
          */
         virtual CharBuffer* duplicate() = 0;
 
@@ -235,7 +235,7 @@ namespace nio{
          * Relative get method. Reads the character at this buffer's current position,
          * and then increments the position.
          *
-         * @returns the char at the current position.
+         * @return the char at the current position.
          *
          * @throws BufferUnderflowException if there no more data to return
          */
@@ -247,7 +247,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the char is to be read.
          *
-         * @returns the char that is located at the given index.
+         * @return the char that is located at the given index.
          *
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit or is negative.
@@ -263,7 +263,7 @@ namespace nio{
          * amount of data that is to be read, that is to say, the caller should call
          * buffer.resize( N ) before calling this get method.
          *
-         * @returns a reference to this CharBuffer.
+         * @return a reference to this CharBuffer.
          *
          * @throws BufferUnderflowException if there are fewer than length chars
          *         remaining in this buffer.
@@ -291,7 +291,7 @@ namespace nio{
          * @param length
          *      The amount of data to put in the passed buffer.
          *
-         * @returns a reference to this Buffer.
+         * @return a reference to this Buffer.
          *
          * @throws BufferUnderflowException if there are fewer than length chars
          *         remaining in this buffer
@@ -307,7 +307,7 @@ namespace nio{
          * be invoked.  Subclasses should override this method if they do not have a
          * backing array as this class always returns true.
          *
-         * @returns true if, and only if, this buffer is backed by an array and is not
+         * @return true if, and only if, this buffer is backed by an array and is not
          *          read-only
          */
         virtual bool hasArray() const = 0;
@@ -315,7 +315,7 @@ namespace nio{
         /**
          * Returns the length of this character buffer.
          *
-         * @returns the length of this buffer from the position to the limit.
+         * @return the length of this buffer from the position to the limit.
          */
         int length() const {
             return this->remaining();
@@ -333,7 +333,7 @@ namespace nio{
          *
          * @param src - the buffer to take chars from an place in this one.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer
          *         for the remaining chars in the source buffer.
@@ -361,7 +361,7 @@ namespace nio{
          * @param length
          *      The number of chars to be read from the given array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer
          * @throws ReadOnlyBufferException if this buffer is read-only
@@ -378,7 +378,7 @@ namespace nio{
          * @param buffer
          *      The buffer whose contents are copied to this CharBuffer.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
@@ -392,7 +392,7 @@ namespace nio{
          * @param value
          *      The char value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if this buffer's current position is not
          *         smaller than its limit
@@ -408,7 +408,7 @@ namespace nio{
          * @param value
          *      The char to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws IndexOutOfBoundsException if index greater than the buffer's limit
          *         minus the size of the type being written, or index is negative.
@@ -423,7 +423,7 @@ namespace nio{
          * there are more characters to be copied from the string than remain in this
          * buffer, that is, if end - start > remaining(), then no characters are
          * transferred and a BufferOverflowException is thrown.
-         * @returns a reference to this buffer
+         * @return a reference to this buffer
          *
          * Otherwise, this method copies n = end - start characters from the given string
          * into this buffer, starting at the given start index and at the current position
@@ -436,7 +436,7 @@ namespace nio{
          * @param end
          *      The position in src to stop at.
          *
-         * @returns a reference to this CharBuffer.
+         * @return a reference to this CharBuffer.
          *
          * @throws BufferOverflowException if this buffer's current position is not
          * @throws IndexOutOfBoundsException if index greater than the buffer's limit
@@ -455,7 +455,7 @@ namespace nio{
          * @param src
          *      The string to copy from.
          *
-         * @returns a reference to this CharBuffer.
+         * @return a reference to this CharBuffer.
          *
          * @throws BufferOverflowException if this buffer's current position is not.
          * @throws ReadOnlyBufferException if this buffer is read-only.
@@ -470,7 +470,7 @@ namespace nio{
          * @param target
          *      The buffer to read characters into
          *
-         * @returns The number of characters added to the buffer, or string::npos if this
+         * @return The number of characters added to the buffer, or string::npos if this
          *          source of characters is at its end
          *
          * @throws NullPointerException if target is Null.
@@ -514,7 +514,7 @@ namespace nio{
          * number of bytes remaining in this buffer, and its mark will be undefined. The
          * new buffer will be read-only if, and only if, this buffer is read-only.
          *
-         * @returns the newly create CharBuffer which the caller owns.
+         * @return the newly create CharBuffer which the caller owns.
          */
         virtual CharBuffer* slice() const = 0;
 
@@ -552,7 +552,7 @@ namespace nio{
          * @param capacity
          *      The size of the Char buffer in chars ( 1 byte ).
          *
-         * @returns the CharBuffer that was allocated, caller owns.
+         * @return the CharBuffer that was allocated, caller owns.
          *
          * @throws IndexOutOfBoundsException if capacity is negative.
          */
@@ -576,7 +576,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new CharBuffer that is backed by buffer, caller owns.
+         * @return a new CharBuffer that is backed by buffer, caller owns.
          *
          * @throws NullPointerException if the array pointer is Null.
          * @throws IndexOutOfBoundsException if capacity is negative.
@@ -596,7 +596,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been
          *      sized to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new CharBuffer that is backed by buffer, caller owns.
+         * @return a new CharBuffer that is backed by buffer, caller owns.
          */
         static CharBuffer* wrap( std::vector<char>& buffer );
 
@@ -616,7 +616,7 @@ namespace nio{
          *      The index of the character following the last character to be used; must be
          *      no smaller than start and no larger than the size of the sequence.
          *
-         * @returns a ReadOnly CharBuffer, caller owns the returned pointer.
+         * @return a ReadOnly CharBuffer, caller owns the returned pointer.
          *
          * @throws NullPointerException if csq is null.
          * @throws IndexOutOfBoundsException if the preconditions on start and end fail
@@ -635,7 +635,7 @@ namespace nio{
          *      The character sequence from which the new character buffer is to
          *      be created, cannot be null.
          *
-         * @returns the newly created CharBuffer, caller owns.
+         * @return the newly created CharBuffer, caller owns.
          *
          * @throws NullPointerException if csq is null.
          */

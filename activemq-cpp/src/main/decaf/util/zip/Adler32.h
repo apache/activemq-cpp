@@ -43,7 +43,7 @@ namespace zip {
         virtual ~Adler32();
 
         /**
-         * @returns the current checksum value.
+         * @return the current checksum value.
          */
         virtual long long getValue() const;
 

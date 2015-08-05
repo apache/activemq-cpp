@@ -148,7 +148,7 @@ namespace concurrent{
 
         /**
          * Gets the current count
-         * @returns int count value
+         * @return int count value
          */
         virtual int getCount() const;
 
@@ -156,7 +156,7 @@ namespace concurrent{
          * Returns the string representation of this latch, includes the current
          * count value at the time of calling.
          *
-         * @returns string describing this CountDownLatch instance.
+         * @return string describing this CountDownLatch instance.
          */
         virtual std::string toString() const;
 

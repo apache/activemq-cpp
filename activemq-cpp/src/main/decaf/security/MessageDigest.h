@@ -109,7 +109,7 @@ namespace security {
          * @param length
          *      The number of bytes within buf allotted for the digest.
          *
-         * @returns the number of bytes placed into buffer.
+         * @return the number of bytes placed into buffer.
          *
          * @throws DigestException if an error occurs.
          */
@@ -125,7 +125,7 @@ namespace security {
          * @param size
          *      The length in bytes of the input buffer.
          *
-         * @returns the array of bytes for the resulting hash value.
+         * @return the array of bytes for the resulting hash value.
          */
         std::vector<unsigned char> digest(const unsigned char* input, int size);
 
@@ -137,7 +137,7 @@ namespace security {
          * @param input
          *      The input to be updated before the digest is completed.
          *
-         * @returns the array of bytes for the resulting hash value.
+         * @return the array of bytes for the resulting hash value.
          */
         std::vector<unsigned char> digest(const std::vector<unsigned char>& input);
 
@@ -145,7 +145,7 @@ namespace security {
          * Returns a string that identifies the algorithm, independent of implementation
          * details. The name should be a standard name (such as "SHA", "MD5", etc).
          *
-         * @returns the algorithm name.
+         * @return the algorithm name.
          */
         std::string getAlgorithmName() const {
             return this->algorithm;
@@ -167,7 +167,7 @@ namespace security {
          * Returns the length of the digest in bytes, or 0 if this operation is not supported
          * by the provider and the implementation is not cloneable.
          *
-         * @returns the digest length in bytes, or 0 if this operation is not supported by the
+         * @return the digest length in bytes, or 0 if this operation is not supported by the
          *          provider and the implementation is not cloneable.
          */
         int getDigestLength() const;
@@ -176,7 +176,7 @@ namespace security {
          * Returns a clone of this MessageDisgest instance if the MessageDigestSpi in use
          * is cloneable.
          *
-         * @returns a clone of this MessageDigest if possible.
+         * @return a clone of this MessageDigest if possible.
          *
          * @throws CloneNotSupportedException if the SPI in use cannot be cloned.
          */
@@ -190,7 +190,7 @@ namespace security {
         /**
          * Returns a string representation of this message digest object.
          *
-         * @returns a string representation of this message digest object.
+         * @return a string representation of this message digest object.
          */
         std::string toString() const;
 
@@ -249,7 +249,7 @@ namespace security {
          * @param algorithm
          *      The name of the algorithm requested. (MD5, SHA-1, etc)
          *
-         * @returns a Message Digest object that implements the specified algorithm.
+         * @return a Message Digest object that implements the specified algorithm.
          * @throws NoSuchAlgorithmException if no Provider supports a MessageDigestSpi implementation
          *         for the specified algorithm.
          */
@@ -263,7 +263,7 @@ namespace security {
          * @param digesta
          *      The second digest for comparison.
          *
-         * @returns true if the two digests are equal.
+         * @return true if the two digests are equal.
          */
         static bool isEqual(const std::vector<unsigned char>& digesta,
                             const std::vector<unsigned char>& digestb);

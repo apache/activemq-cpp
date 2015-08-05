@@ -110,7 +110,7 @@ namespace commands {
 
         /**
          * Fetch this destination's physical name
-         * @returns const string containing the name
+         * @return const string containing the name
          */
         virtual std::string getPhysicalName() const {
             return this->physicalName;
@@ -118,7 +118,7 @@ namespace commands {
 
         /**
          * Set this destination's physical name
-         * @returns const string containing the name
+         * @return const string containing the name
          */
         virtual void setPhysicalName(const std::string& physicalName);
 
@@ -180,7 +180,7 @@ namespace commands {
 
         /**
          * Returns the Type of Destination that this object represents
-         * @returns int type qualifier.
+         * @return int type qualifier.
          */
         virtual cms::Destination::DestinationType getDestinationType() const = 0;
 
@@ -188,7 +188,7 @@ namespace commands {
          * Returns the type of Destination that this object represents as a string, the
          * available string values are, "Queue", "Topic", "TempQueue" and "TempTopic".
          *
-         * @returns The string value that represents the type of this destination.
+         * @return The string value that represents the type of this destination.
          */
         std::string getDestinationTypeAsString() const;
 
@@ -246,14 +246,14 @@ namespace commands {
         }
 
         /**
-         * @returns a reference (const) to the options properties for this Destination.
+         * @return a reference (const) to the options properties for this Destination.
          */
         const activemq::util::ActiveMQProperties& getOptions() const {
             return options;
         }
 
         /**
-         * @returns the cms::Destination interface pointer that the
+         * @return the cms::Destination interface pointer that the
          *          objects that derive from this class implement.
          */
         virtual const cms::Destination* getCMSDestination() const {

@@ -167,7 +167,7 @@ namespace util {
         /**
          * Returns a Hash Code value for this UUID.
          *
-         * @returns a Hash Code for this UUID
+         * @return a Hash Code for this UUID
          */
         int hashCode() const;
 
@@ -206,17 +206,17 @@ namespace util {
          *      | "a" | "b" | "c" | "d" | "e" | "f"
          *      | "A" | "B" | "C" | "D" | "E" | "F"
          *
-         * @returns formatted string for this UUID
+         * @return formatted string for this UUID
          */
         std::string toString() const;
 
         /**
-         * @returns the most significant 64 bits of this UUID's 128 bit value.
+         * @return the most significant 64 bits of this UUID's 128 bit value.
          */
         long long getLeastSignificantBits() const;
 
         /**
-         * @returns the most significant 64 bits of this UUID's 128 bit value.
+         * @return the most significant 64 bits of this UUID's 128 bit value.
          */
         long long getMostSignificantBits() const;
 
@@ -231,7 +231,7 @@ namespace util {
          * version type 1. If this UUID is not a time-based UUID then this method
          * throws UnsupportedOperationException.
          *
-         * @returns the node value of this UUID
+         * @return the node value of this UUID
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
@@ -248,7 +248,7 @@ namespace util {
          * version type 1. If this UUID is not a time-based UUID then this method
          * throws UnsupportedOperationException.
          *
-         * @returns the timestamp associated with a V1 UUID
+         * @return the timestamp associated with a V1 UUID
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
@@ -265,7 +265,7 @@ namespace util {
          * has version type 1. If this UUID is not a time-based UUID then this
          * method throws UnsupportedOperationException.
          *
-         * @returns the clockSequeunce associated with a V1 UUID
+         * @return the clockSequeunce associated with a V1 UUID
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
@@ -280,7 +280,7 @@ namespace util {
          *     * 6 Reserved, Microsoft Corporation backward compatibility
          *     * 7 Reserved for future definition
          *
-         * @returns the variant associated with a V1 UUID
+         * @return the variant associated with a V1 UUID
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */
@@ -295,7 +295,7 @@ namespace util {
          *     * 3 Name-based UUID
          *     * 4 Randomly generated UUID
          *
-         * @returns the version associated with a V1 UUID
+         * @return the version associated with a V1 UUID
          *
          * @throws UnsupportedOperationException if this UUID version does not support this operation.
          */

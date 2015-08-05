@@ -56,14 +56,14 @@ namespace net {
          * Returns the Raw IP address in Network byte order.  The returned address is a copy
          * of the bytes contained in this InetAddress.
          *
-         * @returns and ArrayPointer containing the raw bytes of the network address.
+         * @return and ArrayPointer containing the raw bytes of the network address.
          */
         virtual decaf::lang::ArrayPointer<unsigned char> getAddress() const;
 
         /**
          * Returns a textual representation of the IP Address.
          *
-         * @returns the string form of the IP Address.
+         * @return the string form of the IP Address.
          */
         virtual std::string getHostAddress() const;
 
@@ -75,7 +75,7 @@ namespace net {
          * with the set IP Address.  If the host name cannot be resolved the textual representation
          * of the IP Address is returned instead.
          *
-         * @returns the name of the host associated with this set IP Address.
+         * @return the name of the host associated with this set IP Address.
          */
         virtual std::string getHostName() const;
 
@@ -84,7 +84,7 @@ namespace net {
          *
          * If the hostname is not resolved than it appears as empty.
          *
-         * @returns string value of this InetAddress.
+         * @return string value of this InetAddress.
          */
         virtual std::string toString() const;
 
@@ -220,7 +220,7 @@ namespace net {
          * Gets an InetAddress that is the local host address.  If the localhost value cannot
          * be resolved than the InetAddress for Loopback is returned.
          *
-         * @returns a new InetAddress object that contains the local host address.
+         * @return a new InetAddress object that contains the local host address.
          *
          * @throws UnknownHostException if the address for local host is not found.
          */

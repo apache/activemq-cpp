@@ -419,152 +419,152 @@ namespace util {
     public:
 
         /**
-         * @returns true if the specified destination is a Destination advisory topic.
+         * @return true if the specified destination is a Destination advisory topic.
          */
         static bool isDestinationAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is a Destination advisory topic.
+         * @return true if the specified destination is a Destination advisory topic.
          */
         static bool isDestinationAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is a Temporary Destination advisory topic.
+         * @return true if the specified destination is a Temporary Destination advisory topic.
          */
         static bool isTempDestinationAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is a Temporary Destination advisory topic.
+         * @return true if the specified destination is a Temporary Destination advisory topic.
          */
         static bool isTempDestinationAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an advisory topic.
+         * @return true if the specified destination is an advisory topic.
          */
         static bool isAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an advisory topic.
+         * @return true if the specified destination is an advisory topic.
          */
         static bool isAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Connection advisory topic.
+         * @return true if the specified destination is an Connection advisory topic.
          */
         static bool isConnectionAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Connection advisory topic.
+         * @return true if the specified destination is an Connection advisory topic.
          */
         static bool isConnectionAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Producer advisory topic.
+         * @return true if the specified destination is an Producer advisory topic.
          */
         static bool isProducerAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Producer advisory topic.
+         * @return true if the specified destination is an Producer advisory topic.
          */
         static bool isProducerAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Consumer advisory topic.
+         * @return true if the specified destination is an Consumer advisory topic.
          */
         static bool isConsumerAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Consumer advisory topic.
+         * @return true if the specified destination is an Consumer advisory topic.
          */
         static bool isConsumerAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Slow Consumer advisory topic.
+         * @return true if the specified destination is an Slow Consumer advisory topic.
          */
         static bool isSlowConsumerAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Slow Consumer advisory topic.
+         * @return true if the specified destination is an Slow Consumer advisory topic.
          */
         static bool isSlowConsumerAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Fast Producer advisory topic.
+         * @return true if the specified destination is an Fast Producer advisory topic.
          */
         static bool isFastProducerAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Fast Producer advisory topic.
+         * @return true if the specified destination is an Fast Producer advisory topic.
          */
         static bool isFastProducerAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Message Consumed advisory topic.
+         * @return true if the specified destination is an Message Consumed advisory topic.
          */
         static bool isMessageConsumedAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Message Consumed advisory topic.
+         * @return true if the specified destination is an Message Consumed advisory topic.
          */
         static bool isMessageConsumedAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Master Broker advisory topic.
+         * @return true if the specified destination is an Master Broker advisory topic.
          */
         static bool isMasterBrokerAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Master Broker Consumed advisory topic.
+         * @return true if the specified destination is an Master Broker Consumed advisory topic.
          */
         static bool isMasterBrokerAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Message Delivered advisory topic.
+         * @return true if the specified destination is an Message Delivered advisory topic.
          */
         static bool isMessageDeliveredAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Message Delivered advisory topic.
+         * @return true if the specified destination is an Message Delivered advisory topic.
          */
         static bool isMessageDeliveredAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Message Discarded advisory topic.
+         * @return true if the specified destination is an Message Discarded advisory topic.
          */
         static bool isMessageDiscardedAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Message Discarded advisory topic.
+         * @return true if the specified destination is an Message Discarded advisory topic.
          */
         static bool isMessageDiscardedAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Message DLQ'd advisory topic.
+         * @return true if the specified destination is an Message DLQ'd advisory topic.
          */
         static bool isMessageDLQdAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Message DLQ'd advisory topic.
+         * @return true if the specified destination is an Message DLQ'd advisory topic.
          */
         static bool isMessageDLQdAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Destination Full advisory topic.
+         * @return true if the specified destination is an Destination Full advisory topic.
          */
         static bool isFullAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Destination Full advisory topic.
+         * @return true if the specified destination is an Destination Full advisory topic.
          */
         static bool isFullAdvisoryTopic(const commands::ActiveMQDestination* destination);
 
         /**
-         * @returns true if the specified destination is an Network Bridge advisory topic.
+         * @return true if the specified destination is an Network Bridge advisory topic.
          */
         static bool isNetworkBridgeAdvisoryTopic(const cms::Destination* destination);
 
         /**
-         * @returns true if the specified destination is an Network Bridge advisory topic.
+         * @return true if the specified destination is an Network Bridge advisory topic.
          */
         static bool isNetworkBridgeAdvisoryTopic(const commands::ActiveMQDestination* destination);
 

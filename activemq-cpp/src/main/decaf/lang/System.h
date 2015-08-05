@@ -291,7 +291,7 @@ namespace lang{
          * See the description of the class Date for a discussion of slight discrepancies
          * that may arise between "computer time" and coordinated universal time (UTC).
          *
-         * @returns the difference, measured in milliseconds, between the current time
+         * @return the difference, measured in milliseconds, between the current time
          *          and midnight, January 1, 1970 UTC.
          */
         static long long currentTimeMillis();
@@ -315,7 +315,7 @@ namespace lang{
          *   // ... the code being measured ...
          *   long long estimatedTime = System::nanoTime() - startTime;
          *
-         * @returns
+         * @return
          *     The current value of the system timer, in nanoseconds.
          */
         static long long nanoTime();
@@ -338,7 +338,7 @@ namespace lang{
          * If the Properties has not yet been created or are not yet initialized then they
          * will be on the first call to a Properties accessor.
          *
-         * @returns a reference to the static system Properties object.
+         * @return a reference to the static system Properties object.
          */
         static decaf::util::Properties& getProperties();
 
@@ -351,7 +351,7 @@ namespace lang{
          * @param key
          *      The key name of the desired system property to retrieve.
          *
-         * @returns an empty string if the named property is not set, otherwise returns the value.
+         * @return an empty string if the named property is not set, otherwise returns the value.
          *
          * @throws IllegalArgumentException if key is an empty string.
          */
@@ -368,7 +368,7 @@ namespace lang{
          * @param defaultValue
          *      The default value to return if the key is not set in the System properties.
          *
-         * @returns the value of the named system property or the defaultValue if the property isn't set..
+         * @return the value of the named system property or the defaultValue if the property isn't set..
          *
          * @throws IllegalArgumentException if key is an empty string.
          */
@@ -382,7 +382,7 @@ namespace lang{
          * @param value
          *      The value to assign to the key.
          *
-         * @returns the previous value of the property named by key if there was one, otherwise
+         * @return the previous value of the property named by key if there was one, otherwise
          *          returns an empty string.
          *
          * @throws IllegalArgumentException if key is an empty string.
@@ -395,7 +395,7 @@ namespace lang{
          * @param key
          *      The key name of the system property to clear.
          *
-         * @returns the previous value of the property named by key if there was one, otherwise
+         * @return the previous value of the property named by key if there was one, otherwise
          *          returns an empty string.
          *
          * @throws IllegalArgumentException if key is an empty string.
@@ -409,14 +409,14 @@ namespace lang{
          * with the values.  Caller owns the array.  The array is terminated
          * by an element that holds the value NULL
          *
-         * @returns a vector of environment name / value pairs.
+         * @return a vector of environment name / value pairs.
          */
         static std::vector< std::string > getEnvArray();
 
         /**
          * Gets the one and only APR Pool instance
          *
-         * @returns a reference to the global APR Pool.
+         * @return a reference to the global APR Pool.
          */
         static internal::AprPool& getAprPool();
 

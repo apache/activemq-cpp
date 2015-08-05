@@ -139,21 +139,21 @@ namespace lang{
         }
 
         /**
-         * @returns true if the two Character Objects have the same value.
+         * @return true if the two Character Objects have the same value.
          */
         bool equals(const Character& c) const {
             return this->value == c.value;
         }
 
         /**
-         * @returns true if the two Characters have the same value.
+         * @return true if the two Characters have the same value.
          */
         bool equals(const char& c) const {
             return this->value == c;
         }
 
         /**
-         * @returns this Character Object as a String Representation
+         * @return this Character Object as a String Representation
          */
         std::string toString() const;
 
@@ -219,7 +219,7 @@ namespace lang{
          * @param value
          *      the primitive char to wrap.
          *
-         * @returns a new Character instance that wraps this value.
+         * @return a new Character instance that wraps this value.
          */
         static Character valueOf(char value) {
             return Character(value);
@@ -232,7 +232,7 @@ namespace lang{
          * @param c
          *      The character whose value is being checked.
          *
-         * @returns true if the character is a whitespace value.
+         * @return true if the character is a whitespace value.
          */
         static bool isWhitespace(char c) {
             switch (c) {
@@ -253,7 +253,7 @@ namespace lang{
          * @param c
          *      The character whose value is being checked.
          *
-         * @returns true if the character is a digit value.
+         * @return true if the character is a digit value.
          */
         static bool isDigit(char c) {
             return c >= '0' && c <= '9';
@@ -265,7 +265,7 @@ namespace lang{
          * @param c
          *      The character whose value is being checked.
          *
-         * @returns true if the character is a lower case ASCII value.
+         * @return true if the character is a lower case ASCII value.
          */
         static bool isLowerCase(char c) {
             return c >= 'a' && c <= 'z';
@@ -278,7 +278,7 @@ namespace lang{
          * @param c
          *      The character whose value is being checked.
          *
-         * @returns true if the character is a upper case ASCII value.
+         * @return true if the character is a upper case ASCII value.
          */
         static bool isUpperCase(char c) {
             return c >= 'A' && c <= 'Z';
@@ -290,7 +290,7 @@ namespace lang{
          * @param c
          *      The character whose value is being checked.
          *
-         * @returns true if the character is an ASCII letter value.
+         * @return true if the character is an ASCII letter value.
          */
         static bool isLetter(char c) {
             return isUpperCase(c) || isLowerCase(c);
@@ -303,7 +303,7 @@ namespace lang{
          * @param c
          *      The character whose value is being checked.
          *
-         * @returns true if the character is an ASCII letter or numeric value.
+         * @return true if the character is an ASCII letter or numeric value.
          */
         static bool isLetterOrDigit(char c) {
             return isLetter(c) || isDigit(c);
@@ -344,7 +344,7 @@ namespace lang{
          * @param radix
          *      the radix of the number
          *
-         * @returns the numeric value of the number represented in the given radix
+         * @return the numeric value of the number represented in the given radix
          */
         static int digit(char c, int radix);
 

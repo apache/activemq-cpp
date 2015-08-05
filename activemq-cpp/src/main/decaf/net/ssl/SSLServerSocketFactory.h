@@ -54,7 +54,7 @@ namespace ssl {
          * This method returns SSLContext::getDefault()->getServerSocketFactory(). If that call fails,
          * a non-functional factory is returned.
          *
-         * @returns the default SSL ServerSocketFactory pointer.
+         * @return the default SSL ServerSocketFactory pointer.
          *
          * @see decaf::net::ssl::SSLContext::getDefault()
          */
@@ -66,7 +66,7 @@ namespace ssl {
          * minimum quality of service for these defaults requires confidentiality protection and
          * server authentication (that is, no anonymous cipher suites).
          *
-         * @returns an STL vector containing the list of cipher suites enabled by default.
+         * @return an STL vector containing the list of cipher suites enabled by default.
          *
          * @see getSupportedCipherSuites()
          */
@@ -78,7 +78,7 @@ namespace ssl {
          * include cipher suites which do not meet quality of service requirements for those defaults.
          * Such cipher suites are useful in specialized applications.
          *
-         * @returns an STL vector containing the list of supported cipher suites.
+         * @return an STL vector containing the list of supported cipher suites.
          *
          * @see getDefaultCipherSuites()
          */

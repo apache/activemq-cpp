@@ -89,7 +89,7 @@ namespace net {
          * @param other
          *      The URL that is being compared to source.
          *
-         * @returns true if the two URL instances are considered equal.
+         * @return true if the two URL instances are considered equal.
          */
         virtual bool equals(const URL& source, const URL& other) const;
 
@@ -110,7 +110,7 @@ namespace net {
          * @param other
          *      The URL that is being compared to source.
          *
-         * @returns true if the two URL instances are considered to point to the same host.
+         * @return true if the two URL instances are considered to point to the same host.
          */
         virtual bool hostsEqual(const URL& source, const URL& other) const;
 
@@ -123,7 +123,7 @@ namespace net {
          * @param other
          *      The URL that is being compared to source.
          *
-         * @returns true if the two URL instances are considered to be the same file.
+         * @return true if the two URL instances are considered to be the same file.
          */
         virtual bool sameFile(const URL& source, const URL& other) const;
 
@@ -133,7 +133,7 @@ namespace net {
          * @param url
          *      The URL to construct the string from.
          *
-         * @returns string form of the provided URL.
+         * @return string form of the provided URL.
          */
         virtual decaf::lang::String toExternalForm(const URL& url) const;
 
@@ -153,7 +153,7 @@ namespace net {
          * be overidden by handlers with knowledge of the default port numbers as the default
          * implementation simply returns -1.
          *
-         * @returns the default port number for this URL's protocol.
+         * @return the default port number for this URL's protocol.
          */
         virtual int getDefaultPort() const;
 

@@ -75,7 +75,7 @@ namespace discovery {
         virtual decaf::net::URI getDiscoveryURI() const;
 
         /**
-         * @returns true if this agent is currently started.
+         * @return true if this agent is currently started.
          */
         bool isStarted() const;
 
@@ -91,7 +91,7 @@ namespace discovery {
          * Gets the configured service to publish, not all agents can publish so this value
          * may not mean that an actual service advertisement is ever done.
          *
-         * @returns the configured service to publish.
+         * @return the configured service to publish.
          */
         std::string getServiceName() const;
 
@@ -110,7 +110,7 @@ namespace discovery {
          * seen is kept in the list of discovered services before being idle to long.  Also this
          * value controls how often this service will advertise itself if it supports that.
          *
-         * @returns Time in milliseconds for the keep alive interval.
+         * @return Time in milliseconds for the keep alive interval.
          */
         long long getKeepAliveInterval() const;
 
@@ -125,7 +125,7 @@ namespace discovery {
         /**
          * Gets the configured backoff multiplier for calculating the next recovery time.
          *
-         * @returns the configured backoff multiplier for calculating the next recovery time.
+         * @return the configured backoff multiplier for calculating the next recovery time.
          */
         long long getBackOffMultiplier() const;
 
@@ -142,7 +142,7 @@ namespace discovery {
          * Gets the initial amount of time the agent should wait before attempt a reconnect on
          * a discovered service.
          *
-         * @returns The time to wait before the initial reconnect attempt in milliseconds.
+         * @return The time to wait before the initial reconnect attempt in milliseconds.
          */
         long long getInitialReconnectDelay() const;
 
@@ -159,7 +159,7 @@ namespace discovery {
          * Returns the maximum number of reconnect attempts that will be attempted before a
          * service is considered to be failed.
          *
-         * @returns the maximum number of allowed reconnect attempts.
+         * @return the maximum number of allowed reconnect attempts.
          */
         int getMaxReconnectAttempts() const;
 
@@ -175,7 +175,7 @@ namespace discovery {
          * Returns the maximum time allowed between reconnect attempts.  This limits the amount
          * of time that reconnect will wait when exponential backoff is enabled.
          *
-         * @returns the maximum reconnect delay in milliseconds.
+         * @return the maximum reconnect delay in milliseconds.
          */
         long long getMaxReconnectDelay() const;
 
@@ -194,7 +194,7 @@ namespace discovery {
          * Returns true if successive attempts to reconnect to a discovered service are delayed
          * by an exponentially growing time factor.
          *
-         * @returns whether exponential back-off is enabled.
+         * @return whether exponential back-off is enabled.
          */
         bool isUseExponentialBackOff() const;
 
@@ -210,7 +210,7 @@ namespace discovery {
         /**
          * Returns the assigned group for this discovery agent.
          *
-         * @returns the assigned group for this discovery agent.
+         * @return the assigned group for this discovery agent.
          */
         std::string getGroup() const;
 

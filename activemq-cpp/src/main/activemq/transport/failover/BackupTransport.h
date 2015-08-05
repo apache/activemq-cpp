@@ -80,7 +80,7 @@ namespace failover {
 
         /**
          * Gets the currently held transport
-         * @returns pointer to the held transport or NULL if not set.
+         * @return pointer to the held transport or NULL if not set.
          */
         const Pointer<Transport>& getTransport() {
             return transport;
@@ -115,7 +115,7 @@ namespace failover {
         /**
          * Has the Transport been shutdown and no longer usable.
          *
-         * @returns true if the Transport
+         * @return true if the Transport
          */
         bool isClosed() const {
             return this->closed;
@@ -130,7 +130,7 @@ namespace failover {
         }
 
         /**
-         * @returns true if this transport was in the priority backup list.
+         * @return true if this transport was in the priority backup list.
          */
         bool isPriority() const {
             return this->priority;

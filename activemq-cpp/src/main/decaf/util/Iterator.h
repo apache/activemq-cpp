@@ -41,7 +41,7 @@ namespace util{
          * repeatedly until the hasNext() method returns false will return
          * each element in the underlying collection exactly once.
          *
-         * @returns the next element in the iteration of elements.
+         * @return the next element in the iteration of elements.
          *
          * @throws NoSuchElementException if the iteration has no more elements.
          */
@@ -52,7 +52,7 @@ namespace util{
          * the next call to next would result in an NoSuchElementException to
          * be thrown.
          *
-         * @returns true if there are more elements available for iteration.
+         * @return true if there are more elements available for iteration.
          */
         virtual bool hasNext() const = 0;
 

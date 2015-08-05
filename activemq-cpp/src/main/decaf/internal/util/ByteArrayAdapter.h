@@ -251,7 +251,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an unsigned char* pointer to the array this object wraps.
+         * @return an unsigned char* pointer to the array this object wraps.
          */
         virtual unsigned char* getByteArray() {
             return this->array.bytes;
@@ -260,7 +260,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an char* pointer to the array this object wraps.
+         * @return an char* pointer to the array this object wraps.
          */
         virtual char* getCharArray() {
             return this->array.chars;
@@ -269,7 +269,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an short* pointer to the array this object wraps.
+         * @return an short* pointer to the array this object wraps.
          */
         virtual short* getShortArray() {
             return this->array.shorts;
@@ -278,7 +278,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an int* pointer to the array this object wraps.
+         * @return an int* pointer to the array this object wraps.
          */
         virtual int* getIntArray() {
             return this->array.ints;
@@ -287,7 +287,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an long long* pointer to the array this object wraps.
+         * @return an long long* pointer to the array this object wraps.
          */
         virtual long long* getLongArray() {
             return this->array.longs;
@@ -296,7 +296,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an double* pointer to the array this object wraps.
+         * @return an double* pointer to the array this object wraps.
          */
         virtual double* getDoubleArray() {
             return this->array.doubles;
@@ -305,7 +305,7 @@ namespace util {
         /**
          * Gets the pointer to the array we are wrapping.  Changes to the data in this
          * array are reflected by all ByteArrayAdapter objects that point to this array.
-         * @returns an float* pointer to the array this object wraps.
+         * @return an float* pointer to the array this object wraps.
          */
         virtual float* getFloatArray() {
             return this->array.floats;
@@ -396,7 +396,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the byte is to be read.
          *
-         * @returns the byte that is located at the given index.
+         * @return the byte that is located at the given index.
          *
          * @throws IndexOutOfBoundsException If index is not smaller than the
          *         buffer's limit or is negative.
@@ -409,7 +409,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the byte is to be read.
          *
-         * @returns the byte that is located at the given index.
+         * @return the byte that is located at the given index.
          *
          * @throws IndexOutOfBoundsException If index is not smaller than the
          *         buffer's limit or is negative.
@@ -425,7 +425,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -438,7 +438,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -454,7 +454,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -467,7 +467,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -483,7 +483,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -496,7 +496,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -512,7 +512,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -525,7 +525,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -541,7 +541,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read.
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -554,7 +554,7 @@ namespace util {
          * @param index
          *      The index in the Buffer where the bytes are to be read
          *
-         * @returns the value at the given index in the buffer.
+         * @return the value at the given index in the buffer.
          *
          * @throws IndexOutOfBoundsException if there are not enough bytes remaining
          *         to fill the requested Data Type, or index is negative.
@@ -572,7 +572,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -590,7 +590,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -608,7 +608,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -624,7 +624,7 @@ namespace util {
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -642,7 +642,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -658,7 +658,7 @@ namespace util {
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -676,7 +676,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -692,7 +692,7 @@ namespace util {
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -710,7 +710,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -726,7 +726,7 @@ namespace util {
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -744,7 +744,7 @@ namespace util {
          * @param value
          *      The value to write to the array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.
@@ -760,7 +760,7 @@ namespace util {
          * @param value
          *      The value to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throw IndexOutOfBoundsException if index greater than the buffer's limit
          *        minus the size of the type being written, or index is negative.

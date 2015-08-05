@@ -51,7 +51,7 @@ namespace concurrent {
 
         /**
          * Computes a result, or throws an exception if unable to do so.
-         * @returns
+         * @return
          *      Computed Result.
          * @throws Exception
          *      If unable to compute a result.

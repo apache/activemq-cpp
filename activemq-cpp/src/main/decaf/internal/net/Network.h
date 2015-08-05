@@ -64,7 +64,7 @@ namespace net {
          * The pointer returned is owned by the Network runtime and should not be
          * deleted or copied by the caller.
          *
-         * @returns a pointer to the Network Runtime's single Lock instance.
+         * @return a pointer to the Network Runtime's single Lock instance.
          */
         decaf::util::concurrent::Mutex* getRuntimeLock();
 

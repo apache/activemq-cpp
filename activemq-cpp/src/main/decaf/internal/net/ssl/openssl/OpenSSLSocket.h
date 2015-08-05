@@ -236,7 +236,7 @@ namespace openssl {
         /**
          * Gets the number of bytes in the Socket buffer that can be read without blocking.
          *
-         * @returns the number of bytes that can be read from the Socket without blocking.
+         * @return the number of bytes that can be read from the Socket without blocking.
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */

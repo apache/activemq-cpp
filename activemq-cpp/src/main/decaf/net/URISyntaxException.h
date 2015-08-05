@@ -124,21 +124,21 @@ namespace net{
         virtual ~URISyntaxException() throw();
 
         /**
-         * @returns the Input string that cause this exception or ""
+         * @return the Input string that cause this exception or ""
          */
         std::string getInput() const {
             return input;
         }
 
         /**
-         * @returns the Reason given for this failure, or ""
+         * @return the Reason given for this failure, or ""
          */
         std::string getReason() const {
             return reason;
         }
 
         /**
-         * @returns the index in the input string where the error occured or -1
+         * @return the index in the input string where the error occured or -1
          */
         int getIndex() const {
             return index;

@@ -277,7 +277,7 @@ namespace zip {
          * @param length
          *      The maximum number of byte of data to write.
          *
-         * @returns the actual number of bytes of compressed data.
+         * @return the actual number of bytes of compressed data.
          *
          * @throws NullPointerException if buffer is NULL.
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
@@ -297,7 +297,7 @@ namespace zip {
          * @param length
          *      The maximum number of byte of data to write.
          *
-         * @returns the actual number of bytes of compressed data.
+         * @return the actual number of bytes of compressed data.
          *
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
@@ -312,21 +312,21 @@ namespace zip {
          * @param buffer
          *      The Buffer to write the compressed data to.
          *
-         * @returns the actual number of bytes of compressed data.
+         * @return the actual number of bytes of compressed data.
          *
          * @throws IllegalStateException if in the end state.
          */
         int deflate(std::vector<unsigned char>& buffer);
 
         /**
-         * @returns the ADLER-32 value of the uncompressed data.
+         * @return the ADLER-32 value of the uncompressed data.
          *
          * @throws IllegalStateException if in the end state.
          */
         long long getAdler() const;
 
         /**
-         * @returns the total number of uncompressed bytes input so far.
+         * @return the total number of uncompressed bytes input so far.
          *
          * @throws IllegalStateException if in the end state.
          */

@@ -54,7 +54,7 @@ namespace cms {
          * in stopped mode just as the standard Connection object is created from the ConnectionFactory.
          * No messages will be delivered until the Connection.start method is explicitly called.
          *
-         * @returns a new XAConnectionFactory instance, the caller owns the returned pointer.
+         * @return a new XAConnectionFactory instance, the caller owns the returned pointer.
          *
          * @throws CMSException if an internal error occurs while creating the Connection.
          * @throws CMSSecurityException if the client authentication fails because the user name or
@@ -67,7 +67,7 @@ namespace cms {
          * created in stopped mode just as the standard ConnectionFactory creates a new Connection.
          * No messages will be delivered until the Connection.start method is explicitly called.
          *
-         * @returns a new XAConnectionFactory instance, the caller owns the returned pointer.
+         * @return a new XAConnectionFactory instance, the caller owns the returned pointer.
          *
          * @throws CMSException if an internal error occurs while creating the Connection.
          * @throws CMSSecurityException if the client authentication fails because the user name or

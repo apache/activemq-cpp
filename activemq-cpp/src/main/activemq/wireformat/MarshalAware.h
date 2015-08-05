@@ -39,7 +39,7 @@ namespace wireformat {
          * but since this is C++ and we don't have true interfaces we need
          * a flat inheritance hierarchy, so we always implement this.
          *
-         * @returns true if this class cares about marshaling.
+         * @return true if this class cares about marshaling.
          */
         virtual bool isMarshalAware() const = 0;
 

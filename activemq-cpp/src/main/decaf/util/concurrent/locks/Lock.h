@@ -182,7 +182,7 @@ namespace locks {
          * This usage ensures that the lock is unlocked if it was acquired, and doesn't
          * try to unlock if the lock was not acquired.
          *
-         * @returns true if the lock was acquired and false otherwise
+         * @return true if the lock was acquired and false otherwise
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
@@ -235,7 +235,7 @@ namespace locks {
          * @param unit
          *        the time unit of the time argument
          *
-         * @returns true if the lock was acquired and false if the waiting time elapsed
+         * @return true if the lock was acquired and false if the waiting time elapsed
          *          before the lock was acquired
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
@@ -272,7 +272,7 @@ namespace locks {
          * The exact operation of the Condition instance depends on the Lock implementation
          * and must be documented by that implementation.
          *
-         * @returns A new Condition instance for this Lock instance the caller must
+         * @return A new Condition instance for this Lock instance the caller must
          *          delete the returned Condition object when done with it.
          *
          * @throws RuntimeException if an error occurs while creating the Condition.
@@ -282,7 +282,7 @@ namespace locks {
         virtual Condition* newCondition() = 0;
 
         /**
-         * @returns a string representation of the Lock useful for debugging purposes.
+         * @return a string representation of the Lock useful for debugging purposes.
          */
         virtual std::string toString() const = 0;
     };

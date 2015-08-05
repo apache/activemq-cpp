@@ -63,7 +63,7 @@ namespace core {
         /**
          * Gets the currently configured Audit Depth
          *
-         * @returns the current audit depth setting
+         * @return the current audit depth setting
          */
         int getAuditDepth() const;
 
@@ -76,7 +76,7 @@ namespace core {
         void setAuditDepth(int value);
 
         /**
-         * @returns the current number of producers that will be tracked.
+         * @return the current number of producers that will be tracked.
          */
         int getMaximumNumberOfProducersToTrack() const;
 
@@ -146,7 +146,7 @@ namespace core {
         bool isInOrder(decaf::lang::Pointer<commands::MessageId> msgId) const;
 
         /**
-         * @returns the last sequence Id that we've audited for the given producer.
+         * @return the last sequence Id that we've audited for the given producer.
          */
         long long getLastSeqId(decaf::lang::Pointer<commands::ProducerId> id) const;
 

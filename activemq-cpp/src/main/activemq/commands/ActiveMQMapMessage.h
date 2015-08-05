@@ -129,7 +129,7 @@ namespace commands {
          * Fetches a reference to this objects PrimitiveMap, if one needs
          * to be created or unmarshaled, this will perform the correct steps.
          *
-         * @returns reference to a PrimtiveMap;
+         * @return reference to a PrimtiveMap;
          *
          * @throws NullPointerException if the internal Map is Null.
          */

@@ -142,7 +142,7 @@ namespace transport{
          * nested transport this method delegates down to the lowest level transport that
          * actually maintains a WireFormat info instance.
          *
-         * @returns The WireFormat the object used to encode / decode commands.
+         * @return The WireFormat the object used to encode / decode commands.
          */
         virtual Pointer<wireformat::WireFormat> getWireFormat() const = 0;
 
@@ -180,21 +180,21 @@ namespace transport{
          * Is this Transport fault tolerant, meaning that it will reconnect to
          * a broker on disconnect.
          *
-         * @returns true if the Transport is fault tolerant.
+         * @return true if the Transport is fault tolerant.
          */
         virtual bool isFaultTolerant() const = 0;
 
         /**
          * Is the Transport Connected to its Broker.
          *
-         * @returns true if a connection has been made.
+         * @return true if a connection has been made.
          */
         virtual bool isConnected() const = 0;
 
         /**
          * Has the Transport been shutdown and no longer usable.
          *
-         * @returns true if the Transport
+         * @return true if the Transport
          */
         virtual bool isClosed() const = 0;
 

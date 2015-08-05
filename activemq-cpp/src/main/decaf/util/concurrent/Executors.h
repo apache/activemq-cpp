@@ -97,7 +97,7 @@ namespace concurrent {
          * pool-N-thread-M, where N is the sequence number of this factory, and M is the
          * sequence number of the thread created by this factory.
          *
-         * @returns a new instance of the default thread factory used in Executors, the
+         * @return a new instance of the default thread factory used in Executors, the
          *          caller takes ownership of the returned pointer.
          */
         static ThreadFactory* getDefaultThreadFactory();
@@ -114,7 +114,7 @@ namespace concurrent {
          * @param nThreads
          *      The number of threads to assign as the max for the new ExecutorService.
          *
-         * @returns pointer to a new ExecutorService that is owned by the caller.
+         * @return pointer to a new ExecutorService that is owned by the caller.
          *
          * @throws IllegalArgumentException if nThreads is less than or equal to zero.
          */
@@ -135,7 +135,7 @@ namespace concurrent {
          *      Instance of a ThreadFactory that will be used by the Executor to spawn new
          *      worker threads.  This parameter cannot be NULL.
          *
-         * @returns pointer to a new ExecutorService that is owned by the caller.
+         * @return pointer to a new ExecutorService that is owned by the caller.
          *
          * @throws NullPointerException if threadFactory is NULL.
          * @throws IllegalArgumentException if nThreads is less than or equal to zero.
@@ -150,7 +150,7 @@ namespace concurrent {
          * method is owned by the caller but unlike the Executor returned from the method
          * newFixedThreadPool(1) this one cannot be reconfigurable to use more threads later on.
          *
-         * @returns a new Executor pointer that is owned by the caller.
+         * @return a new Executor pointer that is owned by the caller.
          */
         static ExecutorService* newSingleThreadExecutor();
 
@@ -166,7 +166,7 @@ namespace concurrent {
          *      Instance of a ThreadFactory that will be used by the Executor to spawn new
          *      worker threads.  This parameter cannot be NULL and ownership passes to the Executor.
          *
-         * @returns a new Executor pointer that is owned by the caller.
+         * @return a new Executor pointer that is owned by the caller.
          *
          * @throws NullPointerException if threadFactory is NULL.
          */
@@ -182,7 +182,7 @@ namespace concurrent {
          * @param executor
          *      The ExecutorService pointer to wrap and take ownership of.
          *
-         * @returns a new ExecutorService pointer that is owned by the caller.
+         * @return a new ExecutorService pointer that is owned by the caller.
          *
          * @throws NullPointerException if ExecutorService is NULL.
          */
@@ -199,7 +199,7 @@ namespace concurrent {
          * @param owns
          *      Does the callable instance own the given Runnable task pointer, default is true.
          *
-         * @returns a new Callable<E> pointer that is owned by the caller.
+         * @return a new Callable<E> pointer that is owned by the caller.
          *
          * @throws NullPointerException if the Runnable task is NULL
          */
@@ -225,7 +225,7 @@ namespace concurrent {
          * @param owns
          *      Does the callable instance own the given Runnable task pointer, default is true.
          *
-         * @returns a new Callable<E> pointer that is owned by the caller.
+         * @return a new Callable<E> pointer that is owned by the caller.
          *
          * @throws NullPointerException if the Runnable task is NULL
          */

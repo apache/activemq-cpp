@@ -51,7 +51,7 @@ namespace net{
          * In addition, spaces are substituted by '+'
          *
          * @param value - the string to be converted
-         * @returns the converted string
+         * @return the converted string
          */
         static std::string encode( const std::string& value );
 

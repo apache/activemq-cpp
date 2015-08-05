@@ -102,7 +102,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         template<typename POINTER>
         StringBuilder& append(const POINTER* pointer) {
@@ -123,7 +123,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         template<typename TYPE>
         StringBuilder& append(const Pointer<TYPE> pointer) {
@@ -143,7 +143,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(bool value);
 
@@ -153,7 +153,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(char value);
 
@@ -163,7 +163,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(short value);
 
@@ -173,7 +173,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(int value);
 
@@ -183,7 +183,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(long long value);
 
@@ -193,7 +193,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(float value);
 
@@ -203,7 +203,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(double value);
 
@@ -213,7 +213,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(const char* value);
 
@@ -240,7 +240,7 @@ namespace lang {
          * @param value
          *      The CharSequence value to be appended into this buffer.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(const CharSequence* value);
 
@@ -267,7 +267,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(const String& value);
 
@@ -277,7 +277,7 @@ namespace lang {
          * @param value
          *      The value to append to the contents of the StringBuilder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& append(const StringBuffer& value);
 
@@ -292,7 +292,7 @@ namespace lang {
          * @param end
          *      The ending index (exclusive) to delete from this buffer.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws StringIndexOutOfBoundsException
          *      if start is negative, greater than length(), or greater than end.
@@ -305,7 +305,7 @@ namespace lang {
          * @param index
          *      The index in this buffer where the character to delete is located.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws StringIndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -321,7 +321,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         template<typename POINTER>
         StringBuilder& insert(int index, const POINTER* pointer) {
@@ -344,7 +344,7 @@ namespace lang {
          * @param pointer
          *      A pointer to some object that must define a toString method.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         template<typename TYPE>
         StringBuilder& insert(int index, const Pointer<TYPE> pointer) {
@@ -367,7 +367,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -383,7 +383,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -399,7 +399,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -415,7 +415,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -431,7 +431,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -447,7 +447,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -463,7 +463,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -478,7 +478,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws NullPointerException if the target C string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -494,7 +494,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws NullPointerException if the target C string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -510,7 +510,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws NullPointerException if the target std::string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -532,7 +532,7 @@ namespace lang {
          * @param length
          *      The number of characters to copy from the given C string.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws NullPointerException if the target C string pointer is NULL.
          * @throws IndexOutOfBoundsException
@@ -552,7 +552,7 @@ namespace lang {
          * @param value
          *      The value to insert at the given index.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -574,7 +574,7 @@ namespace lang {
          * @param length
          *      The number of characters to copy from the given CharSequence.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException
          *      if the index is negative or greater than or equal to length().
@@ -596,7 +596,7 @@ namespace lang {
          * @param value
          *      The new string value to replace the older value.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          *
          * @throws IndexOutOfBoundsException if start is negative, greater than end or greater than length().
          */
@@ -605,7 +605,7 @@ namespace lang {
         /**
          * Reverses the order of characters in this builder.
          *
-         * @returns a reference to this StringBuilder so that operations can be chained.
+         * @return a reference to this StringBuilder so that operations can be chained.
          */
         StringBuilder& reverse();
 

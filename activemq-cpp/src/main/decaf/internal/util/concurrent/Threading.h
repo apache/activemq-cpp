@@ -79,7 +79,7 @@ namespace concurrent {
          * initialized and ready for use.  Each monitor that is taken must be returned before
          * the Threading library is shutdown.
          *
-         * @returns handle to a Monitor instance that has been initialized.
+         * @return handle to a Monitor instance that has been initialized.
          */
         static MonitorHandle* takeMonitor(bool alreadyLocked = false);
 
@@ -113,7 +113,7 @@ namespace concurrent {
          * @param monitor
          *      The handle to the monitor that the current thread is attempting to lock.
          *
-         * @returns true if the caller obtains the lock on the Monitor, false otherwise.
+         * @return true if the caller obtains the lock on the Monitor, false otherwise.
          */
         static bool tryEnterMonitor(MonitorHandle* monitor);
 
@@ -144,7 +144,7 @@ namespace concurrent {
          * @param nanos
          *      The time in nanoseconds to wait for the monitor to be signaled.
          *
-         * @returns true if the timeout given expires before the caller was signaled.
+         * @return true if the timeout given expires before the caller was signaled.
          *
          * @throws IllegalMonitorStateException if the caller does not own the monitor.
          */
@@ -195,7 +195,7 @@ namespace concurrent {
          * @param stackSize
          *      The size to allocate for the new thread's stack.
          *
-         * @returns a new ThreadHandle that identifies the thread and allows the parent
+         * @return a new ThreadHandle that identifies the thread and allows the parent
          *          to interact with it.
          */
         static ThreadHandle* createNewThread(Thread* parant, const char* name,
@@ -222,7 +222,7 @@ namespace concurrent {
          * @param nanos
          *      The number of nanoseconds to wait [0-999999].
          *
-         * @returns true if the timeout period expired, false otherwise.
+         * @return true if the timeout period expired, false otherwise.
          *
          * @throws InterruptedException if the Join was interrupted.
          * @throws IllegalArgumentException if the value of mills or nanos is invalid.
@@ -265,17 +265,17 @@ namespace concurrent {
          * @param name
          *      The name to assign to the returned ThreadHandle.
          *
-         * @returns a new ThreadHandle instance for the parent Decaf Thread.
+         * @return a new ThreadHandle instance for the parent Decaf Thread.
          */
         static ThreadHandle* createThreadWrapper(decaf::lang::Thread* parent, const char* name);
 
         /**
-         * @returns the Decaf Thread pointer instance for the currently running thread.
+         * @return the Decaf Thread pointer instance for the currently running thread.
          */
         static Thread* getCurrentThread();
 
         /**
-         * @returns the ThreadHandle instance for the currently running thread.
+         * @return the ThreadHandle instance for the currently running thread.
          */
         static ThreadHandle* getCurrentThreadHandle();
 
@@ -324,7 +324,7 @@ namespace concurrent {
          * @param threadLocal
          *      The ThreadLocalImpl to assign a storage slot.
          *
-         * @returns a new storage slot Id for the given ThreadLocalImpl's value to be assigned.
+         * @return a new storage slot Id for the given ThreadLocalImpl's value to be assigned.
          */
         static int createThreadLocalSlot(ThreadLocalImpl* threadLocal);
 

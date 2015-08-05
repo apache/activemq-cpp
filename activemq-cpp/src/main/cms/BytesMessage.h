@@ -116,7 +116,7 @@ namespace cms {
 
         /**
          * Reads a Boolean from the Bytes message stream
-         * @returns boolean value from stream
+         * @return boolean value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -142,7 +142,7 @@ namespace cms {
         /**
          * Reads a Byte from the Bytes message stream
          *
-         * @returns unsigned char value from stream
+         * @return unsigned char value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -178,7 +178,7 @@ namespace cms {
          *
          * @param value
          *      buffer to place data in
-         * @returns the total number of bytes read into the buffer, or -1 if
+         * @return the total number of bytes read into the buffer, or -1 if
          *          there is no more data because the end of the stream has
          *          been reached
          *
@@ -224,7 +224,7 @@ namespace cms {
          * @param length
          *      the number of bytes to read; must be less than or equal to
          *      value.length
-         * @returns the total number of bytes read into the buffer, or -1 if
+         * @return the total number of bytes read into the buffer, or -1 if
          *          there is no more data because the end of the stream has
          *          been reached
          *
@@ -255,7 +255,7 @@ namespace cms {
         /**
          * Reads a Char from the Bytes message stream
          *
-         * @returns char value from stream
+         * @return char value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -279,7 +279,7 @@ namespace cms {
         /**
          * Reads a 32 bit float from the Bytes message stream
          *
-         * @returns double value from stream
+         * @return double value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -302,7 +302,7 @@ namespace cms {
         /**
          * Reads a 64 bit double from the Bytes message stream
          *
-         * @returns double value from stream
+         * @return double value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -325,7 +325,7 @@ namespace cms {
         /**
          * Reads a 16 bit signed short from the Bytes message stream
          *
-         * @returns short value from stream
+         * @return short value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -349,7 +349,7 @@ namespace cms {
         /**
          * Reads a 16 bit unsigned short from the Bytes message stream
          *
-         * @returns unsigned short value from stream
+         * @return unsigned short value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -373,7 +373,7 @@ namespace cms {
         /**
          * Reads a 32 bit signed integer from the Bytes message stream
          *
-         * @returns int value from stream
+         * @return int value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -397,7 +397,7 @@ namespace cms {
         /**
          * Reads a 64 bit long from the Bytes message stream
          *
-         * @returns long long value from stream
+         * @return long long value from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -421,7 +421,7 @@ namespace cms {
         /**
          * Reads an ASCII String from the Bytes message stream
          *
-         * @returns String from stream
+         * @return String from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.
@@ -445,7 +445,7 @@ namespace cms {
         /**
          * Reads an UTF String from the BytesMessage stream
          *
-         * @returns String from stream
+         * @return String from stream
          *
          * @throws CMSException - if the CMS provider fails to read the message due to
          *                        some internal error.

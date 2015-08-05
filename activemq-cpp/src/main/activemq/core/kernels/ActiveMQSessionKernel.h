@@ -286,7 +286,7 @@ namespace kernels {
          * that this session creates so that they can notify the client of
          * exceptions that occur in the context of another thread.
          *
-         * @returns the registered cms::ExceptionListener pointer or NULL
+         * @return the registered cms::ExceptionListener pointer or NULL
          */
         cms::ExceptionListener* getExceptionListener();
 
@@ -302,7 +302,7 @@ namespace kernels {
         /**
          * Gets the currently configured MessageTransformer for this Session.
          *
-         * @returns the pointer to the currently set cms::MessageTransformer.
+         * @return the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const;
 
@@ -341,7 +341,7 @@ namespace kernels {
         /**
          * Gets the currently set Last Delivered Sequence Id
          *
-         * @returns long long containing the sequence id of the last delivered Message.
+         * @return long long containing the sequence id of the last delivered Message.
          */
         long long getLastDeliveredSequenceId() const {
             return this->lastDeliveredSequenceId;
@@ -377,7 +377,7 @@ namespace kernels {
          * @param timeout
          *      The time to wait for a response, default is zero or infinite.
          *
-         * @returns Pointer to a Response object that the broker has returned for the Command sent.
+         * @return Pointer to a Response object that the broker has returned for the Command sent.
          *
          * @throws ActiveMQException thrown if an error response was received
          *         from the broker, or if any other error occurred.
@@ -527,12 +527,12 @@ namespace kernels {
         bool isInUse(Pointer<commands::ActiveMQDestination> destination);
 
         /**
-         * @returns a Pointer to an ActiveMQProducerKernel using its ProducerId, or NULL.
+         * @return a Pointer to an ActiveMQProducerKernel using its ProducerId, or NULL.
          */
         Pointer<ActiveMQProducerKernel> lookupProducerKernel(Pointer<commands::ProducerId> id);
 
         /**
-         * @returns a Pointer to an ActiveMQConsumerKernel using its ConsumerId, or NULL.
+         * @return a Pointer to an ActiveMQConsumerKernel using its ConsumerId, or NULL.
          */
         Pointer<ActiveMQConsumerKernel> lookupConsumerKernel(Pointer<commands::ConsumerId> id);
 
@@ -542,7 +542,7 @@ namespace kernels {
          * because a consumer requires further processing time to complete its dispatching.  Once
          * all consumers are done this method returns false.
          *
-         * @returns true if more iterations are needed false otherwise.
+         * @return true if more iterations are needed false otherwise.
          */
         bool iterateConsumers();
 
@@ -556,7 +556,7 @@ namespace kernels {
         /**
          * Returns a Hash Code for this Session based on its SessionId.
          *
-         * @returns an int hash code based on the string balue of SessionId.
+         * @return an int hash code based on the string balue of SessionId.
          */
         virtual int getHashCode() const;
 
@@ -619,7 +619,7 @@ namespace kernels {
 
        // Creates a new Temporary Destination name using the connection id
        // and a rolling count.
-       // @returns a unique Temporary Destination name
+       // @return a unique Temporary Destination name
        std::string createTemporaryDestinationName();
 
     };

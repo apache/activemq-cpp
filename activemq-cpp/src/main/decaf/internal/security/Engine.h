@@ -60,7 +60,7 @@ namespace security {
          * Returns the name of the service type that this Engine will be a
          * builder of SecuritySpi instances for.
          *
-         * @returns the service class name of this engine, e.g. MessageDigest.
+         * @return the service class name of this engine, e.g. MessageDigest.
          */
         std::string getServiceName() const {
             return this->serviceName;
@@ -82,7 +82,7 @@ namespace security {
          * Return a new instance of the SercuritySpi implementation that is named by
          * this engine's serviceName and the passed algorithmName.
          *
-         * @returns a new instance of the SecuritySpi provided by serviceName.algorithmName
+         * @return a new instance of the SecuritySpi provided by serviceName.algorithmName
          */
         decaf::security::SecuritySpi* newInstance(const std::string& algorithmName);
 

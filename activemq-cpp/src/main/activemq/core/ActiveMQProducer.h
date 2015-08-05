@@ -120,7 +120,7 @@ namespace core {
 
         /**
          * Gets if Message Time Stamps are disabled for this Producer
-         * @returns boolean indicating state of enable / disable (true / false)
+         * @return boolean indicating state of enable / disable (true / false)
          */
         virtual bool getDisableMessageTimeStamp() const {
             return this->kernel->getDisableMessageTimeStamp();
@@ -185,7 +185,7 @@ namespace core {
     public:
 
         /**
-         * @returns true if this Producer has been closed.
+         * @return true if this Producer has been closed.
          */
         bool isClosed() const {
             return this->kernel->isClosed();

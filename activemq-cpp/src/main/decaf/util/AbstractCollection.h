@@ -209,7 +209,7 @@ namespace util {
          *
          * This implementation returns size() == 0.
          *
-         * @returns true if the size method return 0.
+         * @return true if the size method return 0.
          */
         virtual bool isEmpty() const {
             return this->size() == 0;

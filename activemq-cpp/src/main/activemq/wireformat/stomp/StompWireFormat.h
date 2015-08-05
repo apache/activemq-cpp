@@ -91,7 +91,7 @@ namespace stomp {
          *
          * @param transport - Pointer to the transport that is making this request.
          * @param in - the input stream to read the command from.
-         * @returns the newly marshaled Command, caller owns the pointer
+         * @return the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
         virtual Pointer<commands::Command> unmarshal(const activemq::transport::Transport* transport,
@@ -183,7 +183,7 @@ namespace stomp {
         /**
          * Returns true if this WireFormat has a Negotiator that needs to wrap the
          * Transport that uses it.
-         * @returns true if the WireFormat provides a Negotiator.
+         * @return true if the WireFormat provides a Negotiator.
          */
         virtual bool hasNegotiator() const {
             return false;
@@ -192,7 +192,7 @@ namespace stomp {
         /**
          * If the Transport Provides a Negotiator this method will create and return
          * a news instance of the Negotiator.
-         * @returns new instance of a WireFormatNegotiator.
+         * @return new instance of a WireFormatNegotiator.
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
         virtual Pointer<transport::Transport> createNegotiator(

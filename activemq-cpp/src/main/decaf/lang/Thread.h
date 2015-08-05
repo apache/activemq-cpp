@@ -261,7 +261,7 @@ namespace lang {
 
         /**
          * Returns the Thread's assigned name.
-         * @returns the Name of the Thread.
+         * @return the Name of the Thread.
          */
         std::string getName() const;
 
@@ -292,7 +292,7 @@ namespace lang {
         /**
          * Set the handler invoked when this thread abruptly terminates due to an uncaught exception.
          *
-         * @returns a pointer to the set UncaughtExceptionHandler.
+         * @return a pointer to the set UncaughtExceptionHandler.
          */
         UncaughtExceptionHandler* getUncaughtExceptionHandler() const;
 
@@ -343,7 +343,7 @@ namespace lang {
         /**
          * Returns but does not clear the state of this Thread's interrupted flag.
          *
-         * @returns true if the thread was interrupted, false otherwise.
+         * @return true if the thread was interrupted, false otherwise.
          */
         bool isInterrupted() const;
 
@@ -398,7 +398,7 @@ namespace lang {
          * such that a subsequent call will return false unless an interrupt occurs between
          * the two calls.
          *
-         * @returns true if the thread was interrupted, false otherwise.
+         * @return true if the thread was interrupted, false otherwise.
          */
         static bool interrupted();
 
@@ -409,7 +409,7 @@ namespace lang {
          * is cleared via a call to the setDefaultUncaughtExceptionHandler method will NULL as
          * the value of the handler argument.
          *
-         * @returns a pointer to the default UncaughtExceptionHandler for all Threads.
+         * @return a pointer to the default UncaughtExceptionHandler for all Threads.
          */
         static UncaughtExceptionHandler* getDefaultUncaughtExceptionHandler();
 

@@ -142,7 +142,7 @@ namespace core {
          * connection and returns it.  Mainly intended for use by the objects
          * that this session creates so that they can notify the client of
          * exceptions that occur in the context of another thread.
-         * @returns cms::ExceptionListener pointer or NULL
+         * @return cms::ExceptionListener pointer or NULL
          */
         cms::ExceptionListener* getExceptionListener() {
             return this->kernel->getExceptionListener();
@@ -162,7 +162,7 @@ namespace core {
         /**
          * Gets the currently configured MessageTransformer for this Session.
          *
-         * @returns the pointer to the currently set cms::MessageTransformer.
+         * @return the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const {
             return this->kernel->getMessageTransformer();

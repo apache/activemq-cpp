@@ -247,7 +247,7 @@ namespace core {
          * @param message
          *      The Message that should be checked.
          *
-         * @returns true if the Message was seen before.
+         * @return true if the Message was seen before.
          */
         bool isDuplicate(Dispatcher* dispatcher, Pointer<commands::Message> message);
 
@@ -399,7 +399,7 @@ namespace core {
         /**
          * Gets the pointer to the current PrefetchPolicy that is in use by this ConnectionFactory.
          *
-         * @returns a pointer to this objects PrefetchPolicy.
+         * @return a pointer to this objects PrefetchPolicy.
          */
         PrefetchPolicy* getPrefetchPolicy() const;
 
@@ -416,7 +416,7 @@ namespace core {
         /**
          * Gets the pointer to the current RedeliveryPolicy that is in use by this ConnectionFactory.
          *
-         * @returns a pointer to this objects RedeliveryPolicy.
+         * @return a pointer to this objects RedeliveryPolicy.
          */
         RedeliveryPolicy* getRedeliveryPolicy() const;
 
@@ -451,7 +451,7 @@ namespace core {
 
         /**
          * Gets if the useAsyncSend option is set
-         * @returns true if on false if not.
+         * @return true if on false if not.
          */
         bool isUseAsyncSend() const;
 
@@ -463,7 +463,7 @@ namespace core {
 
         /**
          * Gets if the Connection is configured for Message body compression.
-         * @returns if the Message body will be Compressed or not.
+         * @return if the Message body will be Compressed or not.
          */
         bool isUseCompression() const;
 
@@ -536,7 +536,7 @@ namespace core {
         void setProducerWindowSize(unsigned int windowSize);
 
         /**
-         * @returns true if the Connections that this factory creates should support the
+         * @return true if the Connections that this factory creates should support the
          * message based priority settings.
          */
         bool isMessagePrioritySupported() const;
@@ -585,7 +585,7 @@ namespace core {
          * for duplication, and the larger the performance impact of duplicate
          * detection will be.
          *
-         * @returns the configured audit depth.
+         * @return the configured audit depth.
          */
         int getAuditDepth() const;
 
@@ -603,7 +603,7 @@ namespace core {
         /**
          * The number of Producers that will be audited.
          *
-         * @returns the configured number of producers to include in the audit.
+         * @return the configured number of producers to include in the audit.
          */
         int getAuditMaximumProducerNumber() const;
 
@@ -649,7 +649,7 @@ namespace core {
          * completion.  This allows the acks to represent delivery status which can be persisted on
          * rollback Used in conjunction with KahaDB set to Rewrite On Redelivery.
          *
-         * @returns true if this option is enabled.
+         * @return true if this option is enabled.
          */
         bool isTransactedIndividualAck() const;
 
@@ -684,7 +684,7 @@ namespace core {
         /**
          * Gets the delay period for a consumer redelivery.
          *
-         * @returns configured time delay in milliseconds.
+         * @return configured time delay in milliseconds.
          */
         long long getConsumerFailoverRedeliveryWaitPeriod() const;
 
@@ -712,7 +712,7 @@ namespace core {
         /**
          * Gets the time between optimized ack batches in milliseconds.
          *
-         * @returns time between optimized ack batches in Milliseconds.
+         * @return time between optimized ack batches in Milliseconds.
          */
         long long getOptimizeAcknowledgeTimeOut() const;
 
@@ -748,7 +748,7 @@ namespace core {
         /**
          * Should all created consumers be retroactive.
          *
-         * @returns true if consumer will be created with the retroactive flag set.
+         * @return true if consumer will be created with the retroactive flag set.
          */
         bool isUseRetroactiveConsumer() const;
 
@@ -765,7 +765,7 @@ namespace core {
         /**
          * Should all created consumers be exclusive.
          *
-         * @returns true if consumer will be created with the exclusive flag set.
+         * @return true if consumer will be created with the exclusive flag set.
          */
         bool isExclusiveConsumer() const;
 
@@ -823,7 +823,7 @@ namespace core {
         void setConsumerExpiryCheckEnabled(bool consumerExpiryCheckEnabled);
 
         /**
-         * @returns the current connection's OpenWire protocol version.
+         * @return the current connection's OpenWire protocol version.
          */
         int getProtocolVersion() const;
 
@@ -911,7 +911,7 @@ namespace core {
          * Returns the Id of the Resource Manager that this client will use should
          * it be entered into an XA Transaction.
          *
-         * @returns a string containing the resource manager Id for XA Transactions.
+         * @return a string containing the resource manager Id for XA Transactions.
          */
         std::string getResourceManagerId() const;
 
@@ -942,7 +942,7 @@ namespace core {
          * @param timeout
          *      The time in milliseconds to wait for a response, default is zero or infinite.
          *
-         * @returns a Pointer instance to the Response object sent from the Broker.
+         * @return a Pointer instance to the Response object sent from the Broker.
          *
          * @throws BrokerException if the response from the broker is of type ExceptionResponse.
          * @throws ActiveMQException if any other error occurs while sending the Command.
@@ -986,7 +986,7 @@ namespace core {
         /**
          * Gets the pointer to the first exception that caused the Connection to become failed.
          *
-         * @returns pointer to an Exception instance or NULL if none is set.
+         * @return pointer to an Exception instance or NULL if none is set.
          */
         decaf::lang::Exception* getFirstFailureError() const;
 
@@ -1026,7 +1026,7 @@ namespace core {
         void ensureConnectionInfoSent();
 
         /**
-         * @returns the ExecutorService used to run jobs for this Connection
+         * @return the ExecutorService used to run jobs for this Connection
          */
         decaf::util::concurrent::ExecutorService* getExecutor() const;
 

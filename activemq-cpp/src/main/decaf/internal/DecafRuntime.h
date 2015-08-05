@@ -62,7 +62,7 @@ namespace internal {
          * The pointer returned is owned by the Decaf runtime and should not be
          * deleted or copied by the caller.
          *
-         * @returns a pointer to the Decaf Runtime's global Lock instance.
+         * @return a pointer to the Decaf Runtime's global Lock instance.
          */
         decaf::util::concurrent::Mutex* getGlobalLock();
 

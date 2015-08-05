@@ -148,7 +148,7 @@ namespace kernels {
         /**
          * Gets the currently configured MessageTransformer for this MessageProducer.
          *
-         * @returns the pointer to the currently set cms::MessageTransformer.
+         * @return the pointer to the currently set cms::MessageTransformer.
          */
         virtual cms::MessageTransformer* getMessageTransformer() const {
             return this->transformer;
@@ -196,7 +196,7 @@ namespace kernels {
 
         /**
          * Gets if Message Time Stamps are disabled for this Producer
-         * @returns boolean indicating state of enable / disable (true / false)
+         * @return boolean indicating state of enable / disable (true / false)
          */
         virtual bool getDisableMessageTimeStamp() const {
             return this->disableTimestamps;
@@ -251,7 +251,7 @@ namespace kernels {
         }
 
         /**
-         * @returns true if this Producer has been closed.
+         * @return true if this Producer has been closed.
          */
         bool isClosed() const {
             return this->closed;
@@ -290,7 +290,7 @@ namespace kernels {
         void dispose();
 
         /**
-         * @returns the next sequence number for a Message sent from this Producer.
+         * @return the next sequence number for a Message sent from this Producer.
          */
         long long getNextMessageSequence() {
             return this->messageSequence.getNextSequenceId();

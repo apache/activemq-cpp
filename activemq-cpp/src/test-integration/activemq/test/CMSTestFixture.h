@@ -47,7 +47,7 @@ namespace test {
         /**
          * Return the URL for the Broker that is customized for the
          * test in question.
-         * @returns the BrokerURL string for this test.
+         * @return the BrokerURL string for this test.
          */
         virtual std::string getBrokerURL() const = 0;
 

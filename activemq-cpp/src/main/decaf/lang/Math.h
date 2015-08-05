@@ -50,7 +50,7 @@ namespace lang{
          * negative, the argument is returned. If the argument is negative, the
          * negation of the argument is returned.
          * @param value - the value to return the abs of
-         * @returns the value if positive, otherwise the negative of value
+         * @return the value if positive, otherwise the negative of value
          */
         static int abs( int value ) {
             return value < 0 ? -value : value;
@@ -61,7 +61,7 @@ namespace lang{
          * negative, the argument is returned. If the argument is negative, the
          * negation of the argument is returned.
          * @param value - the value to return the abs of
-         * @returns the value if positive, otherwise the negative of value
+         * @return the value if positive, otherwise the negative of value
          */
         static long long abs( long long value ) {
             return value < 0 ? -value : value;
@@ -81,7 +81,7 @@ namespace lang{
          *    Float::intBitsToFloat( 0x7fffffff & Float::floatToIntBits( value ) )
          *
          * @param value - the value to return the abs of
-         * @returns the value if positive, otherwise the negative of value
+         * @return the value if positive, otherwise the negative of value
          */
         static float abs( float value );
 
@@ -100,7 +100,7 @@ namespace lang{
          *                              Double::doubleToLongBits( value ) )
          *
          * @param value - the value to return the abs of
-         * @returns the value if positive, otherwise the negative of value
+         * @return the value if positive, otherwise the negative of value
          */
         static double abs( double value );
 
@@ -112,7 +112,7 @@ namespace lang{
          *    the result is NaN.
          *
          * @param value - the value to return the arc cosine of.
-         * @returns arc cosine of value in radians.
+         * @return arc cosine of value in radians.
          */
         //static double acos( double value );
 
@@ -126,7 +126,7 @@ namespace lang{
          *    as the argument.
          *
          * @param value - the value to return the arc cosine of.
-         * @returns arc cosine of value in radians.
+         * @return arc cosine of value in radians.
          */
         //static double asin( double value );
 
@@ -139,7 +139,7 @@ namespace lang{
          *    as the argument.
          *
          * @param value - the value to return the arc cosine of.
-         * @returns arc tangent of value in radians.
+         * @return arc tangent of value in radians.
          */
         //static double atan( double value );
 
@@ -182,7 +182,7 @@ namespace lang{
          *
          * @param y - the ordinate coordinate
          * @param x - the abscissa coordinate
-         * @returns the theta component of the point (r, theta) in polar coordinates
+         * @return the theta component of the point (r, theta) in polar coordinates
          * that corresponds to the point (x, y) in Cartesian coordinates.
          */
         //static double atan2( double x, double y );
@@ -199,7 +199,7 @@ namespace lang{
          *    as the argument.
          *
          * @param value - the double to compute the cube root of
-         * @returns the cube root of value
+         * @return the cube root of value
          */
         //static double cbrt( double value );
 
@@ -209,7 +209,7 @@ namespace lang{
          *   o If the argument is NaN or an infinity, then the result is NaN.
          *
          * @param value - an value in radians
-         * @returns the cosine of the argument.
+         * @return the cosine of the argument.
          */
         //static double cos( double value );
 
@@ -330,7 +330,7 @@ namespace lang{
          *    zero, then the result is the same as the argument.
          *
          * @param value - the value to round to the nearest integer
-         * @returns the rounded value
+         * @return the rounded value
          */
         //static double rint( double value );
 
@@ -490,7 +490,7 @@ namespace lang{
          *    is negative infinity.
          *
          * @param value the value to compute the natural log of.
-         * @returns the natural log of value.
+         * @return the natural log of value.
          */
         //static double log( double value );
 
@@ -505,7 +505,7 @@ namespace lang{
          *   o If the argument is equal to 10n for integer n, then the result is n.
          *
          * @param value - the value to operate on
-         * @returns the long base 10 of value
+         * @return the long base 10 of value
          */
         //static double log10( double value );
 
@@ -524,7 +524,7 @@ namespace lang{
          *     as the argument.
          *
          * @param value - the value to operate on
-         * @returns the the value ln(x + 1), the natural log of x + 1
+         * @return the the value ln(x + 1), the natural log of x + 1
          */
         //static double log1p( double value );
 
@@ -542,7 +542,7 @@ namespace lang{
          *
          * Note that the value of Math.ceil(x) is exactly the value of -Math.floor(-x).
          * @param value - the value to find the ceiling of
-         * @returns the smallest (closest to negative infinity) floating-point value
+         * @return the smallest (closest to negative infinity) floating-point value
          * that is greater than or equal to the argument and is equal to a
          * mathematical integer.
          */
@@ -559,7 +559,7 @@ namespace lang{
          *      zero, then the result is the same as the argument.
          *
          * @param value - the value to find the floor of
-         * @returns the largest (closest to positive infinity) floating-point value
+         * @return the largest (closest to positive infinity) floating-point value
          * that less than or equal to the argument and is equal to a mathematical
          * integer.
          */
@@ -580,7 +580,7 @@ namespace lang{
          *     Integer::MAX_VALUE.
          *
          * @param value - the value to round
-         * @returns the value of the argument rounded to the nearest integral value.
+         * @return the value of the argument rounded to the nearest integral value.
          */
         static int round( float value );
 
@@ -599,7 +599,7 @@ namespace lang{
          *     Long::MAX_VALUE.
          *
          * @param value - the value to round
-         * @returns the value of the argument rounded to the nearest integral value.
+         * @return the value of the argument rounded to the nearest integral value.
          */
         static long long round( double value );
 
@@ -637,7 +637,7 @@ namespace lang{
          * one thread. However, if many threads need to generate pseudorandom numbers
          * at a great rate, it may reduce contention for each thread to have its
          * own pseudorandom-number generator.
-         * @returns a pseudorandom double greater than or equal to 0.0 and
+         * @return a pseudorandom double greater than or equal to 0.0 and
          * less than 1.0.
          */
         static double random();
@@ -651,7 +651,7 @@ namespace lang{
          *  o If the argument is negative infinity, then the result is positive zero.
          *
          * @param value - the exponent to raise e to
-         * @returns the value e^a, where e is the base of the natural logarithms.
+         * @return the value e^a, where e is the base of the natural logarithms.
          */
         //static double exp( double value );
 
@@ -667,7 +667,7 @@ namespace lang{
          *    the argument.
          *
          * @param value - the value to raise e^x - 1
-         * @returns the value ex - 1.
+         * @return the value ex - 1.
          */
         //static double expm1( double value );
 
@@ -681,7 +681,7 @@ namespace lang{
          *
          * @param x - an argument
          * @param y - another argument
-         * @returns the sqrt(x^2 + y^2) without intermediate overflow or underflow
+         * @return the sqrt(x^2 + y^2) without intermediate overflow or underflow
          */
         //static double hypot( double x, double y );
 
@@ -695,7 +695,7 @@ namespace lang{
          *    the same as the argument.
          *
          * @param value - the floating-point value whose signum is to be returned
-         * @returns the signum function of the argument
+         * @return the signum function of the argument
          */
         static float signum( float value );
 
@@ -709,7 +709,7 @@ namespace lang{
          *    the same as the argument.
          *
          * @param value - the floating-point value whose signum is to be returned
-         * @returns the signum function of the argument
+         * @return the signum function of the argument
          */
         static double signum( double value );
 
@@ -745,7 +745,7 @@ namespace lang{
          *  o If the argument is ±Float::MAX_VALUE, then the result is equal to 2^104.
          *
          * @param value - the floating-point value whose ulp is to be returned
-         * @returns the size of an ulp of the argument
+         * @return the size of an ulp of the argument
          */
         //static float ulp( float value );
 
@@ -763,7 +763,7 @@ namespace lang{
          *  o If the argument is ±Float::MAX_VALUE, then the result is equal to 2^971.
          *
          * @param value - the floating-point value whose ulp is to be returned
-         * @returns the size of an ulp of the argument
+         * @return the size of an ulp of the argument
          */
         //static double ulp( double value );
 

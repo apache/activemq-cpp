@@ -60,14 +60,14 @@ namespace lang{
         virtual ~Boolean() {}
 
         /**
-         * @returns the primitive boolean value of this object
+         * @return the primitive boolean value of this object
          */
         bool booleanValue() const {
             return value;
         }
 
         /**
-         * @returns the string representation of this Booleans value.
+         * @return the string representation of this Booleans value.
          */
         std::string toString() const;
 
@@ -97,7 +97,7 @@ namespace lang{
         virtual bool operator<(const Boolean& value) const;
 
         /**
-         * @returns true if the two Boolean Objects have the same value.
+         * @return true if the two Boolean Objects have the same value.
          */
         bool equals(const Boolean& b) const {
             return this->value == b.value;
@@ -129,7 +129,7 @@ namespace lang{
         virtual bool operator<(const bool& value) const;
 
         /**
-         * @returns true if the two Boolean Objects have the same value.
+         * @return true if the two Boolean Objects have the same value.
          */
         bool equals(const bool& b) const {
             return this->value == b;
@@ -141,7 +141,7 @@ namespace lang{
          * @param value
          *      The bool value to convert to a <code>Boolean</code> instance.
          *
-         * @returns a Boolean instance of the primitive boolean value
+         * @return a Boolean instance of the primitive boolean value
          */
         static Boolean valueOf(bool value);
 
@@ -149,7 +149,7 @@ namespace lang{
          * @param value
          *      The std::string value to convert to a <code>Boolean</code> instance.
          *
-         * @returns a Boolean instance of the string value
+         * @return a Boolean instance of the string value
          */
         static Boolean valueOf(const String& value);
 

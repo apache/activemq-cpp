@@ -58,7 +58,7 @@ namespace cms {
          * it is removed via a call to setListener(null) and should not be deleted
          * until the client is sure it will not receive any future events.
          *
-         * @returns the configured DestinationListener for this event source or null if none.
+         * @return the configured DestinationListener for this event source or null if none.
          */
         virtual cms::DestinationListener* getListener() const = 0;
 
@@ -70,7 +70,7 @@ namespace cms {
          * The destinations are cloned and placed into the returned vector, the caller is
          * responsible for deleting these cloned objects.
          *
-         * @returns an STL vector containing the current list of known Queues.
+         * @return an STL vector containing the current list of known Queues.
          */
         virtual std::vector<cms::Queue*> getQueues() const = 0;
 
@@ -82,7 +82,7 @@ namespace cms {
          * The destinations are cloned and placed into the returned vector, the caller is
          * responsible for deleting these cloned objects.
          *
-         * @returns an STL vector containing the current list of known Queues.
+         * @return an STL vector containing the current list of known Queues.
          */
         virtual std::vector<cms::Topic*> getTopics() const = 0;
 
@@ -94,7 +94,7 @@ namespace cms {
          * The destinations are cloned and placed into the returned vector, the caller is
          * responsible for deleting these cloned objects.
          *
-         * @returns an STL vector containing the current list of known Queues.
+         * @return an STL vector containing the current list of known Queues.
          */
         virtual std::vector<cms::TemporaryQueue*> getTemporaryQueues() const = 0;
 
@@ -106,7 +106,7 @@ namespace cms {
          * The destinations are cloned and placed into the returned vector, the caller is
          * responsible for deleting these cloned objects.
          *
-         * @returns an STL vector containing the current list of known Queues.
+         * @return an STL vector containing the current list of known Queues.
          */
         virtual std::vector<cms::TemporaryTopic*> getTemporaryTopics() const = 0;
 

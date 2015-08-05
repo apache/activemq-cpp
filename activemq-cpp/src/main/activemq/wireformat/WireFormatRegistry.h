@@ -70,7 +70,7 @@ namespace wireformat {
          * @param name
          *        The name of the Factory to find in the Registry.
          *
-         * @returns the Factory registered under the given name.
+         * @return the Factory registered under the given name.
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
@@ -110,7 +110,7 @@ namespace wireformat {
          * Retrieves a list of the names of all the Registered WireFormat's in this
          * Registry.
          *
-         * @returns stl vector of strings with all the WireFormat names registered.
+         * @return stl vector of strings with all the WireFormat names registered.
          */
         std::vector<std::string> getWireFormatNames() const;
 

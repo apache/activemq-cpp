@@ -61,7 +61,7 @@ namespace cms {
          * Creates a new instance of this destination type that is a
          * copy of this one, and returns it.
          *
-         * @returns cloned copy of this object
+         * @return cloned copy of this object
          */
         virtual cms::Destination* clone() const = 0;
 

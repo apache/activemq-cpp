@@ -41,14 +41,14 @@ namespace marshal {
 
         /**
          * Gets the DataStructureType that this class marshals/unmarshals
-         * @returns byte Id of this classes DataStructureType
+         * @return byte Id of this classes DataStructureType
          */
         virtual unsigned char getDataStructureType() const = 0;
 
         /**
          * Creates a new instance of the class that this class is a marshaling
          * director for.
-         * @returns newly allocated Command
+         * @return newly allocated Command
          */
         virtual commands::DataStructure* createObject() const = 0;
 

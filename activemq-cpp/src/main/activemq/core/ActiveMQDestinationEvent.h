@@ -54,7 +54,7 @@ namespace core {
         /**
          * Returns the DestinationInfo object that triggered this event.
          *
-         * @returns the DestinationInfo object that triggered this event.
+         * @return the DestinationInfo object that triggered this event.
          */
         decaf::lang::Pointer<commands::DestinationInfo> getDestinationInfo() const {
             return this->destination;

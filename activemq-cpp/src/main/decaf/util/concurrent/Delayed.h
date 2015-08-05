@@ -45,7 +45,7 @@ namespace concurrent {
          * @param unit
          *        The time unit
          *
-         * @returns the remaining delay; zero or negative values indicate that the delay
+         * @return the remaining delay; zero or negative values indicate that the delay
          *          has already elapsed
          */
         virtual long long getDelay( const TimeUnit& unit ) = 0;

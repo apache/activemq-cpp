@@ -68,7 +68,7 @@ namespace nio{
         virtual ~LongBuffer() {}
 
         /**
-         * @returns a std::string describing this object
+         * @return a std::string describing this object
          */
         virtual std::string toString() const;
 
@@ -81,7 +81,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure that
          * this buffer has an accessible backing array.
          *
-         * @returns the array that backs this Buffer.
+         * @return the array that backs this Buffer.
          *
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
@@ -95,7 +95,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure that
          * this buffer has an accessible backing array.
          *
-         * @returns The offset long longo the backing array where index zero starts.
+         * @return The offset long longo the backing array where index zero starts.
          *
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
@@ -135,7 +135,7 @@ namespace nio{
          * zero, so that an invocation of this method can be followed immediately by
          * an invocation of another relative put method.
          *
-         * @returns a reference to this LongBuffer.
+         * @return a reference to this LongBuffer.
          *
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
@@ -152,7 +152,7 @@ namespace nio{
          * to those of this buffer. The new buffer will be read-only if, and only if,
          * this buffer is read-only.
          *
-         * @returns a new long long Buffer which the caller owns.
+         * @return a new long long Buffer which the caller owns.
          */
         virtual LongBuffer* duplicate() = 0;
 
@@ -160,7 +160,7 @@ namespace nio{
          * Relative get method. Reads the value at this buffer's current position,
          * and then increments the position.
          *
-         * @returns the long long at the current position.
+         * @return the long long at the current position.
          *
          * @throws BufferUnderflowException if there no more data to return.
          */
@@ -172,7 +172,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the long long is to be read.
          *
-         * @returns the long long that is located at the given index.
+         * @return the long long that is located at the given index.
          *
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit, or index is negative.
@@ -188,7 +188,7 @@ namespace nio{
          * amount of data that is to be read, that is to say, the caller should call
          * buffer.resize( N ) before calling this get method.
          *
-         * @returns a reference to this Buffer.
+         * @return a reference to this Buffer.
          *
          * @throws BufferUnderflowException if there are fewer than length long longs
          *         remaining in this buffer.
@@ -216,7 +216,7 @@ namespace nio{
          * @param length
          *      The amount of data to put in the passed buffer.
          *
-         * @returns a reference to this Buffer.
+         * @return a reference to this Buffer.
          *
          * @throws BufferUnderflowException if there are fewer than length long longs
          *         remaining in this buffer
@@ -232,7 +232,7 @@ namespace nio{
          * be invoked.  Subclasses should override this method if they do not have a
          * backing array as this class always returns true.
          *
-         * @returns true if, and only if, this buffer is backed by an array and is not
+         * @return true if, and only if, this buffer is backed by an array and is not
          *          read-only.
          */
         virtual bool hasArray() const = 0;
@@ -250,7 +250,7 @@ namespace nio{
          * @param src
          *      The buffer to take long longs from an place in this one.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this
          *         buffer for the remaining long longs in the source buffer
@@ -278,7 +278,7 @@ namespace nio{
          * @param length
          *      The number of long longs to be read from the given array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer
          * @throws ReadOnlyBufferException if this buffer is read-only
@@ -295,7 +295,7 @@ namespace nio{
          * @param buffer
          *      The buffer whose contents are copied to this LongBuffer.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
@@ -309,7 +309,7 @@ namespace nio{
          * @param value
          *      The long longs value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if this buffer's current position is not
          *         smaller than its limit
@@ -325,7 +325,7 @@ namespace nio{
          * @param value
          *      The long longs to write.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws IndexOutOfBoundsException if index greater than the buffer's limit
          *         minus the size of the type being written.
@@ -344,7 +344,7 @@ namespace nio{
          * number of bytes remaining in this buffer, and its mark will be undefined. The
          * new buffer will be read-only if, and only if, this buffer is read-only.
          *
-         * @returns the newly create LongBuffer which the caller owns.
+         * @return the newly create LongBuffer which the caller owns.
          */
         virtual LongBuffer* slice() const = 0;
 
@@ -382,7 +382,7 @@ namespace nio{
          * @param capacity
          *      The size of the Double buffer in long longs.
          *
-         * @returns the LongBuffer that was allocated, caller owns.
+         * @return the LongBuffer that was allocated, caller owns.
          */
         static LongBuffer* allocate( int capacity );
 
@@ -404,7 +404,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new LongBuffer that is backed by buffer, caller owns.
+         * @return a new LongBuffer that is backed by buffer, caller owns.
          *
          * @throws NullPointerException if the array pointer is NULL.
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
@@ -425,7 +425,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been sized
          *      to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new LongBuffer that is backed by buffer, caller owns.
+         * @return a new LongBuffer that is backed by buffer, caller owns.
          */
         static LongBuffer* wrap( std::vector<long long>& buffer );
 

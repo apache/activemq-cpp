@@ -174,7 +174,7 @@ namespace locks {
          * If the lock is held by another thread then this method will return immediately with the
          * value false.
          *
-         * @returns true if the lock was acquired and false otherwise
+         * @return true if the lock was acquired and false otherwise
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
          */
@@ -223,7 +223,7 @@ namespace locks {
          * @param unit
          *        the time unit of the time argument
          *
-         * @returns true if the lock was acquired and false if the waiting time elapsed
+         * @return true if the lock was acquired and false if the waiting time elapsed
          *          before the lock was acquired
          *
          * @throws RuntimeException if an error occurs while acquiring the lock.
@@ -298,7 +298,7 @@ namespace locks {
          *        }
          *    }
          *
-         * @returns the number of holds on this lock by the current thread, or zero if this lock
+         * @return the number of holds on this lock by the current thread, or zero if this lock
          *          is not held by the current thread
          */
         int getHoldCount() const;
@@ -341,7 +341,7 @@ namespace locks {
          *     }
          *   }
          *
-         * @returns true if current thread holds this lock and false otherwise
+         * @return true if current thread holds this lock and false otherwise
          */
         bool isHeldByCurrentThread() const;
 
@@ -349,14 +349,14 @@ namespace locks {
          * Queries if this lock is held by any thread. This method is designed for use in
          * monitoring of the system state, not for synchronization control.
          *
-         * @returns true if any thread holds this lock and false otherwise
+         * @return true if any thread holds this lock and false otherwise
          */
         bool isLocked() const;
 
         /**
          * Returns true if this lock has fairness set true.
          *
-         * @returns true if this lock has fairness set true
+         * @return true if this lock has fairness set true
          */
         bool isFair() const;
 
@@ -365,7 +365,7 @@ namespace locks {
          * brackets, includes either the String "Unlocked" or the String "Locked by" followed
          * by the name of the owning thread.
          *
-         * @returns a string identifying this lock, as well as its lock state
+         * @return a string identifying this lock, as well as its lock state
          */
         std::string toString() const;
 
@@ -374,7 +374,7 @@ namespace locks {
          * value changes dynamically so the result of this method can be invalid immediately after it
          * is called.
          *
-         * @returns an estimate of the number of waiting threads.
+         * @return an estimate of the number of waiting threads.
          */
         int getQueueLength() const;
 
@@ -384,7 +384,7 @@ namespace locks {
          * immediately after it is called.  The Condition object must be associated with this Lock
          * or an exception will be thrown.
          *
-         * @returns an estimate of the number of waiting threads.
+         * @return an estimate of the number of waiting threads.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Synchronizer.
@@ -396,7 +396,7 @@ namespace locks {
          * Returns true if there are any threads that are currently waiting on the given Condition object,
          * the condition must be associated with this Lock instance.
          *
-         * @returns true if the condition object has waiting threads.
+         * @return true if the condition object has waiting threads.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
          * @throws IllegalArgumentException if the ConditionObject is not associated with this Lock.
@@ -405,12 +405,12 @@ namespace locks {
         bool hasWaiters(Condition* condition) const;
 
         /**
-         * @returns true if there are threads that are currently waiting to acquire this Lock.
+         * @return true if there are threads that are currently waiting to acquire this Lock.
          */
         bool hasQueuedThreads() const;
 
         /**
-         * @returns true if the given Thread is waiting to acquire this Lock object.  Because of cancellations
+         * @return true if the given Thread is waiting to acquire this Lock object.  Because of cancellations
          *          this method can return true but the given Thread is not in the Queue afterwards.
          *
          * @throws NullPointerException if the given thread is NULL.
@@ -423,7 +423,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains all the threads that may be waiting
          * on the given Condition object instance at the time this method is called.
          *
-         * @returns a Collection pointer that contains waiting threads on given Condition object.
+         * @return a Collection pointer that contains waiting threads on given Condition object.
          *          The caller owns the returned pointer.
          *
          * @throws NullPointerException if the ConditionObject pointer is NULL.
@@ -448,7 +448,7 @@ namespace locks {
          * Creates and returns a new Collection object that contains a best effort snapshot of the
          * threads that are currently waiting to acquire.
          *
-         * @returns a Collection pointer that contains waiting threads for lock acquisition.
+         * @return a Collection pointer that contains waiting threads for lock acquisition.
          *          The caller owns the returned pointer.
          */
         decaf::util::Collection<decaf::lang::Thread*>* getQueuedThreads() const;

@@ -112,7 +112,7 @@ namespace logging{
 
         /**
          * Gets the Filter that this Handler uses to filter Log Records
-         * @returns <code>Filter</code> derived instance
+         * @return <code>Filter</code> derived instance
          */
         virtual Filter* getFilter() {
             return this->filter;
@@ -133,7 +133,7 @@ namespace logging{
         /**
          * Get the log level specifying which message levels will be logged
          * by this Handler.
-         * @returns Level enumeration value
+         * @return Level enumeration value
          */
         virtual Level getLevel() {
             return this->level;
@@ -150,7 +150,7 @@ namespace logging{
 
         /**
          * Gets the <code>Formatter</code> used by this Handler
-         * @returns <code>Filter</code> derived instance
+         * @return <code>Filter</code> derived instance
          */
         virtual Formatter* getFormatter() {
             return this->formatter;
@@ -168,7 +168,7 @@ namespace logging{
 
         /**
          * Gets the <code>ErrorManager</code> used by this Handler.
-         * @returns <code>ErrorManager</code> derived pointer or NULL.
+         * @return <code>ErrorManager</code> derived pointer or NULL.
          */
         virtual ErrorManager* getErrorManager() {
             return this->errorManager;

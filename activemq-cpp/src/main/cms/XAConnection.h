@@ -42,7 +42,7 @@ namespace cms {
         /**
          * Creates an XASession object.
          *
-         * @returns a newly created XASession instance, caller owns the pointer.
+         * @return a newly created XASession instance, caller owns the pointer.
          *
          * @throws CMSException
          *      If the XAConnection object fails to create the XASession instance due to

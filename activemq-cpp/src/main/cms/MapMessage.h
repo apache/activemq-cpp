@@ -76,7 +76,7 @@ namespace cms {
         /**
          * Returns true if there are no values stored in the MapMessage body.
          *
-         * @returns true if the body of the MapMessage contains no elements.
+         * @return true if the body of the MapMessage contains no elements.
          *
          * @throws CMSException if the operation fails due to an internal error.
          */
@@ -113,7 +113,7 @@ namespace cms {
          * @param key
          *      The string key used to look up the value type mapping.
          *
-         * @returns The ValueType contained in the given mapping.
+         * @return The ValueType contained in the given mapping.
          *
          * @throws CMSException if no mapping exists that matches the requested key.
          */

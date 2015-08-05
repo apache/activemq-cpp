@@ -183,7 +183,7 @@ namespace kernels {
         const Pointer<commands::ConsumerId>& getConsumerId() const;
 
         /**
-         * @returns if this Consumer has been closed.
+         * @return if this Consumer has been closed.
          */
         bool isClosed() const;
 
@@ -227,7 +227,7 @@ namespace kernels {
         /**
          * Gets the currently set Last Delivered Sequence Id
          *
-         * @returns long long containing the sequence id of the last delivered Message.
+         * @return long long containing the sequence id of the last delivered Message.
          */
         long long getLastDeliveredSequenceId() const;
 
@@ -249,7 +249,7 @@ namespace kernels {
         /**
          * Returns the delay after a failover before Message redelivery starts.
          *
-         * @returns time in milliseconds to wait after failover.
+         * @return time in milliseconds to wait after failover.
          */
         long long setFailoverRedeliveryWaitPeriod() const;
 
@@ -271,7 +271,7 @@ namespace kernels {
         void setLastDeliveredSequenceId(long long value);
 
         /**
-         * @returns the number of Message's this consumer is waiting to Dispatch.
+         * @return the number of Message's this consumer is waiting to Dispatch.
          */
         int getMessageAvailableCount() const;
 
@@ -290,7 +290,7 @@ namespace kernels {
          * Gets a pointer to this Consumer's Redelivery Policy object, the Consumer
          * retains ownership of this pointer so the caller should not delete it.
          *
-         * @returns a Pointer to a RedeliveryPolicy that is in use by this Consumer.
+         * @return a Pointer to a RedeliveryPolicy that is in use by this Consumer.
          */
         RedeliveryPolicy* getRedeliveryPolicy() const;
 
@@ -306,7 +306,7 @@ namespace kernels {
          * Gets the error that caused this Consumer to be in a Failed state, or NULL if
          * there is no Error.
          *
-         * @returns pointer to the error that faulted this Consumer or NULL.
+         * @return pointer to the error that faulted this Consumer or NULL.
          */
         decaf::lang::Exception* getFailureError() const;
 
@@ -327,7 +327,7 @@ namespace kernels {
          * Time in Milliseconds before an automatic acknowledge is done for any outstanding
          * delivered Messages.  A value less than one means no task is scheduled.
          *
-         * @returns time in milliseconds for the scheduled ack task.
+         * @return time in milliseconds for the scheduled ack task.
          */
         long long getOptimizedAckScheduledAckInterval() const;
 
@@ -342,7 +342,7 @@ namespace kernels {
         void setOptimizedAckScheduledAckInterval(long long value);
 
         /**
-         * @returns true if this consumer is using optimize acknowledge mode.
+         * @return true if this consumer is using optimize acknowledge mode.
          */
         bool isOptimizeAcknowledge() const;
 

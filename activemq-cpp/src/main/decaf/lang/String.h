@@ -176,7 +176,7 @@ namespace lang {
          * @param other
          *      The other String to assign to this instance.
          *
-         * @returns a reference to this string with the new contents.
+         * @return a reference to this string with the new contents.
          */
         String& operator= (const String& other);
 
@@ -188,7 +188,7 @@ namespace lang {
          * @param other
          *      The other std::string to assign to this instance.
          *
-         * @returns a reference to this string with the new contents.
+         * @return a reference to this string with the new contents.
          */
         String& operator= (const std::string& other);
 
@@ -200,7 +200,7 @@ namespace lang {
          * @param other
          *      The other C string to assign to this instance.
          *
-         * @returns a reference to this string with the new contents.
+         * @return a reference to this string with the new contents.
          */
         String& operator= (const char* other);
 
@@ -211,7 +211,7 @@ namespace lang {
          * @param other
          *      The string value to compare to this one.
          *
-         * @returns true if the other string is equal to this one, false otherwise.
+         * @return true if the other string is equal to this one, false otherwise.
          */
         bool operator==(const char* other) const;
         bool operator==(const String& other) const;
@@ -224,7 +224,7 @@ namespace lang {
          * @param other
          *      The string value to compare to this one.
          *
-         * @returns true if the other string is not equal to this one, false otherwise.
+         * @return true if the other string is not equal to this one, false otherwise.
          */
         bool operator!=(const char* other) const;
         bool operator!=(const String& other) const;
@@ -237,7 +237,7 @@ namespace lang {
          * @param other
          *      The string value to compare to this one.
          *
-         * @returns true if this string is lexicographically less than the other string.
+         * @return true if this string is lexicographically less than the other string.
          */
         bool operator< (const char* other) const;
         bool operator< (const String& other) const;
@@ -250,7 +250,7 @@ namespace lang {
          * @param other
          *      The string value to compare to this one.
          *
-         * @returns true if this string is lexicographically less than or equal to the other string.
+         * @return true if this string is lexicographically less than or equal to the other string.
          */
         bool operator<=(const char* other) const;
         bool operator<=(const String& other) const;
@@ -263,7 +263,7 @@ namespace lang {
          * @param other
          *      The string value to compare to this one.
          *
-         * @returns true if this string is lexicographically greater than the other string.
+         * @return true if this string is lexicographically greater than the other string.
          */
         bool operator> (const char* other) const;
         bool operator> (const String& other) const;
@@ -276,7 +276,7 @@ namespace lang {
          * @param other
          *      The string value to compare to this one.
          *
-         * @returns true if this string is lexicographically greater than the other string.
+         * @return true if this string is lexicographically greater than the other string.
          */
         bool operator>=(const char* other) const;
         bool operator>=(const String& other) const;
@@ -289,7 +289,7 @@ namespace lang {
          * @param other
          *      The string whose value is to be concatenated with this one.
          *
-         * @returns a new String instance that is the concatenation of the two strings.
+         * @return a new String instance that is the concatenation of the two strings.
          */
         String operator+ (const String& other) const;
         String operator+ (const std::string& other) const;
@@ -303,7 +303,7 @@ namespace lang {
          * new character array in order to return a pointer value that is guaranteed to
          * be NULL terminated.
          *
-         * @returns a const char* value for this String.
+         * @return a const char* value for this String.
          */
         const char* c_str() const;
 
@@ -319,7 +319,7 @@ namespace lang {
          * viewing a small portion of it and the original source String is no longer also
          * maintaining a reference to the backing store.
          *
-         * @returns a new String instance with a compacted backing store.
+         * @return a new String instance with a compacted backing store.
          */
         String compact() const;
 
@@ -515,7 +515,7 @@ namespace lang {
          * @param other
          *      A String instance to compare to this string.
          *
-         * @returns true if this String is equal to the given String instance.
+         * @return true if this String is equal to the given String instance.
          */
         bool equals(const String& other) const;
 
@@ -525,7 +525,7 @@ namespace lang {
          * @param other
          *      A standard string instance to compare to this String.
          *
-         * @returns true if this String is equal to the given std::string instance.
+         * @return true if this String is equal to the given std::string instance.
          */
         bool equals(const std::string& other) const;
 
@@ -537,7 +537,7 @@ namespace lang {
          * @param other
          *      A C string instance to compare to this String.
          *
-         * @returns true if this String is equal to the given C string instance.
+         * @return true if this String is equal to the given C string instance.
          */
         bool equals(const char* other) const;
 
@@ -658,7 +658,7 @@ namespace lang {
          * Returns a hash code for this String instance, the hash code for an empty
          * String will always be zero.
          *
-         * @returns a hash code for this String instance.
+         * @return a hash code for this String instance.
          */
         int hashCode() const;
 
@@ -779,7 +779,7 @@ namespace lang {
         int indexOf(const char* subString, int start) const;
 
         /**
-         * @returns true if the length of this String is zero.
+         * @return true if the length of this String is zero.
          */
         bool isEmpty() const;
 
@@ -1035,7 +1035,7 @@ namespace lang {
         /**
          * Returns a copy of the string, with leading and trailing whitespace omitted.
          *
-         * @returns a copy of the string, with leading and trailing whitespace omitted.
+         * @return a copy of the string, with leading and trailing whitespace omitted.
          */
         String trim() const;
 
@@ -1101,7 +1101,7 @@ namespace lang {
          * Given a C String pointer return true if the value is either NULL or the
          * string contained is empty.
          *
-         * @returns true if the C string is either a NULL or an Empty string.
+         * @return true if the C string is either a NULL or an Empty string.
          */
         static bool isNullOrEmpty(const char*);
 
@@ -1111,7 +1111,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns "true" if the boolean is true, "false" otherwise.
+         * @return "true" if the boolean is true, "false" otherwise.
          */
         static String valueOf(bool value);
 
@@ -1121,7 +1121,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns a String that contains the single character value given.
+         * @return a String that contains the single character value given.
          */
         static String valueOf(char value);
 
@@ -1131,7 +1131,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns a String that contains the string representation of the float value given.
+         * @return a String that contains the string representation of the float value given.
          */
         static String valueOf(float value);
 
@@ -1141,7 +1141,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns a String that contains the string representation of the double value given.
+         * @return a String that contains the string representation of the double value given.
          */
         static String valueOf(double value);
 
@@ -1151,7 +1151,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns a String that contains the string representation of the short value given.
+         * @return a String that contains the string representation of the short value given.
          */
         static String valueOf(short value);
 
@@ -1161,7 +1161,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns a String that contains the string representation of the integer value given.
+         * @return a String that contains the string representation of the integer value given.
          */
         static String valueOf(int value);
 
@@ -1171,7 +1171,7 @@ namespace lang {
          * @param value
          *      The value whose string representation is to be returned.
          *
-         * @returns a String that contains the string representation of the 64 bit long value given.
+         * @return a String that contains the string representation of the 64 bit long value given.
          */
         static String valueOf(long long value);
 

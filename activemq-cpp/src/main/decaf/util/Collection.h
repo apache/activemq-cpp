@@ -109,7 +109,7 @@ namespace util {
          * @param value
          *      The reference to the element to add to this Collection.
          *
-         * @returns true if the element was added to this Collection.
+         * @return true if the element was added to this Collection.
          *
          * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
          * @throws NullPointerException if the Collection is a container of pointers
@@ -161,7 +161,7 @@ namespace util {
          * @param value
          *      The value to check for presence in the collection.
          *
-         * @returns true if there is at least one of the elements in the collection
+         * @return true if there is at least one of the elements in the collection
          *
          * @throws NullPointerException if the Collection contains pointers and the
          *         Collection does not allow for NULL elements (optional check).
@@ -185,12 +185,12 @@ namespace util {
          * same elements, i.e. all their elements are equivalent, then it
          * returns true.
          *
-         * @returns true if the Collections contain the same elements.
+         * @return true if the Collections contain the same elements.
          */
         virtual bool equals(const Collection<E>& value) const = 0;
 
         /**
-         * @returns true if this collection contains no elements.
+         * @return true if this collection contains no elements.
          */
         virtual bool isEmpty() const = 0;
 
@@ -205,7 +205,7 @@ namespace util {
          * @param value
          *      The reference to the element to remove from this Collection.
          *
-         * @returns true if the collection was changed, false otherwise.
+         * @return true if the collection was changed, false otherwise.
          *
          * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
          * @throws NullPointerException if the Collection is a container of pointers
@@ -222,7 +222,7 @@ namespace util {
          * @param collection
          *      The Collection whose elements are to be removed from this one.
          *
-         * @returns true if the collection changed as a result of this call.
+         * @return true if the collection changed as a result of this call.
          *
          * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
          * @throws NullPointerException if the Collection is a container of pointers
@@ -239,7 +239,7 @@ namespace util {
          * @param collection
          *      The Collection whose elements are to be retained.
          *
-         * @returns true if the collection changed as a result of this call.
+         * @return true if the collection changed as a result of this call.
          *
          * @throws UnsupportedOperationExceptio if this is an unmodifiable collection.
          * @throws NullPointerException if the Collection is a container of pointers
@@ -251,7 +251,7 @@ namespace util {
          * Returns the number of elements in this collection. If this collection
          * contains more than Integer::MAX_VALUE elements, returns Integer::MAX_VALUE.
          *
-         * @returns the number of elements in this collection
+         * @return the number of elements in this collection
          */
         virtual int size() const = 0;
 
@@ -263,7 +263,7 @@ namespace util {
          *
          * This method acts as bridge between array-based and collection-based APIs.
          *
-         * @returns an array of the elements in this collection in the form of an
+         * @return an array of the elements in this collection in the form of an
          *          STL vector.
          */
         virtual std::vector<E> toArray() const = 0;

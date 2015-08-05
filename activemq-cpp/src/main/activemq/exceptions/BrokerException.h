@@ -43,7 +43,7 @@ namespace exceptions {
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          *
-         * @returns new BrokerException instance that is a clone of this one.
+         * @return new BrokerException instance that is a clone of this one.
          */
         virtual BrokerException* clone() const;
 

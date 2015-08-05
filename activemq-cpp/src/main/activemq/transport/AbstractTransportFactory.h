@@ -52,7 +52,7 @@ namespace transport {
          * @param properties
          *        The properties that were configured on the URI.
          *
-         * @returns a pointer to a WireFormat instance that the caller then owns.
+         * @return a pointer to a WireFormat instance that the caller then owns.
          *
          * @throws NoSuchElementException if the configured WireFormat is not found.
          */

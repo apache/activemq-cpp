@@ -70,7 +70,7 @@ namespace utils{
         /**
          * Read a boolean data element from the internal data buffer
          *
-         * @returns boolean from the stream
+         * @return boolean from the stream
          *
          * @throws IOException if an I/O error occurs during this operation.
          */
@@ -115,7 +115,7 @@ namespace utils{
 
         /**
          * Calc the size that data is marshalled to
-         * @returns int size of marshalled data.
+         * @return int size of marshalled data.
          */
         int marshalledSize();
 

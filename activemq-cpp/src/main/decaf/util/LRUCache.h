@@ -98,7 +98,7 @@ namespace util {
         /**
          * Gets the currently configured Max Cache Size setting.
          *
-         * @returns the current max cache size value.
+         * @return the current max cache size value.
          */
         int getMaxCacheSize() const {
             return maxCacheSize;

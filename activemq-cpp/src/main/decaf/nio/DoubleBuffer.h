@@ -70,7 +70,7 @@ namespace nio{
         virtual ~DoubleBuffer() {}
 
         /**
-         * @returns a std::string describing this object
+         * @return a std::string describing this object
          */
         virtual std::string toString() const;
 
@@ -83,7 +83,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure that
          * this buffer has an accessible backing array.
          *
-         * @returns the array that backs this Buffer.
+         * @return the array that backs this Buffer.
          *
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
@@ -97,7 +97,7 @@ namespace nio{
          * Invoke the hasArray method before invoking this method in order to ensure that
          * this buffer has an accessible backing array.
          *
-         * @returns The offset into the backing array where index zero starts.
+         * @return The offset into the backing array where index zero starts.
          *
          * @throws ReadOnlyBufferException if this Buffer is read only.
          * @throws UnsupportedOperationException if the underlying store has no array.
@@ -137,7 +137,7 @@ namespace nio{
          * zero, so that an invocation of this method can be followed immediately by
          * an invocation of another relative put method.
          *
-         * @returns a reference to this DoubleBuffer.
+         * @return a reference to this DoubleBuffer.
          *
          * @throws ReadOnlyBufferException if this buffer is read-only.
          */
@@ -154,7 +154,7 @@ namespace nio{
          * to those of this buffer. The new buffer will be read-only if, and only if,
          * this buffer is read-only.
          *
-         * @returns a new double Buffer which the caller owns.
+         * @return a new double Buffer which the caller owns.
          */
         virtual DoubleBuffer* duplicate() = 0;
 
@@ -162,7 +162,7 @@ namespace nio{
          * Relative get method. Reads the value at this buffer's current position,
          * and then increments the position.
          *
-         * @returns the double at the current position.
+         * @return the double at the current position.
          *
          * @throws BufferUnderflowException if there no more data to return.
          */
@@ -174,7 +174,7 @@ namespace nio{
          * @param index
          *      The index in the Buffer where the double is to be read.
          *
-         * @returns the double that is located at the given index.
+         * @return the double that is located at the given index.
          *
          * @throws IndexOutOfBoundsException if index is not smaller than the
          *         buffer's limit
@@ -190,7 +190,7 @@ namespace nio{
          * amount of data that is to be read, that is to say, the caller should call
          * buffer.resize( N ) before calling this get method.
          *
-         * @returns a reference to this Buffer.
+         * @return a reference to this Buffer.
          *
          * @throws BufferUnderflowException iIf there are fewer than length doubles
          *         remaining in this buffer
@@ -218,7 +218,7 @@ namespace nio{
          * @param length
          *      The amount of data to put in the passed buffer.
          *
-         * @returns a reference to this Buffer.
+         * @return a reference to this Buffer.
          *
          * @throws BufferUnderflowException if there are fewer than length doubles
          *         remaining in this buffer
@@ -234,7 +234,7 @@ namespace nio{
          * be invoked.  Subclasses should override this method if they do not have a
          * backing array as this class always returns true.
          *
-         * @returns true if, and only if, this buffer is backed by an array and is not
+         * @return true if, and only if, this buffer is backed by an array and is not
          *          read-only
          */
         virtual bool hasArray() const = 0;
@@ -252,7 +252,7 @@ namespace nio{
          * @param src
          *      The buffer to take doubles from an place in this one.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this
          *         buffer for the remaining doubles in the source buffer
@@ -280,7 +280,7 @@ namespace nio{
          * @param length
          *      The number of doubles to be read from the given array.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer
          * @throws ReadOnlyBufferException if this buffer is read-only
@@ -297,7 +297,7 @@ namespace nio{
          * @param buffer
          *      The buffer whose contents are copied to this DoubleBuffer.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if there is insufficient space in this buffer.
          * @throws ReadOnlyBufferException if this buffer is read-only.
@@ -311,7 +311,7 @@ namespace nio{
          * @param value
          *      The doubles value to be written.
          *
-         * @returns a reference to this buffer.
+         * @return a reference to this buffer.
          *
          * @throws BufferOverflowException if this buffer's current position is not
          *         smaller than its limit.
@@ -327,7 +327,7 @@ namespace nio{
          * @param value
          *      The doubles to write.
          *
-         * @returns a reference to this buffer
+         * @return a reference to this buffer
          *
          * @throws IndexOutOfBoundsException if index greater than the buffer's limit
          *         minus the size of the type being written, or the index is negative.
@@ -346,7 +346,7 @@ namespace nio{
          * number of bytes remaining in this buffer, and its mark will be undefined. The
          * new buffer will be read-only if, and only if, this buffer is read-only.
          *
-         * @returns the newly create DoubleBuffer which the caller owns.
+         * @return the newly create DoubleBuffer which the caller owns.
          */
         virtual DoubleBuffer* slice() const = 0;
 
@@ -384,7 +384,7 @@ namespace nio{
          * @param capacity
          *      The size of the Double buffer in doubles.
          *
-         * @returns the DoubleBuffer that was allocated, caller owns.
+         * @return the DoubleBuffer that was allocated, caller owns.
          *
          * @throws IllegalArgumentException is the capacity value is negative.
          */
@@ -408,7 +408,7 @@ namespace nio{
          * @param length
          *      The length of the subarray to be used.
          *
-         * @returns a new DoubleBuffer that is backed by buffer, caller owns.
+         * @return a new DoubleBuffer that is backed by buffer, caller owns.
          *
          * @throws NullPointerException if the array pointer is NULL.
          * @throws IndexOutOfBoundsException if the preconditions of size, offset, or length
@@ -429,7 +429,7 @@ namespace nio{
          *      The vector that will back the new buffer, the vector must have been sized
          *      to the desired size already by calling vector.resize( N ).
          *
-         * @returns a new DoubleBuffer that is backed by buffer, caller owns.
+         * @return a new DoubleBuffer that is backed by buffer, caller owns.
          */
         static DoubleBuffer* wrap( std::vector<double>& buffer );
 

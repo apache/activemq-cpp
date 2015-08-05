@@ -115,7 +115,7 @@ namespace lang {
          * exception to be passed only in case the caller knows about that
          * type of exception and wishes to respond to it.
          *
-         * @returns a const pointer reference to the causal exception, if there
+         * @return a const pointer reference to the causal exception, if there
          *          was no cause associated with this exception then NULL is returned.
          */
         virtual const std::exception* getCause() const;

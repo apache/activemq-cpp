@@ -48,14 +48,14 @@ namespace concurrent {
          *      True if the thread executing this task should be interrupted; otherwise,
          *      in-progress tasks are allowed to complete.
          *
-         * @returns false if the task could not be canceled, typically because it has
+         * @return false if the task could not be canceled, typically because it has
          *          already completed normally; true otherwise
          */
         virtual bool cancel(bool mayInterruptIfRunning) = 0;
 
         /**
          * Returns true if this task was canceled before it completed normally.
-         * @returns true if this task was canceled before it completed
+         * @return true if this task was canceled before it completed
          */
         virtual bool isCancelled() const = 0;
 
@@ -63,7 +63,7 @@ namespace concurrent {
          * Returns true if this task completed. Completion may be due to normal termination,
          * an exception, or cancellation -- in all of these cases, this method will return
          * true.
-         * @returns true if this task completed
+         * @return true if this task completed
          */
         virtual bool isDone() const = 0;
 
@@ -93,7 +93,7 @@ namespace concurrent {
         /**
          * Waits if necessary for the computation to complete, and then retrieves its result.
          *
-         * @returns the computed result.
+         * @return the computed result.
          *
          * @throws CancellationException if the computation was canceled
          * @throws ExecutionException if the computation threw an exception
@@ -110,7 +110,7 @@ namespace concurrent {
          * @param unit
          *      The time unit of the timeout argument.
          *
-         * @returns the computed result
+         * @return the computed result
          *
          * @throws CancellationException if the computation was canceled
          * @throws ExecutionException if the computation threw an exception

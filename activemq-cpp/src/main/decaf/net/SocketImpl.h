@@ -138,7 +138,7 @@ namespace net {
         /**
          * Gets the InputStream linked to this Socket.
          *
-         * @returns an InputStream pointer owned by the Socket object.
+         * @return an InputStream pointer owned by the Socket object.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
@@ -147,7 +147,7 @@ namespace net {
         /**
          * Gets the OutputStream linked to this Socket.
          *
-         * @returns an OutputStream pointer owned by the Socket object.
+         * @return an OutputStream pointer owned by the Socket object.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
@@ -156,7 +156,7 @@ namespace net {
         /**
          * Gets the number of bytes that can be read from the Socket without blocking.
          *
-         * @returns the number of bytes that can be read from the Socket without blocking.
+         * @return the number of bytes that can be read from the Socket without blocking.
          *
          * @throws IOException if an I/O error occurs while attempting this operation.
          */
@@ -194,7 +194,7 @@ namespace net {
          * @param option
          *      The Socket options whose value is to be retrieved.
          *
-         * @returns the value of the given socket option.
+         * @return the value of the given socket option.
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
@@ -224,7 +224,7 @@ namespace net {
          /**
           * Gets the value of this SocketImpl's local port field.
           *
-          * @returns the value of localPort.
+          * @return the value of localPort.
           */
          int getLocalPort() const {
              return this->localPort;
@@ -233,7 +233,7 @@ namespace net {
          /**
           * Gets the value of this SocketImpl's address field.
           *
-          * @returns the value of the address field.
+          * @return the value of the address field.
           */
          std::string getInetAddress() const {
              return this->address;
@@ -243,7 +243,7 @@ namespace net {
           * Gets the FileDescriptor for this Socket, the Object is owned by this Socket and
           * should not be deleted by the caller.
           *
-          * @returns a pointer to this Socket's FileDescriptor object.
+          * @return a pointer to this Socket's FileDescriptor object.
           */
          const decaf::io::FileDescriptor* getFileDescriptor() const {
              return this->fd;
@@ -253,19 +253,19 @@ namespace net {
           * Gets the value of the local Inet address the Socket is bound to if bound, otherwise
           * return the InetAddress ANY value "0.0.0.0".
           *
-          * @returns the local address bound to, or ANY.
+          * @return the local address bound to, or ANY.
           */
          virtual std::string getLocalAddress() const = 0;
 
          /**
           * Returns a string containing the address and port of this Socket instance.
           *
-          * @returns a string containing the address and port of this socket.
+          * @return a string containing the address and port of this socket.
           */
          std::string toString() const;
 
          /**
-          * @returns true if this SocketImpl supports sending Urgent Data.  The default
+          * @return true if this SocketImpl supports sending Urgent Data.  The default
           *          implementation always returns false.
           */
          virtual bool supportsUrgentData() const {

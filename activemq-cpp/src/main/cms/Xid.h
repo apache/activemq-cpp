@@ -63,14 +63,14 @@ namespace cms {
         /**
          * Creates a Copy of this Xid instance that contains the same id values.
          *
-         * @returns a new Xid instance that is equal to this one when compared.
+         * @return a new Xid instance that is equal to this one when compared.
          */
         virtual Xid* clone() const = 0;
 
         /**
          * Compares this Xid to another and returns true if they are the same.
          *
-         * @returns true if both Xid's represent that same id value.
+         * @return true if both Xid's represent that same id value.
          */
         virtual bool equals(const Xid* other) const = 0;
 

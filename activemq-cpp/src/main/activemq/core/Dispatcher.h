@@ -45,7 +45,7 @@ namespace core {
         /**
          * HashCode method allowing Dispatcher instances to be used in HashMap etc.
          *
-         * @returns hash value for this Dispatcher.
+         * @return hash value for this Dispatcher.
          */
         virtual int getHashCode() const = 0;
 

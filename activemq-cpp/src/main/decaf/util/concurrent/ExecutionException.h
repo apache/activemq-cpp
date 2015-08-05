@@ -88,7 +88,7 @@ namespace concurrent {
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          *
-         * @returns a new instance of an exception that is a clone of this one.
+         * @return a new instance of an exception that is a clone of this one.
          */
         virtual ExecutionException* clone() const;
 

@@ -134,7 +134,7 @@ namespace openssl {
         /**
          * Gets and formats an error message string from the OpenSSL error stack.
          *
-         * @returns a string containing the complete OpenSSL error string.
+         * @return a string containing the complete OpenSSL error string.
          */
         std::string getErrorString() const;
 

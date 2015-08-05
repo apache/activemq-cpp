@@ -49,7 +49,7 @@ namespace discovery {
         /**
          * Gets the time of the last heart best from this Broker
          *
-         * @returns the time of the last received heart beat event from this Broker
+         * @return the time of the last received heart beat event from this Broker
          */
         long long getLastHeartBeatTime() const {
             return this->lastHeartBeatTime;
@@ -66,7 +66,7 @@ namespace discovery {
         }
 
         /**
-         * @returns true is this service has been marked as failed.
+         * @return true is this service has been marked as failed.
          */
         bool isFailed() const {
             return failed;
@@ -85,7 +85,7 @@ namespace discovery {
         /**
          * Gets the number of times that there was a failure contacting this broker.
          *
-         * @returns count of the number of failures of this service.
+         * @return count of the number of failures of this service.
          */
         int getFailureCount() const {
             return failureCount;
@@ -104,7 +104,7 @@ namespace discovery {
         /**
          * Gets the set time for the next recovery attempt on this service.
          *
-         * @returns the next set time that this service can have a recovery attempt.
+         * @return the next set time that this service can have a recovery attempt.
          */
         long long getNextRecoveryTime() const {
             return nextRecoveryTime;

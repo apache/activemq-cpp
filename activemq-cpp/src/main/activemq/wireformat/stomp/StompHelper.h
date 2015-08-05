@@ -89,7 +89,7 @@ namespace stomp {
          * Converts from a Stomp Destination to an ActiveMQDestination
          *
          * @param destination - The Stomp Destination name string.
-         * @returns Pointer to a new ActiveMQDestination.
+         * @return Pointer to a new ActiveMQDestination.
          */
         Pointer<ActiveMQDestination> convertDestination(const std::string& destination);
 
