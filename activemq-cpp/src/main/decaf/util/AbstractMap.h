@@ -65,9 +65,9 @@ namespace util {
 
         AbstractMap() : Map<K, V>(), mutex() {}
 
-        AbstractMap(const Map<K, V>& map) : Map<K, V>(), mutex() {}
+        AbstractMap(const Map<K, V>& map DECAF_UNUSED) : Map<K, V>(), mutex() {}
 
-        AbstractMap(const AbstractMap<K, V>& map) : Map<K, V>(), mutex() {}
+        AbstractMap(const AbstractMap<K, V>& map DECAF_UNUSED) : Map<K, V>(), mutex() {}
 
         virtual ~AbstractMap() {}
 

@@ -233,7 +233,7 @@ std::string ActiveMQDestination::getDestinationTypeAsString() const {
             return "TempTopic";
         default:
             throw new IllegalArgumentException(
-                __FILE__, __LINE__, "Invalid destination type: " + getDestinationType());
+                __FILE__, __LINE__, "Invalid destination type: %d", (int) getDestinationType());
     }
 }
 

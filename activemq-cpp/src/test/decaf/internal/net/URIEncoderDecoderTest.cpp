@@ -38,17 +38,16 @@ void URIEncoderDecoderTest::testValidate() {
 
     CPPUNIT_ASSERT_NO_THROW_MESSAGE(
         "1. String should Validate:",
-        URIEncoderDecoder::validate( str1, legalSet1 ) );
+        URIEncoderDecoder::validate(str1, legalSet1));
 
     CPPUNIT_ASSERT_NO_THROW_MESSAGE(
         "2. String should Validate:",
-        URIEncoderDecoder::validate( str2, "" ) );
+        URIEncoderDecoder::validate(str2, ""));
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "1. String should not Validate:",
-        URIEncoderDecoder::validate( str1, "" ),
-        URISyntaxException );
-
+        URIEncoderDecoder::validate(str1, ""),
+        URISyntaxException);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,16 +60,16 @@ void URIEncoderDecoderTest::testValidateSimple() {
 
     CPPUNIT_ASSERT_NO_THROW_MESSAGE(
         "1. String should Validate:",
-        URIEncoderDecoder::validate( str1, legalSet1 ) );
+        URIEncoderDecoder::validate(str1, legalSet1));
 
     CPPUNIT_ASSERT_NO_THROW_MESSAGE(
         "2. String should Validate:",
-        URIEncoderDecoder::validate( str2, "" ) );
+        URIEncoderDecoder::validate(str2, ""));
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "1. String should not Validate:",
-        URIEncoderDecoder::validate( str1, "" ),
-        URISyntaxException );
+        URIEncoderDecoder::validate(str1, ""),
+        URISyntaxException);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,21 +80,21 @@ void URIEncoderDecoderTest::testQuoteIllegal() {
     std::string pound3 = "A#*"; // A%23*
     std::string legal = "A";   // A
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "1. Result not equal to: %23",
-        URIEncoderDecoder::quoteIllegal( pound1, "" ) == "%23" );
+        URIEncoderDecoder::quoteIllegal(pound1, "") == "%23");
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "2. Result not equal to: %23%23",
-        URIEncoderDecoder::quoteIllegal( pound2, "" ) == "%23%23" );
+        URIEncoderDecoder::quoteIllegal(pound2, "") == "%23%23");
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "3. Result not equal to: A%23*",
-        URIEncoderDecoder::quoteIllegal( pound3, "*" ) == "A%23*" );
+        URIEncoderDecoder::quoteIllegal(pound3, "*") == "A%23*");
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "4. Result not equal to: A",
-        URIEncoderDecoder::quoteIllegal( legal, "" ) == "A" );
+        URIEncoderDecoder::quoteIllegal(legal, "") == "A");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,13 +106,13 @@ void URIEncoderDecoderTest::testEncodeOthers() {
     test1 += (char)156;
     test2 += 'A';
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "1. Result not equal to: %9C",
-        URIEncoderDecoder::encodeOthers( test1 ) == "%9C" );
+        URIEncoderDecoder::encodeOthers(test1) == "%9C");
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "2. Result not equal to: A",
-        URIEncoderDecoder::encodeOthers( test2 ) == "A" );
+        URIEncoderDecoder::encodeOthers(test2) == "A");
 
 }
 
@@ -122,7 +121,7 @@ void URIEncoderDecoderTest::testDecode() {
 
     string test = "A%20B%20C %24%25";
 
-    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+    CPPUNIT_ASSERT_MESSAGE(
         "1. Result not equal to: 'A B C $%",
-        URIEncoderDecoder::decode( test ) == "A B C $%" );
+        URIEncoderDecoder::decode(test) == "A B C $%");
 }

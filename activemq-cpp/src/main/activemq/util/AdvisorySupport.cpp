@@ -593,7 +593,7 @@ ActiveMQDestination* AdvisorySupport::getDestinationAdvisoryTopic(const ActiveMQ
             return getTempTopicAdvisoryTopic();
         default:
             throw new IllegalArgumentException(
-                __FILE__, __LINE__, "Unknown destination type: " + destination->getDestinationType());
+                __FILE__, __LINE__, "Unknown destination type: %d", (int) destination->getDestinationType());
     }
 }
 

@@ -105,7 +105,7 @@ namespace concurrent {
          * @throws NullPointerException {@inheritDoc}
          * @throws IllegalArgumentException {@inheritDoc}
          */
-        virtual void put(const E& value) {
+        virtual void put(const E& value DECAF_UNUSED) {
 
             //if (o == null) throw new NullPointerException();
             //if (transferer.transfer(o, false, 0) == null) {
@@ -125,7 +125,7 @@ namespace concurrent {
          * @throws NullPointerException {@inheritDoc}
          * @throws IllegalArgumentException {@inheritDoc}
          */
-        virtual bool offer(const E& e, long long timeout, const TimeUnit& unit) {
+        virtual bool offer(const E& e DECAF_UNUSED, long long timeout DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED) {
 
             //if (o == null) throw new NullPointerException();
             //if (transferer.transfer(o, true, unit.toNanos(timeout)) != null)
@@ -151,7 +151,7 @@ namespace concurrent {
          * @throws IllegalArgumentException if some property of the specified
          *         element prevents it from being added to this queue
          */
-        virtual bool offer(const E& value) {
+        virtual bool offer(const E& value DECAF_UNUSED) {
 
             //if (e == null) throw new NullPointerException();
             //return transferer.transfer(e, true, 0) != null;
@@ -190,7 +190,7 @@ namespace concurrent {
          * @return true if the head of the Queue was copied to the result param
          *         or false if no value could be returned.
          */
-        virtual bool poll(E& result, long long timeout, const TimeUnit& unit) {
+        virtual bool poll(E& result DECAF_UNUSED, long long timeout DECAF_UNUSED, const TimeUnit& unit DECAF_UNUSED) {
 
             //Object e = transferer.transfer(null, true, unit.toNanos(timeout));
             //if (e != null || !Thread.interrupted())
@@ -210,12 +210,12 @@ namespace concurrent {
          * @return true if the head of the Queue was copied to the result param
          *         or false if no value could be returned.
          */
-        virtual bool poll(E& result) {
+        virtual bool poll(E& result DECAF_UNUSED) {
             return false; // (E)transferer.transfer(null, true, 0);
         }
 
         virtual bool equals(const Collection<E>& value) const {
-            if( (void*)&value == this ) {
+            if ((void*) &value == this) {
                 return true;
             }
 

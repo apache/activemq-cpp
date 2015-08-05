@@ -58,7 +58,7 @@ namespace util {
         virtual ~PrimitiveValueConverter() {}
 
         template<typename TO>
-        TO convert(const PrimitiveValueNode& value) const {
+        TO convert(const PrimitiveValueNode& value DECAF_UNUSED) const {
 
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "Invalid Conversion");
