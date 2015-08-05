@@ -65,9 +65,8 @@ installed using the systems package installer.
 The Library has been tested using version v1.3 and higher of the APR libs,
 the older 0.9 version will definitely not work with this library.
 
-Many of the Unix type OS'es currently shipping include APR 1.2.x and
-APR-Util 1.2.x, this implies that you will need to build and install APR from
-the source download at Apache.
+Some of the Unix type OS'es currently shipping include APR 1.2.x, this implies
+that you will need to build and install APR from the source download at Apache.
 
     -----------------------------------------------------------------------
     |MacOS X Note:                                                        |
@@ -118,7 +117,7 @@ the following software installed:
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.61
+autoconf    >= 2.63
 automake    >= 1.10
 libtool     >= 1.5.24
 
@@ -210,6 +209,7 @@ To generate the Doxygen documentation for the project, just run:
 In order to build and run the suite of unit tests, run:
 
   make check
+  ./src/test/activemq-test
 
 This will verify that the library is functioning correctly on the target
 platform. In addition, it will generate the integration tests binary.
@@ -225,8 +225,7 @@ tcp://localhost:61613 for Stomp and tcp://localhost:61616 for Openwire.
 The integration tests are built via "make check".  To run them, first
 start a broker and then
 
-  cd src/test-integration
-  ./activemq-test-integration
+  ./sr/test-integration/activemq-test-integration
 
 This will take quite some time to complete, so be patient.  It is recommended
 that you restart the broker between successive runs of the integration tests.
@@ -274,7 +273,7 @@ set of variables is as follows:
 
     Library        Recommended Version     Windows Env Var
     ------------------------------------------------------------
-      APR             >= 1.3                 ${APR_DIST}
+      APR             >= 1.5+                ${APR_DIST}
       CPPUNIT         >= 1.10.2              ${CPPUNIT_DIST}
       OpenSSL         >= 1.5.24              ${OPENSSL_DIST}
       Platform SDK    {varies}               ${PLATFORM_SDK}
@@ -323,7 +322,7 @@ a library from source by downloading the latest release from:
 
     http://apr.apache.org/
 
-At the time of this writing the latest version was v1.4.8 and is recommended since its build
+At the time of this writing the latest version was v1.5.2 and is recommended since its build
 support files are working with the Visual Studio 2010 tools.
 
 APR is built from the command line using its provided Make files.  When building the library you
