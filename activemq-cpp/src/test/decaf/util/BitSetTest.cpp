@@ -310,7 +310,7 @@ void BitSetTest::testClearII() {
             }
         }
         for (int i = 9; i < 74; i++) {
-            CPPUNIT_ASSERT_MESSAGE("Failed to clear bit " + i, !bs.get(i));
+            CPPUNIT_ASSERT_MESSAGE("Failed to clear bit " + Integer::toString(i), !bs.get(i));
         }
         for (int i = 74; i < initialSize; i++) {
             if (i == 110) {
