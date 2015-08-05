@@ -137,7 +137,7 @@ void FutureTaskTest::testConstructor2() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should have thrown a NullPointerException",
-        new FutureTask<std::string>(NULL, "Test"),
+        new FutureTask<std::string>(NULL, std::string("Test")),
         NullPointerException);
 }
 

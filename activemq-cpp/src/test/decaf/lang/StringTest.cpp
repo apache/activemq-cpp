@@ -18,6 +18,7 @@
 #include "StringTest.h"
 
 #include <decaf/lang/String.h>
+#include <decaf/lang/Integer.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/StringIndexOutOfBoundsException.h>
@@ -741,7 +742,7 @@ void StringTest::testLastIndexOfString2() {
 
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect index", 5, input.lastIndexOf(String("World"), 9));
     int result = input.lastIndexOf(String("Hello"), 2);
-    CPPUNIT_ASSERT_MESSAGE("Found String outside of index: " + result, result == 0);
+    CPPUNIT_ASSERT_MESSAGE("Found String outside of index: " + Integer::toString(result), result == 0);
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Reported wrong error code", -1, hello.lastIndexOf(String(""), -5));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Did not accept valid large starting position",
                                  5, hello.lastIndexOf(String(""), 5));
@@ -763,7 +764,7 @@ void StringTest::testLastIndexOfStdString2() {
 
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect index", 5, input.lastIndexOf(std::string("World"), 9));
     int result = input.lastIndexOf(std::string("Hello"), 2);
-    CPPUNIT_ASSERT_MESSAGE("Found String outside of index: " + result, result == 0);
+    CPPUNIT_ASSERT_MESSAGE("Found String outside of index: " + Integer::toString(result), result == 0);
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Reported wrong error code", -1, hello.lastIndexOf(std::string(""), -5));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Did not accept valid large starting position",
                                  5, hello.lastIndexOf(std::string(""), 5));
@@ -786,7 +787,7 @@ void StringTest::testLastIndexOfCString2() {
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect index", -1, input.lastIndexOf(nullString, 0));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect index", 5, input.lastIndexOf("World", 9));
     int result = input.lastIndexOf("Hello", 2);
-    CPPUNIT_ASSERT_MESSAGE("Found String outside of index: " + result, result == 0);
+    CPPUNIT_ASSERT_MESSAGE("Found String outside of index: " + Integer::toString(result), result == 0);
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Reported wrong error code", -1, hello.lastIndexOf("", -5));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Did not accept valid large starting position", 5, hello.lastIndexOf("", 5));
 }
@@ -1083,7 +1084,7 @@ void StringTest::testOperatorLessCString() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should have thrown a NullPointerException",
-        upper < NULL,
+        (upper < NULL),
         NullPointerException);
 
     // test lhs as std::string
@@ -1126,7 +1127,7 @@ void StringTest::testOperatorGreaterCString() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should have thrown a NullPointerException",
-        lower < NULL,
+        (lower < NULL),
         NullPointerException);
 
     // test lhs as C string

@@ -76,8 +76,8 @@ namespace lang{
     private:
 
         double HYP;
-        double OPP;
-        double ADJ;
+        // double OPP;
+        // double ADJ;
 
     public:
 

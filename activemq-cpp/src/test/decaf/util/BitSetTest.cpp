@@ -142,7 +142,7 @@ void BitSetTest::testEquals() {
 void BitSetTest::testClear() {
     eightbs.clear();
     for (int i = 0; i < 8; i++) {
-        CPPUNIT_ASSERT_MESSAGE("Clear didn't clear bit " + i, !eightbs.get(i));
+        CPPUNIT_ASSERT_MESSAGE("Clear didn't clear bit " + Integer::toString(i), !eightbs.get(i));
     }
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Test1: Wrong length", 0, eightbs.length());
 
@@ -249,7 +249,7 @@ void BitSetTest::testClearII() {
     }
 
     for (int i = initialSize; i < bs.size(); i++) {
-        CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + i, !bs.get(i));
+        CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + Integer::toString(i), !bs.get(i));
     }
 
     // pos1 and pos2 is in the same bitset element, boundary testing
@@ -288,7 +288,7 @@ void BitSetTest::testClearII() {
         bs.set(0, initialSize);
         bs.clear(0, 65);
         for (int i = 0; i < 65; i++) {
-            CPPUNIT_ASSERT_MESSAGE("Failed to clear bit " + i, !bs.get(i));
+            CPPUNIT_ASSERT_MESSAGE("Failed to clear bit " + Integer::toString(i), !bs.get(i));
         }
         for (int i = 65; i < bs.size(); i++) {
             CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + Integer::toString(i), !bs.get(i));
@@ -339,15 +339,15 @@ void BitSetTest::testClearII() {
         }
 
         for (int i = 9; i < 219; i++) {
-            CPPUNIT_ASSERT_MESSAGE("CPPUNIT_FAILed to clear bit " + i, !bs.get(i));
+            CPPUNIT_ASSERT_MESSAGE("CPPUNIT_FAILed to clear bit " + Integer::toString(i), !bs.get(i));
         }
 
         for (int i = 219; i < 255; i++) {
-            CPPUNIT_ASSERT_MESSAGE("Shouldn't have cleared bit " + i, bs.get(i));
+            CPPUNIT_ASSERT_MESSAGE("Shouldn't have cleared bit " + Integer::toString(i), bs.get(i));
         }
 
         for (int i = 255; i < bs.size(); i++) {
-            CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + i, !bs.get(i));
+            CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + Integer::toString(i), !bs.get(i));
         }
     }
     {
@@ -695,7 +695,7 @@ void BitSetTest::testFlipII() {
     bs.set(10);
     bs.flip(7, 11);
     for (int i = 0; i < 7; i++) {
-        CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + i, !bs.get(i));
+        CPPUNIT_ASSERT_MESSAGE("Shouldn't have flipped bit " + Integer::toString(i), !bs.get(i));
     }
     CPPUNIT_ASSERT_MESSAGE("Failed to flip bit 7", !bs.get(7));
     CPPUNIT_ASSERT_MESSAGE("Failed to flip bit 8", bs.get(8));
