@@ -4,11 +4,61 @@
 
 Bug
 
+    [AMQCPP-510] - Consumer leaks memory with failover and checkForDuplicates=true
+    [AMQCPP-513] - On closing a connection, ActiveMQ crashes
+    [AMQCPP-514] - ActiveMQBytesMessage destruction may cause unhandle exception
+    [AMQCPP-515] - Stomp frame mishandled duplicate headers
+    [AMQCPP-516] - Don't fire transport interrupted event when no resume is possuble
+    [AMQCPP-518] - dispatch paused, waiting for outstanding dispatch interruption processing to complete..
+    [AMQCPP-520] - AMQ crashes when an exception comes during the connection closure
+    [AMQCPP-525] - C++ client hangs when using the failover transport to connect to a network of brokers
+    [AMQCPP-527] - ConcurrentStlMap - stl map find crash with empty map
+    [AMQCPP-529] - Crash in Threads due to small stack size (set to 32768 bytes)
+    [AMQCPP-530] - SSL does not find hostname in cert with multiple cn's in dn
+    [AMQCPP-532] - Frequently deleting queue browser causes access violation
+    [AMQCPP-533] - Memory leak in StompWireFormat.cpp
+    [AMQCPP-534] - Closing connection with setTransportListener to NULL may cause core dump
+    [AMQCPP-538] - Catch exception by value in FailoverTransport
+    [AMQCPP-539] - Can't build GIT master on MSVC
+    [AMQCPP-540] - Ambiguous usage of Math::min in AbstractDiscoveryAgent.cpp
+    [AMQCPP-546] - ConnetionAudit should be thread safe
+    [AMQCPP-547] - activemq::core::ConnectionAudit::isDuplicate is not thread safe
+    [AMQCPP-549] - Potential memory leak in consumer when delivering delayed ack.
+    [AMQCPP-550] - CMS (C++ client) crashed if getLocalHost failed
+    [AMQCPP-551] - EOFException when sending char in MapMessage between Java and C++
+    [AMQCPP-552] - Honor RedeliveryPolicy for message redelivered by the Broker.
+    [AMQCPP-553] - Deadlock and memory leak under stress
+    [AMQCPP-554] - Consumer close with INDIVIDUAL_ACKNOWLEDGE and dispatched messages doesn't rollback
+    [AMQCPP-556] - setMessageListener on active session may leads to deadlock
+    [AMQCPP-558] - Port fix for AMQ-5513
+    [AMQCPP-566] - Potential spin in SecureRandomImpl if /dev/urandom does not exist
+    [AMQCPP-567] - activemq-cpp.pc contains wrong package name for APR
+    [AMQCPP-568] - CMS FailoverTransport Leaks Socket Descriptors with secondary backup
+    [AMQCPP-569] - thread creation leak with failover transport after disconnect
+    [AMQCPP-571] - Unacknowledged messages dissappear from broker if session/consumer is closed and then re-created
     [AMQCPP-572] - activemq-cmstemplate-stressor.vcproj missing
+    [AMQCPP-577] - Transacted processing stops working correctly after failover
+    [AMQCPP-578] - Port fix for AMQ-5089 to C++
+    [AMQCPP-579] - Disable message priority reordering on client by default
+    [AMQCPP-581] - Pull consumer can hang in receive if RedeliveryPolicy is configured with max redeliveries
+    [AMQCPP-582] - Pull consumer hang when message expires in flight.
 
 Improvement
 
+    [AMQCPP-509] - Support for AlwaysSessionAsync in AMQ CMS CPP library
+    [AMQCPP-512] - Update to support openwire v10
+    [AMQCPP-545] - Failover transport timeout options should only operate on Message sends.
+    [AMQCPP-548] - Too many temporary std::string in Mutex and decaf::lang::Integer::toString(int)
+    [AMQCPP-562] - Reduce memory delete and allocation in ArrayList
+    [AMQCPP-564] - OS thread handles are kept forever
     [AMQCPP-573] - Update OpenWire support to v11
+    [AMQCPP-576] - QueueBrowser should not check for expired messages
+
+New Feature
+
+    [AMQCPP-543] - message producer send never blocking when using producer flow control
+    [AMQCPP-575] - Add support for disable of expiration checks in MessageConsumer
+    [AMQCPP-580] - Add property maximumRedeliveryDelay in RedeliveryPolicy
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.8.4                               ==
