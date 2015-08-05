@@ -42,8 +42,8 @@ namespace zip {
 
     private:
 
-        CheckedInputStream( const CheckedInputStream& );
-        CheckedInputStream& operator= ( const CheckedInputStream& );
+        CheckedInputStream(const CheckedInputStream&);
+        CheckedInputStream& operator=(const CheckedInputStream&);
 
     public:
 
@@ -59,7 +59,7 @@ namespace zip {
          *
          * @throws NullPointerException if the Checksum pointer is NULL.
          */
-        CheckedInputStream( InputStream* inputStream, Checksum* sum, bool own = false );
+        CheckedInputStream(InputStream* inputStream, Checksum* sum, bool own = false);
 
         virtual ~CheckedInputStream();
 
@@ -77,13 +77,13 @@ namespace zip {
          *
          * Adds the skipped bytes into the Checksum.
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
     protected:
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     };
 

@@ -27,12 +27,12 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-CheckedInputStream::CheckedInputStream( InputStream* inputStream, Checksum* sum, bool own )
- :  FilterInputStream( inputStream, own ), sum( sum ) {
+CheckedInputStream::CheckedInputStream(InputStream* inputStream, Checksum* sum, bool own) :
+    FilterInputStream(inputStream, own), sum(sum) {
 
-    if( sum == NULL ) {
+    if (sum == NULL) {
         throw NullPointerException(
-            __FILE__, __LINE__, "The Checksum instance cannot be NULL." );
+            __FILE__, __LINE__, "The Checksum instance cannot be NULL.");
     }
 }
 
@@ -41,117 +41,117 @@ CheckedInputStream::~CheckedInputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long CheckedInputStream::skip( long long num ) {
+long long CheckedInputStream::skip(long long num) {
 
-    try{
+    try {
 
-        if( num <= 0 ) {
+        if (num <= 0) {
             return 0;
         }
 
-        if( isClosed() ) {
+        if (isClosed()) {
             throw IOException(
-                __FILE__, __LINE__, "Stream is Closed." );
+                __FILE__, __LINE__, "Stream is Closed.");
         }
 
         // Perform smaller reads then the indicated amount
-        int remaining = Math::min( (int)num, 2048 );
+        int remaining = Math::min((int) num, 2048);
         long long skipped = 0;
 
-        std::vector<unsigned char> buffer( remaining );
+        std::vector<unsigned char> buffer(remaining);
 
-        while( skipped < num ) {
+        while (skipped < num) {
 
-            int result = this->inputStream->read( &buffer[0], remaining );
+            int result = this->inputStream->read(&buffer[0], remaining);
 
-            if( isClosed() ) {
+            if (isClosed()) {
                 throw IOException(
-                    __FILE__, __LINE__, "Stream is Closed." );
+                    __FILE__, __LINE__, "Stream is Closed.");
             }
 
-            if( result == -1 ) {
+            if (result == -1) {
                 return skipped;
             }
 
-            this->sum->update( buffer, 0, remaining );
+            this->sum->update(buffer, 0, remaining);
 
             skipped += result;
-            remaining = ( num - skipped ) > (long long)buffer.size() ? (int)buffer.size() : (int)(num - skipped);
+            remaining = (num - skipped) > (long long) buffer.size() ? (int) buffer.size() : (int) (num - skipped);
         }
 
         return skipped;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int CheckedInputStream::doReadByte() {
 
-    try{
+    try {
 
-        if( isClosed() ) {
+        if (isClosed()) {
             throw IOException(
-                __FILE__, __LINE__, "Stream is Closed." );
+                __FILE__, __LINE__, "Stream is Closed.");
         }
 
         int result = this->inputStream->read();
 
-        if( result != -1 ) {
-            this->sum->update( result );
+        if (result != -1) {
+            this->sum->update(result);
         }
 
         return result;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int CheckedInputStream::doReadArrayBounded( unsigned char* buffer, int size, int offset, int length ) {
+int CheckedInputStream::doReadArrayBounded(unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( buffer == NULL ) {
+        if (buffer == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__, "Buffer passed was NULL" );
+                __FILE__, __LINE__, "Buffer passed was NULL");
         }
 
-        if( size < 0 ) {
+        if (size < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
         }
 
-        if( offset > size || offset < 0 ) {
+        if (offset > size || offset < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
         }
 
-        if( length < 0 || length > size - offset ) {
+        if (length < 0 || length > size - offset) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
         }
 
-        if( length == 0 ) {
+        if (length == 0) {
             return 0;
         }
 
-        if( isClosed() ) {
+        if (isClosed()) {
             throw IOException(
-                __FILE__, __LINE__, "Stream is Closed." );
+                __FILE__, __LINE__, "Stream is Closed.");
         }
 
-        int result = this->inputStream->read( buffer, size, offset, length );
+        int result = this->inputStream->read(buffer, size, offset, length);
 
-        if( result != -1 ) {
+        if (result != -1) {
             // Only add the amount of bytes actually read to the Checksum.
-            this->sum->update( buffer, size, offset, result );
+            this->sum->update(buffer, size, offset, result);
         }
 
         return result;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCHALL_THROW(IOException)
 }

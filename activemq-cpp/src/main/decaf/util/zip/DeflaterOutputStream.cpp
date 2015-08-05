@@ -28,174 +28,171 @@ using namespace decaf::util::zip;
 const std::size_t DeflaterOutputStream::DEFAULT_BUFFER_SIZE = 512;
 
 ////////////////////////////////////////////////////////////////////////////////
-DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, bool own ) :
-    FilterOutputStream( outputStream, own ), deflater(new Deflater()), buf(), ownDeflater(true), isDone(false) {
+DeflaterOutputStream::DeflaterOutputStream(OutputStream* outputStream, bool own) :
+    FilterOutputStream(outputStream, own), deflater(new Deflater()), buf(), ownDeflater(true), isDone(false) {
 
-    this->buf.resize( DEFAULT_BUFFER_SIZE );
+    this->buf.resize(DEFAULT_BUFFER_SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater, bool own, bool ownDeflater )
- :  FilterOutputStream( outputStream, own ), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
+DeflaterOutputStream::DeflaterOutputStream(OutputStream* outputStream, Deflater* deflater, bool own, bool ownDeflater) :
+    FilterOutputStream(outputStream, own), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
 
-    if( deflater == NULL ) {
+    if (deflater == NULL) {
         throw NullPointerException(
-             __FILE__, __LINE__, "Deflater passed was NULL." );
+            __FILE__, __LINE__, "Deflater passed was NULL.");
     }
 
-    this->buf.resize( DEFAULT_BUFFER_SIZE );
+    this->buf.resize(DEFAULT_BUFFER_SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DeflaterOutputStream::DeflaterOutputStream( OutputStream* outputStream, Deflater* deflater,
-                                            int bufferSize, bool own, bool ownDeflater )
- :  FilterOutputStream( outputStream, own ), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
+DeflaterOutputStream::DeflaterOutputStream(OutputStream* outputStream, Deflater* deflater, int bufferSize, bool own, bool ownDeflater) :
+    FilterOutputStream(outputStream, own), deflater(deflater), buf(), ownDeflater(ownDeflater), isDone(false) {
 
-    if( deflater == NULL ) {
+    if (deflater == NULL) {
         throw NullPointerException(
-             __FILE__, __LINE__, "Deflater passed was NULL." );
+            __FILE__, __LINE__, "Deflater passed was NULL.");
     }
 
-    if( bufferSize == 0 ) {
+    if (bufferSize == 0) {
         throw IllegalArgumentException(
-             __FILE__, __LINE__, "Cannot create a zero sized buffer." );
+            __FILE__, __LINE__, "Cannot create a zero sized buffer.");
     }
 
-    this->buf.resize( bufferSize );
+    this->buf.resize(bufferSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DeflaterOutputStream::~DeflaterOutputStream() {
-    try{
+    try {
 
         this->close();
 
-        if( ownDeflater ) {
+        if (ownDeflater) {
             delete this->deflater;
         }
     }
-    DECAF_CATCH_NOTHROW( Exception )
-    DECAF_CATCHALL_NOTHROW()
-}
+    DECAF_CATCH_NOTHROW(Exception)
+    DECAF_CATCHALL_NOTHROW()}
 
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterOutputStream::finish() {
 
-    try{
+    try {
 
-        if( isDone ) {
+        if (isDone) {
             return;
         }
 
         int result;
         this->deflater->finish();
 
-        while( !this->deflater->finished() ) {
+        while (!this->deflater->finished()) {
 
-            if( this->deflater->needsInput() ) {
-                this->deflater->setInput( buf, 0, 0 );
+            if (this->deflater->needsInput()) {
+                this->deflater->setInput(buf, 0, 0);
             }
-            result = this->deflater->deflate( &buf[0], (int)buf.size(), 0, (int)buf.size() );
-            this->outputStream->write( &buf[0], (int)buf.size(), 0, result );
+            result = this->deflater->deflate(&buf[0], (int) buf.size(), 0, (int) buf.size());
+            this->outputStream->write(&buf[0], (int) buf.size(), 0, result);
         }
 
         this->isDone = true;
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterOutputStream::close() {
 
-    try{
+    try {
 
-        if( !this->deflater->finished() ) {
+        if (!this->deflater->finished()) {
             this->finish();
         }
         this->deflater->end();
         FilterOutputStream::close();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::doWriteByte( unsigned char value ) {
+void DeflaterOutputStream::doWriteByte(unsigned char value) {
 
-    try{
-        this->doWriteArrayBounded( &value, 1, 0, 1 );
+    try {
+        this->doWriteArrayBounded(&value, 1, 0, 1);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DeflaterOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                                int offset, int length ) {
+void DeflaterOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( isDone ) {
+        if (isDone) {
             throw IOException(
-                __FILE__, __LINE__, "Finish was already called on this DeflaterOutputStream." );
+                __FILE__, __LINE__, "Finish was already called on this DeflaterOutputStream.");
         }
 
-        if( buffer == NULL ) {
+        if (buffer == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__, "Buffer passed was NULL." );
+                __FILE__, __LINE__, "Buffer passed was NULL.");
         }
 
-        if( size < 0 ) {
+        if (size < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
         }
 
-        if( offset > size || offset < 0 ) {
+        if (offset > size || offset < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
         }
 
-        if( length < 0 || length > size - offset ) {
+        if (length < 0 || length > size - offset) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
         }
 
-        if( length == 0 ) {
+        if (length == 0) {
             return;
         }
 
-        if( isClosed() ) {
+        if (isClosed()) {
             throw IOException(
-                __FILE__, __LINE__, "The stream is already closed." );
+                __FILE__, __LINE__, "The stream is already closed.");
         }
 
-        if( !this->deflater->needsInput() ) {
+        if (!this->deflater->needsInput()) {
             throw IOException(
-                __FILE__, __LINE__, "The Deflater is in an Invalid State." );
+                __FILE__, __LINE__, "The Deflater is in an Invalid State.");
         }
 
-        this->deflater->setInput( buffer, size, offset, length );
+        this->deflater->setInput(buffer, size, offset, length);
 
         this->deflate();
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DeflaterOutputStream::deflate() {
 
-    try{
+    try {
 
         int result;
-        do{
-            result = this->deflater->deflate( &buf[0], (int)buf.size(), 0, (int)buf.size() );
-            this->outputStream->write( &buf[0], (int)buf.size(), 0, result );
-        } while( !this->deflater->needsInput() );
+        do {
+            result = this->deflater->deflate(&buf[0], (int) buf.size(), 0, (int) buf.size());
+            this->outputStream->write(&buf[0], (int) buf.size(), 0, result);
+        } while (!this->deflater->needsInput());
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }

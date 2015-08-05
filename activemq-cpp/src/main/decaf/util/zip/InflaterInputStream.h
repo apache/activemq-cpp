@@ -60,8 +60,8 @@ namespace zip {
 
     private:
 
-        InflaterInputStream( const InflaterInputStream& );
-        InflaterInputStream& operator= ( const InflaterInputStream& );
+        InflaterInputStream(const InflaterInputStream&);
+        InflaterInputStream& operator=(const InflaterInputStream&);
 
     public:
 
@@ -73,7 +73,7 @@ namespace zip {
          * @param own
          *      Should this Filter take ownership of the InputStream pointer (defaults to false).
          */
-        InflaterInputStream( decaf::io::InputStream* inputStream, bool own = false );
+        InflaterInputStream(decaf::io::InputStream* inputStream, bool own = false);
 
         /**
          * Creates a new InflaterInputStream with a user supplied Inflater and a default buffer size.
@@ -92,8 +92,8 @@ namespace zip {
          *
          * @throws NullPointerException if the Inflater given is NULL.
          */
-        InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
-                             bool own = false, bool ownInflater = false );
+        InflaterInputStream(decaf::io::InputStream* inputStream, Inflater* inflater,
+                            bool own = false, bool ownInflater = false);
 
         /**
          * Creates a new DeflateOutputStream with a user supplied Inflater and specified buffer size.
@@ -115,8 +115,8 @@ namespace zip {
          * @throws NullPointerException if the Inflater given is NULL.
          * @throws IllegalArgumentException if the bufferSize value is zero.
          */
-        InflaterInputStream( decaf::io::InputStream* inputStream, Inflater* inflater,
-                             int bufferSize, bool own = false, bool ownInflater = false );
+        InflaterInputStream(decaf::io::InputStream* inputStream, Inflater* inflater,
+                            int bufferSize, bool own = false, bool ownInflater = false);
 
         virtual ~InflaterInputStream();
 
@@ -139,14 +139,14 @@ namespace zip {
          *
          * Skips the specified amount of uncompressed input data.
          */
-        virtual long long skip( long long num );
+        virtual long long skip(long long num);
 
         /**
          * {@inheritDoc}
          *
          * Does nothing.
          */
-        virtual void mark( int readLimit );
+        virtual void mark(int readLimit);
 
         /**
          * {@inheritDoc}
@@ -175,7 +175,7 @@ namespace zip {
 
         virtual int doReadByte();
 
-        virtual int doReadArrayBounded( unsigned char* buffer, int size, int offset, int length );
+        virtual int doReadArrayBounded(unsigned char* buffer, int size, int offset, int length);
 
     };
 

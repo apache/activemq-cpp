@@ -56,8 +56,8 @@ namespace zip {
 
     private:
 
-        DeflaterOutputStream( const DeflaterOutputStream& );
-        DeflaterOutputStream& operator= ( const DeflaterOutputStream& );
+        DeflaterOutputStream(const DeflaterOutputStream&);
+        DeflaterOutputStream& operator=(const DeflaterOutputStream&);
 
     public:
 
@@ -69,7 +69,7 @@ namespace zip {
          * @param own
          *      Should this filter take ownership of the OutputStream pointer (default is false).
          */
-        DeflaterOutputStream( decaf::io::OutputStream* outputStream, bool own = false );
+        DeflaterOutputStream(decaf::io::OutputStream* outputStream, bool own = false);
 
         /**
          * Creates a new DeflateOutputStream with a user supplied Deflater and a default buffer size.
@@ -88,8 +88,8 @@ namespace zip {
          *
          * @throws NullPointerException if the Deflater given is NULL.
          */
-        DeflaterOutputStream( decaf::io::OutputStream* outputStream, Deflater* deflater,
-                              bool own = false, bool ownDeflater = false );
+        DeflaterOutputStream(decaf::io::OutputStream* outputStream, Deflater* deflater,
+                             bool own = false, bool ownDeflater = false);
 
         /**
          * Creates a new DeflateOutputStream with a user supplied Deflater and specified buffer size.
@@ -111,8 +111,8 @@ namespace zip {
          * @throws NullPointerException if the Deflater given is NULL.
          * @throws IllegalArgumentException if bufferSize is 0.
          */
-        DeflaterOutputStream( decaf::io::OutputStream* outputStream, Deflater* deflater,
-                              int bufferSize, bool own = false, bool ownDeflater = false );
+        DeflaterOutputStream(decaf::io::OutputStream* outputStream, Deflater* deflater,
+                             int bufferSize, bool own = false, bool ownDeflater = false);
 
         virtual ~DeflaterOutputStream();
 
@@ -133,10 +133,9 @@ namespace zip {
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte(unsigned char value);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size,
-                                          int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     protected:
 

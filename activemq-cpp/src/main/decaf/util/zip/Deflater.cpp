@@ -30,9 +30,9 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace decaf{
-namespace util{
-namespace zip{
+namespace decaf {
+namespace util {
+namespace zip {
 
     class DeflaterData {
     public:
@@ -48,8 +48,8 @@ namespace zip{
 
     private:
 
-        DeflaterData( const DeflaterData& );
-        DeflaterData& operator= ( const DeflaterData& );
+    DeflaterData(const DeflaterData&);
+    DeflaterData& operator=(const DeflaterData&);
 
     public:
 
@@ -64,11 +64,11 @@ namespace zip{
 
     public:
 
-        static void initZLibDeflate( DeflaterData* handle, int level, bool nowrap = false ) {
+        static void initZLibDeflate(DeflaterData* handle, int level, bool nowrap = false) {
 
-            if( handle == NULL ) {
+            if (handle == NULL) {
                 throw NullPointerException(
-                    __FILE__, __LINE__, "Error While initializing the Compression Library." );
+                    __FILE__, __LINE__, "Error While initializing the Compression Library.");
             }
 
             handle->stream = new z_stream;
@@ -87,58 +87,58 @@ namespace zip{
             handle->stream->next_in = Z_NULL;
 
             int result = Z_OK;
-            if( nowrap == false ) {
-                result = deflateInit( handle->stream, handle->level );
+            if (nowrap == false) {
+                result = deflateInit(handle->stream, handle->level);
             } else {
 
                 // Turn off ZLib header wrapping and encode raw.  Attempts
                 // to set all other values to their normal defaults.
-                result = deflateInit2( handle->stream,
-                                       handle->level,
-                                       Z_DEFLATED,
-                                       -15, 8,
-                                       Z_DEFAULT_STRATEGY );
+                result = deflateInit2(handle->stream,
+                                      handle->level,
+                                      Z_DEFLATED,
+                                      -15, 8,
+                                      Z_DEFAULT_STRATEGY);
             }
 
-            if( result != Z_OK ) {
+            if (result != Z_OK) {
                 throw RuntimeException(
-                    __FILE__, __LINE__, "Error While initializing the Compression Library." );
+                    __FILE__, __LINE__, "Error While initializing the Compression Library.");
             }
         }
 
-        static void finishZlibDeflate( DeflaterData* handle ) {
+        static void finishZlibDeflate(DeflaterData* handle) {
 
-            if( handle == NULL ) {
+            if (handle == NULL) {
                 throw NullPointerException(
-                    __FILE__, __LINE__, "Error While initializing the Compression Library." );
+                    __FILE__, __LINE__, "Error While initializing the Compression Library.");
             }
 
             handle->ended = true;
 
-            if( handle->stream != NULL ) {
+            if (handle->stream != NULL) {
 
                 // Shutdown the ZLib stream
-                deflateEnd( handle->stream );
+                deflateEnd(handle->stream);
                 delete handle->stream;
                 handle->stream = NULL;
             }
         }
 
-        static void resetZlibStream( DeflaterData* handle ) {
+        static void resetZlibStream(DeflaterData* handle) {
 
-            if( handle == NULL ) {
+            if (handle == NULL) {
                 throw NullPointerException(
-                    __FILE__, __LINE__, "Error While initializing the Compression Library." );
+                    __FILE__, __LINE__, "Error While initializing the Compression Library.");
             }
 
-            if( handle->stream != NULL ) {
+            if (handle->stream != NULL) {
 
                 handle->finished = false;
                 handle->flush = Z_NO_FLUSH;
                 handle->ended = false;
 
                 // Ask ZLib to do the reset.
-                deflateReset( handle->stream );
+                deflateReset(handle->stream);
 
                 // Clear any old data that might still be around.
                 handle->stream->opaque = Z_NULL;
@@ -163,102 +163,100 @@ const int Deflater::FILTERED = 1;
 const int Deflater::HUFFMAN_ONLY = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
-Deflater::Deflater( int level, bool nowrap ) : data( new DeflaterData() ) {
+Deflater::Deflater(int level, bool nowrap) : data(new DeflaterData()) {
 
-    if( level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION ) {
+    if (level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__, "Compression level passed was Invalid: %d", level );
+            __FILE__, __LINE__, "Compression level passed was Invalid: %d", level);
     }
 
     // Initialize all the ZLib structures.
-    DeflaterData::initZLibDeflate( this->data, level, nowrap );
+    DeflaterData::initZLibDeflate(this->data, level, nowrap);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Deflater::Deflater() : data( new DeflaterData() ) {
+Deflater::Deflater() : data(new DeflaterData()) {
     // Initialize all the ZLib structures.
-    DeflaterData::initZLibDeflate( this->data, DEFAULT_COMPRESSION );
+    DeflaterData::initZLibDeflate(this->data, DEFAULT_COMPRESSION);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Deflater::~Deflater() {
-    try{
+    try {
         this->end();
         delete this->data;
     }
-    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCH_NOTHROW(Exception)
     DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const unsigned char* buffer, int size, int offset, int length ) {
+void Deflater::setInput(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( buffer == NULL ) {
+        if (buffer == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__, "Buffer passed cannot be NULL." );
+                __FILE__, __LINE__, "Buffer passed cannot be NULL.");
         }
 
-        if( this->data->stream == NULL ) {
+        if (this->data->stream == NULL) {
             throw IllegalStateException(
-                __FILE__, __LINE__, "The Deflator has already been ended." );
+                __FILE__, __LINE__, "The Deflator has already been ended.");
         }
 
-        if( offset + length > size ) {
+        if (offset + length > size) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Given offset + length greater than the size of the buffer." );
+                __FILE__, __LINE__, "Given offset + length greater than the size of the buffer.");
         }
-
 
         // We can only change the level and strategy once an entire block of data is compressed.
-        if( this->data->stream->next_in == NULL ) {
-            deflateParams( this->data->stream, this->data->level, this->data->strategy );
+        if (this->data->stream->next_in == NULL) {
+            deflateParams(this->data->stream, this->data->level, this->data->strategy);
         }
 
-        this->data->stream->avail_in = (uInt)length;
-        this->data->stream->next_in = (Bytef*)( buffer + offset );
+        this->data->stream->avail_in = (uInt) length;
+        this->data->stream->next_in = (Bytef*) (buffer + offset);
     }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IllegalStateException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IllegalStateException )
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalStateException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IllegalStateException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const std::vector<unsigned char>& buffer, int offset, int length ) {
-
-    this->setInput( &buffer[0], (int)buffer.size(), offset, length );
+void Deflater::setInput(const std::vector<unsigned char>& buffer, int offset, int length) {
+    this->setInput(&buffer[0], (int) buffer.size(), offset, length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setInput( const std::vector<unsigned char>& buffer ) {
+void Deflater::setInput(const std::vector<unsigned char>& buffer) {
 
-    if( buffer.empty() ) {
+    if (buffer.empty()) {
         return;
     }
 
-    this->setInput( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+    this->setInput(&buffer[0], (int) buffer.size(), 0, (int) buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const unsigned char* buffer, int size, int offset, int length ) {
+void Deflater::setDictionary(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( buffer == NULL ) {
+        if (buffer == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__, "Buffer passed cannot be NULL." );
+                __FILE__, __LINE__, "Buffer passed cannot be NULL.");
         }
 
-        if( this->data->stream == NULL ) {
+        if (this->data->stream == NULL) {
             throw IllegalStateException(
-                __FILE__, __LINE__, "The Deflator has already been ended." );
+                __FILE__, __LINE__, "The Deflator has already been ended.");
         }
 
-        if( offset + length > size ) {
+        if (offset + length > size) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "Given offset + length greater than the size of the buffer." );
+                __FILE__, __LINE__, "Given offset + length greater than the size of the buffer.");
         }
 
         // From the ZLib documentation.
@@ -266,60 +264,59 @@ void Deflater::setDictionary( const unsigned char* buffer, int size, int offset,
         // (such as NULL dictionary) or the stream state is inconsistent (for example if deflate has
         // already been called for this stream or if the compression method is bsort).
         // deflateSetDictionary does not perform any compression: this will be done by deflate().
-        if( deflateSetDictionary( this->data->stream, buffer + offset, (uInt)length ) != Z_OK ) {
+        if (deflateSetDictionary(this->data->stream, buffer + offset, (uInt) length) != Z_OK) {
             throw IllegalStateException(
-                __FILE__, __LINE__, "Deflator could not accept the dictionary." );
+                __FILE__, __LINE__, "Deflator could not accept the dictionary.");
         }
     }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IllegalStateException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IllegalStateException )
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalStateException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IllegalStateException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const std::vector<unsigned char>& buffer, int offset, int length ) {
-
-    this->setDictionary( &buffer[0], (int)buffer.size(), offset, length );
+void Deflater::setDictionary(const std::vector<unsigned char>& buffer, int offset, int length) {
+    this->setDictionary(&buffer[0], (int) buffer.size(), offset, length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setDictionary( const std::vector<unsigned char>& buffer ) {
+void Deflater::setDictionary(const std::vector<unsigned char>& buffer) {
 
-    if( buffer.empty() ) {
+    if (buffer.empty()) {
         return;
     }
 
-    this->setDictionary( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+    this->setDictionary(&buffer[0], (int) buffer.size(), 0, (int) buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setStrategy( int strategy ) {
+void Deflater::setStrategy(int strategy) {
 
-    if( strategy < DEFAULT_STRATEGY || strategy > HUFFMAN_ONLY ) {
+    if (strategy < DEFAULT_STRATEGY || strategy > HUFFMAN_ONLY) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__, "Strategy value {%d} is not valid.", strategy );
+            __FILE__, __LINE__, "Strategy value {%d} is not valid.", strategy);
     }
 
-    if( this->data->stream == NULL && !this->data->ended ) {
+    if (this->data->stream == NULL && !this->data->ended) {
         throw IllegalStateException(
-            __FILE__, __LINE__, "The Deflator is in an invalid state." );
+            __FILE__, __LINE__, "The Deflator is in an invalid state.");
     }
 
     this->data->strategy = strategy;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Deflater::setLevel( int level ) {
+void Deflater::setLevel(int level) {
 
-    if( level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION ) {
+    if (level < DEFAULT_COMPRESSION || level > BEST_COMPRESSION) {
         throw IllegalArgumentException(
-            __FILE__, __LINE__, "Strategy value {%d} is not valid.", level );
+            __FILE__, __LINE__, "Strategy value {%d} is not valid.", level);
     }
 
-    if( this->data->stream == NULL && !this->data->ended ) {
+    if (this->data->stream == NULL && !this->data->ended) {
         throw IllegalStateException(
-            __FILE__, __LINE__, "The Deflator is in an invalid state." );
+            __FILE__, __LINE__, "The Deflator is in an invalid state.");
     }
 
     this->data->level = level;
@@ -327,7 +324,7 @@ void Deflater::setLevel( int level ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Deflater::needsInput() const {
-    if( this->data->stream == NULL ) {
+    if (this->data->stream == NULL) {
         return false;
     }
 
@@ -345,72 +342,70 @@ bool Deflater::finished() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Deflater::deflate( unsigned char* buffer, int size, int offset, int length ) {
+int Deflater::deflate(unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( buffer == NULL ) {
+        if (buffer == NULL) {
             throw NullPointerException(
-                __FILE__, __LINE__, "Buffer passed cannot be NULL." );
+                __FILE__, __LINE__, "Buffer passed cannot be NULL.");
         }
 
-        if( this->data->stream == NULL ) {
+        if (this->data->stream == NULL) {
             throw IllegalStateException(
-                __FILE__, __LINE__, "The Deflator has already been ended." );
+                __FILE__, __LINE__, "The Deflator has already been ended.");
         }
 
-        if( size < 0 ) {
+        if (size < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
         }
 
-        if( offset > size || offset < 0 ) {
+        if (offset > size || offset < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
         }
 
-        if( length < 0 || length > size - offset ) {
+        if (length < 0 || length > size - offset) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
         }
 
         unsigned long outStart = this->data->stream->total_out;
 
         this->data->stream->next_out = buffer + offset;
-        this->data->stream->avail_out = (uInt)length;
+        this->data->stream->avail_out = (uInt) length;
 
         // Call ZLib and then process the resulting data to figure out what happened.
-        int result = ::deflate( this->data->stream, this->data->flush );
+        int result = ::deflate(this->data->stream, this->data->flush);
 
-        if( result == Z_STREAM_END ) {
+        if (result == Z_STREAM_END) {
             this->data->finished = true;
         }
 
-        return (int)( this->data->stream->total_out - outStart );
+        return (int) (this->data->stream->total_out - outStart);
     }
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IllegalStateException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IllegalStateException )
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IllegalStateException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IllegalStateException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Deflater::deflate( std::vector<unsigned char>& buffer, int offset, int length ) {
-
-    return this->deflate( &buffer[0], (int)buffer.size(), offset, length );
+int Deflater::deflate(std::vector<unsigned char>& buffer, int offset, int length) {
+    return this->deflate(&buffer[0], (int) buffer.size(), offset, length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Deflater::deflate( std::vector<unsigned char>& buffer ) {
-
-    return this->deflate( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+int Deflater::deflate(std::vector<unsigned char>& buffer) {
+    return this->deflate(&buffer[0], (int) buffer.size(), 0, (int) buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Deflater::getAdler() const {
-    if( this->data->stream == NULL ) {
+    if (this->data->stream == NULL) {
         throw IllegalStateException(
-            __FILE__, __LINE__, "The Deflator has already been ended." );
+            __FILE__, __LINE__, "The Deflator has already been ended.");
     }
 
     return this->data->stream->adler;
@@ -418,9 +413,9 @@ long long Deflater::getAdler() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Deflater::getBytesRead() const {
-    if( this->data->stream == NULL ) {
+    if (this->data->stream == NULL) {
         throw IllegalStateException(
-            __FILE__, __LINE__, "The Deflator has already been ended." );
+            __FILE__, __LINE__, "The Deflator has already been ended.");
     }
 
     return this->data->stream->total_in;
@@ -428,9 +423,9 @@ long long Deflater::getBytesRead() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Deflater::getBytesWritten() const {
-    if( this->data->stream == NULL ) {
+    if (this->data->stream == NULL) {
         throw IllegalStateException(
-            __FILE__, __LINE__, "The Deflator has already been ended." );
+            __FILE__, __LINE__, "The Deflator has already been ended.");
     }
 
     return this->data->stream->total_out;
@@ -439,18 +434,18 @@ long long Deflater::getBytesWritten() const {
 ////////////////////////////////////////////////////////////////////////////////
 void Deflater::reset() {
 
-    if( this->data->stream == NULL ) {
+    if (this->data->stream == NULL) {
         throw IllegalStateException(
-            __FILE__, __LINE__, "The Deflator has already been ended." );
+            __FILE__, __LINE__, "The Deflator has already been ended.");
     }
 
-    DeflaterData::resetZlibStream( this->data );
+    DeflaterData::resetZlibStream(this->data);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Deflater::end() {
 
-    if( this->data ) {
-        DeflaterData::finishZlibDeflate( this->data );
+    if (this->data) {
+        DeflaterData::finishZlibDeflate(this->data);
     }
 }

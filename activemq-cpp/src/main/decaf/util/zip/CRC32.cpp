@@ -36,7 +36,7 @@ CRC32::~CRC32() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void CRC32::reset() {
-    this->value = crc32( (uLong)this->value, NULL, 0 );
+    this->value = crc32((uLong) this->value, NULL, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,36 +45,33 @@ long long CRC32::getValue() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const std::vector<unsigned char>& buffer ) {
-    this->update( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+void CRC32::update(const std::vector<unsigned char>& buffer) {
+    this->update(&buffer[0], (int) buffer.size(), 0, (int) buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const std::vector<unsigned char>& buffer, int offset, int length ) {
+void CRC32::update(const std::vector<unsigned char>& buffer, int offset, int length) {
 
-    if( offset + length > (int)buffer.size() ) {
+    if (offset + length > (int) buffer.size()) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer." );
+            __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer.");
     }
 
-    this->update( &buffer[0], (int)buffer.size(), offset, length );
+    this->update(&buffer[0], (int) buffer.size(), offset, length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( int byte ) {
-    this->value = crc32( (uLong)this->value, (const Bytef*)&byte, 1 );
+void CRC32::update(int byte) {
+    this->value = crc32((uLong) this->value, (const Bytef*) &byte, 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CRC32::update( const unsigned char* buffer, int size, int offset, int length ) {
+void CRC32::update(const unsigned char* buffer, int size, int offset, int length) {
 
-    if( offset + length > size ) {
+    if (offset + length > size) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer." );
+            __FILE__, __LINE__, "Given offset + length exceeds the length of the buffer.");
     }
 
-    this->value = crc32( (uLong)this->value, (const Bytef*)( buffer + offset ), (uInt)length );
+    this->value = crc32((uLong) this->value, (const Bytef*) (buffer + offset), (uInt) length);
 }
-
-
-

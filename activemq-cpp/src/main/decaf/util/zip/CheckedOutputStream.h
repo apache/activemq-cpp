@@ -41,8 +41,8 @@ namespace zip {
 
     private:
 
-        CheckedOutputStream( const CheckedOutputStream& );
-        CheckedOutputStream& operator= ( const CheckedOutputStream& );
+        CheckedOutputStream(const CheckedOutputStream&);
+        CheckedOutputStream& operator=(const CheckedOutputStream&);
 
     public:
 
@@ -58,7 +58,7 @@ namespace zip {
          *
          * @throws NullPointerException if the Checksum pointer is NULL.
          */
-        CheckedOutputStream( decaf::io::OutputStream* outputStream, Checksum* sum, bool own = false );
+        CheckedOutputStream(decaf::io::OutputStream* outputStream, Checksum* sum, bool own = false);
 
         virtual ~CheckedOutputStream();
 
@@ -71,9 +71,9 @@ namespace zip {
 
     protected:
 
-        virtual void doWriteByte( unsigned char value );
+        virtual void doWriteByte(unsigned char value);
 
-        virtual void doWriteArrayBounded( const unsigned char* buffer, int size, int offset, int length );
+        virtual void doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length);
 
     };
 

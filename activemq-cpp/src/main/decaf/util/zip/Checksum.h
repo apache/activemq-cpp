@@ -55,7 +55,7 @@ namespace zip {
          * @param buffer
          *      The buffer to read the updated bytes from.
          */
-        virtual void update( const std::vector<unsigned char>& buffer ) = 0;
+        virtual void update(const std::vector<unsigned char>& buffer) = 0;
 
         /**
          * Updates the current checksum with the specified array of bytes.
@@ -69,7 +69,7 @@ namespace zip {
          *
          * @throw IndexOutOfBoundsException if offset + length > size of the buffer.
          */
-        virtual void update( const std::vector<unsigned char>& buffer, int offset, int length ) = 0;
+        virtual void update(const std::vector<unsigned char>& buffer, int offset, int length) = 0;
 
         /**
          * Updates the current checksum with the specified array of bytes.
@@ -86,7 +86,7 @@ namespace zip {
          * @throw NullPointerException if the passed buffer is NULL.
          * @throw IndexOutOfBoundsException if offset + length > size of the buffer.
          */
-        virtual void update( const unsigned char* buffer, int size, int offset, int length ) = 0;
+        virtual void update(const unsigned char* buffer, int size, int offset, int length) = 0;
 
         /**
          * Updates the current checksum with the specified byte value.
@@ -94,7 +94,7 @@ namespace zip {
          * @param byte
          *      The byte value to update the current Checksum with (0..255).
          */
-        virtual void update( int byte ) = 0;
+        virtual void update(int byte) = 0;
 
     };
 

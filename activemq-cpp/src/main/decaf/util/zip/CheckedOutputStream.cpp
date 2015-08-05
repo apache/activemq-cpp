@@ -25,12 +25,12 @@ using namespace decaf::util;
 using namespace decaf::util::zip;
 
 ////////////////////////////////////////////////////////////////////////////////
-CheckedOutputStream::CheckedOutputStream( OutputStream* outputStream, Checksum* sum, bool own )
- :  FilterOutputStream( outputStream, own ), sum( sum ) {
+CheckedOutputStream::CheckedOutputStream(OutputStream* outputStream, Checksum* sum, bool own) :
+    FilterOutputStream(outputStream, own), sum(sum) {
 
-    if( sum == NULL ) {
+    if (sum == NULL) {
         throw NullPointerException(
-            __FILE__, __LINE__, "The Checksum instance cannot be NULL." );
+            __FILE__, __LINE__, "The Checksum instance cannot be NULL.");
     }
 }
 
@@ -39,58 +39,57 @@ CheckedOutputStream::~CheckedOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CheckedOutputStream::doWriteByte( unsigned char value ) {
+void CheckedOutputStream::doWriteByte(unsigned char value) {
 
-    try{
+    try {
 
-        if( isClosed() ) {
+        if (isClosed()) {
             throw IOException(
-                 __FILE__, __LINE__, "Stream already closed" );
+                __FILE__, __LINE__, "Stream already closed");
         }
 
-        this->outputStream->write( value );
-        this->sum->update( value );
+        this->outputStream->write(value);
+        this->sum->update(value);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCHALL_THROW(IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CheckedOutputStream::doWriteArrayBounded( const unsigned char* buffer, int size,
-                                               int offset, int length ) {
+void CheckedOutputStream::doWriteArrayBounded(const unsigned char* buffer, int size, int offset, int length) {
 
-    try{
+    try {
 
-        if( buffer == NULL ) {
+        if (buffer == NULL) {
             throw NullPointerException(
-                 __FILE__, __LINE__, "The buffer passed was NULL." );
+                __FILE__, __LINE__, "The buffer passed was NULL.");
         }
 
-        if( size < 0 ) {
+        if (size < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+                __FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
         }
 
-        if( offset > size || offset < 0 ) {
+        if (offset > size || offset < 0) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+                __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
         }
 
-        if( length < 0 || length > size - offset ) {
+        if (length < 0 || length > size - offset) {
             throw IndexOutOfBoundsException(
-                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+                __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
         }
 
-        if( isClosed() ) {
+        if (isClosed()) {
             throw IOException(
-                 __FILE__, __LINE__, "Stream already closed" );
+                __FILE__, __LINE__, "Stream already closed");
         }
 
-        this->outputStream->write( buffer, size, offset, length );
-        this->sum->update( buffer, size, offset, length );
+        this->outputStream->write(buffer, size, offset, length);
+        this->sum->update(buffer, size, offset, length);
     }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCH_RETHROW( NullPointerException )
-    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
-    DECAF_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW(IOException)
+    DECAF_CATCH_RETHROW(NullPointerException)
+    DECAF_CATCH_RETHROW(IndexOutOfBoundsException)
+    DECAF_CATCHALL_THROW(IOException)
 }

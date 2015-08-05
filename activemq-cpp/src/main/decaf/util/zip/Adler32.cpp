@@ -36,7 +36,7 @@ Adler32::~Adler32() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void Adler32::reset() {
-    this->value = adler32( (uLong)this->value, NULL, 0 );
+    this->value = adler32((uLong) this->value, NULL, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,42 +45,42 @@ long long Adler32::getValue() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Adler32::update( const std::vector<unsigned char>& buffer ) {
-    this->update( &buffer[0], (int)buffer.size(), 0, (int)buffer.size() );
+void Adler32::update(const std::vector<unsigned char>& buffer) {
+    this->update(&buffer[0], (int) buffer.size(), 0, (int) buffer.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Adler32::update( const std::vector<unsigned char>& buffer, int offset, int length ) {
-    this->update( &buffer[0], (int)buffer.size(), offset, length );
+void Adler32::update(const std::vector<unsigned char>& buffer, int offset, int length) {
+    this->update(&buffer[0], (int) buffer.size(), offset, length);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Adler32::update( int byte ) {
-    this->value = adler32( (uLong)this->value, (const Bytef*)&byte, 1 );
+void Adler32::update(int byte) {
+    this->value = adler32((uLong) this->value, (const Bytef*) &byte, 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Adler32::update( const unsigned char* buffer, int size, int offset, int length ) {
+void Adler32::update(const unsigned char* buffer, int size, int offset, int length) {
 
-    if( size < 0 ) {
+    if (size < 0) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size );
+            __FILE__, __LINE__, "size parameter out of Bounds: %d.", size);
     }
 
-    if( offset > size || offset < 0 ) {
+    if (offset > size || offset < 0) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset );
+            __FILE__, __LINE__, "offset parameter out of Bounds: %d.", offset);
     }
 
-    if( length < 0 || length > size - offset ) {
+    if (length < 0 || length > size - offset) {
         throw IndexOutOfBoundsException(
-            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length );
+            __FILE__, __LINE__, "length parameter out of Bounds: %d.", length);
     }
 
-    if( buffer == NULL ) {
+    if (buffer == NULL) {
         throw NullPointerException(
-            __FILE__, __LINE__, "Buffer pointer passed was NULL." );
+            __FILE__, __LINE__, "Buffer pointer passed was NULL.");
     }
 
-    this->value = adler32( (uLong)this->value, (const Bytef*)( buffer + offset ), (uInt)length );
+    this->value = adler32((uLong) this->value, (const Bytef*) (buffer + offset), (uInt) length);
 }

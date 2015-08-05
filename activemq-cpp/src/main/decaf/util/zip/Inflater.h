@@ -58,8 +58,8 @@ namespace zip {
 
     private:
 
-        Inflater( const Inflater& );
-        Inflater& operator=( const Inflater& );
+        Inflater(const Inflater&);
+        Inflater& operator=(const Inflater&);
 
     public:
 
@@ -78,7 +78,7 @@ namespace zip {
          * byte as input. This is required by the ZLIB native library in order to support
          * certain optimizations.
          */
-        Inflater( bool nowrap );
+        Inflater(bool nowrap);
 
         virtual ~Inflater();
 
@@ -99,7 +99,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const unsigned char* buffer, int size, int offset, int length );
+        void setInput(const unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Sets input data for decompression. This should be called whenever needsInput() returns
@@ -115,7 +115,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const std::vector<unsigned char>& buffer, int offset, int length );
+        void setInput(const std::vector<unsigned char>& buffer, int offset, int length);
 
         /**
          * Sets input data for decompression. This should be called whenever needsInput() returns
@@ -126,7 +126,7 @@ namespace zip {
          *
          * @throws IllegalStateException if in the end state.
          */
-        void setInput( const std::vector<unsigned char>& buffer );
+        void setInput(const std::vector<unsigned char>& buffer);
 
         /**
          * Returns the total number of bytes remaining in the input buffer. This can be used to
@@ -157,7 +157,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match thre required
          *         dictionaries checksum value.
          */
-        void setDictionary( const unsigned char* buffer, int size, int offset, int length );
+        void setDictionary(const unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Sets the preset dictionary to the given array of bytes. Should be called when inflate()
@@ -177,7 +177,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match thre required
          *         dictionaries checksum value.
          */
-        void setDictionary( const std::vector<unsigned char>& buffer, int offset, int length );
+        void setDictionary(const std::vector<unsigned char>& buffer, int offset, int length);
 
         /**
          * Sets the preset dictionary to the given array of bytes. Should be called when inflate()
@@ -192,7 +192,7 @@ namespace zip {
          * @throws IllegalArgumentException if the given dictionary doesn't match the required
          *         dictionaries checksum value.
          */
-        void setDictionary( const std::vector<unsigned char>& buffer );
+        void setDictionary(const std::vector<unsigned char>& buffer);
 
         /**
          * @return true if the input data buffer is empty and setInput() should be called in
@@ -236,7 +236,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        int inflate( unsigned char* buffer, int size, int offset, int length );
+        int inflate(unsigned char* buffer, int size, int offset, int length);
 
         /**
          * Uncompresses bytes into specified buffer. Returns actual number of bytes uncompressed.
@@ -255,7 +255,7 @@ namespace zip {
          * @throws IndexOutOfBoundsException if the offset + length > size of the buffer.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        int inflate( std::vector<unsigned char>& buffer, int offset, int length );
+        int inflate(std::vector<unsigned char>& buffer, int offset, int length);
 
         /**
          * Uncompresses bytes into specified buffer. Returns actual number of bytes uncompressed.
@@ -269,7 +269,7 @@ namespace zip {
          * @throws IllegalStateException if in the end state.
          * @throws DataFormatException if the compressed data format is invalid.
          */
-        int inflate( std::vector<unsigned char>& buffer );
+        int inflate(std::vector<unsigned char>& buffer);
 
         /**
          * @returns the ADLER-32 value of the uncompressed data.

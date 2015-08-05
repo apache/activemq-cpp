@@ -28,8 +28,8 @@ namespace util {
     class Arrays {
     private:
 
-        Arrays( const Arrays& source );
-        Arrays& operator= ( const Arrays& source );
+        Arrays(const Arrays& source);
+        Arrays& operator=(const Arrays& source);
 
     private:
 
