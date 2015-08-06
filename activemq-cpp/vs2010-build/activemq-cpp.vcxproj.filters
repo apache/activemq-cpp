@@ -187,12 +187,6 @@
     <Filter Include="decaf\internal\net\https">
       <UniqueIdentifier>{a35e574c-2c08-4dc9-884c-0ad38a5fccc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="activemq\transport\discovery">
-      <UniqueIdentifier>{f870f841-d877-40a1-8c1a-7ac4274e0d36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="activemq\transport\discovery\http">
-      <UniqueIdentifier>{0384ed27-9040-404e-918e-f75572fa637d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main\activemq\cmsutil\CachedConsumer.cpp">
@@ -2162,39 +2156,6 @@
     </ClCompile>
     <ClCompile Include="..\src\main\decaf\net\URLStreamHandlerFactory.cpp">
       <Filter>decaf\net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgent.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgentFactory.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveredBrokerData.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryAgent.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryAgentFactory.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryAgentRegistry.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryListener.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryTransport.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\DiscoveryTransportFactory.cpp">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgent.cpp">
-      <Filter>activemq\transport\discovery\http</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgentFactory.cpp">
-      <Filter>activemq\transport\discovery\http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -4234,39 +4195,6 @@
     </ClInclude>
     <ClInclude Include="..\src\main\decaf\net\URLStreamHandlerFactory.h">
       <Filter>decaf\net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgent.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\AbstractDiscoveryAgentFactory.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveredBrokerData.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryAgent.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryAgentFactory.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryAgentRegistry.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryListener.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryTransport.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\DiscoveryTransportFactory.h">
-      <Filter>activemq\transport\discovery</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgent.h">
-      <Filter>activemq\transport\discovery\http</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\activemq\transport\discovery\http\HttpDiscoveryAgentFactory.h">
-      <Filter>activemq\transport\discovery\http</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
