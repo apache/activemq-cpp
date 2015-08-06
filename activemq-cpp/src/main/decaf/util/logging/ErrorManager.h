@@ -88,11 +88,11 @@ namespace logging {
          * This method may be overridden in subclasses. The default behavior in this base class is
          * that the first call is reported to System.err, and subsequent calls are ignored.
          *
-         * @param msg - a descriptive string (may be empty)
+         * @param message - a descriptive string (may be empty)
          * @param ex - an exception (may be NULL)
          * @param code - an error code defined in ErrorManager
          */
-        virtual void error( const std::string& message, decaf::lang::Exception* ex, int code );
+        virtual void error(const std::string& message, decaf::lang::Exception* ex, int code);
 
     };
 

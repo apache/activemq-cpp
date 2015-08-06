@@ -128,7 +128,7 @@ namespace net {
          * This constructor is equivalent to a call to the two-argument constructor with
          * a empty first argument.
          *
-         * @param spec
+         * @param url
          *      the String to parse as a URL.
          *
          * @throws MalformedURLException If the string specifies an unknown protocol.
@@ -215,8 +215,6 @@ namespace net {
          *      the name of the protocol to use.
          * @param host
          *      the name of the host.
-         * @param port
-         *      the port number on the host.
          * @param file
          *      the file on the host
          *
@@ -261,7 +259,7 @@ namespace net {
          *
          * @throws MalformedURLException if an unknown protocol is specified.
          */
-        URL(const URL& context, const decaf::lang::String& spec, URLStreamHandler* streamHandler);
+        URL(const URL& context, const decaf::lang::String& spec, URLStreamHandler* handler);
 
         virtual ~URL();
 

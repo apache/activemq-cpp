@@ -58,7 +58,7 @@ namespace security {
          * @param seed
          *      The seed bytes to use to seed this secure random number generator.
          */
-        SecureRandom( const std::vector<unsigned char>& seed );
+        SecureRandom(const std::vector<unsigned char>& seed);
 
         /**
          * Creates a new instance of a secure random number generator that implements the
@@ -75,26 +75,17 @@ namespace security {
          * @throw NullPointerException if the seed buffer is NULL.
          * @throw IllegalArgumentException if the size value is negative.
          */
-        SecureRandom( const unsigned char* seed, int size );
+        SecureRandom(const unsigned char* seed, int size);
 
         virtual ~SecureRandom();
 
     public:  // Virtual Methods
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void nextBytes( std::vector<unsigned char>& buf );
+        virtual void nextBytes(std::vector<unsigned char>& buf);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void nextBytes( unsigned char* buf, int size );
+        virtual void nextBytes(unsigned char* buf, int size);
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual void setSeed( unsigned long long seed );
+        virtual void setSeed(unsigned long long seed);
 
         /**
          * Supplements or sets the seed of this secure random number generator, calls to this
@@ -103,7 +94,7 @@ namespace security {
          * @param seed
          *      A vector of bytes that is used update the seed of the RNG.
          */
-        virtual void setSeed( const std::vector<unsigned char>& seed );
+        virtual void setSeed(const std::vector<unsigned char>& seed);
 
         /**
          * Supplements or sets the seed of this secure random number generator, calls to this
@@ -117,14 +108,11 @@ namespace security {
          * @throw NullPointerException if the seed buffer is NULL.
          * @throw IllegalArgumentException if the size value is negative.
          */
-        virtual void setSeed( const unsigned char* seed, int size );
+        virtual void setSeed(const unsigned char* seed, int size);
 
     protected:  // Virtual method used by all non-virtual methods in Random.
 
-        /**
-         * {@inheritDoc}
-         */
-        virtual int next( int bits );
+        virtual int next(int bits);
 
     };
 

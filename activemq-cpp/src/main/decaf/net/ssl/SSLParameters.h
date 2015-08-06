@@ -111,7 +111,8 @@ namespace ssl {
          * Sets whether client authentication should be requested. Calling this method clears the
          * needClientAuth flag.
          *
-         * @param whether client authentication should be requested.
+         * @param wantClientAuth
+         *      whether client authentication should be requested.
          */
         void setWantClientAuth(bool wantClientAuth) {
             this->wantClientAuth = wantClientAuth;

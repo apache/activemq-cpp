@@ -28,9 +28,9 @@
 
 #include <decaf/lang/Pointer.h>
 
-namespace decaf{
-namespace internal{
-namespace nio{
+namespace decaf {
+namespace internal {
+namespace nio {
 
     using decaf::internal::util::ByteArrayAdapter;
 
@@ -63,7 +63,7 @@ namespace nio{
          *
          * @throws IllegalArguementException if the capacity value is negative.
          */
-        DoubleArrayBuffer( int capacity, bool readOnly = false );
+        DoubleArrayBuffer(int size, bool readOnly = false);
 
         /**
          * Creates a DoubleArrayBuffer object that wraps the given array.  If the own flag
@@ -83,7 +83,7 @@ namespace nio{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
-        DoubleArrayBuffer( double* array, int size, int offset, int length, bool readOnly = false );
+        DoubleArrayBuffer(double* array, int size, int offset, int length, bool readOnly = false);
 
         /**
          * Creates a byte buffer that wraps the passed ByteArrayAdapter and
@@ -102,8 +102,8 @@ namespace nio{
          * @throws NullPointerException if array is NULL
          * @throws IndexOutOfBoundsException if offset + length is greater than array size.
          */
-        DoubleArrayBuffer( const decaf::lang::Pointer<ByteArrayAdapter>& array,
-                           int offset, int length, bool readOnly = false );
+        DoubleArrayBuffer(const decaf::lang::Pointer<ByteArrayAdapter>& array,
+                          int offset, int length, bool readOnly = false);
 
         /**
          * Create a DoubleArrayBuffer that mirrors this one, meaning it shares a
@@ -113,7 +113,7 @@ namespace nio{
          * @param other
          *      The DoubleArrayBuffer this one is to mirror.
          */
-        DoubleArrayBuffer( const DoubleArrayBuffer& other );
+        DoubleArrayBuffer(const DoubleArrayBuffer& other);
 
         virtual ~DoubleArrayBuffer();
 
@@ -152,12 +152,14 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual double get( int index ) const;
+        virtual double get(int index) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual bool hasArray() const { return true; }
+        virtual bool hasArray() const {
+            return true;
+        }
 
         /**
          * {@inheritDoc}
@@ -169,12 +171,12 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual DoubleBuffer& put( double value );
+        virtual DoubleBuffer& put(double value);
 
         /**
          * {@inheritDoc}
          */
-        virtual DoubleBuffer& put( int index, double value );
+        virtual DoubleBuffer& put(int index, double value);
 
         /**
          * {@inheritDoc}
@@ -189,7 +191,7 @@ namespace nio{
          * @param value
          *      Boolean value, true if this buffer is to be read-only, false otherwise.
          */
-        virtual void setReadOnly( bool value ) {
+        virtual void setReadOnly(bool value) {
             this->readOnly = value;
         }
 

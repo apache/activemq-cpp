@@ -37,7 +37,7 @@ namespace threads {
         virtual void start() = 0;
 
         /**
-         * @retuns true if the start method has been called.
+         * @return true if the start method has been called.
          */
         virtual bool isStarted() const = 0;
 

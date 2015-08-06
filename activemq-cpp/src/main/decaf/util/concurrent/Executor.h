@@ -79,7 +79,7 @@ namespace concurrent {
      * implement {@link decaf.util.concurrent.ExecutorService}, which is a more
      * extensive interface.  The {@link decaf.util.concurrent.ThreadPoolExecutor}
      * class provides an extensible thread pool implementation. The
-     * {@link decaf.util.concurrentExecutor} class provides convenient factory
+     * {@link decaf.util.concurrent.Executor} class provides convenient factory
      * methods for these Executors.
      *
      * @since 1.0

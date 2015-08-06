@@ -529,7 +529,7 @@ namespace concurrent{
         /**
          * Handler policy for tasks that are rejected upon a call to ThreadPoolExecutor::execute
          * this class will attempt to run the task in the Thread that called the execute method
-         * unless the executor is shutdown in which case the task is not run and is destroyed..
+         * unless the executor is shutdown in which case the task is not run and is destroyed.
          *
          * @since 1.0
          */
@@ -549,10 +549,10 @@ namespace concurrent{
                     return;
                 }
 
-                try{
+                try {
                     task->run();
                     delete task;
-                } catch(decaf::lang::Exception& ex) {
+                } catch (decaf::lang::Exception& ex) {
                     delete task;
                     throw ex;
                 }
@@ -583,7 +583,7 @@ namespace concurrent{
         /**
          * Handler policy for tasks that are rejected upon a call to ThreadPoolExecutor::execute
          * this class always destroys the oldest unexecuted task in the Queue and then attempts
-         * to execute the rejected task using the passed in executor..
+         * to execute the rejected task using the passed in executor.
          *
          * @since 1.0
          */
@@ -596,21 +596,20 @@ namespace concurrent{
             virtual ~DiscardOldestPolicy() {
             }
 
-            virtual void rejectedExecution( decaf::lang::Runnable* task, ThreadPoolExecutor* executer ) {
+            virtual void rejectedExecution(decaf::lang::Runnable* task, ThreadPoolExecutor* executer) {
 
                 if (executer->isShutdown()) {
                     delete task;
                     return;
                 }
 
-                try{
-
+                try {
                     decaf::lang::Runnable* oldest = NULL;
                     executer->getQueue()->poll(oldest);
                     delete oldest;
 
                     executer->execute(task);
-                } catch(decaf::lang::Exception& ex) {
+                } catch (decaf::lang::Exception& ex) {
                     delete task;
                     throw ex;
                 }

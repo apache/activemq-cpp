@@ -207,14 +207,14 @@ namespace security {
          *
          * @param input
          *      The array of bytes.
-         * @param input
+         * @param size
          *      The size of the given input buffer.
          * @param offset
          *      The offset to start from in the array of bytes.
          * @param length
          *      The number of bytes to use, starting at offset.
          */
-        void update(unsigned char* input, int size, int offset, int len);
+        void update(unsigned char* input, int size, int offset, int length);
 
         /**
          * Updates the digest using the specified array of bytes.
@@ -260,7 +260,7 @@ namespace security {
          *
          * @param digesta
          *      The first digest for comparison.
-         * @param digesta
+         * @param digestb
          *      The second digest for comparison.
          *
          * @return true if the two digests are equal.

@@ -27,8 +27,8 @@
 #include <decaf/util/AbstractCollection.h>
 #include <decaf/util/ListIterator.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /**
      * An ordered collection (also known as a sequence). The user of this interface has

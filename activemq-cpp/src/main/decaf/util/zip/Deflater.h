@@ -73,7 +73,7 @@ namespace zip {
         static const int DEFLATED;
 
         /**
-         * Compression level for no compression. .
+         * Compression level for no compression.
          */
         static const int NO_COMPRESSION;
 

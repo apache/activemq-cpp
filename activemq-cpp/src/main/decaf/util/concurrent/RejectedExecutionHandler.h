@@ -50,14 +50,14 @@ namespace concurrent {
          * an {@link RejectedExecutionException}, which will be propagated to
          * the caller of {@link ThreadPoolExecutor#execute execute}.
          *
-         * @param r
+         * @param task
          *      The pointer to the runnable task requested to be executed.
          * @param executor
          *      The pointer to the executor attempting to execute this task.
          *
          * @throws RejectedExecutionException if there is no remedy.
          */
-        virtual void rejectedExecution( decaf::lang::Runnable* r, ThreadPoolExecutor* executer ) = 0;
+        virtual void rejectedExecution(decaf::lang::Runnable* task, ThreadPoolExecutor* executor) = 0;
 
     };
 

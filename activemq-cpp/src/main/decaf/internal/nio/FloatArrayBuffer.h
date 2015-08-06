@@ -28,9 +28,9 @@
 
 #include <decaf/lang/Pointer.h>
 
-namespace decaf{
-namespace internal{
-namespace nio{
+namespace decaf {
+namespace internal {
+namespace nio {
 
     using decaf::internal::util::ByteArrayAdapter;
 
@@ -63,7 +63,7 @@ namespace nio{
          *
          * @throws IllegalArguementException if the capacity value is negative.
          */
-        FloatArrayBuffer( int size, bool readOnly = false );
+        FloatArrayBuffer(int size, bool readOnly = false);
 
         /**
          * Creates a FloatArrayBuffer object that wraps the given array.  If the own flag
@@ -83,7 +83,7 @@ namespace nio{
          * @throws NullPointerException if buffer is NULL
          * @throws IndexOutOfBoundsException if offset is greater than array capacity.
          */
-        FloatArrayBuffer( float* array, int size, int offset, int length, bool readOnly = false );
+        FloatArrayBuffer(float* array, int size, int offset, int length, bool readOnly = false);
 
         /**
          * Creates a byte buffer that wraps the passed ByteArrayAdapter and
@@ -94,7 +94,7 @@ namespace nio{
          *      The ByteArrayAdapter to wrap.
          * @param offset
          *      The position that is this buffers start position.
-         * @param length
+         * @param capacity
          *      The limit of how many bytes into the array this Buffer can write.
          * @param readOnly
          *      Boolean indicating if this buffer should be read-only, default as false.
@@ -102,8 +102,8 @@ namespace nio{
          * @throws NullPointerException if array is NULL
          * @throws IndexOutOfBoundsException if offset + length is greater than array size.
          */
-        FloatArrayBuffer( const decaf::lang::Pointer<ByteArrayAdapter>& array, int offset, int capacity,
-                          bool readOnly = false );
+        FloatArrayBuffer(const decaf::lang::Pointer<ByteArrayAdapter>& array, int offset, int capacity,
+                         bool readOnly = false);
 
         /**
          * Create a FloatArrayBuffer that mirrors this one, meaning it shares a
@@ -113,7 +113,7 @@ namespace nio{
          * @param other
          *      The FloatArrayBuffer this one is to mirror.
          */
-        FloatArrayBuffer( const FloatArrayBuffer& other );
+        FloatArrayBuffer(const FloatArrayBuffer& other);
 
         virtual ~FloatArrayBuffer();
 
@@ -152,12 +152,14 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual float get( int index ) const;
+        virtual float get(int index) const;
 
         /**
          * {@inheritDoc}
          */
-        virtual bool hasArray() const { return true; }
+        virtual bool hasArray() const {
+            return true;
+        }
 
         /**
          * {@inheritDoc}
@@ -169,12 +171,12 @@ namespace nio{
         /**
          * {@inheritDoc}
          */
-        virtual FloatBuffer& put( float value );
+        virtual FloatBuffer& put(float value);
 
         /**
          * {@inheritDoc}
          */
-        virtual FloatBuffer& put( int index, float value );
+        virtual FloatBuffer& put(int index, float value);
 
         /**
          * {@inheritDoc}
@@ -189,7 +191,7 @@ namespace nio{
          * @param value
          *      Boolean value, true if this buffer is to be read-only, false otherwise.
          */
-        virtual void setReadOnly( bool value ) {
+        virtual void setReadOnly(bool value) {
             this->readOnly = value;
         }
 

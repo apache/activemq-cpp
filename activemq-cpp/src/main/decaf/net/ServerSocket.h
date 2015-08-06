@@ -31,8 +31,8 @@
 
 #include <string>
 
-namespace decaf{
-namespace net{
+namespace decaf {
+namespace net {
 
     class Socket;
     class SocketImpl;
@@ -65,8 +65,8 @@ namespace net{
 
     private:
 
-        ServerSocket( const ServerSocket& );
-        ServerSocket& operator= ( const ServerSocket& );
+        ServerSocket(const ServerSocket&);
+        ServerSocket& operator=(const ServerSocket&);
 
     public:
 
@@ -91,7 +91,7 @@ namespace net{
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        ServerSocket( int port );
+        ServerSocket(int port);
 
         /**
          * Creates a new ServerSocket bound to the specified port, if the value of port is 0, then
@@ -112,7 +112,7 @@ namespace net{
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        ServerSocket( int port, int backlog );
+        ServerSocket(int port, int backlog);
 
         /**
          * Creates a new ServerSocket bound to the specified port, if the value of port is 0, then
@@ -130,13 +130,13 @@ namespace net{
          *      The port to bind the ServerSocket to.
          * @param backlog
          *      The the number of incoming connection attempts to queue before connections are refused.
-         * @param ifAddress
+         * @param address
          *      The IP Address to bind to on the local machine.
          *
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        ServerSocket( int port, int backlog, const InetAddress* address );
+        ServerSocket(int port, int backlog, const InetAddress* address);
 
         /**
          * Releases socket handle if close() hasn't been called.
@@ -155,7 +155,7 @@ namespace net{
          *
          * @throws NullPointerException if the passed SocketImpl is Null.
          */
-        ServerSocket( SocketImpl* impl );
+        ServerSocket(SocketImpl* impl);
 
     public:
 
@@ -172,7 +172,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while binding the socket.
          * @throws IllegalArgumentException if the parameters are not valid.
          */
-        virtual void bind( const std::string& host, int port );
+        virtual void bind(const std::string& host, int port);
 
         /**
          * Bind and listen to given local IPAddress and port, if the address is empty
@@ -192,7 +192,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while binding the socket.
          * @throws IllegalArgumentException if the parameters are not valid.
          */
-        virtual void bind( const std::string& host, int port, int backlog );
+        virtual void bind(const std::string& host, int port, int backlog);
 
         /**
          * Listens for a connection request on the bound IPAddress and Port for this ServerSocket, the
@@ -245,7 +245,7 @@ namespace net{
          * @throws SocketException if the operation fails.
          * @throws IllegalArgumentException if the value is zero or negative.
          */
-        virtual void setReceiveBufferSize( int size );
+        virtual void setReceiveBufferSize(int size);
 
         /**
          * Gets the reuse address flag, SO_REUSEADDR.
@@ -264,7 +264,7 @@ namespace net{
          *
          * @throws SocketException if the operation fails.
          */
-        virtual void setReuseAddress( bool reuse );
+        virtual void setReuseAddress(bool reuse);
 
         /**
          * Gets the timeout for socket operations, SO_TIMEOUT.
@@ -285,7 +285,7 @@ namespace net{
          * @throws SocketException Thrown if unable to set the information.
          * @throws IllegalArgumentException if the timeout value is negative.
          */
-        virtual void setSoTimeout( int timeout );
+        virtual void setSoTimeout(int timeout);
 
         /**
          * Gets the port number on the Local machine that this ServerSocket is bound to.
@@ -312,7 +312,7 @@ namespace net{
          * @throws IOException if an I/O error occurs while performing this operation.
          * @throws SocketException if this method has already been called with a valid factory.
          */
-        static void setSocketImplFactory( SocketImplFactory* factory );
+        static void setSocketImplFactory(SocketImplFactory* factory);
 
     protected:
 
@@ -325,7 +325,7 @@ namespace net{
          *
          * @throws IOException if an I/O error occurs while performing this operation.
          */
-        virtual void implAccept( Socket* socket );
+        virtual void implAccept(Socket* socket);
 
         /**
          * Allows a subclass to override what is considered the default backlog.
@@ -343,7 +343,7 @@ namespace net{
         void ensureCreated() const;
 
         // Binds and sets up the Listen for this Server Socket
-        void setupSocketImpl( int port, int backlog, const InetAddress* ifAddress );
+        void setupSocketImpl(int port, int backlog, const InetAddress* ifAddress);
 
     };
 

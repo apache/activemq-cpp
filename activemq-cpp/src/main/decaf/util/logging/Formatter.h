@@ -20,9 +20,9 @@
 #include <decaf/util/Config.h>
 #include <decaf/util/logging/Handler.h>
 
-namespace decaf{
-namespace util{
-namespace logging{
+namespace decaf {
+namespace util {
+namespace logging {
 
     /**
      * A Formatter provides support for formatting LogRecords.
@@ -41,17 +41,23 @@ namespace logging{
 
         /**
          * Format the given log record and return the formatted string.
-         * @param record The Log Record to Format
+         *
+         * @param record
+         *      The Log Record to Format
+         *
          * @return the formatted record.
          */
-        virtual std::string format( const LogRecord& record ) const = 0;
+        virtual std::string format(const LogRecord& record) const = 0;
 
         /**
          * Format the message string from a log record.
-         * @param record The Log Record to Format
+         *
+         * @param record
+         *      The Log Record to Format
+         *
          * @return the formatted message
          */
-        virtual std::string formatMessage( const LogRecord& record ) const;
+        virtual std::string formatMessage(const LogRecord& record) const;
 
         /**
          * Return the header string for a set of formatted records.  In the
@@ -62,17 +68,20 @@ namespace logging{
          *
          * @return the head string.
          */
-        virtual std::string getHead( const Handler* handler DECAF_UNUSED ) {
+        virtual std::string getHead(const Handler* handler DECAF_UNUSED) {
             return "";
         }
 
         /**
          * Return the tail string for a set of formatted records.  In the
          * default implementation this method should return empty string
-         * @param handler the target handler, can be null
+         *
+         * @param handler
+         *      the target handler, can be null
+         *
          * @return the tail string
          */
-        virtual std::string getTail( const Handler* handler DECAF_UNUSED ) {
+        virtual std::string getTail(const Handler* handler DECAF_UNUSED) {
             return "";
         }
 

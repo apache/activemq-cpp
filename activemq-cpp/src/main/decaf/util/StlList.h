@@ -30,8 +30,8 @@
 #include <decaf/util/List.h>
 #include <decaf/util/AbstractList.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /**
      * List class that wraps the STL list object to provide a simpler interface and
@@ -430,9 +430,6 @@ namespace util{
             return true;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         virtual bool addAll(int index, const Collection<E>& collection) {
 
             if (index < 0 || index > this->size()) {
@@ -457,18 +454,12 @@ namespace util{
             return true;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         virtual bool remove(const E& value) {
             int origSize = this->size();
             this->values.remove(value);
             return origSize != this->size();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         virtual E removeAt(int index) {
 
             if (index < 0 || index >= this->size()) {

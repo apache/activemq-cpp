@@ -189,7 +189,7 @@ namespace core {
         /**
          * Sets the Broker URI that should be used when creating a new connection instance.
          *
-         * @param brokerURI
+         * @param uri
          *      The string form of the Broker URI, this will be converted to a URI object.
          */
         void setBrokerURI(const std::string& uri);
@@ -197,7 +197,7 @@ namespace core {
         /**
          * Sets the Broker URI that should be used when creating a new connection instance.
          *
-         * @param brokerURI
+         * @param uri
          *      The URI of the broker that this client will connect to.
          */
         void setBrokerURI(const decaf::net::URI& uri);

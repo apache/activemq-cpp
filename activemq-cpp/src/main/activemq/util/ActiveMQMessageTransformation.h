@@ -75,6 +75,8 @@ namespace util {
          *
          * @param message
          *      CMS Message to be converted into ActiveMQ's implementation.
+         * @param connection
+         *      The Connection instance where this message was created.
          * @param amqMessage
          *      Pointer to a pointer where the casted or cloned AMQ message is stored.
          *

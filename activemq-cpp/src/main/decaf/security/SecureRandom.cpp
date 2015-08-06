@@ -47,19 +47,19 @@ SecureRandom::SecureRandom( const std::vector<unsigned char>& seed ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SecureRandom::SecureRandom( const unsigned char* seed, int size ) :
+SecureRandom::SecureRandom(const unsigned char* seed, int size) :
     secureRandom(new SecureRandomImpl()) {
 
-    if( seed == NULL ) {
-        throw NullPointerException( __FILE__, __LINE__, "Seed buffer pointer passed was NULL" );
+    if (seed == NULL) {
+        throw NullPointerException( __FILE__, __LINE__, "Seed buffer pointer passed was NULL");
     }
 
-    if( size < 0 ) {
-        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative." );
+    if (size < 0) {
+        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative.");
     }
 
-    if( size > 0 ) {
-        this->secureRandom->providerSetSeed( seed, size );
+    if (size > 0) {
+        this->secureRandom->providerSetSeed(seed, size);
     }
 }
 
@@ -68,32 +68,32 @@ SecureRandom::~SecureRandom() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SecureRandom::nextBytes( std::vector<unsigned char>& buf ) {
-    if( !buf.empty() ) {
-        this->secureRandom->providerNextBytes( &buf[0], (int)buf.size() );
+void SecureRandom::nextBytes(std::vector<unsigned char>& buf) {
+    if (!buf.empty()) {
+        this->secureRandom->providerNextBytes(&buf[0], (int) buf.size());
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SecureRandom::nextBytes( unsigned char* buf, int size ) {
+void SecureRandom::nextBytes(unsigned char* buf, int size) {
 
-    if( buf == NULL ) {
-        throw NullPointerException( __FILE__, __LINE__, "Buffer pointer passed was NULL" );
+    if (buf == NULL) {
+        throw NullPointerException( __FILE__, __LINE__, "Buffer pointer passed was NULL");
     }
 
-    if( size < 0 ) {
-        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative." );
+    if (size < 0) {
+        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative.");
     }
 
-    if( size > 0 ) {
-        this->secureRandom->providerNextBytes( buf, size );
+    if (size > 0) {
+        this->secureRandom->providerNextBytes(buf, size);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SecureRandom::setSeed( unsigned long long seed ) {
+void SecureRandom::setSeed(unsigned long long seed) {
 
-    if( seed == 0 ) {
+    if (seed == 0) {
         return;
     }
 
@@ -110,49 +110,49 @@ void SecureRandom::setSeed( unsigned long long seed ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SecureRandom::setSeed( const std::vector<unsigned char>& seed ) {
-    if( !seed.empty() ) {
-        this->secureRandom->providerSetSeed( &seed[0], (int)seed.size() );
+void SecureRandom::setSeed(const std::vector<unsigned char>& seed) {
+    if (!seed.empty()) {
+        this->secureRandom->providerSetSeed(&seed[0], (int) seed.size());
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SecureRandom::setSeed( const unsigned char* seed, int size ) {
+void SecureRandom::setSeed(const unsigned char* seed, int size) {
 
-    if( seed == NULL ) {
-        throw NullPointerException( __FILE__, __LINE__, "Buffer pointer passed was NULL" );
+    if (seed == NULL) {
+        throw NullPointerException( __FILE__, __LINE__, "Buffer pointer passed was NULL");
     }
 
-    if( size < 0 ) {
-        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative." );
+    if (size < 0) {
+        throw IllegalArgumentException( __FILE__, __LINE__, "Passed buffer size was negative.");
     }
 
-    if( size > 0 ) {
-        this->secureRandom->providerSetSeed( seed, size );
+    if (size > 0) {
+        this->secureRandom->providerSetSeed(seed, size);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SecureRandom::next( int numBits ) {
+int SecureRandom::next(int numBits) {
 
-    if( numBits < 0 ) {
+    if (numBits < 0) {
         numBits = 0;
-    } else if(numBits > 32 ) {
+    } else if (numBits > 32) {
         numBits = 32;
     }
 
-    int bytes = ( numBits + 7 ) / 8;
+    int bytes = (numBits + 7) / 8;
     unsigned char* next = new unsigned char[bytes];
     unsigned int ret = 0;
 
-    this->nextBytes( next, bytes );
-    for( int i = 0; i < bytes; i++ ) {
-        ret = ( next[i] & 0xFF ) | ( ret << 8 );
+    this->nextBytes(next, bytes);
+    for (int i = 0; i < bytes; i++) {
+        ret = (next[i] & 0xFF) | (ret << 8);
     }
 
-    ret = ret >> ( ( bytes * 8 ) - numBits );
+    ret = ret >> ((bytes * 8) - numBits);
 
-    delete [] next;
+    delete[] next;
 
     return ret;
 }

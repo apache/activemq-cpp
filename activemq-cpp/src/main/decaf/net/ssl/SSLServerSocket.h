@@ -57,7 +57,7 @@ namespace ssl {
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        SSLServerSocket( int port );
+        SSLServerSocket(int port);
 
         /**
          * Creates a new ServerSocket bound to the specified port, if the value of port is 0, then
@@ -78,7 +78,7 @@ namespace ssl {
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        SSLServerSocket( int port, int backlog );
+        SSLServerSocket(int port, int backlog);
 
         /**
          * Creates a new ServerSocket bound to the specified port, if the value of port is 0, then
@@ -96,13 +96,13 @@ namespace ssl {
          *      The port to bind the ServerSocket to.
          * @param backlog
          *      The the number of incoming connection attempts to queue before connections are refused.
-         * @param ifAddress
+         * @param address
          *      The IP Address to bind to on the local machine.
          *
          * @throws IOException if there is an I/O error while performing this operation.
          * @throws IllegalArgumentException if the port value is negative or greater than 65535.
          */
-        SSLServerSocket( int port, int backlog, const decaf::net::InetAddress* address );
+        SSLServerSocket(int port, int backlog, const decaf::net::InetAddress* address);
 
     public:
 
@@ -142,7 +142,7 @@ namespace ssl {
          *
          * @throws IllegalArgumentException if the vector is empty or one of the names is invalid.
          */
-        virtual void setEnabledCipherSuites( const std::vector<std::string>& suites ) = 0;
+        virtual void setEnabledCipherSuites(const std::vector<std::string>& suites) = 0;
 
         /**
          * Returns a vector containing the names of all the currently enabled Protocols for
@@ -162,7 +162,7 @@ namespace ssl {
          *
          * @throws IllegalArgumentException if the vector is empty or one of the names is invalid.
          */
-        virtual void setEnabledProtocols( const std::vector<std::string>& protocols ) = 0;
+        virtual void setEnabledProtocols(const std::vector<std::string>& protocols) = 0;
 
         /**
          * @return true if the Socket request client Authentication.
@@ -177,7 +177,7 @@ namespace ssl {
          * @param value
          *      Whether the server socket should request client authentication.
          */
-        virtual void setWantClientAuth( bool value ) = 0;
+        virtual void setWantClientAuth(bool value) = 0;
 
         /**
          * @return true if the Socket requires client Authentication.
@@ -192,7 +192,7 @@ namespace ssl {
          * @param value
          *      Whether the server socket should require client authentication.
          */
-        virtual void setNeedClientAuth( bool value ) = 0;
+        virtual void setNeedClientAuth(bool value) = 0;
 
     };
 

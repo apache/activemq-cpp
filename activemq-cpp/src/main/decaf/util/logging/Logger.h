@@ -521,9 +521,10 @@ namespace logging{
          * If the logger is currently enabled for the given message level
          * then the given message is forwarded to all the registered output
          * Handler objects
-         * @param level the Level to log at
+         * @param levels the Level to log at
          * @param file the message to log
          * @param line the line in the file
+         * @param message the log message
          * @param ... variable length argument to format the message string.
          */
         virtual void log( const Level& levels,

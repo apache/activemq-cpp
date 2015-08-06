@@ -426,7 +426,7 @@ namespace concurrent {
          * internally by the <tt>run</tt> method upon successful completion of
          * the computation.
          *
-         * @param v
+         * @param result
          *      The value to return as the result of this Future.
          */
         virtual void set(const T& result) {

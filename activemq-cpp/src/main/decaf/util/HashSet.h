@@ -178,7 +178,7 @@ namespace util {
          * that (e == e2). If this set already contains the element, the call leaves the set
          * unchanged and returns false.
          *
-         * @param object
+         * @param value
          *      The object to add.
          *
          * @return true when this HashSet did not already contain the object,false otherwise.
@@ -200,7 +200,7 @@ namespace util {
         /**
          * Searches this {@code HashSet} for the specified object.
          *
-         * @param object
+         * @param value
          *            the object to search for.
          * @return {@code true} if {@code object} is an element of this
          *         {@code HashSet}, {@code false} otherwise.

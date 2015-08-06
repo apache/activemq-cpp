@@ -978,8 +978,9 @@ namespace core {
         /**
          * Sets the pointer to the first exception that caused the Connection to become failed.
          *
-         * @param pointer to the exception instance that is to be the first failure error if the
-         *        first error is already set this value is deleted.
+         * @param error
+         *      pointer to the exception instance that is to be the first failure error if the
+         *      first error is already set this value is deleted.
          */
         void setFirstFailureError(decaf::lang::Exception* error);
 
