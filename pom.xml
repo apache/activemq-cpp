@@ -72,8 +72,14 @@
     <activemq-client-dir>${ACTIVEMQ_SRC_HOME}/activemq-client/</activemq-client-dir>
     <activemq-cpp-openwire-generator-version>2.0</activemq-cpp-openwire-generator-version>
     <junit-version>4.12</junit-version>
+
     <assembly-plugin-version>2.4</assembly-plugin-version>
+    <apache-rat-plugin-version>0.11</apache-rat-plugin-version>
     <maven-exec-version>1.4.0</maven-exec-version>
+    <maven-release-plugin-version>2.4.1</maven-release-plugin-version>
+    <maven-gpg-plugin>1.6</maven-gpg-plugin>
+    <maven-antrun-plugin-version>1.7</maven-antrun-plugin-version>
+    <maven-eclipse-plugin-version>2.9</maven-eclipse-plugin-version>
   </properties>
 
   <modules>
@@ -119,7 +125,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.6</version>
+          <version>${maven-antrun-plugin-version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -132,7 +138,7 @@
         <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
-          <version>0.7</version>
+          <version>${apache-rat-plugin-version}</version>
           <configuration>
             <excludeSubProjects>false</excludeSubProjects>
             <excludes>
@@ -165,13 +171,14 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.2.1</version>
+          <version>${maven-release-plugin-version}</version>
           <configuration>
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
             <preparationGoals>clean install</preparationGoals>
             <arguments>-Prelease</arguments>
             <goals>deploy</goals>
+            <tagNameFormat>activemq-cpp-@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
       </plugins>
@@ -201,6 +208,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven-gpg-plugin}</version>
             <inherited>true</inherited>
             <configuration>
               <passphrase>${gpg.passphrase}</passphrase>
