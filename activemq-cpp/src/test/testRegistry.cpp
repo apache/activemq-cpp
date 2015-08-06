@@ -121,15 +121,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::mock::MockTransportFactory
 #include <activemq/transport/inactivity/InactivityMonitorTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::inactivity::InactivityMonitorTest );
 
-//#include <activemq/transport/discovery/DiscoveryAgentRegistryTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::DiscoveryAgentRegistryTest );
-//#include <activemq/transport/discovery/DiscoveryTransportFactoryTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::DiscoveryTransportFactoryTest );
-//#include <activemq/transport/discovery/AbstractDiscoveryAgentTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::AbstractDiscoveryAgentTest );
-//#include <activemq/transport/discovery/AbstractDiscoveryAgentFactoryTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::discovery::AbstractDiscoveryAgentFactoryTest );
-
 #include <activemq/transport/TransportRegistryTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportRegistryTest );
 #include <activemq/transport/IOTransportTest.h>

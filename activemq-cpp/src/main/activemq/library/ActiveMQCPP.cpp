@@ -20,7 +20,6 @@
 #include <decaf/lang/Runtime.h>
 #include <activemq/wireformat/WireFormatRegistry.h>
 #include <activemq/transport/TransportRegistry.h>
-#include <activemq/transport/discovery/DiscoveryAgentRegistry.h>
 
 #include <activemq/util/IdGenerator.h>
 
@@ -31,9 +30,6 @@
 #include <activemq/transport/tcp/TcpTransportFactory.h>
 #include <activemq/transport/tcp/SslTransportFactory.h>
 #include <activemq/transport/failover/FailoverTransportFactory.h>
-#include <activemq/transport/discovery/DiscoveryTransportFactory.h>
-
-#include <activemq/transport/discovery/http/HttpDiscoveryAgentFactory.h>
 
 using namespace activemq;
 using namespace activemq::library;
@@ -42,8 +38,6 @@ using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::transport::mock;
 using namespace activemq::transport::failover;
-using namespace activemq::transport::discovery;
-using namespace activemq::transport::discovery::http;
 using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +79,6 @@ void ActiveMQCPP::shutdownLibrary() {
 
     WireFormatRegistry::shutdown();
     TransportRegistry::shutdown();
-    DiscoveryAgentRegistry::shutdown();
 
     // Now it should be safe to shutdown Decaf.
     decaf::lang::Runtime::shutdownRuntime();
@@ -114,10 +107,4 @@ void ActiveMQCPP::registerTransports() {
     TransportRegistry::getInstance().registerFactory("nio+ssl", new SslTransportFactory());
     TransportRegistry::getInstance().registerFactory("mock", new MockTransportFactory());
     TransportRegistry::getInstance().registerFactory("failover", new FailoverTransportFactory());
-    TransportRegistry::getInstance().registerFactory("discovery", new DiscoveryTransportFactory());
-
-    // Each discovery agent implemented in this library must be registered here.
-    DiscoveryAgentRegistry::initialize();
-
-    DiscoveryAgentRegistry::getInstance().registerFactory("http", new HttpDiscoveryAgentFactory);
 }
