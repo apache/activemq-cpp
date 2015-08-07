@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.activemq-cpp</groupId>
     <artifactId>activemq-cpp-pom</artifactId>
-    <version>3.9.0-SNAPSHOT</version>
+    <version>3.9.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>maven-cpptools-plugin</artifactId>
@@ -108,7 +108,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
               </pluginExecutions>
