@@ -249,7 +249,7 @@ unsigned char ActiveMQStreamMessage::readByte() const {
             throw MessageEOFException("reached end of data", NULL);
         }
         if (type == PrimitiveValueNode::BYTE_TYPE) {
-            return this->dataIn->readByte();
+            return (unsigned char) this->dataIn->readByte();
         }
         if (type == PrimitiveValueNode::STRING_TYPE) {
             return Byte::valueOf(this->dataIn->readUTF()).byteValue();
@@ -628,10 +628,10 @@ unsigned short ActiveMQStreamMessage::readUnsignedShort() const {
             return this->dataIn->readUnsignedShort();
         }
         if (type == PrimitiveValueNode::BYTE_TYPE) {
-            return this->dataIn->readByte();
+            return (unsigned char) this->dataIn->readByte();
         }
         if (type == PrimitiveValueNode::STRING_TYPE) {
-            return Short::valueOf(this->dataIn->readUTF()).shortValue();
+            return (unsigned short) Short::valueOf(this->dataIn->readUTF()).shortValue();
         }
 
         if (type == PrimitiveValueNode::NULL_TYPE) {
@@ -832,7 +832,7 @@ std::string ActiveMQStreamMessage::readString() const {
             return Short(this->dataIn->readShort()).toString();
         }
         if (type == PrimitiveValueNode::BYTE_TYPE) {
-            return Byte(this->dataIn->readByte()).toString();
+            return Byte((unsigned char) this->dataIn->readByte()).toString();
         }
         if (type == PrimitiveValueNode::FLOAT_TYPE) {
             return Float(this->dataIn->readFloat()).toString();

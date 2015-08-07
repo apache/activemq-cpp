@@ -280,7 +280,7 @@ namespace util {
         virtual std::vector<E> toArray() const {
 
             std::vector<E> result;
-            result.reserve(this->listSize);
+            result.reserve((std::size_t) this->listSize);
 
             const ListNode<E>* current = this->head.next;
 

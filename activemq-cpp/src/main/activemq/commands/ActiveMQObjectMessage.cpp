@@ -129,7 +129,7 @@ std::vector<unsigned char> ActiveMQObjectMessage::getObjectBytes() const {
                     return std::vector<unsigned char>();
                 }
 
-                uncompressed.resize(length);
+                uncompressed.resize((std::size_t) length);
             } catch (IOException& ex) {
                 throw CMSExceptionSupport::create(ex);
             }

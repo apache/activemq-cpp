@@ -243,7 +243,7 @@ unsigned char ActiveMQBytesMessage::readByte() const {
 
     initializeReading();
     try {
-        return this->dataIn->readByte();
+        return (unsigned char) this->dataIn->readByte();
     } catch (EOFException& ex) {
         throw CMSExceptionSupport::createMessageEOFException(ex);
     } catch (IOException& ex) {

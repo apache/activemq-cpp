@@ -715,8 +715,8 @@ bool ActiveMQTransactionContext::equals(const cms::Xid* local, const cms::Xid* r
         return false;
     } else {
 
-        std::vector<unsigned char> localBQual(Xid::MAXBQUALSIZE);
-        std::vector<unsigned char> remoteBQual(Xid::MAXBQUALSIZE);
+        std::vector<unsigned char> localBQual((std::size_t) Xid::MAXBQUALSIZE);
+        std::vector<unsigned char> remoteBQual((std::size_t) Xid::MAXBQUALSIZE);
 
         local->getBranchQualifier(&localBQual[0], Xid::MAXBQUALSIZE);
         remote->getBranchQualifier(&remoteBQual[0], Xid::MAXBQUALSIZE);
@@ -725,8 +725,8 @@ bool ActiveMQTransactionContext::equals(const cms::Xid* local, const cms::Xid* r
             return false;
         }
 
-        std::vector<unsigned char> localGTXID(Xid::MAXBQUALSIZE);
-        std::vector<unsigned char> remoteGTXID(Xid::MAXBQUALSIZE);
+        std::vector<unsigned char> localGTXID((std::size_t) Xid::MAXBQUALSIZE);
+        std::vector<unsigned char> remoteGTXID((std::size_t) Xid::MAXBQUALSIZE);
 
         local->getGlobalTransactionId(&localGTXID[0], Xid::MAXGTRIDSIZE);
         remote->getGlobalTransactionId(&remoteGTXID[0], Xid::MAXGTRIDSIZE);

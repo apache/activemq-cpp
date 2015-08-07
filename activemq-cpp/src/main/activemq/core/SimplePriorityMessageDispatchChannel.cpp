@@ -36,7 +36,7 @@ const int SimplePriorityMessageDispatchChannel::MAX_PRIORITIES = 10;
 
 ////////////////////////////////////////////////////////////////////////////////
 SimplePriorityMessageDispatchChannel::SimplePriorityMessageDispatchChannel() :
-    closed(false), running(false), mutex(), channels(MAX_PRIORITIES), enqueued(0) {
+    closed(false), running(false), mutex(), channels((std::size_t) MAX_PRIORITIES), enqueued(0) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
