@@ -67,6 +67,7 @@
       <directory>config</directory>
       <lineEnding>keep</lineEnding>
       <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
     </fileSet>
     <fileSet>
       <directory>doc</directory>
@@ -74,10 +75,6 @@
     </fileSet>
     <fileSet>
       <directory>m4</directory>
-      <lineEnding>keep</lineEnding>
-    </fileSet>
-    <fileSet>
-      <directory>vs2008-build</directory>
       <lineEnding>keep</lineEnding>
     </fileSet>
     <fileSet>
