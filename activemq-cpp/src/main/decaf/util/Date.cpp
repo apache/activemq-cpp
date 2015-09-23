@@ -29,15 +29,15 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Date::Date() : time( System::currentTimeMillis() ) {
+Date::Date() : time(System::currentTimeMillis()) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Date::Date( long long milliseconds ) : time(milliseconds) {
+Date::Date(long long milliseconds) : time(milliseconds) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Date::Date( const Date& source ) : time(0) {
+Date::Date(const Date& source) : time(0) {
     (*this) = source;
 }
 
@@ -51,37 +51,37 @@ long long Date::getTime() const{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Date::setTime( long long milliseconds ){
+void Date::setTime(long long milliseconds){
     this->time = milliseconds;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Date::after( const Date& when ) const {
+bool Date::after(const Date& when) const {
     return time > when.time;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Date::before( const Date& when ) const {
+bool Date::before(const Date& when) const {
     return time < when.time;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Date& Date::operator= ( const Date& source ) {
+Date& Date::operator= (const Date& source) {
     this->time = source.time;
     return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Date::equals( const Date& when ) const {
+bool Date::equals(const Date& when) const {
     return time == when.time;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Date::compareTo( const Date& value ) const {
+int Date::compareTo(const Date& value) const {
 
-    if( this->time < value.time ) {
+    if (this->time < value.time) {
         return -1;
-    } else if( this->time > value.time ) {
+    } else if (this->time > value.time) {
         return 1;
     }
 
@@ -89,32 +89,32 @@ int Date::compareTo( const Date& value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Date::operator==( const Date& value ) const {
-    return ( this->time == value.time );
+bool Date::operator==(const Date& value) const {
+    return (this->time == value.time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Date::operator<( const Date& value ) const {
-    return ( this->time < value.time );
+bool Date::operator<(const Date& value) const {
+    return (this->time < value.time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Date::toString() const {
 
     apr_time_exp_t exploded;
-    char buffer[80] = {0};
+    char buffer[80] = { 0 };
     apr_size_t resultSize = 0;
 
     // dow mon dd hh:mm:ss zzz yyyy
     static char format[] = "%a %b %d %T %Z %Y";
 
     // Explode time to local time.
-    if( apr_time_exp_lt( &exploded, this->time ) != APR_SUCCESS ) {
+    if (apr_time_exp_lt(&exploded, this->time * 1000) != APR_SUCCESS) {
         return "";
     }
 
     // Now format the exploded time into our desired format.
-    if( apr_strftime( &buffer[0], &resultSize, sizeof(buffer) / sizeof(char), format, &exploded ) != APR_SUCCESS ) {
+    if (apr_strftime(&buffer[0], &resultSize, sizeof(buffer) / sizeof(char), format, &exploded) != APR_SUCCESS) {
         return "";
     }
 

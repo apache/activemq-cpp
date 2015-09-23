@@ -22,8 +22,8 @@
 #include <decaf/lang/Comparable.h>
 #include <string>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
     /**
      * Wrapper class around a time value in milliseconds.  This
@@ -35,7 +35,7 @@ namespace util{
     private:
 
         /**
-         * The underlying time value in milliseconds�
+         * The underlying time value in milliseconds
          */
         long long time;
 
