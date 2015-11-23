@@ -482,6 +482,24 @@ namespace {
     };
 
     /**
+     * ActiveMQAckHandler used to support Managed Acknowledge modes.
+     */
+    class NoOpAckHandler : public ActiveMQAckHandler {
+    private:
+
+        NoOpAckHandler(const NoOpAckHandler&);
+        NoOpAckHandler& operator=(const NoOpAckHandler&);
+
+    public:
+
+        NoOpAckHandler() {
+        }
+
+        void acknowledgeMessage(const commands::Message* message AMQCPP_UNUSED) {
+        }
+    };
+
+    /**
      * ActiveMQAckHandler used to support Client Acknowledge mode.
      */
     class ClientAckHandler : public ActiveMQAckHandler {
@@ -1520,9 +1538,14 @@ void ActiveMQConsumerKernel::rollback() {
                 Pointer<MessageAck> ack(new MessageAck(lastMsg, ActiveMQConstants::ACK_TYPE_POISON,
                                         this->internal->deliveredMessages.size()));
                 ack->setFirstMessageId(firstMsgId);
+
                 std::string message = "Exceeded RedeliveryPolicy max redelivery limit: " +
-                                       Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries()) +
-                                       " cause: " + lastMsg->getRollbackCause().getMessage();
+                                       Integer::toString(internal->redeliveryPolicy->getMaximumRedeliveries());
+                if (!lastMsg->getRollbackCause().getMessage().empty()) {
+                    message.append(" cause: Exception -> ");
+                    message.append(lastMsg->getRollbackCause().getMessage());
+                }
+
                 ack->setPoisonCause(internal->createBrokerError(message));
                 session->sendAck(ack, true);
                 // Adjust the window size.
@@ -1622,9 +1645,9 @@ void ActiveMQConsumerKernel::dispatch(const Pointer<MessageDispatch>& dispatch) 
                                 }
                                 afterMessageIsConsumed(dispatch, expired);
                             } catch (RuntimeException& e) {
+                                dispatch->setRollbackCause(e);
                                 if (isAutoAcknowledgeBatch() || isAutoAcknowledgeEach() || session->isIndividualAcknowledge()) {
                                     // Schedule redelivery and possible DLQ processing
-                                    dispatch->setRollbackCause(e);
                                     rollback();
                                 } else {
                                     // Transacted or Client ack: Deliver the next message.
@@ -1710,6 +1733,9 @@ Pointer<cms::Message> ActiveMQConsumerKernel::createCMSMessage(Pointer<MessageDi
             message->setAckHandler(ackHandler);
         } else if (session->isIndividualAcknowledge()) {
             Pointer<ActiveMQAckHandler> ackHandler(new IndividualAckHandler(this, dispatch));
+            message->setAckHandler(ackHandler);
+        } else {
+            Pointer<ActiveMQAckHandler> ackHandler(new NoOpAckHandler());
             message->setAckHandler(ackHandler);
         }
 

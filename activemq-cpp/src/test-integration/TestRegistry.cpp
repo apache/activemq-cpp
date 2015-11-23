@@ -28,6 +28,7 @@
 #include "activemq/test/openwire/OpenwireJmsMessageGroupsTest.h"
 #include "activemq/test/openwire/OpenwireJmsRecoverTest.h"
 #include "activemq/test/openwire/OpenwireMessageCompressionTest.h"
+#include "activemq/test/openwire/OpenWireMessageListenerRedeliveryTest.h"
 #include "activemq/test/openwire/OpenwireMessagePriorityTest.h"
 #include "activemq/test/openwire/OpenwireMapMessageTest.h"
 #include "activemq/test/openwire/OpenwireNonBlockingRedeliveryTest.h"
@@ -68,6 +69,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireJmsMessageGro
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireJmsRecoverTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireMapMessageTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireMessageCompressionTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenWireMessageListenerRedeliveryTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireMessagePriorityTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireNonBlockingRedeliveryTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireOptimizedAckTest );
