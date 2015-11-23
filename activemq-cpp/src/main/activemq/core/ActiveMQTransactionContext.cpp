@@ -747,7 +747,7 @@ std::string ActiveMQTransactionContext::getResourceManagerId() const {
 ////////////////////////////////////////////////////////////////////////////////
 XAException ActiveMQTransactionContext::toXAException(decaf::lang::Exception& ex) {
     CMSException cmsEx = CMSExceptionSupport::create(ex);
-    XAException xae(ex.getMessage(), &cmsEx);
+    XAException xae(ex.getMessage(), cmsEx.clone());
     xae.setErrorCode(XAException::XAER_RMFAIL);
     return xae;
 }
