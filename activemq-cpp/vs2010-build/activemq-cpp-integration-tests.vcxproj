@@ -92,6 +92,7 @@
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.cpp" />
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireMessageListenerRedeliveryTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.cpp" />
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireJmsRecoverTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMapMessageTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMessageCompressionTest.h" />
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireMessageListenerRedeliveryTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireMessagePriorityTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireNonBlockingRedeliveryTest.h" />
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenwireOptimizedAckTest.h" />

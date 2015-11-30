@@ -200,6 +200,9 @@
     <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireRedeliveryPolicyTest.cpp">
       <Filter>activemq\test\openwire</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\test-integration\activemq\test\openwire\OpenWireMessageListenerRedeliveryTest.cpp">
+      <Filter>activemq\test\openwire</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\test-integration\util\teamcity\TeamCityProgressListener.h">
@@ -377,6 +380,9 @@
       <Filter>activemq\test\openwire</Filter>
     </ClInclude>
     <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireRedeliveryPolicyTest.h">
+      <Filter>activemq\test\openwire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\test-integration\activemq\test\openwire\OpenWireMessageListenerRedeliveryTest.h">
       <Filter>activemq\test\openwire</Filter>
     </ClInclude>
   </ItemGroup>
