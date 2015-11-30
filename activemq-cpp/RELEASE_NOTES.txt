@@ -3,6 +3,20 @@
 =========================================================================
 
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.9.1                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-585] - Date::toString() return wrong date string.
+    [AMQCPP-587] - ActiveMQ CPP (CMS) integration unit tests leads to client segmentation fault when executed against Artemis
+    [AMQCPP-589] - NPE when acknowledge called on message in some cases
+
+Improvement
+
+    [AMQCPP-588] - Always set a rollback cause on exception thrown in onMessage
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.9.0                               ==
 =========================================================================
 
