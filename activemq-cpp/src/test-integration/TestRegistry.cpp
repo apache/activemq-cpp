@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "activemq/test/openwire/OpenwireAdvisorysTest.h"
+#include "activemq/test/openwire/OpenwireAdvisoryTest.h"
 #include "activemq/test/openwire/OpenwireAsyncSenderTest.h"
 #include "activemq/test/openwire/OpenwireClientAckTest.h"
 #include "activemq/test/openwire/OpenwireCmsConnectionStartStopTest.h"
@@ -42,6 +42,7 @@
 #include "activemq/test/openwire/OpenwireSlowListenerTest.h"
 #include "activemq/test/openwire/OpenwireVirtualTopicTest.h"
 #include "activemq/test/openwire/OpenwireXATransactionsTest.h"
+#include "activemq/test/stomp/StompAdvisoryTest.h"
 #include "activemq/test/stomp/StompAsyncSenderTest.h"
 #include "activemq/test/stomp/StompBulkMessageTest.h"
 #include "activemq/test/stomp/StompCmsTemplateTest.h"
@@ -55,7 +56,7 @@
 #include "activemq/test/stomp/StompJmsMessageGroupsTest.h"
 
 // Openwire Tests
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAdvisorysTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAdvisoryTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireAsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireClientAckTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireCmsConnectionStartStopTest );
@@ -84,6 +85,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireVirtualTopicT
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::openwire::OpenwireXATransactionsTest );
 
 // Stomp Tests
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompAdvisoryTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompAsyncSenderTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompBulkMessageTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::test::stomp::StompCmsTemplateTest );

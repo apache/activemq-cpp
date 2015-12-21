@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-#include "OpenwireAdvisorysTest.h"
-
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQSession.h>
@@ -43,6 +41,7 @@
 #include <cms/TextMessage.h>
 
 #include <memory>
+#include "OpenwireAdvisoryTest.h"
 
 using namespace cms;
 using namespace std;
@@ -59,58 +58,57 @@ using namespace activemq::test;
 using namespace activemq::test::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenwireAdvisorysTest::OpenwireAdvisorysTest() {
+OpenwireAdvisoryTest::OpenwireAdvisoryTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenwireAdvisorysTest::~OpenwireAdvisorysTest() {
+OpenwireAdvisoryTest::~OpenwireAdvisoryTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireAdvisorysTest::testConnectionAdvisories() {
+void OpenwireAdvisoryTest::testConnectionAdvisories() {
 
-    std::auto_ptr<ConnectionFactory> factory(
-        ConnectionFactory::createCMSConnectionFactory( getBrokerURL() ) );
-    CPPUNIT_ASSERT( factory.get() != NULL );
+    std::auto_ptr<ConnectionFactory> factory(ConnectionFactory::createCMSConnectionFactory(getBrokerURL()));
+    CPPUNIT_ASSERT(factory.get() != NULL);
 
-    std::auto_ptr<Connection> connection( factory->createConnection() );
-    CPPUNIT_ASSERT( connection.get() != NULL );
+    std::auto_ptr<Connection> connection(factory->createConnection());
+    CPPUNIT_ASSERT(connection.get() != NULL);
 
-    std::auto_ptr<Session> session( connection->createSession() );
-    CPPUNIT_ASSERT( session.get() != NULL );
+    std::auto_ptr<Session> session(connection->createSession());
+    CPPUNIT_ASSERT(session.get() != NULL);
 
-    std::auto_ptr<Destination> destination( session->createTopic("ActiveMQ.Advisory.Connection") );
-    std::auto_ptr<MessageConsumer> consumer( session->createConsumer( destination.get() ) );
+    std::auto_ptr<Destination> destination(session->createTopic("ActiveMQ.Advisory.Connection"));
+    std::auto_ptr<MessageConsumer> consumer(session->createConsumer(destination.get()));
 
     connection->start();
 
-    std::auto_ptr<Connection> otherConnection( factory->createConnection() );
-    CPPUNIT_ASSERT( otherConnection.get() != NULL );
+    std::auto_ptr<Connection> otherConnection(factory->createConnection());
+    CPPUNIT_ASSERT(otherConnection.get() != NULL);
     otherConnection->start();
 
     std::auto_ptr<cms::Message> message;
     int connectionInfoCount = 0;
 
     do {
-        message.reset( consumer->receive(3000) );
+        message.reset(consumer->receive(3000));
 
-        commands::Message* amqMessage = dynamic_cast<commands::Message*>( message.get() );
-        if(amqMessage != NULL) {
+        commands::Message* amqMessage = dynamic_cast<commands::Message*>(message.get());
+        if (amqMessage != NULL) {
             try {
                 Pointer<ConnectionInfo> connectionInfo =
                     amqMessage->getDataStructure().dynamicCast<commands::ConnectionInfo>();
 
-                if(connectionInfo != NULL) {
+                if (connectionInfo != NULL) {
                     connectionInfoCount++;
                 }
 
-            } catch(ClassCastException& ex) {
+            } catch (ClassCastException& ex) {
             }
         }
 
-    } while(message.get() != NULL);
+    } while (message.get() != NULL);
 
-    CPPUNIT_ASSERT_EQUAL(2, connectionInfoCount);
+    CPPUNIT_ASSERT(connectionInfoCount >= 2);
 
     otherConnection->close();
     connection->close();
@@ -162,10 +160,10 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireAdvisorysTest::testConcurrentTempDestCreation() {
+void OpenwireAdvisoryTest::testConcurrentTempDestCreation() {
 
     std::auto_ptr<ConnectionFactory> factory(
-        ConnectionFactory::createCMSConnectionFactory( getBrokerURL() ) );
+        ConnectionFactory::createCMSConnectionFactory(getBrokerURL()));
 
     ConnectionLoadThread thread1(factory.get());
     ConnectionLoadThread thread2(factory.get());

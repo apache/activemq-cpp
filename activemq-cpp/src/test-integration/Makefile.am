@@ -17,6 +17,7 @@
 
 cc_sources = \
     TestRegistry.cpp \
+    activemq/test/AdvisoryTest.cpp \
     activemq/test/AsyncSenderTest.cpp \
     activemq/test/BulkMessageTest.cpp \
     activemq/test/CmsConnectionStartStopTest.cpp \
@@ -37,7 +38,7 @@ cc_sources = \
     activemq/test/openwire/OpenWireCmsSendWithAsyncCallbackTest.cpp \
     activemq/test/openwire/OpenWireMessageListenerRedeliveryTest.cpp \
     activemq/test/openwire/OpenWireRedeliveryPolicyTest.cpp \
-    activemq/test/openwire/OpenwireAdvisorysTest.cpp \
+    activemq/test/openwire/OpenwireAdvisoryTest.cpp \
     activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
     activemq/test/openwire/OpenwireClientAckTest.cpp \
     activemq/test/openwire/OpenwireCmsConnectionStartStopTest.cpp \
@@ -61,6 +62,7 @@ cc_sources = \
     activemq/test/openwire/OpenwireTransactionTest.cpp \
     activemq/test/openwire/OpenwireVirtualTopicTest.cpp \
     activemq/test/openwire/OpenwireXATransactionsTest.cpp \
+    activemq/test/stomp/StompAdvisoryTest.cpp \
     activemq/test/stomp/StompAsyncSenderTest.cpp \
     activemq/test/stomp/StompBulkMessageTest.cpp \
     activemq/test/stomp/StompCmsConnectionStartStopTest.cpp \
@@ -80,6 +82,7 @@ cc_sources = \
 
 
 h_sources = \
+    activemq/test/AdvisoryTest.h \
     activemq/test/AsyncSenderTest.h \
     activemq/test/BulkMessageTest.h \
     activemq/test/CMSTestFixture.h \
@@ -101,7 +104,7 @@ h_sources = \
     activemq/test/openwire/OpenWireCmsSendWithAsyncCallbackTest.h \
     activemq/test/openwire/OpenWireMessageListenerRedeliveryTest.h \
     activemq/test/openwire/OpenWireRedeliveryPolicyTest.h \
-    activemq/test/openwire/OpenwireAdvisorysTest.h \
+    activemq/test/openwire/OpenwireAdvisoryTest.h \
     activemq/test/openwire/OpenwireAsyncSenderTest.h \
     activemq/test/openwire/OpenwireClientAckTest.h \
     activemq/test/openwire/OpenwireCmsConnectionStartStopTest.h \
@@ -125,6 +128,7 @@ h_sources = \
     activemq/test/openwire/OpenwireTransactionTest.h \
     activemq/test/openwire/OpenwireVirtualTopicTest.h \
     activemq/test/openwire/OpenwireXATransactionsTest.h \
+    activemq/test/stomp/StompAdvisoryTest.h \
     activemq/test/stomp/StompAsyncSenderTest.h \
     activemq/test/stomp/StompBulkMessageTest.h \
     activemq/test/stomp/StompCmsConnectionStartStopTest.h \
