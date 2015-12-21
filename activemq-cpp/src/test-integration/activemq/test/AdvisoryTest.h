@@ -15,37 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREASYNCSENDERTEST_H_
-#define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREASYNCSENDERTEST_H_
+#ifndef _ACTIVEMQ_TEST_ADVISORYTEST_H_
+#define _ACTIVEMQ_TEST_ADVISORYTEST_H_
 
-#include <activemq/test/AsyncSenderTest.h>
-#include <activemq/util/IntegrationCommon.h>
+#include <activemq/test/CMSTestFixture.h>
 
 namespace activemq {
 namespace test {
-namespace openwire {
 
-    class OpenwireAsyncSenderTest : public AsyncSenderTest {
-
-        CPPUNIT_TEST_SUITE( OpenwireAsyncSenderTest );
-        CPPUNIT_TEST( testAsyncSends );
-        CPPUNIT_TEST( testOpenWireConnector );
-        CPPUNIT_TEST_SUITE_END();
-
+    class AdvisoryTest : public CMSTestFixture {
     public:
 
-        OpenwireAsyncSenderTest();
-        virtual ~OpenwireAsyncSenderTest();
+        AdvisoryTest();
+        virtual ~AdvisoryTest();
 
-        virtual std::string getBrokerURL() const {
-            return activemq::util::IntegrationCommon::getInstance().getOpenwireURL() +
-                   "&connection.useAsyncSend=true";
-        }
-
-        virtual void testOpenWireConnector();
+        void testTempDestinationCompositeAdvisoryTopic();
 
     };
 
-}}}
+}}
 
-#endif /*_ACTIVEMQ_TEST_OPENWIRE_OPENWIREASYNCSENDERTEST_H_*/
+#endif /*_ACTIVEMQ_TEST_ADVISORYTEST_H_*/

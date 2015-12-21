@@ -36,6 +36,36 @@ using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    std::string doConvertDestination(StompWireFormat* wireFormat, Pointer<ActiveMQDestination> destination) {
+        switch (destination->getDestinationType()) {
+
+        case cms::Destination::TOPIC:
+            return std::string(wireFormat->getTopicPrefix()) + destination->getPhysicalName();
+        case cms::Destination::TEMPORARY_TOPIC:
+
+            if (destination->getPhysicalName().find("/remote-temp-topic/") == 0) {
+                return destination->getPhysicalName();
+            } else {
+                return std::string(wireFormat->getTempTopicPrefix()) + destination->getPhysicalName();
+            }
+
+        case cms::Destination::TEMPORARY_QUEUE:
+
+            if (destination->getPhysicalName().find("/remote-temp-queue/") == 0) {
+                return destination->getPhysicalName();
+            } else {
+                return std::string(wireFormat->getTempQueuePrefix()) + destination->getPhysicalName();
+            }
+
+        default:
+            return std::string(wireFormat->getQueuePrefix()) + destination->getPhysicalName();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 StompHelper::StompHelper(StompWireFormat* wireformat) : messageIdGenerator(), wireFormat(wireformat) {
 }
 
@@ -159,34 +189,29 @@ void StompHelper::convertProperties(const Pointer<Message>& message, const Point
 ////////////////////////////////////////////////////////////////////////////////
 std::string StompHelper::convertDestination(const Pointer<ActiveMQDestination>& destination) {
 
-    if (destination == NULL) {
-        return "";
-    } else {
+    std::string result = "";
 
-        switch (destination->getDestinationType()) {
+    if (destination != NULL) {
 
-        case cms::Destination::TOPIC:
-            return std::string(wireFormat->getTopicPrefix()) + destination->getPhysicalName();
-        case cms::Destination::TEMPORARY_TOPIC:
+        if (destination->isComposite()) {
+            ArrayList< Pointer<ActiveMQDestination> > destinations = destination->getCompositeDestinations();
 
-            if (destination->getPhysicalName().find("/remote-temp-topic/") == 0) {
-                return destination->getPhysicalName();
-            } else {
-                return std::string(wireFormat->getTempTopicPrefix()) + destination->getPhysicalName();
+            Pointer<Iterator< Pointer<ActiveMQDestination> > > destIter(destinations.iterator());
+            while (destIter->hasNext()) {
+                Pointer<ActiveMQDestination> composite = destIter->next();
+
+                if (!result.empty()) {
+                    result.append(",");
+                }
+
+                result += doConvertDestination(wireFormat, composite);
             }
-
-        case cms::Destination::TEMPORARY_QUEUE:
-
-            if (destination->getPhysicalName().find("/remote-temp-queue/") == 0) {
-                return destination->getPhysicalName();
-            } else {
-                return std::string(wireFormat->getTempQueuePrefix()) + destination->getPhysicalName();
-            }
-
-        default:
-            return std::string(wireFormat->getQueuePrefix()) + destination->getPhysicalName();
+        } else {
+            result += doConvertDestination(wireFormat, destination);
         }
     }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

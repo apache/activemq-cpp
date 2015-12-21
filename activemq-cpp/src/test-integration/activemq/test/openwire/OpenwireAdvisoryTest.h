@@ -15,37 +15,32 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREADVISORYSTEST_H_
-#define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREADVISORYSTEST_H_
+#ifndef _ACTIVEMQ_TEST_OPENWIRE_OPENWIREADVISORYTEST_H_
+#define _ACTIVEMQ_TEST_OPENWIRE_OPENWIREADVISORYTEST_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
+#include <activemq/test/AdvisoryTest.h>
 #include <activemq/util/IntegrationCommon.h>
 
 namespace activemq {
 namespace test {
 namespace openwire {
 
-    class OpenwireAdvisorysTest : public CppUnit::TestFixture {
+    class OpenwireAdvisoryTest : public AdvisoryTest {
 
-        CPPUNIT_TEST_SUITE( OpenwireAdvisorysTest );
+        CPPUNIT_TEST_SUITE( OpenwireAdvisoryTest );
         CPPUNIT_TEST( testConnectionAdvisories );
         CPPUNIT_TEST( testConcurrentTempDestCreation );
+        CPPUNIT_TEST( testTempDestinationCompositeAdvisoryTopic );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        OpenwireAdvisorysTest();
-
-        virtual ~OpenwireAdvisorysTest();
+        OpenwireAdvisoryTest();
+        virtual ~OpenwireAdvisoryTest();
 
         virtual std::string getBrokerURL() const {
             return activemq::util::IntegrationCommon::getInstance().getOpenwireURL();
         }
-
-        virtual void setUp() {}
-        virtual void tearDown() {}
 
         void testConnectionAdvisories();
         void testConcurrentTempDestCreation();
@@ -54,4 +49,4 @@ namespace openwire {
 
 }}}
 
-#endif /* _ACTIVEMQ_TEST_OPENWIRE_OPENWIREADVISORYSTEST_H_ */
+#endif /* _ACTIVEMQ_TEST_OPENWIRE_OPENWIREADVISORYTEST_H_ */
