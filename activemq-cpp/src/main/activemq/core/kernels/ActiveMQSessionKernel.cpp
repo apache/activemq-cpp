@@ -686,7 +686,7 @@ cms::MessageProducer* ActiveMQSessionKernel::createProducer(const cms::Destinati
 
         try {
             this->addProducer(producer);
-            this->connection->oneway(producer->getProducerInfo());
+            this->connection->syncRequest(producer->getProducerInfo());
         } catch (Exception& ex) {
             this->removeProducer(producer);
             throw;
