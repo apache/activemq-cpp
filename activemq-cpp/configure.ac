@@ -197,7 +197,7 @@ case "${host_os}" in
     if ! test "$GCC" = "yes"; then
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
-       PLAT_CXXFLAGS="-mt -w -O5 -library=stlport4"
+       PLAT_CXXFLAGS="-mt -w -O5"
     fi
     ;;
 
