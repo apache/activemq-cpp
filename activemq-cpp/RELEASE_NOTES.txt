@@ -1,4 +1,14 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.9.3                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-594] - ActiveMQ-CPP does not build on Solaris 11
+    [AMQCPP-595] - ActiveMQMessageProducer sends producer registration async which causes
+                   it to miss possible exceptions on creation like security exceptions.
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.9.2                               ==
 =========================================================================
 
