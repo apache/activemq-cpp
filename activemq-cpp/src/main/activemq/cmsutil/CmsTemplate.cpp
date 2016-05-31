@@ -630,6 +630,10 @@ void CmsTemplate::ReceiveExecutor::doInCms(cms::Session* session) {
 
     try {
 
+        if (session == NULL) {
+            return;
+        }
+
         // Create the consumer resource.
         consumer = parent->createConsumer(session, getDestination(session), selector, noLocal);
 
