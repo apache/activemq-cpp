@@ -391,7 +391,7 @@ void MD4MessageDigestSpi::engineUpdate(decaf::nio::ByteBuffer& input) {
         temp = new unsigned char[length];
         input.get(temp, length, 0, length);
         engineUpdate(temp, length, 0, length);
-        delete temp;
+        delete [] temp;
     }
 }
 
