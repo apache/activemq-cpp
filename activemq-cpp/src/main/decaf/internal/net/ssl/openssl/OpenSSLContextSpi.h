@@ -66,13 +66,15 @@ namespace openssl {
          */
         virtual decaf::net::ServerSocketFactory* providerGetServerSocketFactory();
 
-    protected:
+    private:
 
         friend class OpenSSLSocket;
         friend class OpenSSLSocketFactory;
 
         std::vector<std::string> getDefaultCipherSuites();
         std::vector<std::string> getSupportedCipherSuites();
+	
+	protected:
         void* getOpenSSLCtx();
 
     };
