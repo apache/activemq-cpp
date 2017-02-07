@@ -18,6 +18,8 @@
 #include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 
+#include <activemq/core/ActiveMQConnectionMetaData.h>
+
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
@@ -26,6 +28,7 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
+using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
@@ -38,6 +41,8 @@ using namespace decaf::lang::exceptions;
 Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(const decaf::util::Properties& properties) {
 
     try {
+
+        ActiveMQConnectionMetaData meta;
 
         Pointer<WireFormatInfo> info(new WireFormatInfo());
 
@@ -61,6 +66,10 @@ Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(const decaf::util::P
             Long::parseLong(properties.getProperty("wireFormat.MaxInactivityDuration", "30000")));
         info->setMaxInactivityDurationInitalDelay(
             Long::parseLong(properties.getProperty("wireFormat.MaxInactivityDurationInitalDelay", "10000")));
+
+        info->getProperties().setString("ProviderName", meta.getCMSProviderName());
+        info->getProperties().setString("ProviderVersion", meta.getProviderVersion());
+        info->getProperties().setString("PlatformDetails", "C++");
 
         // Create the Openwire Format Object
         Pointer<OpenWireFormat> wireFormat(new OpenWireFormat(properties));
