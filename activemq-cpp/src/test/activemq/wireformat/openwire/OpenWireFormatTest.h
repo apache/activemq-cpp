@@ -28,7 +28,7 @@ namespace openwire {
     class OpenWireFormatTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( OpenWireFormatTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testProviderInfoInWireFormat );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,7 +36,7 @@ namespace openwire {
         OpenWireFormatTest() {}
         virtual ~OpenWireFormatTest() {}
 
-        virtual void test();
+        virtual void testProviderInfoInWireFormat();
 
     };
 

@@ -18,11 +18,15 @@
 #include "OpenWireFormatTest.h"
 
 #include <decaf/util/Properties.h>
+#include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
+
+#include <activemq/core/ActiveMQConnectionMetaData.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
+using namespace activemq::core;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::util;
@@ -31,8 +35,18 @@ using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatTest::test()
-{
+void OpenWireFormatTest::testProviderInfoInWireFormat() {
+    ActiveMQConnectionMetaData meta;
+
+    OpenWireFormatFactory factory;
     Properties properties;
-    //OpenWireFormat myWireFormat( properties );
+
+    Pointer<OpenWireFormat> myWireFormat =
+            factory.createWireFormat(properties).dynamicCast<OpenWireFormat>();
+
+    CPPUNIT_ASSERT_EQUAL(meta.getCMSProviderName(),
+            myWireFormat->getPreferedWireFormatInfo()->getProperties().getString("ProviderName"));
+    CPPUNIT_ASSERT_EQUAL(meta.getProviderVersion(),
+            myWireFormat->getPreferedWireFormatInfo()->getProperties().getString("ProviderVersion"));
+    CPPUNIT_ASSERT(!myWireFormat->getPreferedWireFormatInfo()->getProperties().getString("PlatformDetails").empty());
 }
