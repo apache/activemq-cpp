@@ -64,6 +64,8 @@ namespace failover {
         FailoverTransportImpl(const FailoverTransportImpl&);
         FailoverTransportImpl& operator= (const FailoverTransportImpl&);
 
+    public:
+
         static const int DEFAULT_INITIAL_RECONNECT_DELAY;
         static const int INFINITE_WAIT;
 
@@ -856,7 +858,11 @@ bool FailoverTransport::isPending() const {
 
             int maxReconnectAttempts = this->impl->calculateReconnectAttemptLimit();
 
-            if (maxReconnectAttempts != -1 && this->impl->connectFailures >= maxReconnectAttempts) {
+            if (impl->firstConnection && impl->connectFailures == 0) {
+                return true;
+            }
+
+            if (maxReconnectAttempts != -1 && this->impl->connectFailures > maxReconnectAttempts) {
                 result = false;
             } else {
                 result = true;
@@ -1021,9 +1027,9 @@ bool FailoverTransport::iterate() {
             }
         }
 
-        int reconnectAttempts = this->impl->calculateReconnectAttemptLimit();
+        int reconnectLimit = this->impl->calculateReconnectAttemptLimit();
 
-        if (reconnectAttempts >= 0 && ++this->impl->connectFailures >= reconnectAttempts) {
+        if (reconnectLimit != impl->INFINITE_WAIT && ++this->impl->connectFailures > reconnectLimit) {
             this->impl->connectionFailure = failure;
 
             // Make sure on initial startup, that the transportListener has been initialized

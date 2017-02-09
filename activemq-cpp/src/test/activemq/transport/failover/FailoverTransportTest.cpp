@@ -22,6 +22,7 @@
 #include <activemq/transport/mock/MockTransport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ActiveMQMessage.h>
+#include <activemq/commands/WireFormatInfo.h>
 #include <activemq/commands/ConnectionControl.h>
 #include <activemq/mock/MockBrokerService.h>
 #include <decaf/lang/Pointer.h>
@@ -699,4 +700,99 @@ void FailoverTransportTest::testConnectedToMockBroker() {
 
     broker1.stop();
     broker1.waitUntilStopped();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testMaxReconnectsZeroAttemptsOneConnect() {
+
+    std::string uri = "failover://(mock://localhost:61616)?maxReconnectAttempts=0";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+
+    transport->start();
+
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testMaxReconnectsHonorsConfiguration() {
+
+    // max reconnect attempts of two means one connection attempt followed by
+    // two retries.
+
+    std::string uri = "failover://(mock://localhost:61616?failOnCreate=true,"
+                                  "mock://localhost:61617?failOnCreate=true)"
+                                  "?randomize=false&maxReconnectAttempts=2";
+
+    Pointer<WireFormatInfo> info(new WireFormatInfo());
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE("Send should have failed after max connect attempts of two",
+            transport->oneway(info), Exception);
+
+    CPPUNIT_ASSERT(failover->isConnected() == false);
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testStartupMaxReconnectsHonorsConfiguration() {
+
+    // max reconnect attempts of two means one connection attempt followed by
+    // two retries.
+
+    std::string uri = "failover://(mock://localhost:61616?failOnCreate=true,"
+                                  "mock://localhost:61617?failOnCreate=true)"
+                                  "?randomize=false&startupMaxReconnectAttempts=2";
+
+    Pointer<WireFormatInfo> info(new WireFormatInfo());
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE("Send should have failed after max connect attempts of two",
+            transport->oneway(info), Exception);
+
+    CPPUNIT_ASSERT(failover->isConnected() == false);
+
+    transport->close();
 }
