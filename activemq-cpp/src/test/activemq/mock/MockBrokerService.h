@@ -57,6 +57,8 @@ namespace mock {
 
         std::string getConnectString() const;
 
+        int getPort() const;
+
     };
 
 }}

@@ -54,6 +54,12 @@ namespace failover {
         CPPUNIT_TEST( testPriorityBackupConfig );
         CPPUNIT_TEST( testUriOptionsApplied );
         CPPUNIT_TEST( testConnectedToMockBroker );
+        CPPUNIT_TEST( testMaxReconnectsZeroAttemptsOneConnect );
+        CPPUNIT_TEST( testMaxReconnectsHonorsConfiguration );
+        CPPUNIT_TEST( testStartupMaxReconnectsHonorsConfiguration );
+        CPPUNIT_TEST( testConnectedToPriorityOnFirstTryThenFailover );
+        CPPUNIT_TEST( testConnectsToPriorityOnceStarted );
+        //CPPUNIT_TEST( testConnectsToPriorityAfterInitialBackupFails );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -75,6 +81,12 @@ namespace failover {
         void testPriorityBackupConfig();
         void testUriOptionsApplied();
         void testConnectedToMockBroker();
+        void testMaxReconnectsZeroAttemptsOneConnect();
+        void testMaxReconnectsHonorsConfiguration();
+        void testStartupMaxReconnectsHonorsConfiguration();
+        void testConnectedToPriorityOnFirstTryThenFailover();
+        void testConnectsToPriorityOnceStarted();
+        void testConnectsToPriorityAfterInitialBackupFails();
 
     private:
 

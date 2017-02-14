@@ -24,6 +24,8 @@
 #include <activemq/commands/ActiveMQMessage.h>
 #include <activemq/commands/ConnectionControl.h>
 #include <activemq/mock/MockBrokerService.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/UUID.h>
@@ -38,6 +40,7 @@ using namespace activemq::exceptions;
 using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::util;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 FailoverTransportTest::FailoverTransportTest() {
@@ -699,4 +702,337 @@ void FailoverTransportTest::testConnectedToMockBroker() {
 
     broker1.stop();
     broker1.waitUntilStopped();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testMaxReconnectsZeroAttemptsOneConnect() {
+
+    std::string uri = "failover://(mock://localhost:61616)?maxReconnectAttempts=0";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+
+    transport->start();
+
+    Thread::sleep(1000);
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testMaxReconnectsHonorsConfiguration() {
+
+    // max reconnect attempts of two means one connection attempt followed by
+    // two retries.
+
+    std::string uri = "failover://(mock://localhost:61616?failOnCreate=true,"
+                                  "mock://localhost:61617?failOnCreate=true)"
+                                  "?randomize=false&maxReconnectAttempts=2";
+
+    Pointer<WireFormatInfo> info(new WireFormatInfo());
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE("Send should have failed after max connect attempts of two",
+            transport->oneway(info), Exception);
+
+    CPPUNIT_ASSERT(failover->isConnected() == false);
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testStartupMaxReconnectsHonorsConfiguration() {
+
+    // max reconnect attempts of two means one connection attempt followed by
+    // two retries.
+
+    std::string uri = "failover://(mock://localhost:61616?failOnCreate=true,"
+                                  "mock://localhost:61617?failOnCreate=true)"
+                                  "?randomize=false&startupMaxReconnectAttempts=2";
+
+    Pointer<WireFormatInfo> info(new WireFormatInfo());
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE("Send should have failed after max connect attempts of two",
+            transport->oneway(info), Exception);
+
+    CPPUNIT_ASSERT(failover->isConnected() == false);
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+namespace {
+
+    class PriorityBackupListener : public DefaultTransportListener {
+    private:
+
+        Pointer<CountDownLatch> interruptedLatch;
+        Pointer<CountDownLatch> resumedLatch;
+
+        Mutex resetMutex;
+
+    public:
+
+        PriorityBackupListener() : interruptedLatch(new CountDownLatch(1)),
+                                   resumedLatch(new CountDownLatch(1)),
+                                   resetMutex() {
+        }
+
+        virtual ~PriorityBackupListener() {}
+
+        virtual void transportInterrupted() {
+            interruptedLatch->countDown();
+        }
+
+        virtual void transportResumed() {
+            resumedLatch->countDown();
+        }
+
+        void reset() {
+            synchronized(&resetMutex) {
+                interruptedLatch.reset(new CountDownLatch(1));
+                resumedLatch.reset(new CountDownLatch(1));
+            }
+        }
+
+        bool awaitInterruption() {
+            synchronized(&resetMutex) {
+                return interruptedLatch->await(60000);
+            }
+
+            return false;
+        }
+
+        bool awaitResumed() {
+            synchronized(&resetMutex) {
+                return resumedLatch->await(60000);
+            }
+
+            return false;
+        }
+    };
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testConnectedToPriorityOnFirstTryThenFailover() {
+
+    Pointer<MockBrokerService> broker1(new MockBrokerService(61626));
+    Pointer<MockBrokerService> broker2(new MockBrokerService(61628));
+
+    broker1->start();
+    broker1->waitUntilStarted();
+
+    broker2->start();
+    broker2->waitUntilStarted();
+
+    std::string uri = "failover://(tcp://localhost:61626,"
+                                  "tcp://localhost:61628)?randomize=false&priorityBackup=true";
+
+    PriorityBackupListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+    CPPUNIT_ASSERT(failover->isPriorityBackup() == true);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to get reconnected in time", listener.awaitResumed());
+    listener.reset();
+
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == true);
+
+    broker1->stop();
+    broker1->waitUntilStopped();
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to get interrupted in time", listener.awaitInterruption());
+    CPPUNIT_ASSERT_MESSAGE("Failed to get reconnected in time", listener.awaitResumed());
+    listener.reset();
+
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == false);
+
+    transport->close();
+
+    broker1->stop();
+    broker1->waitUntilStopped();
+
+    broker2->stop();
+    broker2->waitUntilStopped();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testConnectsToPriorityOnceStarted() {
+
+    Pointer<MockBrokerService> broker1(new MockBrokerService(61626));
+    Pointer<MockBrokerService> broker2(new MockBrokerService(61628));
+
+    broker2->start();
+    broker2->waitUntilStarted();
+
+    std::string uri = "failover://(tcp://localhost:61626?transport.useInactivityMonitor=false,"
+                                  "tcp://localhost:61628?transport.useInactivityMonitor=false)?randomize=false&priorityBackup=true";
+
+    PriorityBackupListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+    CPPUNIT_ASSERT(failover->isPriorityBackup() == true);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to get reconnected in time", listener.awaitResumed());
+    listener.reset();
+
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == false);
+
+    broker1->start();
+    broker1->waitUntilStarted();
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to get interrupted in time", listener.awaitInterruption());
+    CPPUNIT_ASSERT_MESSAGE("Failed to get reconnected in time", listener.awaitResumed());
+    listener.reset();
+
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == true);
+
+    transport->close();
+
+    broker1->stop();
+    broker1->waitUntilStopped();
+
+    broker2->stop();
+    broker2->waitUntilStopped();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testConnectsToPriorityAfterInitialBackupFails() {
+
+    Pointer<MockBrokerService> broker1(new MockBrokerService(61626));
+    Pointer<MockBrokerService> broker2(new MockBrokerService(61627));
+    Pointer<MockBrokerService> broker3(new MockBrokerService(61628));
+
+    broker2->start();
+    broker2->waitUntilStarted();
+
+    broker3->start();
+    broker3->waitUntilStarted();
+
+    std::string uri = "failover://(tcp://localhost:61626?transport.useInactivityMonitor=false,"
+                                  "tcp://localhost:61627?transport.useInactivityMonitor=false,"
+                                  "tcp://localhost:61628?transport.useInactivityMonitor=false)?randomize=false&priorityBackup=true";
+
+    PriorityBackupListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport(factory.create(uri));
+    CPPUNIT_ASSERT(transport != NULL);
+    transport->setTransportListener(&listener);
+
+    FailoverTransport* failover =
+        dynamic_cast<FailoverTransport*>(transport->narrow(typeid(FailoverTransport)));
+
+    CPPUNIT_ASSERT(failover != NULL);
+    CPPUNIT_ASSERT(failover->isRandomize() == false);
+    CPPUNIT_ASSERT(failover->isPriorityBackup() == true);
+
+    transport->start();
+
+    CPPUNIT_ASSERT_MESSAGE("Failed to get reconnected in time", listener.awaitResumed());
+    listener.reset();
+
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == false);
+
+    Thread::sleep(100);
+
+    broker1->start();
+    broker1->waitUntilStarted();
+
+    broker2->stop();
+    broker2->waitUntilStopped();
+
+    for (int i = 0; i < 2; ++i) {
+
+        CPPUNIT_ASSERT_MESSAGE("Failed to get interrupted in time", listener.awaitInterruption());
+        CPPUNIT_ASSERT_MESSAGE("Failed to get reconnected in time", listener.awaitResumed());
+        listener.reset();
+
+        URI connectedURI = URI(transport->getRemoteAddress());
+
+        if (connectedURI.getPort() == broker1->getPort()) {
+            break;
+        }
+    }
+
+    CPPUNIT_ASSERT(failover->isConnected() == true);
+    CPPUNIT_ASSERT(failover->isConnectedToPriority() == true);
+
+    transport->close();
+
+    broker1->stop();
+    broker1->waitUntilStopped();
+
+    broker2->stop();
+    broker2->waitUntilStopped();
+
+    broker3->stop();
+    broker3->waitUntilStopped();
 }

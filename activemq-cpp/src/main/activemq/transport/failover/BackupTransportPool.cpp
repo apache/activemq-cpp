@@ -53,14 +53,37 @@ namespace failover {
 
     public:
 
+        BackupTransportPool* pool;
+        FailoverTransport* parent;
         LinkedList< Pointer<BackupTransport> > backups;
         volatile bool pending;
         volatile bool closed;
         volatile int priorityBackups;
 
-        BackupTransportPoolImpl() : backups(), pending(false), closed(false), priorityBackups(0) {
+        BackupTransportPoolImpl(BackupTransportPool* pool, FailoverTransport* parent) : pool(pool),
+                                                                                        parent(parent),
+                                                                                        backups(),
+                                                                                        pending(false),
+                                                                                        closed(false),
+                                                                                        priorityBackups(0) {
         }
 
+        bool shouldBuildBackup() {
+            bool result = false;
+
+            if (pool->isEnabled()) {
+
+                // If there's no priority backup and the failover transport isn't connected to
+                // a priority backup then we should keep trying to connect to one.
+                if (parent->isPriorityBackup() && !parent->isConnectedToPriority() && priorityBackups == 0) {
+                    result = true;
+                } else if (backups.size() < pool->getBackupPoolSize()) {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
     };
 
 }}}
@@ -101,7 +124,7 @@ BackupTransportPool::BackupTransportPool(FailoverTransport* parent,
         throw NullPointerException(__FILE__, __LINE__, "Close Transport Task passed is NULL");
     }
 
-    this->impl = new BackupTransportPoolImpl();
+    this->impl = new BackupTransportPoolImpl(this, parent);
 
     // Add this instance as a Task so that we can create backups when nothing else is
     // going on.
@@ -145,7 +168,7 @@ BackupTransportPool::BackupTransportPool(FailoverTransport* parent,
         throw NullPointerException(__FILE__, __LINE__, "Close Transport Task passed is NULL");
     }
 
-    this->impl = new BackupTransportPoolImpl();
+    this->impl = new BackupTransportPoolImpl(this, parent);
 
     // Add this instance as a Task so that we can create backups when nothing else is
     // going on.
@@ -242,7 +265,7 @@ bool BackupTransportPool::iterate() {
 
         bool wakeupParent = false;
 
-        while (isEnabled() && (int) this->impl->backups.size() < backupPoolSize) {
+        while (impl->shouldBuildBackup()) {
 
             URI connectTo;
 
@@ -259,20 +282,20 @@ bool BackupTransportPool::iterate() {
             Pointer<BackupTransport> backup(new BackupTransport(this));
             backup->setUri(connectTo);
 
-            if (priorityUriPool->contains(connectTo)) {
-                backup->setPriority(true);
-
-                if (!parent->isConnectedToPriority()) {
-                    wakeupParent = true;
-                }
-            }
-
             try {
                 Pointer<Transport> transport = createTransport(connectTo);
 
                 transport->setTransportListener(backup.get());
                 transport->start();
                 backup->setTransport(transport);
+
+                if (priorityUriPool->contains(connectTo) || (priorityUriPool->isEmpty() && uriPool->isPriority(connectTo))) {
+                    backup->setPriority(true);
+
+                    if (!parent->isConnectedToPriority()) {
+                        wakeupParent = true;
+                    }
+                }
 
                 // Put any priority connections first so a reconnect picks them
                 // up automatically.
@@ -282,6 +305,7 @@ bool BackupTransportPool::iterate() {
                 } else {
                     this->impl->backups.addLast(backup);
                 }
+
             } catch (...) {
                 // Store it in the list of URIs that didn't work, once done we
                 // return those to the pool.
@@ -289,15 +313,16 @@ bool BackupTransportPool::iterate() {
             }
 
             // We connected to a priority backup and the parent isn't already using one
-            // so wake it up and quick the backups process for now.
+            // so wake it up and quit the backups process for now.
             if (wakeupParent) {
-                this->parent->reconnect(true);
+                this->parent->reconnect(false);
                 break;
             }
         }
 
         // return all failures to the URI Pool, we can try again later.
         uriPool->addURIs(failures);
+
         this->impl->pending = false;
     }
 
