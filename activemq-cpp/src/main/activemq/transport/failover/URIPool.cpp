@@ -161,9 +161,7 @@ bool URIPool::contains(const decaf::net::URI& uri) const {
 ////////////////////////////////////////////////////////////////////////////////
 bool URIPool::isPriority(const decaf::net::URI& uri) const {
     synchronized(&uriPool) {
-        if (!uriPool.isEmpty()) {
-            return uriPool.getFirst().equals(uri);
-        }
+        return priorityURI.equals(uri);
     }
     return false;
 }

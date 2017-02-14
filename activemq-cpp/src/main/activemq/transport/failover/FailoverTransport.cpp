@@ -71,9 +71,9 @@ namespace failover {
 
     public:
 
-        bool closed;
-        bool connected;
-        bool started;
+        volatile bool closed;
+        volatile bool connected;
+        volatile bool started;
 
         long long timeout;
         long long initialReconnectDelay;
@@ -253,7 +253,7 @@ namespace failover {
         }
 
         bool isConnectionStateValid() const {
-            return connectedTransport != NULL && !doRebalance && !this->backups->isPriorityBackupAvailable();
+            return connectedTransport != NULL && !doRebalance && !backups->isPriorityBackupAvailable();
         }
 
         void disconnect() {
@@ -272,6 +272,10 @@ namespace failover {
                 if (this->connectedTransportURI != NULL) {
                     this->uris->addURI(*this->connectedTransportURI);
                     this->connectedTransportURI.reset(NULL);
+                }
+
+                if (transportListener != NULL) {
+                    transportListener->transportInterrupted();
                 }
             }
         }
@@ -853,16 +857,14 @@ void FailoverTransport::updateURIs(bool rebalance, const decaf::util::List<decaf
 bool FailoverTransport::isPending() const {
     bool result = false;
 
-    synchronized(&this->impl->reconnectMutex) {
-        if (!this->impl->isConnectionStateValid() && this->impl->started && !this->impl->isClosedOrFailed()) {
+    synchronized(&impl->reconnectMutex) {
+        if (!impl->isConnectionStateValid() && impl->started && !impl->isClosedOrFailed()) {
 
-            int maxReconnectAttempts = this->impl->calculateReconnectAttemptLimit();
+            int maxReconnectAttempts = impl->calculateReconnectAttemptLimit();
 
             if (impl->firstConnection && impl->connectFailures == 0) {
-                return true;
-            }
-
-            if (maxReconnectAttempts != -1 && this->impl->connectFailures > maxReconnectAttempts) {
+                result = true;
+            } else if (maxReconnectAttempts != -1 && impl->connectFailures > maxReconnectAttempts) {
                 result = false;
             } else {
                 result = true;
@@ -878,7 +880,7 @@ bool FailoverTransport::iterate() {
 
     Pointer<Exception> failure;
 
-    synchronized( &this->impl->reconnectMutex ) {
+    synchronized(&this->impl->reconnectMutex) {
 
         if (this->impl->isClosedOrFailed()) {
             this->impl->reconnectMutex.notifyAll();
@@ -890,7 +892,7 @@ bool FailoverTransport::iterate() {
 
             Pointer<URIPool> connectList = this->impl->getConnectList();
 
-            if (connectList->isEmpty()) {
+            if (connectList->isEmpty() && !impl->backups->isEnabled()) {
                 failure.reset(new IOException(__FILE__, __LINE__, "No URIs available for reconnect."));
             } else {
 
@@ -939,7 +941,7 @@ bool FailoverTransport::iterate() {
                     }
                 }
 
-                while (transport == NULL && this->impl->connectedTransport == NULL && !this->impl->closed) {
+                while ((transport != NULL || !connectList->isEmpty()) && this->impl->connectedTransport == NULL && !this->impl->closed) {
                     try {
                         // We could be starting the loop with a backup already.
                         if (transport == NULL) {
@@ -964,6 +966,7 @@ bool FailoverTransport::iterate() {
                         this->impl->connectedTransport = transport;
                         this->impl->reconnectMutex.notifyAll();
                         this->impl->connectFailures = 0;
+                        this->impl->connected = true;
 
                         if (isPriorityBackup()) {
                             this->impl->connectedToPrioirty = connectList->getPriorityURI().equals(uri) ||
@@ -1012,6 +1015,7 @@ bool FailoverTransport::iterate() {
                             // this prevents a deadlock from occurring if the Transport happens
                             // to call back through our onException method or locks in some other
                             // way.
+                            this->impl->connected = false;
                             this->impl->closeTask->add(transport);
                             this->impl->taskRunner->wakeup();
                             transport.reset(NULL);

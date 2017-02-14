@@ -55,8 +55,9 @@ namespace mock {
     class TcpServer : public lang::Thread {
     private:
 
-        bool done;
-        bool error;
+        volatile bool done;
+        volatile bool error;
+        const int configuredPort;
         Pointer<ServerSocket> server;
         Pointer<OpenWireFormat> wireFormat;
         Pointer<OpenWireResponseBuilder> responeBuilder;
@@ -65,9 +66,8 @@ namespace mock {
 
     public:
 
-        TcpServer() : Thread(), done(false), error(false), server(), wireFormat(),
+        TcpServer() : Thread(), done(false), error(false), configuredPort(0), server(), wireFormat(),
                       responeBuilder(), started(1), rand() {
-            server.reset(new ServerSocket(0));
 
             Properties properties;
 
@@ -77,9 +77,8 @@ namespace mock {
             this->rand.setSeed(System::currentTimeMillis());
         }
 
-        TcpServer(int port) : Thread(), done(false), error(false), server(), wireFormat(),
+        TcpServer(int port) : Thread(), done(false), error(false), configuredPort(port), server(), wireFormat(),
                               responeBuilder(), started(1), rand() {
-            server.reset(new ServerSocket(port));
 
             Properties properties;
             this->wireFormat = OpenWireFormatFactory().createWireFormat(properties).dynamicCast<OpenWireFormat>();
@@ -90,6 +89,7 @@ namespace mock {
 
         virtual ~TcpServer() {
             stop();
+            waitUntilStopped();
         }
 
         int getLocalPort() {
@@ -124,7 +124,15 @@ namespace mock {
 
                     MockTransport mock(this->wireFormat, this->responeBuilder);
 
-                    std::auto_ptr<Socket> socket(server->accept());
+                    server.reset(new ServerSocket(configuredPort));
+
+                    std::auto_ptr<Socket> socket;
+                    try {
+                        socket.reset(server->accept());
+                    } catch (IOException& ioe) {
+                        continue;
+                    }
+
                     socket->setSoLinger(false, 0);
 
                     Pointer<WireFormatInfo> preferred = wireFormat->getPreferedWireFormatInfo();
@@ -147,7 +155,6 @@ namespace mock {
                         }
                     }
                 }
-
             } catch (IOException& ex) {
                 error = true;
             } catch (Exception& ex) {
@@ -225,6 +232,11 @@ void MockBrokerService::waitUntilStarted() {
 ////////////////////////////////////////////////////////////////////////////////
 void MockBrokerService::waitUntilStopped() {
     this->impl->server->waitUntilStopped();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int MockBrokerService::getPort() const {
+    return this->impl->server->getLocalPort();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
