@@ -386,7 +386,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     long long startTime = System::currentTimeMillis();
 
     HelloWorldProducer producer(brokerURI, numMessages, useTopics);
-        HelloWorldConsumer consumer(brokerURI, numMessages, useTopics, sessionTransacted);
+    HelloWorldConsumer consumer(brokerURI, numMessages, useTopics, sessionTransacted);
 
     // Start the consumer thread.
     Thread consumerThread(&consumer);
