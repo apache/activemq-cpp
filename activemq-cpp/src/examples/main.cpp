@@ -359,7 +359,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //     System::setProperty( "decaf.net.ssl.keyStorePassword", "password" );
     //     System::setProperty( "decaf.net.ssl.trustStore", "<path>/rootCA.pem" );
     //
-    // The you just specify the ssl transport in the URI, for example:
+    // Then you just specify the ssl transport in the URI, for example:
     //
     //     ssl://localhost:61617
     //
