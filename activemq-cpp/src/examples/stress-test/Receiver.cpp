@@ -194,7 +194,7 @@ void Receiver::registerMessageListener(ReceiverListener* messageListener, ErrorC
         return;
     }
 
-    if (messageListener != NULL) {
+    if (this->messageListener != NULL) {
         errorCode = CMS_ERROR_A_MESSAGELISTENER_HAS_BEEN_REGISTERED_ALREADY;
         mutexGeneral.unlock();
         return;
