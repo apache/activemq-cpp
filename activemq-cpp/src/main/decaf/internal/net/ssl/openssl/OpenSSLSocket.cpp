@@ -658,27 +658,42 @@ void OpenSSLSocket::verifyServerCert(const std::string& serverName) {
         const char* extensionName = OBJ_nid2sn(OBJ_obj2nid(X509_EXTENSION_get_object(extension)));
 
         if (StringUtils::compare("subjectAltName", extensionName) == 0) {
-
             X509V3_EXT_METHOD* method = (X509V3_EXT_METHOD*) X509V3_EXT_get(extension);
             if (method == NULL) {
                 break;
             }
 
-            const unsigned char* data = extension->value->data;
-            STACK_OF(CONF_VALUE)* confValue = method->i2v(method,
-                    method->it ?
-                            ASN1_item_d2i(NULL, &data, extension->value->length, ASN1_ITEM_ptr(method->it)) :
-                            method->d2i(NULL, &data, extension->value->length), NULL);
+            bool found = false;
+            const unsigned char* data = ASN1_STRING_data(X509_EXTENSION_get_data(extension));
+            long length = ASN1_STRING_length(X509_EXTENSION_get_data(extension));
+            void* ext_data;
+
+            if (method->it) {
+                ext_data = ASN1_item_d2i(NULL, &data, length, ASN1_ITEM_ptr(method->it));
+            } else {
+                ext_data = method->d2i(NULL, &data, length);
+            }
+            STACK_OF(CONF_VALUE)* confValue = method->i2v(method, ext_data, NULL);
 
             CONF_VALUE* value = NULL;
 
             for (int iy = 0; iy < sk_CONF_VALUE_num( confValue ); iy++) {
-                value = sk_CONF_VALUE_value( confValue, iy );
+                value = sk_CONF_VALUE_value(confValue, iy);
                 if ((StringUtils::compare(value->name, "DNS") == 0) && StringUtils::compare(value->value, serverName.c_str()) == 0) {
-
-                    // Found it.
-                    return;
+                    found = true;
+                    break;
                 }
+            }
+
+            sk_CONF_VALUE_pop_free(confValue, X509V3_conf_free);
+            if (method->it) {
+                ASN1_item_free((ASN1_VALUE*)ext_data, ASN1_ITEM_ptr(method->it));
+            } else {
+                method->ext_free(ext_data);
+            }
+
+            if (found) {
+                return;
             }
         }
     }
