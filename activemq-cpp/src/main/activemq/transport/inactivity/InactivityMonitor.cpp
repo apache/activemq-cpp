@@ -72,9 +72,6 @@ namespace inactivity {
         Pointer<ReadChecker> readCheckerTask;
         Pointer<WriteChecker> writeCheckerTask;
 
-        Timer readCheckTimer;
-        Timer writeCheckTimer;
-
         Pointer<CompositeTaskRunner> asyncTasks;
 
         Pointer<AsyncSignalReadErrorkTask> asyncReadTask;
@@ -97,6 +94,9 @@ namespace inactivity {
         long long initialDelayTime;
 
         bool keepAliveResponseRequired;
+
+        Timer readCheckTimer;
+        Timer writeCheckTimer;
 
         InactivityMonitorData(const Pointer<WireFormat> wireFormat) :
             wireFormat(wireFormat),
