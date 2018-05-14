@@ -24,8 +24,7 @@
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
 #include <decaf/lang/System.h>
-#include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/util/Config.h>
+#include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -38,7 +37,6 @@
 #include <iostream>
 #include <memory>
 
-using namespace activemq::core;
 using namespace decaf::util::concurrent;
 using namespace decaf::util;
 using namespace decaf::lang;
