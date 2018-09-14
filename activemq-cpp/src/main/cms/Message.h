@@ -172,12 +172,7 @@ namespace cms {
         virtual void clearBody() = 0;
 
         /**
-         * Clears out the message body. Clearing a message's body does not clear
-         * its header values or property entries.
-         *
-         * If this message body was read-only, calling this method leaves the
-         * message body in the same state as an empty body in a newly created
-         * message.
+         * Clears out the message properties.
          *
          * @throws CMSException - if an internal error occurs.
          */
