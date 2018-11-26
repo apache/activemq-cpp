@@ -352,15 +352,27 @@ void PlatformThread::createNewThread(decaf_thread_t* handle, threadMainMethod th
                                      int priority, long long stackSize, long long* threadId) {
 
     unsigned int osThreadId = 0;
+    uintptr_t result = _beginthreadex(NULL, (DWORD)0, threadMain, threadArg, 0, &osThreadId);
+    char errorMessage[256];
 
-    *handle = (HANDLE)_beginthreadex(
-         NULL, (DWORD)0, threadMain, threadArg, 0, &osThreadId );
-
-    if (*handle == 0) {
-        throw RuntimeException(
-            __FILE__, __LINE__, "Failed to create new Thread." );
+    *handle = nullptr;
+    
+    if (((uintptr_t )-1L) == result)
+    {
+        sprintf_s(errorMessage, sizeof(errorMessage), "Failed to create new Thread. Result: -1. Error code: %d. DOS Error code: %d.", errno, _doserrno);
+        
+        throw RuntimeException(__FILE__, __LINE__, errorMessage);
     }
-
+    
+    *handle = (decaf_thread_t)result;
+    
+    if (nullptr == *handle)
+    {
+        sprintf_s(errorMessage, sizeof(errorMessage), "Failed to create new Thread.  Result: NULL. Error code: %d. DOS Error code: %d.", errno, _doserrno);
+        
+        throw RuntimeException(__FILE__, __LINE__, errorMessage);
+    }
+    
     *threadId = (long long)osThreadId;
 }
 
