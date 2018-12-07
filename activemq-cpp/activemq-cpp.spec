@@ -22,7 +22,7 @@ BuildRequires:  autoconf >= 2.61
 BuildRequires:  libtool  >= 1.5.24
 BuildRequires:  apr-devel%{?_isa} >= 1.3
 BuildRequires:  cppunit-devel%{?_isa} >= 1.10.2
-BuildRequires:  openssl-devel%{?_isa} >= 0.98.0
+BuildRequires:  openssl-devel%{?_isa} >= 1.0.2
 
 %description
 activemq-cpp is a JMS-like API for C++ for interfacing with Message
