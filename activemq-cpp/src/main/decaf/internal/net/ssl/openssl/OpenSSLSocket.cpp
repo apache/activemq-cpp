@@ -356,11 +356,11 @@ void OpenSSLSocket::startHandshake() {
                 // Since we are a client we want to enforce peer verification, we set a
                 // callback so we can collect data on why a verify failed for debugging.
                 if (!peerVerifyDisabled) {
-					// Check host https://wiki.openssl.org/index.php/Hostname_validation
-					X509_VERIFY_PARAM *param = SSL_get0_param(this->parameters->getSSL());
+                                        // Check host https://wiki.openssl.org/index.php/Hostname_validation
+                                        X509_VERIFY_PARAM *param = SSL_get0_param(this->parameters->getSSL());
 
-					X509_VERIFY_PARAM_set_hostflags(param, X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS);
-					X509_VERIFY_PARAM_set1_host(param, this->data->commonName.c_str(), 0);
+                                        X509_VERIFY_PARAM_set_hostflags(param, X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS);
+                                        X509_VERIFY_PARAM_set1_host(param, this->data->commonName.c_str(), 0);
 
                     SSL_set_verify(this->parameters->getSSL(), SSL_VERIFY_PEER, SocketData::verifyCallback);
                 } else {
@@ -382,7 +382,7 @@ void OpenSSLSocket::startHandshake() {
                 case SSL_ERROR_SSL:
                 case SSL_ERROR_ZERO_RETURN:
                 case SSL_ERROR_SYSCALL:
-				default:
+                               default:
                     SSLSocket::close();
                     throw OpenSSLSocketException(__FILE__, __LINE__);
                 }
