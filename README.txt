@@ -23,7 +23,6 @@ APR         >= 1.3*
 APR-Util    >= 1.3*
 CPPUnit     >= 1.10.2*
 libuuid     >= ?*
-openssl     >= 1.0.2
 
 * Requires that the Development package also be installed.
 

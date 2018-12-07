@@ -242,6 +242,12 @@ namespace openssl {
          */
         int available();
 
+    private:
+
+        // Perform some additional checks on the Server's Certificate to ensure that
+        // its really valid.
+        void verifyServerCert(const std::string& serverName);
+
     public:
 
         using decaf::net::Socket::connect;
