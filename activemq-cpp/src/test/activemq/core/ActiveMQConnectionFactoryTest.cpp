@@ -306,7 +306,8 @@ void ActiveMQConnectionFactoryTest::testURIOptionsProcessing() {
             "mock://127.0.0.1:23232?connection.dispatchAsync=true&"
             "connection.alwaysSyncSend=true&connection.useAsyncSend=true&"
             "connection.useCompression=true&connection.compressionLevel=7&"
-            "connection.closeTimeout=10000";
+            "connection.closeTimeout=10000&"
+            "connection.connectResponseTimeout=2000";
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
@@ -316,6 +317,7 @@ void ActiveMQConnectionFactoryTest::testURIOptionsProcessing() {
         CPPUNIT_ASSERT( connectionFactory.isUseCompression() == true );
         CPPUNIT_ASSERT( connectionFactory.getCloseTimeout() == 10000 );
         CPPUNIT_ASSERT( connectionFactory.getCompressionLevel() == 7 );
+        CPPUNIT_ASSERT( connectionFactory.getConnectResponseTimeout() == 2000 );
 
         cms::Connection* connection =
             connectionFactory.createConnection();
@@ -330,6 +332,7 @@ void ActiveMQConnectionFactoryTest::testURIOptionsProcessing() {
         CPPUNIT_ASSERT( amqConnection->isUseCompression() == true );
         CPPUNIT_ASSERT( amqConnection->getCloseTimeout() == 10000 );
         CPPUNIT_ASSERT( amqConnection->getCompressionLevel() == 7 );
+        CPPUNIT_ASSERT( amqConnection->getConnectResponseTimeout() == 2000 );
 
         delete connection;
 
