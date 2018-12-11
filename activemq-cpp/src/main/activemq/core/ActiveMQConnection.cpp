@@ -185,6 +185,7 @@ namespace core {
         bool alwaysSessionAsync;
         int compressionLevel;
         unsigned int sendTimeout;
+        unsigned int connectResponseTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
         int auditDepth;
@@ -255,6 +256,7 @@ namespace core {
                              alwaysSessionAsync(true),
                              compressionLevel(-1),
                              sendTimeout(0),
+                             connectResponseTimeout(0),
                              closeTimeout(15000),
                              producerWindowSize(0),
                              auditDepth(ActiveMQMessageAudit::DEFAULT_WINDOW_SIZE),
@@ -318,6 +320,7 @@ namespace core {
         void waitForBrokerInfo() {
             this->brokerInfoReceived->await();
         }
+
     };
 
     // Static init.
@@ -1354,7 +1357,7 @@ void ActiveMQConnection::ensureConnectionInfoSent() {
             }
 
             // Now we ping the broker and see if we get an ack / nack
-            syncRequest(this->config->connectionInfo);
+            syncRequest(this->config->connectionInfo, this->config->connectResponseTimeout);
 
             this->config->isConnectionInfoSentToBroker = true;
 
@@ -1585,6 +1588,16 @@ unsigned int ActiveMQConnection::getSendTimeout() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::setSendTimeout(unsigned int timeout) {
     this->config->sendTimeout = timeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned int ActiveMQConnection::getConnectResponseTimeout() const {
+    return this->config->connectResponseTimeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::setConnectResponseTimeout(unsigned int connectResponseTimeout) {
+    this->config->connectResponseTimeout = connectResponseTimeout;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

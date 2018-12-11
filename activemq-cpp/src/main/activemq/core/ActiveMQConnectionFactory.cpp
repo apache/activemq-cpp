@@ -92,6 +92,7 @@ namespace core{
         bool alwaysSessionAsync;
         int compressionLevel;
         unsigned int sendTimeout;
+        unsigned int connectResponseTimeout;
         unsigned int closeTimeout;
         unsigned int producerWindowSize;
         int auditDepth;
@@ -128,6 +129,7 @@ namespace core{
                             alwaysSessionAsync(true),
                             compressionLevel(-1),
                             sendTimeout(0),
+                            connectResponseTimeout(0),
                             closeTimeout(15000),
                             producerWindowSize(0),
                             auditDepth(ActiveMQMessageAudit::DEFAULT_WINDOW_SIZE),
@@ -191,6 +193,9 @@ namespace core{
             this->sendTimeout = decaf::lang::Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_SENDTIMEOUT), Integer::toString(sendTimeout)));
+            this->connectResponseTimeout = decaf::lang::Integer::parseInt(
+                properties->getProperty(core::ActiveMQConstants::toString(
+                    core::ActiveMQConstants::CONNECTION_CONNECTRESPONSETIMEOUT), Integer::toString(connectResponseTimeout)));
             this->closeTimeout = decaf::lang::Integer::parseInt(
                 properties->getProperty(core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT), Integer::toString(closeTimeout)));
@@ -401,6 +406,7 @@ void ActiveMQConnectionFactory::configureConnection(ActiveMQConnection* connecti
     connection->setUseCompression(this->settings->useCompression);
     connection->setCompressionLevel(this->settings->compressionLevel);
     connection->setSendTimeout(this->settings->sendTimeout);
+    connection->setConnectResponseTimeout(this->settings->connectResponseTimeout);
     connection->setCloseTimeout(this->settings->closeTimeout);
     connection->setProducerWindowSize(this->settings->producerWindowSize);
     connection->setPrefetchPolicy(this->settings->defaultPrefetchPolicy->clone());
@@ -591,6 +597,16 @@ unsigned int ActiveMQConnectionFactory::getSendTimeout() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionFactory::setSendTimeout(unsigned int timeout) {
     this->settings->sendTimeout = timeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned int ActiveMQConnectionFactory::getConnectResponseTimeout() const {
+    return this->settings->connectResponseTimeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactory::setConnectResponseTimeout(unsigned int connectResponseTimeout) {
+    this->settings->connectResponseTimeout = connectResponseTimeout;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

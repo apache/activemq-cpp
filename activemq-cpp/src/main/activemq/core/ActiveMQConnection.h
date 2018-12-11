@@ -507,6 +507,20 @@ namespace core {
         void setSendTimeout(unsigned int timeout);
 
         /**
+         * Gets the assigned connect response timeout for this Connector
+         * @return the connect response timeout configured in the connection uri
+         */
+        unsigned int getConnectResponseTimeout() const;
+
+        /**
+         * Sets the connect response timeout to use when sending Message objects, this will
+         * protect clients using a Synchronous request in the case of the broker not responding
+         * or missing the brokers response.
+         * @param timeout - The time to wait for a connect response.
+         */
+        void setConnectResponseTimeout(unsigned int connectResponseTimeout);
+
+        /**
          * Gets the assigned close timeout for this Connector
          * @return the close timeout configured in the connection uri
          */
