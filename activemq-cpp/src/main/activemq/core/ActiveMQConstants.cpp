@@ -55,6 +55,7 @@ ActiveMQConstants::StaticInitializer::StaticInitializer() {
     uriParams[PARAM_USERNAME] = "username";
     uriParams[PARAM_PASSWORD] = "password";
     uriParams[PARAM_CLIENTID] = "client-id";
+    uriParams[CONNECTION_CONNECTRESPONSETIMEOUT] = "connection.connectResponseTimeout";
 
     for (int ix = 0; ix < NUM_OPTIONS; ++ix) {
         destOptionMap[destOptions[ix]] = (DestinationOption) ix;
