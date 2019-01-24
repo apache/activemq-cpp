@@ -3,6 +3,23 @@
 =========================================================================
 
 =========================================================================
+==  Release Notes for ActiveMQ CPP 3.9.4                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-596] - decaf/internal/security/provider/crypto/MD4MessageDigestSpi.cpp:394]:
+                   (error) Mismatching allocation and deallocation: temp
+    [AMQCPP-598] - CmsTemplate::createConsumer possible dereference of null pointer
+    [AMQCPP-601] - PriorityBackup isn't working
+    [AMQCPP-610] - Stall when maxReconnectAttempts is set to zero
+
+Improvement
+
+    [AMQCPP-607] - Add Openwire properties for client metadata to CMS client
+    [AMQCPP-609] - Prevent unnecesary reconnect attempt with failover during shutdown
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 3.9.3                               ==
 =========================================================================
 
