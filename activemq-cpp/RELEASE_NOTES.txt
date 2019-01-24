@@ -1,6 +1,19 @@
 =========================================================================
-==  Release Notes for ActiveMQ CPP 3.10.0                               ==
+==  Release Notes for ActiveMQ CPP 3.10.0                              ==
 =========================================================================
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 3.9.5                               ==
+=========================================================================
+
+Bug
+
+    [AMQCPP-622] - Memory leaks in the handshake of a OpenSSL connection
+    [AMQCPP-623] - Can't build on some newer OpenSSL versions
+
+New Feature
+
+    [AMQCPP-643] - Add an option to time out connection attempts when blocked in ensureConnectionInfoSent
 
 =========================================================================
 ==  Release Notes for ActiveMQ CPP 3.9.4                               ==
