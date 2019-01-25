@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>15</version>
+    <version>19</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -102,8 +102,8 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/activemq-cpp.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/activemq-cpp.git</developerConnection>
+    <connection>scm:git:http://gitbox.apache.org/repos/asf/activemq-cpp.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/activemq-cpp.git</developerConnection>
     <url>https://fisheye6.atlassian.com/browse/~br=master/activemq-cpp-git</url>
     <tag>HEAD</tag>
   </scm>
@@ -179,6 +179,7 @@
             <arguments>-Prelease</arguments>
             <goals>deploy</goals>
             <tagNameFormat>activemq-cpp-@{project.version}</tagNameFormat>
+            <pushChanges>true</pushChanges>
           </configuration>
         </plugin>
       </plugins>
