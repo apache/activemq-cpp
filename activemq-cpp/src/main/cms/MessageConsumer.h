@@ -105,7 +105,7 @@ namespace cms {
         virtual void setMessageListener(MessageListener* listener) = 0;
 
         /**
-         * Gets the MessageListener that this class will send mew Message
+         * Gets the MessageListener that this class will send new Message
          * notification events to.
          *
          * @return The listener of messages received by this consumer
@@ -155,7 +155,7 @@ namespace cms {
         virtual void setMessageAvailableListener(cms::MessageAvailableListener* listener) = 0;
 
         /**
-         * Gets the MessageAvailableListener that this class will send mew Message
+         * Gets the MessageAvailableListener that this class will send new Message
          * notification events to.
          *
          * @return The listener of message events received by this consumer.

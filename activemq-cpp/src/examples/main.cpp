@@ -359,7 +359,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //     System::setProperty( "decaf.net.ssl.keyStorePassword", "password" );
     //     System::setProperty( "decaf.net.ssl.trustStore", "<path>/rootCA.pem" );
     //
-    // The you just specify the ssl transport in the URI, for example:
+    // Then you just specify the ssl transport in the URI, for example:
     //
     //     ssl://localhost:61617
     //
@@ -386,7 +386,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     long long startTime = System::currentTimeMillis();
 
     HelloWorldProducer producer(brokerURI, numMessages, useTopics);
-        HelloWorldConsumer consumer(brokerURI, numMessages, useTopics, sessionTransacted);
+    HelloWorldConsumer consumer(brokerURI, numMessages, useTopics, sessionTransacted);
 
     // Start the consumer thread.
     Thread consumerThread(&consumer);
