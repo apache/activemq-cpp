@@ -23,6 +23,8 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/util/Random.h>
 
+#include <memory>
+
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0500
 
