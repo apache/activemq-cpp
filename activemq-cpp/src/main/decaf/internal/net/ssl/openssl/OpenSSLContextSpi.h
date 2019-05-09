@@ -73,6 +73,8 @@ namespace openssl {
 
         std::vector<std::string> getDefaultCipherSuites();
         std::vector<std::string> getSupportedCipherSuites();
+	
+	protected:
         void* getOpenSSLCtx();
 
     };
