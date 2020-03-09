@@ -278,7 +278,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     // Wait to exit.
     std::cout << "Press 'q' to quit" << std::endl;
-    while( std::cin.get() != 'q') {}
+    while( std::cin.get() != 'q') {sleep(1);}
 
     // All CMS resources should be closed before the library is shutdown.
     consumer.close();
