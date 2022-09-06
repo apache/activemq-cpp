@@ -39,7 +39,7 @@ jobs:
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
       - name: Install dependencies
         run: |
-          sudo apt-get install -y libcppunit-dev libapr1 libapr1-dev libapr1util libapr1util-dev build-essential
+          sudo apt-get install -y libcppunit-dev libapr1 libapr1-dev libaprutil1 libaprutil1-dev build-essential
       - name: Run build-wrapper
         working-directory: ./activemq-cpp
         run: |
