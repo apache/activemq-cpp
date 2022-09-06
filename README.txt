@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------
 ActiveMQ CPP Library
 --------------------------------------------------------------------------
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=red-avalanche_activemq-cpp&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=red-avalanche_activemq-cpp)
 
 ActiveMQ CPP is a messaging library that can use multiple protocols to
 talk to a MOM (e.g. ActiveMQ).
