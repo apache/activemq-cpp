@@ -106,7 +106,6 @@ public:
             }
 
             connection->start();
-
             connection->setExceptionListener(this);
 
             // Create a Session
