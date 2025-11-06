@@ -148,7 +148,7 @@ bool ActiveMQMessageAudit::isDuplicate(const std::string& id) const {
             if (index >= 0) {
                 int scaledIndex = (int) index;
                 if (index > Integer::MAX_VALUE) {
-                    scaledIndex = (int)(index - Integer::MAX_VALUE);
+                    scaledIndex = (int)(index % Integer::MAX_VALUE);
                 }
 
                 answer = bits->get(scaledIndex);
@@ -185,7 +185,7 @@ bool ActiveMQMessageAudit::isDuplicate(decaf::lang::Pointer<MessageId> msgId) co
                     if (index >= 0) {
                         int scaledIndex = (int) index;
                         if (index > Integer::MAX_VALUE) {
-                            scaledIndex = (int)(index - Integer::MAX_VALUE);
+                            scaledIndex = (int)(index % Integer::MAX_VALUE);
                         }
 
                         answer = bits->get(scaledIndex);
@@ -218,7 +218,7 @@ void ActiveMQMessageAudit::rollback(const std::string& msgId) {
                 if (index >= 0) {
                     int scaledIndex = (int) index;
                     if (index > Integer::MAX_VALUE) {
-                        scaledIndex = (int)(index - Integer::MAX_VALUE);
+                        scaledIndex = (int)(index % Integer::MAX_VALUE);
                     }
 
                     bits->set(scaledIndex, false);
@@ -249,7 +249,7 @@ void ActiveMQMessageAudit::rollback(decaf::lang::Pointer<commands::MessageId> ms
                         if (index >= 0) {
                             int scaledIndex = (int) index;
                             if (index > Integer::MAX_VALUE) {
-                                scaledIndex = (int)(index - Integer::MAX_VALUE);
+                                scaledIndex = (int)(index % Integer::MAX_VALUE);
                             }
 
                             bits->set(scaledIndex, false);
@@ -284,7 +284,7 @@ bool ActiveMQMessageAudit::isInOrder(const std::string& msgId) const {
 
                     int scaledIndex = (int) index;
                     if (index > Integer::MAX_VALUE) {
-                        scaledIndex = (int)(index - Integer::MAX_VALUE);
+                        scaledIndex = (int)(index % Integer::MAX_VALUE);
                     }
 
                     answer = ((bits->length() - 1) == scaledIndex);
@@ -319,7 +319,7 @@ bool ActiveMQMessageAudit::isInOrder(decaf::lang::Pointer<commands::MessageId> m
                     if (index >= 0) {
                         int scaledIndex = (int) index;
                         if (index > Integer::MAX_VALUE) {
-                            scaledIndex = (int)(index - Integer::MAX_VALUE);
+                            scaledIndex = (int)(index % Integer::MAX_VALUE);
                         }
                         answer = ((bits->length() - 1) == scaledIndex);
                     }
